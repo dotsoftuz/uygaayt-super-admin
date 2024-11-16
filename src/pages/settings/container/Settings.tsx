@@ -1,0 +1,223 @@
+import { Box, Grid, Switch, Typography } from "@mui/material";
+import { HeaderOfSettings, SettingsStyled, SettingTitle, StyledMenuItem, StyledPhoneCountrySelect } from "./Settings.styled";
+import { SETTINGS_TABS } from "types/enums";
+import { useEffect, useState } from "react";
+import MinimumOrder from "../components/MinimumOrder";
+import StateMap from "../components/StateMap";
+import { useRoleManager } from "services/useRoleManager";
+import { MainButton, TextInput } from "components";
+import { useTranslation } from "react-i18next";
+import { PHONE_COUNTRY_DATA } from "./Settings.constants";
+import { useForm } from "react-hook-form";
+import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
+import { toast } from "react-toastify";
+import { useSearchParams } from "react-router-dom";
+import MainAddress from "../components/MainAddress";
+import WebsiteConditions from "../components/WebsiteConditions";
+import MinimumOrderPrice from "../components/MinimumOrderPrice";
+
+const Settings = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(SETTINGS_TABS[0].key);
+  const hasAccess = useRoleManager();
+  const { t } = useTranslation();
+  const [phonePrefix, setphonePrefix] = useState<string>("");
+  const { control, reset, watch, register, handleSubmit } = useForm();
+
+
+  const { data, status, refetch } = useApi(
+    "settings-general",
+    {},
+    {
+      onSuccess({ data }) {
+        localStorage.setItem("settings", JSON.stringify(data));
+      },
+    }
+  );
+
+  const { mutate } = useApiMutation("settings-general", "post", {
+    onSuccess() {
+      toast.success(t("general.success"));
+      refetch();
+    },
+  });
+
+  useEffect(() => {
+    if (status === "success") {
+      reset(data.data);
+      setphonePrefix(data.data?.phonePrefix);
+    }
+  }, [status]);
+
+  const submit = handleSubmit((data: any) => {
+    mutate({
+      ...data,
+      phonePrefix,
+    });
+  });
+
+  const handleTab = (tab: { name: string; key: string }) => {
+    setActiveTab(tab.key);
+    setSearchParams({ tab: tab.key });
+  };
+
+  const onChangePhone = (event: any) => {
+    setphonePrefix(event.target.value);
+  };
+
+  return (
+    <SettingsStyled>
+      <Grid container spacing={3}>
+        <Grid item sm={3}>
+          <div className="tabs">
+            {SETTINGS_TABS.map((tab) => {
+              if (hasAccess(tab.role)) {
+                return (
+                  <div
+                    className={`tab ${activeTab === tab.key && "active"}`}
+                    onClick={() => setActiveTab(tab.key)}
+                  >
+                    {tab.name}
+                    {activeTab === tab.key && (
+                      <div className="left-border"></div>
+                    )}
+                  </div>
+                );
+              }
+            })}
+          </div>
+        </Grid>
+        <Grid item sm={9}>
+        {activeTab === "functionality" && (
+            <div className="settings">
+              <HeaderOfSettings>
+                <SettingTitle>Funksionallik</SettingTitle>
+                <MainButton
+                  title={t("general.save")}
+                  variant="contained"
+                  onClick={submit}
+                />
+              </HeaderOfSettings>
+              <Grid container spacing={2}>
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">Minimal buyurtma summasi</span>
+                    <TextInput
+                      control={control}
+                      name="orderMinimumPrice"
+                      type="number"
+                      rules={{ required: false }}
+                    />
+                  </div>
+                </Grid>
+                {/* <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">Multi do'konlardan buyurtma</span>
+                    <Box display="flex" alignItems="center">
+                      <Switch
+                        checked={watch("orderForMultipleStores")}
+                        id="orderForMultipleStores"
+                        {...register("orderForMultipleStores")}
+                      />
+                      <label className="mb-1" htmlFor="orderForMultipleStores">
+                        Ruxsat berish
+                      </label>
+                    </Box>
+                  </div>
+                </Grid> */}
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">Banner aylanish vaqti (sekund)</span>
+                    <TextInput
+                      control={control}
+                      name="bannerTime"
+                      type="number"
+                      rules={{ required: false }}
+                    />
+                  </div>
+                </Grid>
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">
+                      Do'konlar ko'rinish radiusi (km)
+                    </span>
+                    <TextInput
+                      control={control}
+                      name="storeRadius"
+                      type="number"
+                      rules={{ required: false }}
+                    />
+                  </div>
+                </Grid>
+
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">Valyuta</span>
+                    <TextInput control={control} name="currency" type="text" />
+                  </div>
+                </Grid>
+
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <Box>
+                      <Typography fontSize={"13px"} color="#000">
+                        {t("common.phone_prefix_comment")}
+                      </Typography>
+                      <Box marginTop="10px">
+                        <StyledPhoneCountrySelect
+                          value={phonePrefix}
+                          onChange={onChangePhone}
+                          sx={{
+                            "& fieldset": { border: "none" },
+                          }}
+                        >
+                          {PHONE_COUNTRY_DATA.map((phone) => (
+                            <StyledMenuItem
+                              value={phone?.prefix}
+                              key={phone?.flag}
+                            >
+                              <img
+                                src={`/images/phone/${phone?.flag}.svg`}
+                                alt={phone?.flag}
+                                style={{ width: "32px" }}
+                              />
+                              <Typography
+                                fontFamily="SF Pro Display"
+                                marginLeft="12px"
+                                marginBottom={0}
+                              >
+                                {t(`common.country.${phone?.translationKey}`)}
+                                &nbsp; ({phone?.prefix})
+                              </Typography>
+                            </StyledMenuItem>
+                          ))}
+                        </StyledPhoneCountrySelect>
+                      </Box>
+                    </Box>
+                  </div>
+                </Grid>
+              </Grid>
+            </div>
+          )}
+            {activeTab === "clientSettings" && (
+            <div className="settings">
+              <MinimumOrderPrice />
+            </div>
+          )}
+           {activeTab === "mainAddress" && (
+            <div className="settings">
+              <MainAddress />
+            </div>
+          )}
+            {activeTab === "websiteConditions" && (
+            <div className="settings">
+              <WebsiteConditions />
+            </div>
+          )}
+        </Grid>
+      </Grid>
+    </SettingsStyled>
+  );
+};
+
+export default Settings;

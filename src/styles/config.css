@@ -1,0 +1,158 @@
+/* @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap"); */
+/* Require Editor CSS files. */
+@import url("froala-editor/css/froala_style.min.css");
+@import url("froala-editor/css/froala_editor.pkgd.min.css");
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: "SF Pro Display";
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+@font-face {
+  font-family: "SF Pro Display";
+  src: url(../font/SFPRODISPLAYMEDIUM.OTF);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+.page {
+  width: 100%;
+  /* background-color: white; */
+  /* padding: 15px; */
+  /* border-radius: 6px; */
+}
+.error-text {
+  color: #ed4337;
+}
+.blue-text {
+  color: #00afff !important;
+}
+
+.froala-editor-container {
+  /* width: 20.1cm !important; */
+  margin: auto;
+}
+.fr-wrapper {
+  padding: 0 40px !important;
+}
+.fr-wrapper .fr-element {
+  padding: 0 40px !important;
+}
+@media print {
+  .froala-editor-container {
+    margin: 0 40px !important;
+    padding: 0 40px !important;
+  }
+  .fr-wrapper {
+    padding: 0 40px !important;
+  }
+  .fr-wrapper .fr-element {
+    padding: 0 40px !important;
+  }
+}
+
+@media print {
+  /* All your print styles go here */
+  /* #header,
+  #footer,
+  #nav {
+    display: none !important;
+  }
+  @page {
+    margin: 0;
+  }
+  body {
+    margin-left: 0.5cm;
+    margin-right: 0.5cm;
+    margin-bottom: 0.5cm;
+    margin-top: 0.5cm;
+  } */
+}
+
+.froala-editor-container .fr-second-toolbar a {
+  visibility: hidden;
+}
+.fr-wrapper > div:first-child > a:first-child {
+  visibility: hidden !important;
+}
+p[data-f-id="pbf"] {
+  display: none;
+  visibility: hidden !important;
+}
+
+@media print {
+  .no-border th,
+  .no-border td {
+    border: none !important;
+  }
+  .fr-view * {
+    color: #000 !important;
+    /* border-color: #000 !important; */
+    font-family: "Times New Roman", Times, serif;
+  }
+  .contract-report-table * {
+    text-align: center;
+    font-size: 13px !important;
+  }
+  .contract-report-table .car-name-info {
+    padding: 5px;
+  }
+  .contract-report-table .car-name-info div {
+    text-align: left !important;
+  }
+  .contract-report-table .header {
+    padding: 5px 0;
+  }
+}
+.no-border th,
+.no-border td {
+  border: none !important;
+}
+.fr-view * {
+  color: #000 !important;
+  /* border-color: #000 !important; */
+  font-family: "Times New Roman", Times, serif;
+}
+
+.contract-report-table * {
+  text-align: center;
+  font-weight: bold;
+  font-size: 13px !important;
+  line-height: 15px;
+}
+.contract-report-table .car-name-info div {
+  text-align: left !important;
+}
+.contract-report-table .car-name-info {
+  padding: 5px;
+}
+.contract-report-table .header > td {
+  padding: 5px 0;
+}
+/*    */
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #d9d9d9;
+  border-radius: 12px;
+}
+::-webkit-scrollbar-track {
+  background-color: #f5f5f5;
+}

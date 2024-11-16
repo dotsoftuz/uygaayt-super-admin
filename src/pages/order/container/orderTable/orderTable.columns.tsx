@@ -1,0 +1,119 @@
+import { GridColumns } from "@mui/x-data-grid";
+import { Select } from "components";
+import dayjs from "dayjs";
+import { get } from "lodash";
+import { useTranslation } from "react-i18next";
+import styled from "styled-components";
+import { numberFormat } from "utils/numberFormat";
+
+const StateSelectStyled = styled.div<{ stateColor: string; luma: any }>`
+  margin-bottom: 5px;
+  .MuiInputBase-root {
+    background-color: ${({ stateColor }) => stateColor};
+    color: ${({ luma }) => (luma > 60 ? "#232323" : "#ffffff")} !important;
+  }
+  & .MuiSelect-select.Mui-disabled {
+    color: ${({ luma }) => (luma > 60 ? "#232323" : "#ffffff")} !important;
+    -webkit-text-fill-color: ${({ luma }) =>
+      luma > 60 ? "#232323" : "#ffffff"} !important;
+  }
+
+  & svg {
+    path {
+      fill: ${({ luma }) => (luma > 60 ? "#232323" : "#ffffff")} !important;
+    }
+  }
+`;
+
+export const useOrderTableColumns = (setStateUpdateData: any): GridColumns => {
+  const { t } = useTranslation();
+
+  return [
+    {
+      field: t("common.number"),
+      renderCell({ row }) {
+        return row.number;
+      },
+      flex: 0.6,
+    },
+    {
+      field: t("common.price"),
+      renderCell({ row }) {
+        return numberFormat(row.totalPrice);
+      },
+      flex: 0.6,
+    },
+    {
+      field: t("common.customer"),
+      renderCell({ row }) {
+        return (
+          get(row, "customer.firstName", "") +
+          " " +
+          get(row, "customer.lastName", "")
+        );
+      },
+    },
+    {
+      field: t("common.phoneNumber"),
+      renderCell({ row }) {
+        return row.customer?.phoneNumber;
+      },
+    },
+    {
+      field: t("common.receiverPhoneNumber"),
+      renderCell({ row }) {
+        return row.receiverCustomer?.phoneNumber;
+      },
+    },
+    {
+      field: t("common.paymentType"),
+      renderCell({ row }) {
+        return t(`enum.${row.paymentType}`);
+      },
+      flex: 0.6,
+    },
+    {
+      field: t("common.time"),
+      renderCell({ row }) {
+        return dayjs(row.createdAt).format("DD.MM.YYYY HH:mm");
+      },
+    },
+    {
+      field: t("common.status"),
+      renderCell({ row }) {
+        var c: any = row?.state?.color?.substring(1); // strip #
+        var rgb = parseInt(c, 16); // convert rrggbb to decimal
+        var r = (rgb >> 16) & 0xff; // extract red
+        var g = (rgb >> 8) & 0xff; // extract green
+        var b = (rgb >> 0) & 0xff; // extract blue
+
+        var luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
+
+        console.log(luma);
+
+        return (
+          <StateSelectStyled
+            stateColor={row?.state?.color}
+            luma={luma}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <Select
+              onChange={(id) =>
+                setStateUpdateData({
+                  stateId: id,
+                  orderId: row._id,
+                })
+              }
+              customValue={row.stateId}
+              optionsUrl="order/states"
+              disabled={
+                row.state?.state === "completed" ||
+                row.state?.state === "cancelled"
+              }
+            />
+          </StateSelectStyled>
+        );
+      },
+    },
+  ];
+};

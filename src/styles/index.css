@@ -1,0 +1,51 @@
+html {
+  overflow-y: hidden;
+}
+.MuiMenu-paper {
+  max-height: 200px !important;
+  background-color: #ffffff !important;
+  margin-top: 6px !important;
+  border: 1px solid #f5f5f5 !important;
+  border-radius: 8px !important;
+  -webkit-box-shadow: -3px 4px 5px -5px rgba(34, 60, 80, 0.6) !important;
+  -moz-box-shadow: -3px 4px 5px -5px rgba(34, 60, 80, 0.6) !important;
+  box-shadow: -3px 4px 5px -5px rgba(34, 60, 80, 0.6) !important;
+}
+
+.MuiDataGrid-columnHeaders {
+  border-bottom: none !important;
+}
+
+.MuiButtonBase-root {
+  box-shadow: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: inherit !important;
+}
+.toast {
+  position: relative;
+  transform: translateX(-120px);
+  z-index: 999999;
+}
+.Toastify__toast {
+  width: 560px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+.Toastify__close-button {
+  width: 35px;
+  height: 35px;
+  margin-top: 9px;
+  margin-right: 12px;
+}
+
+.date_lable {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.MuiAutocomplete-popper * {
+  z-index: 9999;
+}
