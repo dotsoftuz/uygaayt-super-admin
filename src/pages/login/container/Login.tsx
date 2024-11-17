@@ -52,6 +52,7 @@ const Login = () => {
   
       localStorage.setItem("token", updatedLoginData.token);
       localStorage.setItem("employeeId", updatedLoginData.employee._id);
+      localStorage.setItem("roleId", updatedLoginData.employee.roleId);
       localStorage.setItem("i18nextLng", "uz");
   
       initializeSocket(updatedLoginData.token, "");

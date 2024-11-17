@@ -97,7 +97,7 @@ const AddOrderForm = ({
   );
 
   const { data: storeData, status: storeStatus } = useApi(
-    "store",
+    "store/get",
     {},
     {
       suspense: false,

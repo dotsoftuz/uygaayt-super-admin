@@ -20,12 +20,12 @@ const BannerForm: FC<IEmployeesForm> = ({
   const { control, handleSubmit, reset, watch, setValue } = formStore;
 
   const { mutate, status } = useApiMutation(
-    editingBannerId ? `banner/${editingBannerId}` : "banner",
+    editingBannerId ? `/banner/update/${editingBannerId}` : "/banner/create",
     editingBannerId ? "put" : "post"
   );
 
   const { data: getByIdData, status: getByIdStatus } = useApi(
-    `banner/${editingBannerId}`,
+    `/banner/update/${editingBannerId}`,
     {},
     {
       enabled: !!editingBannerId,
@@ -53,7 +53,6 @@ const BannerForm: FC<IEmployeesForm> = ({
         title: getByIdData.data.title,
         imageId: getByIdData.data.image,
         description: getByIdData.data.description,
-        storeId: getByIdData.data.storeId,
       });
     }
   }, [getByIdStatus, getByIdData]);
@@ -69,7 +68,7 @@ const BannerForm: FC<IEmployeesForm> = ({
               label={t("common.name")}
             />
           </Grid>
-          <Grid item md={12}>
+          {/* <Grid item md={12}>
             <AutoCompleteForm
               control={control}
               name="storeId"
@@ -81,7 +80,7 @@ const BannerForm: FC<IEmployeesForm> = ({
                 limit: 10,
               }}
             />
-          </Grid>
+          </Grid> */}
           <Grid item md={12}>
             <TextEditor
               value={watch("description")}

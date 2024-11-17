@@ -9,14 +9,15 @@ export const useBannerColumns = (): GridColumns => {
     {
       field: t("common.name"),
       renderCell({ row }) {
+        console.log(row);
         return row.title;
       },
     },
-    {
-      field: t("common.store"),
-      renderCell({ row }) {
-        return get(row, "store.name", "-");
-      },
-    },
+    // {
+    //   field: t("common.store"),
+    //   renderCell({ row }) {
+    //     return get(row, "store.name", "-");
+    //   },
+    // },
   ];
 };

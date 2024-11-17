@@ -25,7 +25,7 @@ const About = () => {
   const { t } = useTranslation();
 
   const { data, status } = useApi(
-    "store",
+    "store/get",
     {},
     {
       suspense: false,

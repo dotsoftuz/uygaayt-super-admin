@@ -38,7 +38,7 @@ const AuthUser = () => {
   );
   const { isLoading: roleIsLoading, isFetching: roleIsFetching } =
     useApi<ILoginData>(
-      `/role/get-by-id${localStorage.getItem("employeeId")}`,
+      `/role/get-by-id/${localStorage.getItem("roleId")}`,
       {},
       {
         enabled: hasToken,
@@ -49,8 +49,6 @@ const AuthUser = () => {
         },
       }
     );
-
-    console.log(roleIsFetching)
 
   if (isLoading || isFetching || roleIsLoading || roleIsFetching) {
     return <Loading />;

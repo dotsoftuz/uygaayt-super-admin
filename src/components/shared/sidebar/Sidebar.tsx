@@ -58,7 +58,7 @@ const Sidebar = () => {
   const currentStore = stores.find((store: any) => store?._id === storeId);
 
   const { data } = useApi(
-    "store",
+    "store/get",
     {},
     {
       suspense: false,

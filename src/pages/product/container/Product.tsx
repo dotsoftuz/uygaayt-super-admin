@@ -67,7 +67,7 @@ const Client = () => {
     <>
       <Table
         columns={columns}
-        dataUrl="product/pagin"
+        dataUrl="product/paging"
         searchable
         headerChildren={renderHeader}
         onAddButton={() => dis(setOpenDrawer(true))}

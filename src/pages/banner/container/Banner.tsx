@@ -8,6 +8,7 @@ import BannerForm from "../components/BannerForm";
 import { useTranslation } from "react-i18next";
 import { useRoleManager } from "services/useRoleManager";
 import WarningModal from "components/common/WarningModal/WarningModal";
+import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 
 const Banner = () => {
   const [editingBannerId, setEditingBannerId] = useState<any>();
@@ -27,10 +28,17 @@ const Banner = () => {
     });
   };
 
+  const { mutate: data, status } = useApiMutation("/banner/paging",
+    "post"
+  );
+
+
+  console.log(data)
+
   return (
     <>
       <Table
-        dataUrl="banner"
+        dataUrl="/banner/get-by-id/67388f7872ed4c074cefd556"
         columns={columns}
         searchable
         onAddButton={() => dis(setOpenDrawer(true))}
