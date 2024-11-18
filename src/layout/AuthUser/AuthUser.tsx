@@ -17,7 +17,7 @@ const AuthUser = () => {
   const hasToken = !!localStorage.getItem("token");
   const navigate = useNavigate();
   const { isLoading, isFetching } = useApi<ILoginData>(
-    "profile",
+    "profile/get",
     {},
     {
       enabled: hasToken,

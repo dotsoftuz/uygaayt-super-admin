@@ -1,16 +1,18 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { numberFormat } from "utils/numberFormat";
 import { BasketStyled } from "./Basket.styled";
 import { DeleteIcon, MinusIcon, PlusIcon } from "assets/svgs";
 import { TextInput } from "components";
 import { useForm } from "react-hook-form";
 import { Grid } from "@mui/material";
-import { useApi } from "hooks/useApi/useApiHooks";
+import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import useDebounce from "hooks/useDebounce";
 import { IProduct } from "types/common.types";
 import { useTranslation } from "react-i18next";
 import useCommonContext from "context/useCommon";
 import { get } from "lodash";
+import { useSearchParams } from "react-router-dom";
+import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
 
 interface IBasketProps {
   basketItems: IProduct[];
@@ -22,23 +24,40 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
   const { control, watch } = useForm();
   const { debouncedValue: search } = useDebounce(watch("search"), 500);
   const { t } = useTranslation();
+  const allParams = useAllQueryParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [queryParams, setQueryParams] = useState<any>(
+    {
+      page: searchParams.get("page") || 1,
+      limit: searchParams.get("limit") || 10,
+      search: searchParams.get("search") || "",
+    }
+  );
 
   const {
     state: { data: settingsData },
   } = useCommonContext();
 
-  const { data } = useApi<{ data: IProduct[] }>(
-    "product/pagin",
+  const { data, mutate } = useApiMutation<{ data: IProduct[] }>(
+    "product/paging",
+    "post",
     {
-      page: 1,
-      limit: 20,
-      search,
-      minStock: 0,
-    },
-    {
-      suspense: false,
+      onSuccess: (data) => {
+        console.log("Product created successfully:", data);
+      },
+      onError: (error) => {
+        console.error("Error creating product:", error);
+      },
     }
   );
+
+  useEffect(() => {
+    mutate({
+      ...queryParams,
+      ...allParams,
+    });
+  }, [mutate, search]);
+
 
   const basketFn = (
     product: IProduct,
@@ -62,19 +81,19 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
                 ? inputValue === "noValue"
                   ? ""
                   : Number(inputValue) <= product.inStock
-                  ? Number(inputValue)
-                  : amount
+                    ? Number(inputValue)
+                    : amount
                 : !action
-                ? foundProduct.amount < product.inStock
-                  ? amount + 1
-                  : amount
-                : action === "minus" && amount > 1
-                ? amount - 1
-                : action === "plus"
-                ? foundProduct.amount < product.inStock
-                  ? amount + 1
-                  : amount
-                : amount,
+                  ? foundProduct.amount < product.inStock
+                    ? amount + 1
+                    : amount
+                  : action === "minus" && amount > 1
+                    ? amount - 1
+                    : action === "plus"
+                      ? foundProduct.amount < product.inStock
+                        ? amount + 1
+                        : amount
+                      : amount,
             };
           }
           return prevItem;
@@ -118,7 +137,7 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
       </div>
       {active === "product" && (
         <Grid container spacing={2}>
-          {data?.data?.data?.map((product) => {
+          {data?.data?.data?.map((product: any) => {
             const foundBasketItem = basketItems.find(
               (e) => e._id === product._id
             );
