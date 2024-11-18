@@ -58,7 +58,7 @@ const OrderTable = () => {
   return (
     <>
       <Table
-        dataUrl="order/pagin"
+        dataUrl="/order/paging"
         columns={columns}
         headerChildren={renderHeader}
         searchable

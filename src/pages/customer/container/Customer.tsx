@@ -6,7 +6,7 @@ const Client = () => {
 
   return (
     <>
-      <Table columns={columns} dataUrl="customer/pagin" searchable />
+      <Table columns={columns} dataUrl="customer/paging" searchable />
     </>
   );
 };

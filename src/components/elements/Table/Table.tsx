@@ -89,23 +89,18 @@ const Table = <TData extends { _id: string }>({
   }, [debValue, search]);
 
   /** @todo to get data */
-  const { data, refetch, isFetching } = useApi<ITableData>(
+  const { mutate, reset, data, isLoading } = useApiMutation(
     dataUrl,
+    "post",
     {
-      ...queryParams,
-      ...allParams,
-      ...exQueryParams,
-    },
-    {
-      onSuccess(data) {
-        const tableData = isGetAll ? get(data, "data", []) : data?.data?.data;
+      onSuccess(response) {
+        const tableData = isGetAll ? get(response, "data", []) : response?.data?.data;
         onDataChange?.(tableData);
-        getAllData?.(data?.data);
-        if (data?.data?.total > 0 && data?.data?.data?.length === 0) {
+        getAllData?.(response?.data);
+        if (response?.data?.total > 0 && response?.data?.data?.length === 0) {
           setSearchParams({
             ...queryParams,
             ...exQueryParams,
-            ...allParams,
             ...allParams,
             search: searchParams.get("search") || "",
             page: searchParams.get("page"),
@@ -113,9 +108,16 @@ const Table = <TData extends { _id: string }>({
           });
         }
       },
-      suspense: false,
     }
   );
+
+  useEffect(() => {
+    mutate({
+      ...queryParams,
+      ...allParams,
+      ...exQueryParams,
+    });
+  }, [debValue, search]);
   /** @todo to delete */
   const { mutate: deleteMutate, isSuccess: isDeleteSuccess } = useApiMutation(
     deleteUrl || dataUrl,
@@ -129,18 +131,18 @@ const Table = <TData extends { _id: string }>({
   };
   useEffect(() => {
     if (isDeleteSuccess) {
-      refetch();
+      reset();
       onDeleteSuccess?.();
     }
     if (reRender && !noRerender) {
-      refetch();
+      reset();
       dis(reRenderTable(false));
     }
   }, [isDeleteSuccess, isOpen, reRender]);
 
   useEffect(() => {
     if (socketRender) {
-      refetch();
+      reset();
       dis(socketReRender(false));
     }
   }, [socketRender]);
@@ -179,7 +181,7 @@ const Table = <TData extends { _id: string }>({
     [columns]
   );
 
-  const totalData = data?.data?.total! || tableData?.length || 0;
+  const totalData = data?.data?.total || tableData?.length || 0;
 
   return (
     <>
@@ -198,7 +200,7 @@ const Table = <TData extends { _id: string }>({
           onDelete={onDelete}
           dataUrl={dataUrl}
         />
-        {tableData?.length === 0 && !isFetching ? (
+        {tableData?.length === 0 && !isLoading ? (
           <>
             <div className="grid-container no-data">
               <DataGrid rows={[]} sx={{ height: 50 }} columns={tableColumns} />
@@ -215,7 +217,7 @@ const Table = <TData extends { _id: string }>({
                 localeText={localization}
                 pageSize={Number(searchParams.get("limit"))}
                 rowsPerPageOptions={[5, 10, 20]}
-                loading={isFetching}
+                loading={isLoading}
                 hideFooterPagination
                 disableSelectionOnClick
                 isRowSelectable={(params: GridRowParams<TData>) =>

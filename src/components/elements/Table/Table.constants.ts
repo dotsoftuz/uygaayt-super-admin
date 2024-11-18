@@ -36,6 +36,14 @@ export interface ITable<TData extends { _id: string }> {
   // it is useful when there is another data instead of table
   insteadOfTable?: React.ReactNode;
 }
+
+export interface ApiResponse {
+  data: {
+    data: any[];
+    total: number;
+  };
+}
+
 export interface ITableData {
   data: any;
   total: number;

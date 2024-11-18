@@ -53,7 +53,7 @@ const useApi = <Data = any, Error = any>(
 
 const useApiMutation = <
   Variables = any,
-  Response = {},
+  Response = any,
   Error extends { message?: string } = {}
 >(
   url: string,
