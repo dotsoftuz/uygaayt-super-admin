@@ -34,26 +34,18 @@ const OrderBoard = () => {
   const hasAccess = useRoleManager();
   const enabled = !!stateIndex || !!stateId;
 
-  const { data, status } = useApi<IOrderByStatus[]>(
-    "order/states",
+  const { data:OrderStateData, status } = useApi<IOrderByStatus[]>(
+    "/order-state/get-all",
     {
       ...allParams,
     },
     { suspense: false }
   );
 
-  const {} = useApi(
-    "order/pagin",
+  const {mutate, reset, data, isLoading} = useApiMutation(
+    "order/paging",
+    "post",
     {
-      page: stateId
-        ? page[stateId]
-        : page[boardData?.[stateIndex - 1]?._id] || 1,
-      limit: 10,
-      stateId: stateId || boardData?.[stateIndex - 1]?._id,
-    },
-    {
-      enabled,
-      suspense: false,
       onSuccess({ data }) {
         setBoardData((prev: any) =>
           prev.map((item: any, index: number) => {
@@ -87,17 +79,27 @@ const OrderBoard = () => {
   );
 
   useEffect(() => {
+    mutate({
+      page: stateId
+      ? page[stateId]
+      : page[boardData?.[stateIndex - 1]?._id] || 1,
+    limit: 10,
+    stateId: stateId || boardData?.[stateIndex - 1]?._id,
+    });
+  }, [mutate]);
+
+  useEffect(() => {
     if (status === "success") {
-      setBoardData(data?.data);
+      setBoardData(OrderStateData?.data);
       setStateIndex(1);
-      data?.data?.map((e) => {
+      OrderStateData?.data?.map((e) => {
         setPage((prev: any) => ({
           ...prev,
           [e._id]: 1,
         }));
       });
     }
-  }, [status, data?.data]);
+  }, [status, OrderStateData?.data]);
 
   const readyBoardData = useMemo(() => {
     if (getBoardDataFinished) {
