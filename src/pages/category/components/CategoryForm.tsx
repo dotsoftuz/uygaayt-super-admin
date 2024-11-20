@@ -24,12 +24,12 @@ const CategoryForm: React.FC<IBranchForm> = ({
 
   const { mutate, status } = useApiMutation<any>(
     editingCategoryId
-      ? `category/storeProduct/${editingCategoryId}`
-      : "category/storeProduct",
+      ? `category/update/${editingCategoryId}`
+      : "category/create",
     editingCategoryId ? "put" : "post"
   );
 
-  const { data: getByIdData, status: getByIdStatus } = useApi(`category/storeProduct/${editingCategoryId}`, {}, {
+  const { data: getByIdData, status: getByIdStatus } = useApi(`category/get-by-id/${editingCategoryId}`, {}, {
     enabled: !!editingCategoryId,
     suspense: false
   })

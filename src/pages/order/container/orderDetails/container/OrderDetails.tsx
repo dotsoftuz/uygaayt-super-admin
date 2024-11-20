@@ -23,9 +23,10 @@ const OrderDetails = () => {
   const { setValue, reset, handleSubmit } = formStore;
   const socketRender = useAppSelector((store) => store.SocketState.render);
   const dis = useDispatch();
+  const currentLang = localStorage.getItem("i18nextLng") || "uz";
 
   const { data, status, refetch } = useApi<IOrder>(
-    `order/${id}`,
+    `order/get-by-id/${id}`,
     {},
     {
       enabled: !!id,
@@ -35,8 +36,9 @@ const OrderDetails = () => {
   const isCompleted = order?.state?.state === "completed";
   const isCancelled = order?.state?.state === "cancelled";
 
+
   const { data: orderStates, refetch: refetchOrderState } = useApi(
-    "order/states",
+    "order-state/get-all",
     {},
     { suspense: false }
   );
@@ -109,12 +111,13 @@ const OrderDetails = () => {
             {!isCancelled && !isCompleted && (
               <div className="d-flex">
                 <MainButton
-                  title={orderStates?.data[stateIndex + 1]?.name}
+                  title={orderStates?.data[stateIndex + 1]?.name?.[currentLang]}
                   variant="contained"
                   className="me-3"
                   onClick={() =>
                     updateState({
                       stateId: orderStates?.data[stateIndex + 1]?._id,
+                      _id: order?._id,
                       position: 1,
                     })
                   }
@@ -126,8 +129,8 @@ const OrderDetails = () => {
                   className="me-3"
                   onClick={() =>
                     updateState({
-                      stateId:
-                        orderStates?.data[orderStates?.data.length - 1]._id,
+                      stateId: orderStates?.data[orderStates?.data.length - 1]._id,
+                      _id: order?._id,
                       position: 1,
                     })
                   }
@@ -142,11 +145,11 @@ const OrderDetails = () => {
               </div>
               <span className="state">
                 {order?.paymentType === "cash" &&
-                order.state.state === "completed"
+                  order.state.state === "completed"
                   ? "To'langan"
                   : order?.isPaid
-                  ? "To'langan"
-                  : "To'lanmagan"}
+                    ? "To'langan"
+                    : "To'lanmagan"}
               </span>
             </div>
             {!isCompleted && !isCancelled && (

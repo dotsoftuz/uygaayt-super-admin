@@ -78,16 +78,24 @@ const Select = ({
     }
   }, [options]);
 
+  console.log(optionsUrlData)
+
   const [searchParams, setSearchParams] = useSearchParams();
   const allParams = useAllQueryParams();
   const [value, setValue] = useState<string | IOption[]>(!multiple ? "" : []);
   const SELECT_OPTIONS =
-    optionsUrlData?.data?.map((item) => ({
+  optionsUrlData?.data?.map((item) => {
+    const currentLang = localStorage.getItem("i18nextLng") || "uz"; 
+    return {
       ...item,
       name: item?.firstName
-        ? `${item?.firstName} ${item?.lastName}`
-        : item?.name,
-    })) || options;
+        ? `${item?.firstName} ${item?.lastName}` 
+        : item?.name?.[currentLang] || "uz", 
+    };
+  }) || options;
+
+
+   
 
   return (
     <div>

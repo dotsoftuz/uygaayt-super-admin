@@ -4,10 +4,11 @@ import { useCourierColumns } from "./courier.columns";
 import { useAppDispatch } from "../../../store/storeHooks";
 import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
 import { useForm } from "react-hook-form";
-import EmployeeFrom from "../components/CourierForm";
 import { useTranslation } from "react-i18next";
 import { useRoleManager } from "services/useRoleManager";
 import WarningModal from "components/common/WarningModal/WarningModal";
+import { IIdImage } from "hooks/usePostImage";
+import CourierFrom from "../components/CourierForm";
 
 const Employee = () => {
   const [editingCourierId, setEditingCourierId] = useState<any>();
@@ -17,6 +18,8 @@ const Employee = () => {
   const { t } = useTranslation();
   const dis = useAppDispatch();
   const formStore = useForm<any>();
+  const [courierImages, setCourierImages] = useState<IIdImage[]>([]);
+  const [mainImageId, setMainImageId] = useState<any>();
 
   const resetForm = () => {
     setEditingCourierId(undefined);
@@ -25,14 +28,18 @@ const Employee = () => {
       lastName: "",
       phoneNumber: "",
       password: "",
-      roleId: "",
+      carBrand: "",
+      carColor: "",
+      carModel: "",
+      carNumber: "",
+      imageUrl: "",
     });
   };
 
   return (
     <>
       <Table
-        dataUrl="employee/pagin"
+        dataUrl="courier/paging"
         columns={columns}
         searchable
         onAddButton={hasAccess('employeeCreate') ? () => dis(setOpenDrawer(true)) : undefined}
@@ -42,17 +49,23 @@ const Employee = () => {
         } : undefined}
         onDeleteColumn={hasAccess('employeeDelete') ? (row) => setCourierId(row._id) : undefined}
       />
-      <WarningModal open={courierId} setOpen={setCourierId} url="courier" />
+      <WarningModal open={courierId} setOpen={setCourierId} url="courier/delete" />
       <FormDrawer
         FORM_ID="courier"
         isEditing={!!editingCourierId}
         customTitle={t("general.addCourier")}
         onClose={resetForm}
       >
-        <EmployeeFrom
+        <CourierFrom
           formStore={formStore}
           resetForm={resetForm}
           editingCourierId={editingCourierId}
+          productProps={{
+            courierImages,
+            setCourierImages,
+            mainImageId,
+            setMainImageId,
+          }}
         />
       </FormDrawer>
     </>

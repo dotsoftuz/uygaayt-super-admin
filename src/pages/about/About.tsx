@@ -48,7 +48,7 @@ const About = () => {
     }
   }, [address]);
 
-  const { mutate } = useApiMutation("store", "put");
+  const { mutate } = useApiMutation("store/update", "put");
 
   const {mutate: addressByPointName} = useApiMutation(`address/by-point`, "post", {
    
@@ -113,7 +113,7 @@ const About = () => {
                 className="mb-3"
                 accept=".png, .jpg, .jpeg"
               />
-              <div className="d-flex gap-2 flex-column">
+              {/* <div className="d-flex gap-2 flex-column">
                 <span>Dokon to'lov ID</span>
                 <span className="d-flex gap-5 align-items-center">
                   {get(data, "data.number", "")}{" "}
@@ -126,7 +126,7 @@ const About = () => {
                     <CopyIcon />
                   </IconButton>
                 </span>
-              </div>
+              </div> */}
             </div>
             <div className="mb-3">
               <TextInput

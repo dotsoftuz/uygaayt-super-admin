@@ -1,4 +1,5 @@
-import { Grid } from "@mui/material";
+import { Button, Grid } from "@mui/material";
+import { DeleteIcon } from "assets/svgs";
 import MainButton from "components/common/button/MainButton";
 import SearchInput from "components/common/searchInput/SearchInput";
 import React, { FC } from "react";
@@ -13,6 +14,11 @@ interface IDragTableHeader {
 
   onAddButton?: () => void;
   addButtonTitle?: string;
+
+  onDelete: () => void;
+  selectedRows: any;
+  deletable: any;
+  headerChildrenSecondRow: any;
 }
 const DragTableHeader: FC<IDragTableHeader> = ({
   onAddButton,
@@ -21,6 +27,11 @@ const DragTableHeader: FC<IDragTableHeader> = ({
   search,
   headerChildren,
   addButtonTitle,
+  headerChildrenSecondRow,
+
+  onDelete,
+  selectedRows,
+  deletable
 }) => {
   const { t } = useTranslation();
 
@@ -50,9 +61,21 @@ const DragTableHeader: FC<IDragTableHeader> = ({
               }}
             />
           ) : null}
+          {deletable && selectedRows?.length > 0 && (
+            <Button
+              style={{ borderRadius: 12 }}
+              onClick={onDelete}
+              sx={{ width: 40 }}
+              variant="outlined"
+              color="error"
+              className="table_add_button"
+            >
+              <DeleteIcon />
+            </Button>
+          )}
         </div>
       </div>
-      <div>{/* headerChildrenSecondRow */}</div>
+      <div>{headerChildrenSecondRow}</div>
     </div>
   );
 };

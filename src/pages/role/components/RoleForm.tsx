@@ -14,8 +14,8 @@ const RolesForm = ({ formStore, editingRoleId, resetForm }: IRolesForm) => {
   const { t } = useTranslation();
 
   const { mutate, status } = useApiMutation<IRoleBody>(
-    editingRoleId ? `role/update/${editingRoleId}` : "role/create",
-    editingRoleId ? "post" : "post",{}
+    editingRoleId ? `role/update` : "role/create",
+    editingRoleId ? "put" : "post",{}
   );
 
   const { data: getByIdData, status: getByIdStatus } = useApi(`role/get-by-id/${editingRoleId}`, {}, {

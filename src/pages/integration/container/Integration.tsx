@@ -27,13 +27,20 @@ const Integration = () => {
 
   const { t } = useTranslation();
 
-  const { data, refetch, isLoading } = useApi("integration");
+  // const { data, refetch, isLoading } = useApi("integration");
+  const { data, reset, isLoading} = useApiMutation(`integration`, "post", {
+    // onSuccess() {
+    //   refetch();
+    //   refetchInteg();
+    //   toast.success(t("general.success"));
+    // },
+  });
 
   const [copiedText, copy] = useCopyToClipboard();
 
   const { mutate } = useApiMutation(`integration/${integrationId}`, "put", {
     onSuccess() {
-      refetch();
+      reset();
       refetchInteg();
       toast.success(t("general.success"));
     },

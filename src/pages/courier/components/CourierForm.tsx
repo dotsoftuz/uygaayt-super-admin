@@ -1,7 +1,8 @@
-import { FC, useEffect, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { Grid } from "@mui/material";
 import {
   AutoCompleteForm,
+  ImageInput,
   MainButton,
   PhoneInput,
   TextInput,
@@ -9,20 +10,31 @@ import {
 import { UseFormReturn } from "react-hook-form";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import { useTranslation } from "react-i18next";
+import { IIdImage } from "hooks/usePostImage";
+import { DeleteIcon } from "assets/svgs";
 
-interface IEmployeesForm {
+interface ICourierForm {
   formStore: UseFormReturn<any>;
   editingCourierId?: any;
   resetForm: () => void;
+  productProps: {
+    courierImages: IIdImage[];
+    setCourierImages: Dispatch<SetStateAction<IIdImage[]>>;
+    mainImageId: any;
+    setMainImageId: any;
+  };
 }
-const CourierFrom: FC<IEmployeesForm> = ({
+const CourierFrom: FC<ICourierForm> = ({
   formStore,
   editingCourierId,
   resetForm,
+  productProps,
 }) => {
   const { t } = useTranslation();
-  const { control, handleSubmit, reset, watch } = formStore;
+  const { control, handleSubmit, reset, watch, setValue } = formStore;
   const [checkData, setCheckData] = useState<any>();
+  const { courierImages, setCourierImages, mainImageId, setMainImageId } =
+  productProps;
 
   const { } = useApi(
     `employee/check?phoneNumber=${watch("phoneNumber")}`,
@@ -37,11 +49,11 @@ const CourierFrom: FC<IEmployeesForm> = ({
   );
 
   const { mutate, status } = useApiMutation(
-    editingCourierId ? `employee/${editingCourierId}` : "employee",
+    editingCourierId ? `courier/update` : "courier/create",
     editingCourierId ? "put" : "post"
   );
 
-  const { data: getByIdData, status: getByIdStatus } = useApi(`employee/${editingCourierId}`, {}, {
+  const { data: getByIdData, status: getByIdStatus } = useApi(`courier/get-by-id/${editingCourierId}`, {}, {
     enabled: !!editingCourierId,
     suspense: false
   })
@@ -54,8 +66,12 @@ const CourierFrom: FC<IEmployeesForm> = ({
 
   const submit = (data: any) => {
     mutate({
-      _id: editingCourierId,
       ...data,
+      imageId: courierImages.map((image) => image._id),
+      mainImageId: courierImages.length
+        ? mainImageId || courierImages?.[0]?._id
+        : null,
+      _id: editingCourierId,
     });
   };
 
@@ -63,10 +79,25 @@ const CourierFrom: FC<IEmployeesForm> = ({
     if (getByIdStatus === 'success') {
       reset({
         ...getByIdData.data,
-        roleId: getByIdData.data.role?._id,
       });
+      setCourierImages(getByIdData.data?.images || []);
+      const foundMain = getByIdData.data?.images?.find(
+        (img:any) => img?._id === getByIdData.data.mainImage?._id
+      );
+      if (foundMain && !!getByIdData.data?.images?.length) {
+        setMainImageId(getByIdData.data.mainImage?._id);
+      } else setMainImageId(getByIdData.data?.images?.[0]?._id);
     }
   }, [getByIdData, getByIdStatus]);
+
+  useEffect(() => {
+    const foundMain = courierImages.find((main) => main._id === mainImageId);
+    if (foundMain) {
+      setMainImageId(foundMain._id);
+    } else if (courierImages.length) {
+      setMainImageId(courierImages[0]._id);
+    }
+  }, [courierImages]);
 
   return (
     <div className="custom-drawer">
@@ -119,15 +150,72 @@ const CourierFrom: FC<IEmployeesForm> = ({
               rules={{ required: false }}
             />
           </Grid>
-          {/* <Grid item md={12}>
-            <AutoCompleteForm
-              name="roleId"
+          <Grid item md={12}>
+            <TextInput
               control={control}
-              optionsUrl="role/pagin"
-              dataProp="data.data"
-              label={t("common.role")}
+              name="carBrand"
+              label={t("common.carBrand")}
             />
-          </Grid> */}
+          </Grid>
+          <Grid item md={12}>
+            <TextInput
+              control={control}
+              name="carModel"
+              label={t("common.carModel")}
+            />
+          </Grid>
+          <Grid item md={12}>
+            <TextInput
+              control={control}
+              name="carNumber"
+              label={t("common.carNumber")}
+            />
+          </Grid>
+          <Grid item md={12}>
+            <TextInput
+              control={control}
+              name="carColor"
+              label={t("common.carColor")}
+            />
+          </Grid>
+          <Grid item md={12}>
+            <div className="product-images">
+              <ImageInput
+                control={control}
+                setValue={setValue}
+                name="image"
+                rules={{ required: false }}
+                multiple
+                getImage={(img) => setCourierImages((prev) => [...prev, img])}
+                accept=".png, .jpg, .jpeg"
+              />
+              {courierImages?.map((image:any) => (
+                <div className="product-image" key={image._id}>
+                  <img
+                    src={process.env.REACT_APP_BASE_URL + image.url}
+                    alt="product"
+                  />
+                  <div className="on-hover">
+                    <span
+                      className="delete"
+                      onClick={() =>
+                        setCourierImages((prev) =>
+                          prev.filter((prevImg) => prevImg._id !== image._id)
+                        )
+                      }
+                    >
+                      <DeleteIcon />
+                    </span>
+                    <span
+                      className={`main-image ${image._id === mainImageId && "active"
+                        }`}
+                      onClick={() => setCourierImages(image._id)}
+                    ></span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Grid>
         </Grid>
       </form>
     </div>

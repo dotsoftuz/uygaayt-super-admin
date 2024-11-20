@@ -45,6 +45,7 @@ function AutoCompleteFilter({
   const [search, setSearch] = useState<string>();
   const { debouncedValue: debVal, isDebouncing } = useDebounce(search, 600);
   const [value, setValue] = useState<string | undefined | null>(null);
+  const currentLang = localStorage.getItem("i18nextLng") || "uz";
   useEffect(() => {
     setQueryParams({
       search,
@@ -85,7 +86,7 @@ function AutoCompleteFilter({
       <Autocomplete
         options={mapData ? mapData(OPTIONS) : OPTIONS}
         // @ts-ignore
-        getOptionLabel={(option) => option?.name || ""}
+        getOptionLabel={(option) => option?.name?.[currentLang] || ""}
         onChange={(e, data) => {
           // @ts-ignore
           onChange?.(data);

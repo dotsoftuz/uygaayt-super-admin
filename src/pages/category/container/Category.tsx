@@ -7,6 +7,7 @@ import { useState } from "react";
 import CategoryForm from "../components/CategoryForm";
 import { useForm } from "react-hook-form";
 import WarningModal from "components/common/WarningModal/WarningModal";
+import { useRoleManager } from "services/useRoleManager";
 
 const Category = () => {
   const [render, setRender] = useState<boolean>(false);
@@ -17,6 +18,7 @@ const Category = () => {
   const dis = useAppDispatch();
   const { t } = useTranslation();
   const formStore = useForm<any>();
+  const hasAccess = useRoleManager();
 
   const resetForm = () => {
     setEditingCategoryId(undefined);
@@ -42,18 +44,23 @@ const Category = () => {
 
       <DragTable
         columns={columnsDrag}
-        dataUrl="category/product"
+        dataUrl="/category/paging"
         dragUrl="/category/positions"
         dragKey="categoryIds"
         render={render}
         setRender={setRender}
         onAddButton={() => dis(setOpenDrawer(true))}
+        onDeleteColumn={
+          hasAccess("productDelete")
+            ? (row:any) => categoryId(row._id)
+            : undefined
+        }
       />
       <WarningModal
         open={categoryId}
         setOpen={setCategoryId}
-        setRender={setRender}
-        url="category/product"
+        // setRender={setRender}
+        url="category/delete"
       />
       <FormDrawer
         FORM_ID="category"

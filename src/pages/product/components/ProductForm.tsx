@@ -172,7 +172,7 @@ const ProductForm = ({
               />
             </Box>
           </Grid>
-          <Grid item md={12}>
+          {/* <Grid item md={12}>
             <AutoCompleteForm
               control={control}
               name="measureId"
@@ -180,7 +180,7 @@ const ProductForm = ({
               dataProp="data.data"
               label={t("common.measure")}
             />
-          </Grid>
+          </Grid> */}
           <Grid item md={12}>
             <AutoCompleteForm
               control={control}

@@ -2,10 +2,11 @@ import { Grid } from "@mui/material";
 import { TransactionStyled } from "./Transaction.styled";
 import { RangeDatePicker, Table } from "components";
 import { useTransactionColumns } from "./transaction.columns";
-import { useApi } from "hooks/useApi/useApiHooks";
+import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import { numberFormat } from "utils/numberFormat";
 import useCommonContext from "context/useCommon";
 import { get } from "lodash";
+import { useEffect } from "react";
 
 const Transaction = () => {
   const columns = useTransactionColumns();
@@ -22,7 +23,24 @@ const Transaction = () => {
     </Grid>
   );
 
-  const { data } = useApi("balance/total");
+
+  const { mutate, reset, data } = useApiMutation("balance/total", "post", {
+    onSuccess() {
+      // toast.success(t("general.success"));
+      reset();
+    },
+  });
+
+
+  useEffect(() => {
+    mutate({
+      // ...queryParams,
+      // ...allParams,
+      // ...exQueryParams,
+    });
+  }, [mutate]);
+
+  console.log(data)
 
   return (
     <TransactionStyled>
@@ -57,7 +75,7 @@ const Transaction = () => {
       </Grid>
       <Table
         columns={columns}
-        dataUrl="balance/transactions"
+        dataUrl="balance/paging"
         headerChildren={renderHeader}
       />
     </TransactionStyled>

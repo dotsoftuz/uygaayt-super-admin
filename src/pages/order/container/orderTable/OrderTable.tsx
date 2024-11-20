@@ -31,6 +31,7 @@ const OrderTable = () => {
     if (stateUpdateData) {
       mutate({
         stateId: stateUpdateData.stateId,
+        _id: stateUpdateData.orderId,
         position: 1,
       });
     }

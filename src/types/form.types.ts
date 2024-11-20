@@ -25,7 +25,7 @@ export interface ICustomProviderProps {
 }
 export interface IOption<T = string> extends Record<string, any> {
   _id: T;
-  name: string;
+  name: any;
   trans_key?: string;
 }
 

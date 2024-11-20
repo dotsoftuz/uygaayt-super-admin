@@ -18,7 +18,7 @@ export const sidebarRoutes: ISidebarRoute[] = [
   },
   {
     path: "/category",
-    role: "storeProductCategory",
+    role: "product",
     translate: "category",
   },
   {
@@ -46,31 +46,31 @@ export const sidebarRoutes: ISidebarRoute[] = [
       },
     ]
   },
-  {
-    path: "/measure",
-    role: "role", // o'zgartirish kerak measure
-    translate: "measure",
-  },
+  // {
+  //   path: "/measure",
+  //   role: "role", // o'zgartirish kerak measure
+  //   translate: "measure",
+  // },
   {
     path: "/banner",
     role: "role", // o'zgartirish kerak banner
     translate: "banner",
   },
-  {
-    path: "/rating",
-    translate: "rating", 
-    role: "role", // o'zgartirish kerak rating
-  },
+  // {
+  //   path: "/rating",
+  //   translate: "rating", 
+  //   role: "role", // o'zgartirish kerak rating
+  // },
   {
     path: "/transaction",
     translate: "transaction",
     role: "transaction",
   },
-  {
-    path: "/integration",
-    role: "integration",
-    translate: "integration",
-  },
+  // {
+  //   path: "/integration",
+  //   role: "integration",
+  //   translate: "integration",
+  // },
   {
     path: "/settings",
     translate: "settings",

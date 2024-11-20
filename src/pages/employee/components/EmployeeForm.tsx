@@ -37,7 +37,7 @@ const EmployeeFrom: FC<IEmployeesForm> = ({
   );
 
   const { mutate, status } = useApiMutation(
-    editingEmployeeId ? `employee/update/${editingEmployeeId}` : "employee/create",
+    editingEmployeeId ? `employee/update` : "employee/create",
     editingEmployeeId ? "put" : "post"
   );
 

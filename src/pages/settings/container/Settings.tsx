@@ -35,7 +35,7 @@ const Settings = () => {
     }
   );
 
-  const { mutate } = useApiMutation("settings-general", "post", {
+  const { mutate } = useApiMutation("settings-general", "put", {
     onSuccess() {
       toast.success(t("general.success"));
       refetch();

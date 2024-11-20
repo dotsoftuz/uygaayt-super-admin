@@ -38,7 +38,7 @@ const Banner = () => {
   return (
     <>
       <Table
-        dataUrl="/banner/get-by-id/67388f7872ed4c074cefd556"
+        dataUrl="banner/paging"
         columns={columns}
         searchable
         onAddButton={() => dis(setOpenDrawer(true))}
@@ -48,7 +48,7 @@ const Banner = () => {
         }}
         onDeleteColumn={(row) => setBannerId(row._id)}
       />
-      <WarningModal open={bannerId} setOpen={setBannerId} url="banner" />
+      <WarningModal open={bannerId} setOpen={setBannerId} url="banner/delete" />
       <FormDrawer
         FORM_ID="banner"
         isEditing={!!editingBannerId}

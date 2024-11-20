@@ -81,6 +81,7 @@ export const useOrderTableColumns = (setStateUpdateData: any): GridColumns => {
     {
       field: t("common.status"),
       renderCell({ row }) {
+        console.log(row);
         var c: any = row?.state?.color?.substring(1); // strip #
         var rgb = parseInt(c, 16); // convert rrggbb to decimal
         var r = (rgb >> 16) & 0xff; // extract red
@@ -105,7 +106,7 @@ export const useOrderTableColumns = (setStateUpdateData: any): GridColumns => {
                 })
               }
               customValue={row.stateId}
-              optionsUrl="order/states"
+              optionsUrl="order-state/get-all"
               disabled={
                 row.state?.state === "completed" ||
                 row.state?.state === "cancelled"

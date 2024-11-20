@@ -74,7 +74,7 @@ const OrderProducts = ({ formStore, state, order }: any) => {
                 {item.product.mainImage ? (
                   <img
                     src={
-                      process.env.REACT_APP_BASE_URL +
+                      process.env.REACT_APP_BASE_URL + "/" +
                       item.product.mainImage.url
                     }
                     alt="product"

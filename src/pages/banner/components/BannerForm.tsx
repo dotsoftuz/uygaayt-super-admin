@@ -20,12 +20,12 @@ const BannerForm: FC<IEmployeesForm> = ({
   const { control, handleSubmit, reset, watch, setValue } = formStore;
 
   const { mutate, status } = useApiMutation(
-    editingBannerId ? `/banner/update/${editingBannerId}` : "/banner/create",
+    editingBannerId ? `/banner/update` : "/banner/create",
     editingBannerId ? "put" : "post"
   );
 
   const { data: getByIdData, status: getByIdStatus } = useApi(
-    `/banner/update/${editingBannerId}`,
+    `banner/get-by-id/${editingBannerId}`,
     {},
     {
       enabled: !!editingBannerId,
