@@ -33,8 +33,8 @@ const About = () => {
   );
 
   const { mutate: addressByName, data: addressData } = useApiMutation(
-    `address/by-name?name=${address}`,
-    "get",
+    `address/by-name`,
+    "post",
     {
       onSuccess() {
         setShowOptions(true);
@@ -42,21 +42,33 @@ const About = () => {
     }
   );
 
+  useEffect(() => {
+    if (typeof address === "string" && address.trim()) {
+      addressByName({ name: address }); 
+    }
+  }, [address]);
+
   const { mutate } = useApiMutation("store", "put");
 
-  const {} = useApi(`address/by-point`, addressLocation, {
-    enabled: !!addressLocation,
-    suspense: false,
+  const {mutate: addressByPointName} = useApiMutation(`address/by-point`, "post", {
+   
     onSuccess({ data }) {
       setValue("addressName", data?.name);
     },
   });
 
   useEffect(() => {
-    if (debouncedValue) {
-      addressByName("");
+    if (addressLocation?.latitude && addressLocation?.longitude) {
+      addressByPointName({
+        latitude: addressLocation.latitude,
+        longitude: addressLocation.longitude,
+      });
+    } else {
+      console.error("Coordinates are missing");
     }
-  }, [debouncedValue]);
+  }, [addressByPointName, addressLocation])
+
+
 
   useEffect(() => {
     if (status === "success") {

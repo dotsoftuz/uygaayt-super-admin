@@ -1,6 +1,3 @@
-
-
-
 import Autocomplete from "@mui/lab/Autocomplete";
 import { TextField } from "@mui/material";
 import { AutoCompleteStyled } from "components/form/AutoCompleteForm/AutoCompleteForm.style";
@@ -54,47 +51,24 @@ function AutoCompleteFilter({
     });
   }, [debVal]);
 
-  // const { data: OptionsData, isFetching } = useApi<IOption[]>(
-  //   optionsUrl,
-  //   {
-  //     ...queryParams,
-  //     ...exQueryParams,
-  //   },
-  //   {
-  //     enabled: !!optionsUrl,
-  //     suspense: false,
-  //   }
-  // );
-
-  const { mutate, data, isLoading, status } = useApiMutation(
-    optionsUrl, 
-    "post",
+  const { data: OptionsData, isFetching } = useApi<IOption[]>(
+    optionsUrl,
     {
-      onSuccess(data) {
-        console.log(data)
-      },
-      onError(error) {
-        console.error("Error in POST request:", error);
-      }
-    }
-  );
-  
-  // Trigger the mutation
-  useEffect(() => {
-    mutate({
       ...queryParams,
       ...exQueryParams,
+    },
+    {
       enabled: !!optionsUrl,
       suspense: false,
-    });
-  }, [mutate, search]);
+    }
+  );
 
   const getLabel = (option: IOption) =>
     option?.firstName
       ? `${option?.firstName} ${option?.lastName}`
       : (option?.[nameProp] as string);
   // @ts-ignore
-  const OPTIONS = ((get(data, dataProp) as IOption[]) || options).map(
+  const OPTIONS = ((get(OptionsData, dataProp) as IOption[]) || options).map(
     (option) => ({
       ...option,
       name: getLabel(option),
@@ -133,7 +107,7 @@ function AutoCompleteFilter({
             }
           }
         }}
-        loading={isLoading || isDebouncing}
+        loading={isFetching || isDebouncing}
         disabled={disabled}
         sx={{
           "& fieldset": { border: "none" },

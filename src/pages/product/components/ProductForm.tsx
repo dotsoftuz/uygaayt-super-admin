@@ -43,12 +43,12 @@ const ProductForm = ({
   discountEndMinDate.setDate(discountEndMinDate.getDate() + 1);
 
   const { mutate, status } = useApiMutation<any>(
-    editingProductId ? `product/${editingProductId}` : "product",
+    editingProductId ? `/product/update/${editingProductId}` : "product/create",
     editingProductId ? "put" : "post"
   );
 
   const { data: getByIdData, status: getByIdStatus } = useApi<IProduct>(
-    `product/${editingProductId}`,
+    `product/get-by-id/${editingProductId}`,
     {},
     {
       enabled: !!editingProductId,
@@ -185,7 +185,7 @@ const ProductForm = ({
             <AutoCompleteForm
               control={control}
               name="categoryId"
-              optionsUrl="category/storeProduct"
+              optionsUrl="category/paging"
               dataProp="data.data"
               label={t("common.category")}
             />

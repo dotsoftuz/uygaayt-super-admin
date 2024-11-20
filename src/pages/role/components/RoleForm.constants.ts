@@ -7,7 +7,7 @@ export interface ICheckboxes {
 }
 export type IRoleBody =
   | IRoleData
-  | { description: string; _select_all: boolean };
+  | { description: string; _select_all: boolean; _id: string; };
 
 export interface IRolesForm {
   formStore: UseFormReturn<any>;
@@ -129,6 +129,24 @@ export const ALL_ROLES: Array<{
     ],
   },
   {
+    role: "courier",
+    label: "courier",
+    childRoles: [
+      {
+        role: "courierCreate",
+        label: "create",
+      },
+      {
+        role: "courierUpdate",
+        label: "update",
+      },
+      {
+        role: "courierDelete",
+        label: "delete",
+      },
+    ],
+  },
+  {
     role: "banner",
     label: "banner",
     childRoles: [
@@ -210,10 +228,22 @@ export const ALL_ROLES: Array<{
   {
     role: "transaction",
     label: "transaction",
+    childRoles: [
+      {
+        role: "transactionCreate",
+        label: "create",
+      },
+    ],
   },
   {
     role: "settings",
     label: "settings",
+    childRoles: [
+      {
+        role: "settingsUpdate",
+        label: "update",
+      },
+    ],
   },
   {
     role: "siteSettings",

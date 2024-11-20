@@ -38,7 +38,7 @@ const Roles = () => {
     <div>
       <Table
         columns={columns}
-        dataUrl="role/pagin"
+        dataUrl="role/paging"
         onAddButton={hasAccess('roleCreate') ? () => dis(setOpenDrawer(true)) : undefined}
         onEditColumn={hasAccess('roleUpdate') ? (row) => {
           setEditingRoleId(row._id);
@@ -47,7 +47,7 @@ const Roles = () => {
         onDeleteColumn={hasAccess('roleDelete') ? (row) => setRoleId(row._id) : undefined}
         searchable
       />
-      <WarningModal open={roleId} setOpen={setRoleId} url="role" />
+      <WarningModal open={roleId} setOpen={setRoleId} url="role/delete" />
       <FormDrawer
         onClose={resetForm}
         customTitle={t("general.addRole")}

@@ -32,7 +32,7 @@ const Employee = () => {
   return (
     <>
       <Table
-        dataUrl="employee/pagin"
+        dataUrl="employee/paging"
         columns={columns}
         searchable
         onAddButton={hasAccess('employeeCreate') ? () => dis(setOpenDrawer(true)) : undefined}
@@ -42,7 +42,7 @@ const Employee = () => {
         } : undefined}
         onDeleteColumn={hasAccess('employeeDelete') ? (row) => setEmployeeId(row._id) : undefined}
       />
-      <WarningModal open={employeeId} setOpen={setEmployeeId} url="employee" />
+      <WarningModal open={employeeId} setOpen={setEmployeeId} url="employee/delete" />
       <FormDrawer
         FORM_ID="employee"
         isEditing={!!editingEmployeeId}

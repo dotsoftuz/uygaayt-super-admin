@@ -1,6 +1,6 @@
 import Autocomplete from "@mui/lab/Autocomplete";
 import { TextField } from "@mui/material";
-import { useApi } from "hooks/useApi/useApiHooks";
+import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import { useEffect, useMemo, useState } from "react";
 import { Control, Controller, FieldPath } from "react-hook-form";
 import { IOption, TRules } from "types/form.types";
@@ -61,20 +61,40 @@ function AutoCompleteForm<FormNames extends Record<string, any>>({
     });
   }, [debVal]);
 
-  const { data: OptionsData, isFetching } = useApi<IOption[]>(
-    optionsUrl,
+  // const { data: OptionsData, isFetching } = useApi<IOption[]>(
+  //   optionsUrl,
+  //   {
+  //     ...queryParams,
+  //     ...exQueryParams,
+  //   },
+  //   {
+  //     enabled: !!optionsUrl,
+  //     suspense: false,
+  //     onSuccess(data) {
+  //       getDataLength?.(get(data, dataProp)?.length);
+  //     },
+  //   }
+  // );
+  const { mutate, data, isLoading, status } = useApiMutation(
+    optionsUrl, 
+    "post", 
     {
-      ...queryParams,
-      ...exQueryParams,
-    },
-    {
-      enabled: !!optionsUrl,
-      suspense: false,
       onSuccess(data) {
-        getDataLength?.(get(data, dataProp)?.length);
+        getDataLength?.(get(data, dataProp)?.length); 
       },
+      onError(error) {
+        console.error("Error in POST request:", error);
+      }
     }
   );
+  
+  useEffect(() => {
+    mutate({
+      ...queryParams,
+      ...exQueryParams,
+    });
+  }, [mutate, search]);
+  
   const getLabel = (option: IOption) =>
     option?.firstName
       ? `${option?.firstName} ${option?.lastName}`
@@ -82,7 +102,7 @@ function AutoCompleteForm<FormNames extends Record<string, any>>({
 
   // @ts-ignore
   const OPTIONS_PREV = (
-    (get(OptionsData, dataProp) as IOption[]) ||
+    (get(data, dataProp) as IOption[]) ||
     options ||
     []
   )?.map((option) => ({
@@ -117,7 +137,7 @@ function AutoCompleteForm<FormNames extends Record<string, any>>({
                 field.onChange(returnOnlyId ? data?._id! : data);
                 onChange?.(data);
               }}
-              loading={isFetching || isDebouncing}
+              loading={isLoading || isDebouncing}
               disabled={disabled}
               sx={{
                 "& fieldset": { border: "none" },

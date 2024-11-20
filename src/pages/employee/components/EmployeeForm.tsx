@@ -37,11 +37,11 @@ const EmployeeFrom: FC<IEmployeesForm> = ({
   );
 
   const { mutate, status } = useApiMutation(
-    editingEmployeeId ? `employee/${editingEmployeeId}` : "employee",
+    editingEmployeeId ? `employee/update/${editingEmployeeId}` : "employee/create",
     editingEmployeeId ? "put" : "post"
   );
 
-  const { data: getByIdData, status: getByIdStatus } = useApi(`employee/${editingEmployeeId}`, {}, {
+  const { data: getByIdData, status: getByIdStatus } = useApi(`employee/get-by-id/${editingEmployeeId}`, {}, {
     enabled: !!editingEmployeeId,
     suspense: false
   })
@@ -123,7 +123,7 @@ const EmployeeFrom: FC<IEmployeesForm> = ({
             <AutoCompleteForm
               name="roleId"
               control={control}
-              optionsUrl="role/pagin"
+              optionsUrl="role/paging"
               dataProp="data.data"
               label={t("common.role")}
             />
@@ -132,6 +132,6 @@ const EmployeeFrom: FC<IEmployeesForm> = ({
       </form>
     </div>
   );
-};
+}
 
 export default EmployeeFrom;

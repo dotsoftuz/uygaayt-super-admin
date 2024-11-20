@@ -33,7 +33,7 @@ const useApi = <Data = any, Error = any>(
       } catch (error: AxiosResponse<Data>) {
         if (error?.statusCode === 401) {
           localStorage.clear();
-          window.location.replace("/login");
+          if(window.location.pathname !== "/login") window.location.replace("/login");
           return error;
         }
         if (options.toast) {

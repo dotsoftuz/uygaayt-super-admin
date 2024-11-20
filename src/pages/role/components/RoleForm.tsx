@@ -7,22 +7,24 @@ import { RoleFormStyled } from "./RoleForm.styled";
 import { ALL_ROLES, IRoleBody, IRolesForm } from "./RoleForm.constants";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { IRoleData } from "store/reducers/LoginSlice";
 
 const RolesForm = ({ formStore, editingRoleId, resetForm }: IRolesForm) => {
   const { control, handleSubmit, setValue, reset } = formStore;
   const { t } = useTranslation();
 
   const { mutate, status } = useApiMutation<IRoleBody>(
-    editingRoleId ? `role/${editingRoleId}` : "role",
-    editingRoleId ? "put" : "post"
+    editingRoleId ? `role/update/${editingRoleId}` : "role/create",
+    editingRoleId ? "post" : "post",{}
   );
 
-  const { data: getByIdData, status: getByIdStatus } = useApi(`role/${editingRoleId}`, {}, {
+  const { data: getByIdData, status: getByIdStatus } = useApi(`role/get-by-id/${editingRoleId}`, {}, {
     enabled: !!editingRoleId,
     suspense: false
   })
 
-  const submit = (data: IRoleBody) => {
+  const submit = (data: IRoleData) => {
+    console.log(data)
     mutate(data);
   };
 

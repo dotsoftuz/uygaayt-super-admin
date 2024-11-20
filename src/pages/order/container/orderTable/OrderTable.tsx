@@ -1,5 +1,4 @@
 import { Grid } from "@mui/material";
-import { AutoCompleteFilter, Table } from "components";
 import { reRenderTable } from "components/elements/Table/reducer/table.slice";
 import { useApiMutation } from "hooks/useApi/useApiHooks";
 import SwitchView from "pages/order/components/SwitchView/SwitchView";
@@ -9,6 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { useRoleManager } from "services/useRoleManager";
 import { useAppDispatch } from "store/storeHooks";
 import { useOrderTableColumns } from "./orderTable.columns";
+import AutoCompleteFilter from "components/common/AutocompleteFilterGet/AutoCompleteFilter";
+import { Table } from "components";
 
 const OrderTable = () => {
   const [stateUpdateData, setStateUpdateData] = useState<any>();
@@ -44,7 +45,7 @@ const OrderTable = () => {
       <Grid container width={200}>
         <Grid item sm={12}>
           <AutoCompleteFilter
-            optionsUrl="order/states"
+            optionsUrl="order-state/get-all"
             filterName="stateId"
             placeholder={t("common.status")}
             dataProp="data"

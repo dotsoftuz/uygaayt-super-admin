@@ -32,6 +32,7 @@ import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import useCommonContext from "context/useCommon";
 import { get } from "lodash";
+import YandexMap from "components/common/YandexMap/YandexMap";
 
 const AddOrderForm = ({
   basketItems,
@@ -59,42 +60,72 @@ const AddOrderForm = ({
     state: { data: settingsData },
   } = useCommonContext();
 
+
   const { mutate: addressByName, data } = useApiMutation(
-    `address/by-name?name=${address}`,
-    "get",
+    `address/by-name`,
+    "post", 
     {
       onSuccess() {
         setShowOptions(true);
       },
+      onError(error) {
+        console.error("Error fetching address:", error);
+      },
     }
   );
-  const { mutate, status } = useApiMutation("order", "post", {
+  
+useEffect(() => {
+    if (typeof address === "string" && address.trim()) {
+      addressByName({ name: address }); 
+    }
+  }, [address]);
+  
+
+
+  const { mutate, status } = useApiMutation("order/create", "post", {
     onSuccess() {
       navigate("/order");
     },
   });
-  const {} = useApi(
+  const { mutate: addressByPointName } = useApiMutation(
     `address/by-point`,
+    "post",
     {
-      latitude: coordinate?.latitude,
-      longitude: coordinate?.longitude,
-    },
-    {
-      enabled: !!coordinate,
-      suspense: false,
       onSuccess({ data }) {
         if (formStore) {
           formStore?.setValue("addressName", data?.name);
           formStore?.setValue("addressLocation", coordinate);
-          formStore?.setError("addressName", {});
-          return;
+          formStore?.setError("addressName", {}); 
+        } else {
+          setValue("addressName", data?.name);
+          setValue("addressLocation", coordinate);
+          setError("addressName", {}); 
         }
-        setValue("addressName", data?.name);
-        setValue("addressLocation", coordinate);
-        setError("addressName", {});
+      },
+      onError(error) {
+        console.error("Error fetching address:", error);
       },
     }
   );
+
+  useEffect(() => {
+    if (coordinate?.latitude && coordinate?.longitude) {
+      addressByPointName({
+        latitude: coordinate.latitude,
+        longitude: coordinate.longitude,
+      });
+    } else {
+      console.error("Coordinates are missing");
+    }
+  }, [addressByPointName, coordinate])
+
+  // Trigger the mutation
+  // const handleFetchAddress = () => {
+
+  // };
+
+
+  console.log(addressByPointName)
 
   const { data: storeData, status: storeStatus } = useApi(
     "store/get",
@@ -104,11 +135,6 @@ const AddOrderForm = ({
     }
   );
 
-  useEffect(() => {
-    if (debouncedValue) {
-      addressByName("");
-    }
-  }, [debouncedValue]);
 
   const submit = (data: any) => {
     if (!basketItems.length) {
@@ -125,6 +151,10 @@ const AddOrderForm = ({
         productId: e._id,
         amount: e.amount,
       })),
+      addressLocation: {
+        latitude: coordinate?.latitude,
+        longitude: coordinate?.longitude,
+      }
     };
     mutate(requestData);
   };
@@ -136,12 +166,46 @@ const AddOrderForm = ({
         <Grid container spacing={2}>
           <Grid item sm={12}>
             <div onClick={() => setOpen(true)}>
-              <TextInput
+              {/* <TextInput
                 control={formStore ? formStore?.control : control}
                 name="addressName"
                 label={t("order.deliveryAddress")}
                 searchIcon
-              />
+              /> */}
+              <TextInput
+                      control={formStore ? formStore.control : control}
+                      name="addressName"
+                      placeholder="Yetkazib berish manzili"
+                      searchIcon
+                      onCustomChange={(value) => {
+                        setAddress(value); 
+                      }}
+                    />
+                    <div className="address-options">
+                      {showOptions &&
+                        // @ts-ignore
+                        data?.data?.map((item: any) => (
+                          <div
+                            className="option"
+                            onClick={() => {
+                              setValue("addressName", item.name);
+                              setValue("addressLocation", {
+                                latitude: item.latitude,
+                                longitude: item.longitude,
+                                name: item.name,
+                              });
+                              setCoordinate({
+                                latitude: item.latitude,
+                                longitude: item.longitude,
+                                name: item.name,
+                              });
+                              setShowOptions(false);
+                            }}
+                          >
+                            {item.name}
+                          </div>
+                        ))}
+                    </div>
             </div>
           </Grid>
           <Grid item md={6}>
@@ -272,11 +336,13 @@ const AddOrderForm = ({
                 <Grid container spacing={2}>
                   <Grid item md={12} position="relative">
                     <TextInput
-                      control={formStore ? formStore?.control : control}
+                      control={formStore ? formStore.control : control}
                       name="addressName"
                       placeholder="Yetkazib berish manzili"
                       searchIcon
-                      onCustomChange={(value) => setAddress(value)}
+                      onCustomChange={(value) => {
+                        setAddress(value); 
+                      }}
                     />
                     <div className="address-options">
                       {showOptions &&
@@ -285,22 +351,16 @@ const AddOrderForm = ({
                           <div
                             className="option"
                             onClick={() => {
-                              if (formStore) {
-                                formStore?.setValue("addressName", item.name);
-                                formStore?.setValue("addressLocation", {
-                                  latitude: item.latitude,
-                                  longitude: item.longitude,
-                                });
-                              } else {
-                                setValue("addressName", item.name);
-                                setValue("addressLocation", {
-                                  latitude: item.latitude,
-                                  longitude: item.longitude,
-                                });
-                              }
+                              setValue("addressName", item.name);
+                              setValue("addressLocation", {
+                                latitude: item.latitude,
+                                longitude: item.longitude,
+                                name: item.name,
+                              });
                               setCoordinate({
                                 latitude: item.latitude,
                                 longitude: item.longitude,
+                                name: item.name,
                               });
                               setShowOptions(false);
                             }}
@@ -358,17 +418,20 @@ const AddOrderForm = ({
             </Grid>
             <Grid item md={6}>
               <div className="map">
-                <YMaps>
+              <YandexMap
+                getCoordinate={setCoordinate}
+                center={watch("addressLocation")}
+              />
+                {/* <YMaps >
                   <Map
                     width="100%"
                     height="500px"
                     defaultState={{
-                      center: coordinate
-                        ? [coordinate?.latitude, coordinate?.longitude]
-                        : [
-                            storeData?.data?.addressLocation?.latitude,
-                            storeData?.data?.addressLocation?.longitude,
-                          ],
+                      center: coordinate?.latitude && coordinate?.longitude
+                        ? [coordinate.latitude, coordinate.longitude]
+                        : storeData?.data?.addressLocation?.latitude && storeData?.data?.addressLocation?.longitude
+                        ? [storeData.data.addressLocation.latitude, storeData.data.addressLocation.longitude]
+                        : [55.751244, 37.618423], // Default to Moscow if all else fails
                       zoom: 13,
                       behaviors: ["default", "scrollZoom"],
                     }}
@@ -388,7 +451,7 @@ const AddOrderForm = ({
                     <TypeSelector options={{ float: "right" }} />
                     <ZoomControl options={{ float: "right" }} />
                   </Map>
-                </YMaps>
+                </YMaps> */}
               </div>
             </Grid>
           </Grid>

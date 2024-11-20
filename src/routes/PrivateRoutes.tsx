@@ -52,7 +52,7 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   {
     element: <Category />,
     path: "category",
-    role: "storeProductCategory",
+    role: "employee",
   },
   {
     element: <About />,

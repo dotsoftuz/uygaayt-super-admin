@@ -26,7 +26,7 @@ const Client = () => {
     <Grid container width={400} spacing={2}>
       <Grid item sm={6}>
         <AutoCompleteFilter
-          optionsUrl="category/storeProduct"
+          optionsUrl="category/paging"
           filterName="categoryId"
           placeholder={t("common.category")}
         />
@@ -88,7 +88,7 @@ const Client = () => {
           isActive: formStore.watch("isActiveQuery") || undefined,
         }}
       />
-      <WarningModal open={productId} setOpen={setProductId} url="product" />
+      <WarningModal open={productId} setOpen={setProductId} url="product/delete" />
       <FormDrawer
         FORM_ID="product"
         isEditing={!!editingProductId}
