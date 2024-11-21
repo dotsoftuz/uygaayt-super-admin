@@ -39,21 +39,39 @@ export const ALL_ROLES: Array<{
     ],
   },
   {
+    role: "order",
+    label: "order",
+    childRoles: [
+      {
+        role: "orderCreate",
+        label: "create",
+      },
+      {
+        role: "orderUpdate",
+        label: "update",
+      },
+      {
+        role: "orderDelete",
+        label: "delete",
+      },
+    ],
+  },
+  {
     role: "customer",
     label: "customer",
     childRoles: [
-      // {
-      //   role: "customerCreate",
-      //   label: "create",
-      // },
-      // {
-      //   role: "customerUpdate",
-      //   label: "update",
-      // },
-      // {
-      //   role: "customerDelete",
-      //   label: "delete",
-      // },
+      {
+        role: "customerCreate",
+        label: "create",
+      },
+      {
+        role: "customerUpdate",
+        label: "update",
+      },
+      {
+        role: "customerDelete",
+        label: "delete",
+      },
     ],
   },
   {
@@ -75,19 +93,19 @@ export const ALL_ROLES: Array<{
     ],
   },
   {
-    role: "storeProductCategory",
+    role: "category",
     label: "category",
     childRoles: [
       {
-        role: "storeProductCategoryCreate",
+        role: "categoryCreate",
         label: "create",
       },
       {
-        role: "storeProductCategoryUpdate",
+        role: "categoryUpdate",
         label: "update",
       },
       {
-        role: "storeProductCategoryDelete",
+        role: "categoryDelete",
         label: "delete",
       },
     ],
@@ -164,42 +182,42 @@ export const ALL_ROLES: Array<{
       },
     ],
   },
-  {
-    role: "measure",
-    label: "measure",
-    childRoles: [
-      {
-        role: "measureCreate",
-        label: "create",
-      },
-      {
-        role: "measureUpdate",
-        label: "update",
-      },
-      {
-        role: "measureDelete",
-        label: "delete",
-      },
-    ],
-  },
-  {
-    role: "rateComment",
-    label: "rateComment",
-    childRoles: [
-      {
-        role: "rateCommentCreate",
-        label: "create",
-      },
-      {
-        role: "rateCommentUpdate",
-        label: "update",
-      },
-      {
-        role: "rateCommentDelete",
-        label: "delete",
-      },
-    ],
-  },
+  // {
+  //   role: "measure",
+  //   label: "measure",
+  //   childRoles: [
+  //     {
+  //       role: "measureCreate",
+  //       label: "create",
+  //     },
+  //     {
+  //       role: "measureUpdate",
+  //       label: "update",
+  //     },
+  //     {
+  //       role: "measureDelete",
+  //       label: "delete",
+  //     },
+  //   ],
+  // },
+  // {
+  //   role: "rateComment",
+  //   label: "rateComment",
+  //   childRoles: [
+  //     {
+  //       role: "rateCommentCreate",
+  //       label: "create",
+  //     },
+  //     {
+  //       role: "rateCommentUpdate",
+  //       label: "update",
+  //     },
+  //     {
+  //       role: "rateCommentDelete",
+  //       label: "delete",
+  //     },
+  //   ],
+  // },
   {
     role: "store",
     label: "store",
@@ -245,14 +263,14 @@ export const ALL_ROLES: Array<{
       },
     ],
   },
-  {
-    role: "siteSettings",
-    label: "siteSettings",
-    childRoles: [
-      {
-        role: "siteSettingsUpdate",
-        label: "update",
-      },
-    ],
-  },
+  // {
+  //   role: "siteSettings",
+  //   label: "siteSettings",
+  //   childRoles: [
+  //     {
+  //       role: "siteSettingsUpdate",
+  //       label: "update",
+  //     },
+  //   ],
+  // },
 ];

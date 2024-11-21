@@ -111,7 +111,7 @@ interface IDragTable {
 
   deleteUrl?: string;
   onDeleteSuccess?: any;
-  onDeleteColumn?:any;
+  onDeleteColumn?: any;
   noRerender?: any;
 
   setRender?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -124,7 +124,8 @@ interface IDragTable {
   onRowClick?: any;
   headerChildrenSecondRow?: any;
   onEditColumn?: any;
-  
+  onDataChange?: any;
+  getAllData?: any;
 }
 const DragTable: React.FC<IDragTable> = ({
   columns,
@@ -146,6 +147,8 @@ const DragTable: React.FC<IDragTable> = ({
   onRowClick = undefined,
   headerChildrenSecondRow,
   onEditColumn,
+  onDataChange,
+  getAllData,
 
   onAddButton,
   setRender,
@@ -227,6 +230,8 @@ const DragTable: React.FC<IDragTable> = ({
     {
       onSuccess(response) {
         const tableData = isGetAll ? get(response, "data", []) : response?.data?.data;
+        onDataChange?.(tableData);
+        getAllData?.(response?.data);
         if (response?.data?.total > 0 && response?.data?.data?.length === 0) {
           setSearchParams({
             ...queryParams,
@@ -245,7 +250,7 @@ const DragTable: React.FC<IDragTable> = ({
       ...queryParams,
       ...allParams,
     });
-  }, [debValue, search, dataUrlMutate]);
+  }, [debValue, search, dataUrlMutate, reRender, searchParams]);
 
 
   /** @todo to delete */
@@ -303,7 +308,7 @@ const DragTable: React.FC<IDragTable> = ({
 
   useEffect(() => {
     setDataSource(tableData || []);
-  }, [tableData]);
+  }, [tableData, reRender]);
 
 
   useEffect(() => {
@@ -319,7 +324,7 @@ const DragTable: React.FC<IDragTable> = ({
       reset();
       setIsDragged(false);
     }
-  }, [status]);
+  }, [status, reRender]);
 
   useEffect(() => {
     if (isDragged) {
@@ -327,7 +332,7 @@ const DragTable: React.FC<IDragTable> = ({
     }
   }, [isDragged]);
 
-  const dragTableColumns: any  = React.useMemo(
+  const dragTableColumns: any = React.useMemo(
     () =>
       getTableColumns<any>({
         columns,
@@ -359,39 +364,39 @@ const DragTable: React.FC<IDragTable> = ({
         <>
           <div className="grid-container no-data">
             <DataGrid
-                getRowId={(row: any) => row?._id}
-                rows={(mapData ? mapData(tableData) : tableData) || []}
-                columns={dragTableColumns}
-                localeText={localization}
-                pageSize={Number(searchParams.get("limit"))}
-                rowsPerPageOptions={[5, 10, 20]}
-                loading={isLoading}
-                hideFooterPagination
-                disableSelectionOnClick
-                isRowSelectable={(params: GridRowParams<any>) =>
-                  isRowSelectable?.(params.row)
-                }
-                onPageSizeChange={(newPageSize) => {
-                  setSearchParams({
-                    ...queryParams,
-                    limit: searchParams.get("limit") || newPageSize,
-                    page: searchParams.get("page"),
-                  });
-                }}
-                onRowClick={(props) => {
-                  onRowClick?.(props.row);
-                }}
-                rowCount={totalData}
-                getRowClassName={(params) => (!!onRowClick ? "row-hover" : "")}
-                checkboxSelection={selection}
-                onSelectionModelChange={(rows, data) => {
-                  setSelectedRows(rows);
-                }}
-                paginationMode="server"
-                sx={{ height: "100%" }}
-                rowHeight={48}
-                headerHeight={45}
-              />
+              getRowId={(row: any) => row?._id}
+              rows={(mapData ? mapData(tableData) : tableData) || []}
+              columns={dragTableColumns}
+              localeText={localization}
+              pageSize={Number(searchParams.get("limit"))}
+              rowsPerPageOptions={[5, 10, 20]}
+              loading={isLoading}
+              hideFooterPagination
+              disableSelectionOnClick
+              isRowSelectable={(params: GridRowParams<any>) =>
+                isRowSelectable?.(params.row)
+              }
+              onPageSizeChange={(newPageSize) => {
+                setSearchParams({
+                  ...queryParams,
+                  limit: searchParams.get("limit") || newPageSize,
+                  page: searchParams.get("page"),
+                });
+              }}
+              onRowClick={(props) => {
+                onRowClick?.(props.row);
+              }}
+              rowCount={totalData}
+              getRowClassName={(params) => (!!onRowClick ? "row-hover" : "")}
+              checkboxSelection={selection}
+              onSelectionModelChange={(rows, data) => {
+                setSelectedRows(rows);
+              }}
+              paginationMode="server"
+              sx={{ height: "100%" }}
+              rowHeight={48}
+              headerHeight={45}
+            />
           </div>
           {/* <NoDataFound /> */}
         </>
@@ -413,7 +418,7 @@ const DragTable: React.FC<IDragTable> = ({
               dataSource={dataSource}
               pagination={false}
               loading={isLoading}
-              
+
             />
           </SortableContext>
         </DndContext>

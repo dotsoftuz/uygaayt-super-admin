@@ -24,7 +24,7 @@ const CategoryForm: React.FC<IBranchForm> = ({
 
   const { mutate, status } = useApiMutation<any>(
     editingCategoryId
-      ? `category/update/${editingCategoryId}`
+      ? `category/update`
       : "category/create",
     editingCategoryId ? "put" : "post"
   );

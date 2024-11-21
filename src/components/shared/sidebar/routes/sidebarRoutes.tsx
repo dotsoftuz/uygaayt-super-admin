@@ -18,7 +18,7 @@ export const sidebarRoutes: ISidebarRoute[] = [
   },
   {
     path: "/category",
-    role: "product",
+    role: "category",
     translate: "category",
   },
   {

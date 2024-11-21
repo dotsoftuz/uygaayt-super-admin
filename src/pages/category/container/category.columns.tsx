@@ -55,7 +55,7 @@ export const useCategoryCol = ({
       render: (_: any, record: any) => {
         return (
           <div className="d-flex gap-2 justify-content-end">
-            {hasAccess("storeProductCategoryCreate") && (
+            {hasAccess("categoryCreate") && (
               <IconButton
                 onClick={() => {
                   setEditingCategoryId?.(record?._id);
@@ -65,7 +65,7 @@ export const useCategoryCol = ({
                 <EditIcon />
               </IconButton>
             )}
-            {hasAccess("storeProductCategoryDelete") && (
+            {hasAccess("categoryDelete") && (
               <IconButton onClick={() => setCategoryId?.(record?._id)}>
                 <DeleteIcon />
               </IconButton>

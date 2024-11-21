@@ -43,7 +43,7 @@ const ProductForm = ({
   discountEndMinDate.setDate(discountEndMinDate.getDate() + 1);
 
   const { mutate, status } = useApiMutation<any>(
-    editingProductId ? `/product/update/${editingProductId}` : "product/create",
+    editingProductId ? `/product/update` : "product/create",
     editingProductId ? "put" : "post"
   );
 
