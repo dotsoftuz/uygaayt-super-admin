@@ -105,6 +105,7 @@ const Table = <TData extends { _id: string }>({
             search: searchParams.get("search") || "",
             page: searchParams.get("page"),
             limit: searchParams.get("limit"),
+            suspense: false,
           });
         }
       },
@@ -117,7 +118,7 @@ const Table = <TData extends { _id: string }>({
       ...allParams,
       ...exQueryParams,
     });
-  }, [debValue, search, mutate]);
+  }, [debValue, search, mutate, reRender]);
   /** @todo to delete */
   const { mutate: deleteMutate, isSuccess: isDeleteSuccess } = useApiMutation(
     deleteUrl || dataUrl,
