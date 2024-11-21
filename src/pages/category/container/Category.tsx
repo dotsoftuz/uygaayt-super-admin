@@ -50,11 +50,6 @@ const Category = () => {
         render={render}
         setRender={setRender}
         onAddButton={() => dis(setOpenDrawer(true))}
-        onDeleteColumn={
-          hasAccess("productDelete")
-            ? (row:any) => categoryId(row._id)
-            : undefined
-        }
       />
       <WarningModal
         open={categoryId}

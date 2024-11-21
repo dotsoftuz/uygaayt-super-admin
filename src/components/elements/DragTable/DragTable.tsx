@@ -24,10 +24,6 @@ import DragTableHeader from "./components/DragTableHeader";
 import TablePagination from "../Table/components/tablePagination";
 import NoDataFound from "../Table/components/noDataFound";
 import { useSearchParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { reRenderTable } from "../Table/reducer/table.slice";
-import { getTableColumns, localization } from "../Table/utils";
-import { DataGrid, GridRowParams } from "@mui/x-data-grid";
 
 // interface DataType {
 //   key: string;
@@ -109,23 +105,8 @@ interface IDragTable {
   render: boolean;
   headerChildren?: React.ReactNode;
 
-  deleteUrl?: string;
-  onDeleteSuccess?: any;
-  onDeleteColumn?: any;
-  noRerender?: any;
-
-  setRender?: React.Dispatch<React.SetStateAction<boolean>>;
+  setRender: React.Dispatch<React.SetStateAction<boolean>>;
   onAddButton?: () => void;
-  deletable?: boolean;
-  selection?: any;
-  numerate?: any;
-  mapData?: any;
-  isRowSelectable?: any;
-  onRowClick?: any;
-  headerChildrenSecondRow?: any;
-  onEditColumn?: any;
-  onDataChange?: any;
-  getAllData?: any;
 }
 const DragTable: React.FC<IDragTable> = ({
   columns,
@@ -137,24 +118,9 @@ const DragTable: React.FC<IDragTable> = ({
   searchable = true,
   render,
 
-  onDeleteColumn,
-  onDeleteSuccess,
-  deleteUrl,
-  noRerender,
-  numerate = true,
-  mapData,
-  isRowSelectable = () => true,
-  onRowClick = undefined,
-  headerChildrenSecondRow,
-  onEditColumn,
-  onDataChange,
-  getAllData,
-
   onAddButton,
   setRender,
   headerChildren,
-  deletable = false,
-  selection = deletable ? true : false,
 }) => {
   const [dataSource, setDataSource] = useState<any[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -162,12 +128,9 @@ const DragTable: React.FC<IDragTable> = ({
     searchParams.get("search") || ""
   );
   const [isDragged, setIsDragged] = useState<boolean>(false);
-  const isOpen = useAppSelector((store) => store.formDrawerState.isOpen);
   const { debouncedValue: debValue } = useDebounce(search, 500);
   const allParams = useAllQueryParams();
   const reRender = useAppSelector((store) => store.tableState.render);
-  const [selectedRows, setSelectedRows] = useState<any[]>([]);
-  const dis = useDispatch();
   /** @todo work with query params */
   const [queryParams, setQueryParams] = useState<any>(
     !isGetAll
@@ -197,53 +160,28 @@ const DragTable: React.FC<IDragTable> = ({
     });
   }, [debValue, search]);
 
-  // const { data, refetch, isFetching } = useApi<ITableData>(
-  //   dataUrl,
-  //   {
-  //     ...queryParams,
-  //     ...allParams,
-  //     // ...exQueryParams,
-  //   },
-  //   {
-  //     onSuccess(data) {
-  //       const tableData = isGetAll ? get(data, "data", []) : data?.data?.data;
-  //       // onDataChange?.(tableData);
-  //       // getAllData?.(data?.data);
-  //       if (data?.data?.total > 0 && data?.data?.data?.length === 0) {
-  //         setSearchParams({
-  //           ...queryParams,
-  //           ...allParams,
-  //           search: searchParams.get("search") || "",
-  //           page: searchParams.get("page"),
-  //           limit: searchParams.get("limit"),
-  //         });
-  //       }
-  //       setRender(false);
-  //     },
-  //     suspense: false,
-  //   }
-  // );
+  const { mutate: dataUrlMutate, data, reset, isLoading } = useApiMutation<ITableData>(dataUrl, "post", {
+    onSuccess: (data) => {
+      const tableData = isGetAll ? get(data, "data", []) : data?.data?.data;
+      if (tableData?.length > 0) {
+        setDataSource(tableData.map((item: any, i: number) => ({
+          ...item,
+          _number: i + 1,
+          key: i + 1,
+        })));
+      }
 
-  const { mutate: dataUrlMutate, reset, data, isLoading } = useApiMutation(
-    dataUrl,
-    "post",
-    {
-      onSuccess(response) {
-        const tableData = isGetAll ? get(response, "data", []) : response?.data?.data;
-        onDataChange?.(tableData);
-        getAllData?.(response?.data);
-        if (response?.data?.total > 0 && response?.data?.data?.length === 0) {
-          setSearchParams({
-            ...queryParams,
-            ...allParams,
-            search: searchParams.get("search") || "",
-            page: searchParams.get("page"),
-            limit: searchParams.get("limit"),
-          });
-        }
-      },
-    }
-  );
+      if (data?.data?.total > 0 && data?.data?.data?.length === 0) {
+        setSearchParams({
+          ...queryParams,
+          ...allParams,
+          search: searchParams.get("search") || "",
+          page: searchParams.get("page"),
+          limit: searchParams.get("limit"),
+        });
+      }
+    },
+  });
 
   useEffect(() => {
     dataUrlMutate({
@@ -251,29 +189,6 @@ const DragTable: React.FC<IDragTable> = ({
       ...allParams,
     });
   }, [debValue, search, dataUrlMutate, reRender, searchParams]);
-
-
-  /** @todo to delete */
-  const { mutate: deleteMutate, isSuccess: isDeleteSuccess } = useApiMutation(
-    deleteUrl || dataUrl,
-    "delete"
-  );
-
-  const onDelete = () => {
-    deleteMutate({
-      ids: selectedRows,
-    });
-  };
-  useEffect(() => {
-    if (isDeleteSuccess) {
-      reset();
-      onDeleteSuccess?.();
-    }
-    if (reRender && !noRerender) {
-      reset();
-      dis(reRenderTable(false));
-    }
-  }, [isDeleteSuccess, isOpen, reRender]);
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
     if (active.id !== over?.id) {
@@ -308,8 +223,9 @@ const DragTable: React.FC<IDragTable> = ({
 
   useEffect(() => {
     setDataSource(tableData || []);
-  }, [tableData, reRender]);
+  }, [tableData]);
 
+  const totalData = data?.data?.total || tableData?.length || 0;
 
   useEffect(() => {
     if (render) reset();
@@ -324,28 +240,13 @@ const DragTable: React.FC<IDragTable> = ({
       reset();
       setIsDragged(false);
     }
-  }, [status, reRender]);
+  }, [status]);
 
   useEffect(() => {
     if (isDragged) {
       mutate({ [dragKey]: reOrderedData });
     }
   }, [isDragged]);
-
-  const dragTableColumns: any = React.useMemo(
-    () =>
-      getTableColumns<any>({
-        columns,
-        // numerate,
-        onEditColumn,
-        onDeleteColumn,
-        // onSeenClick,
-      }),
-    [columns]
-  );
-
-  const totalData = data?.data?.total || tableData?.length || 0;
-
 
   return (
     <DragTableStyled>
@@ -354,48 +255,21 @@ const DragTable: React.FC<IDragTable> = ({
         search={search}
         onAddButton={onAddButton}
         headerChildren={headerChildren}
-        headerChildrenSecondRow={headerChildrenSecondRow}
         searchable={searchable}
-        onDelete={onDelete}
-        selectedRows={selectedRows}
-        deletable={deletable}
       />
       {tableData?.length === 0 && !isLoading ? (
         <>
           <div className="grid-container no-data">
-            <DataGrid
-              getRowId={(row: any) => row?._id}
-              rows={(mapData ? mapData(tableData) : tableData) || []}
-              columns={dragTableColumns}
-              localeText={localization}
-              pageSize={Number(searchParams.get("limit"))}
-              rowsPerPageOptions={[5, 10, 20]}
-              loading={isLoading}
-              hideFooterPagination
-              disableSelectionOnClick
-              isRowSelectable={(params: GridRowParams<any>) =>
-                isRowSelectable?.(params.row)
-              }
-              onPageSizeChange={(newPageSize) => {
-                setSearchParams({
-                  ...queryParams,
-                  limit: searchParams.get("limit") || newPageSize,
-                  page: searchParams.get("page"),
-                });
+            <Table
+              components={{
+                body: {
+                  row: Row,
+                },
               }}
-              onRowClick={(props) => {
-                onRowClick?.(props.row);
-              }}
-              rowCount={totalData}
-              getRowClassName={(params) => (!!onRowClick ? "row-hover" : "")}
-              checkboxSelection={selection}
-              onSelectionModelChange={(rows, data) => {
-                setSelectedRows(rows);
-              }}
-              paginationMode="server"
-              sx={{ height: "100%" }}
-              rowHeight={48}
-              headerHeight={45}
+              rowKey="key"
+              columns={columns}
+              dataSource={[]}
+              pagination={false}
             />
           </div>
           {/* <NoDataFound /> */}
@@ -414,11 +288,10 @@ const DragTable: React.FC<IDragTable> = ({
                 },
               }}
               rowKey="key"
-              columns={dragTableColumns}
+              columns={columns}
               dataSource={dataSource}
               pagination={false}
               loading={isLoading}
-
             />
           </SortableContext>
         </DndContext>
