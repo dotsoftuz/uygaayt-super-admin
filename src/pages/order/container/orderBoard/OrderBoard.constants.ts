@@ -1,5 +1,6 @@
 import { CSSProperties } from "react";
 
+
 export const translateUz = {
   "Add another lane": "+Status qo'shish",
   "Click to add card": "Buyurtma qo'shish",
@@ -18,18 +19,19 @@ export const translateUz = {
 };
 
 export function mapBoardLanes(lanes: any[]): BoardData {
+  const currentLang = localStorage.getItem("i18nextLng") || "uz";
   return {
     lanes: lanes?.map((lane) => ({
-      cards:
-        lane.orders?.map((order: any) => ({
-          id: order._id,
-          label: `${order.totalPrice} UZS`,
-          title: `#${order.number}`,
-          description: order.addressName,
-          draggable: !["completed", "cancelled"].includes(order.state),
-        })) || [],
+      cards: lane.orders?.map((order: any, index: number) => ({
+        ids: order._id,
+        id: `${order._id}-${index}`, 
+        label: `${order.totalPrice} UZS`,
+        title: `#${order.number}`,
+        description: order.addressName,
+        draggable: !["completed", "cancelled"].includes(order.state),
+      })) || [],
       id: lane?._id,
-      title: lane.name,
+      title: lane.name?.[currentLang],
       statusColor: lane.color,
       style: {
         width: 280,
@@ -41,13 +43,14 @@ export function mapBoardLanes(lanes: any[]): BoardData {
   };
 }
 
+
 export interface BoardData {
   lanes: Lane[];
 }
 
 export interface Lane {
   id: string;
-  title?: string;
+  title?: any;
   label?: string;
   style?: CSSProperties;
   cards?: Card[];
@@ -60,6 +63,7 @@ export interface Lane {
 
 export interface Card {
   id: string;
+  ids: string;
   title?: string;
   label?: string;
   description?: string;
