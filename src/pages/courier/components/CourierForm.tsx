@@ -12,6 +12,8 @@ import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import { useTranslation } from "react-i18next";
 import { IIdImage } from "hooks/usePostImage";
 import { DeleteIcon } from "assets/svgs";
+import { useAppDispatch } from "store/storeHooks";
+import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
 
 interface ICourierForm {
   formStore: UseFormReturn<any>;
@@ -34,7 +36,8 @@ const CourierFrom: FC<ICourierForm> = ({
   const { control, handleSubmit, reset, watch, setValue } = formStore;
   const [checkData, setCheckData] = useState<any>();
   const { courierImages, setCourierImages, mainImageId, setMainImageId } =
-  productProps;
+    productProps;
+  const dis = useAppDispatch();
 
   const { } = useApi(
     `employee/check?phoneNumber=${watch("phoneNumber")}`,
@@ -50,13 +53,37 @@ const CourierFrom: FC<ICourierForm> = ({
 
   const { mutate, status } = useApiMutation(
     editingCourierId ? `courier/update` : "courier/create",
-    editingCourierId ? "put" : "post"
+    editingCourierId ? "post" : "post"
   );
 
-  const { data: getByIdData, status: getByIdStatus } = useApi(`courier/get-by-id/${editingCourierId}`, {}, {
-    enabled: !!editingCourierId,
-    suspense: false
-  })
+  const { mutate: GetByIdDataMutate, data: getByIdData, status: getByIdStatus } = useApiMutation(
+    `courier/get-by-id/${editingCourierId}`,
+    "post",
+    {
+      onSuccess: () => {
+        dis(setOpenDrawer(true));
+      },
+      onError: () => {
+        dis(setOpenDrawer(false));
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (editingCourierId) {
+      GetByIdDataMutate({ _id: editingCourierId });
+    } else {
+      dis(setOpenDrawer(false));
+    }
+  }, [editingCourierId, GetByIdDataMutate]);
+
+
+
+
+  // const { data: getByIdData, status: getByIdStatus } = useApi(`courier/get-by-id/${editingCourierId}`, {}, {
+  //   enabled: !!editingCourierId,
+  //   suspense: false
+  // })
 
   useEffect(() => {
     if (status === "success") {
@@ -82,7 +109,7 @@ const CourierFrom: FC<ICourierForm> = ({
       });
       setCourierImages(getByIdData.data?.images || []);
       const foundMain = getByIdData.data?.images?.find(
-        (img:any) => img?._id === getByIdData.data.mainImage?._id
+        (img: any) => img?._id === getByIdData.data.mainImage?._id
       );
       if (foundMain && !!getByIdData.data?.images?.length) {
         setMainImageId(getByIdData.data.mainImage?._id);
@@ -189,7 +216,7 @@ const CourierFrom: FC<ICourierForm> = ({
                 getImage={(img) => setCourierImages((prev) => [...prev, img])}
                 accept=".png, .jpg, .jpeg"
               />
-              {courierImages?.map((image:any) => (
+              {courierImages?.map((image: any) => (
                 <div className="product-image" key={image._id}>
                   <img
                     src={process.env.REACT_APP_BASE_URL + image.url}

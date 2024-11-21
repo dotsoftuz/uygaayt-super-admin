@@ -6,9 +6,9 @@ import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useRoleManager } from "services/useRoleManager";
-import WarningModal from "components/common/WarningModal/WarningModal";
 import { IIdImage } from "hooks/usePostImage";
 import CourierFrom from "../components/CourierForm";
+import WarningModal from "components/common/WarningModalPost/WarningModal";
 
 const Employee = () => {
   const [editingCourierId, setEditingCourierId] = useState<any>();
