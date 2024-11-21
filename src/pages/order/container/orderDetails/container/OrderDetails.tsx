@@ -54,7 +54,7 @@ const OrderDetails = () => {
     }
   );
 
-  const { mutate } = useApiMutation(`order/${id}`, "put");
+  const { mutate } = useApiMutation(`order/update`, "put");
 
   useEffect(() => {
     if (status === "success") {
@@ -88,6 +88,8 @@ const OrderDetails = () => {
         productId: e.productId,
         amount: e.amount,
       })),
+      _id: order?._id,
+      cardId: order?._id
     };
     mutate(requestData);
   });
