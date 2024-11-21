@@ -127,13 +127,13 @@ useEffect(() => {
 
   console.log(addressByPointName)
 
-  const { data: storeData, status: storeStatus } = useApi(
-    "store/get",
-    {},
-    {
-      suspense: false,
-    }
-  );
+  // const { data: storeData, status: storeStatus } = useApi(
+  //   "store/get",
+  //   {},
+  //   {
+  //     suspense: false,
+  //   }
+  // );
 
 
   const submit = (data: any) => {
@@ -261,10 +261,11 @@ useEffect(() => {
           </Grid>
           <Grid item sm={12}>
             <DatePickerTime
+              label={t("common.date")}
               control={formStore ? formStore?.control : control}
               name="deliveryDate"
               minDate={dayjs(new Date())}
-              label={t("common.date")}
+
             />
           </Grid>
           <Grid item sm={12}>

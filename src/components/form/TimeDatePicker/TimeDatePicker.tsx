@@ -75,7 +75,7 @@ function DatePickerForm<FormNames extends Record<string, any>>({
             )}
             {error && (
               <div className="mt-1">
-                <p className="error">Vaqtni to'g'ri kiriting</p>
+                <p className="text-error">Vaqtni to'g'ri kiriting</p>
               </div>
             )}
           </LocalizationProvider>

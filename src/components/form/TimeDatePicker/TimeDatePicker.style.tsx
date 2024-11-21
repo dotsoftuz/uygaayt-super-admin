@@ -17,6 +17,7 @@ export const DateTimePickerStyled = styled.div`
   .text-error {
     bottom: -10;
     position: absolute;
+    color: red !important;
   }
   .MuiFormLabel-root {
   }
