@@ -56,34 +56,34 @@ const CourierFrom: FC<ICourierForm> = ({
     editingCourierId ? "post" : "post"
   );
 
-  const { mutate: GetByIdDataMutate, data: getByIdData, status: getByIdStatus } = useApiMutation(
-    `courier/get-by-id/${editingCourierId}`,
-    "post",
-    {
-      onSuccess: () => {
-        dis(setOpenDrawer(true));
-      },
-      onError: () => {
-        dis(setOpenDrawer(false));
-      },
-    }
-  );
+  // const { mutate: GetByIdDataMutate, data: getByIdData, status: getByIdStatus } = useApiMutation(
+  //   `courier/get-by-id/${editingCourierId}`,
+  //   "post",
+  //   {
+  //     onSuccess: () => {
+  //       dis(setOpenDrawer(true));
+  //     },
+  //     onError: () => {
+  //       dis(setOpenDrawer(false));
+  //     },
+  //   }
+  // );
 
-  useEffect(() => {
-    if (editingCourierId) {
-      GetByIdDataMutate({ _id: editingCourierId });
-    } else {
-      dis(setOpenDrawer(false));
-    }
-  }, [editingCourierId, GetByIdDataMutate]);
-
-
+  // useEffect(() => {
+  //   if (editingCourierId) {
+  //     GetByIdDataMutate({ _id: editingCourierId });
+  //   } else {
+  //     dis(setOpenDrawer(false));
+  //   }
+  // }, [editingCourierId, GetByIdDataMutate]);
 
 
-  // const { data: getByIdData, status: getByIdStatus } = useApi(`courier/get-by-id/${editingCourierId}`, {}, {
-  //   enabled: !!editingCourierId,
-  //   suspense: false
-  // })
+
+
+  const { data: getByIdData, status: getByIdStatus } = useApi(`courier/get-by-id/${editingCourierId}`, {}, {
+    enabled: !!editingCourierId,
+    suspense: false
+  })
 
   useEffect(() => {
     if (status === "success") {
