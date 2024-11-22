@@ -68,15 +68,7 @@ function AutoCompleteFilter({
 
   const { mutate, data, isLoading, status } = useApiMutation(
     optionsUrl, 
-    "post",
-    {
-      onSuccess(data) {
-        console.log(data)
-      },
-      onError(error) {
-        console.error("Error in POST request:", error);
-      }
-    }
+    "post"
   );
   
   // Trigger the mutation

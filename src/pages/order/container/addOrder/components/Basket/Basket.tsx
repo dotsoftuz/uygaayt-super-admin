@@ -43,7 +43,7 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
     "post",
     {
       onSuccess: (data) => {
-        console.log("Product created successfully:", data);
+        console.log("Product created successfully:");
       },
       onError: (error) => {
         console.error("Error creating product:", error);

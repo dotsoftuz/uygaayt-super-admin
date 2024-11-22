@@ -46,6 +46,7 @@ const Roles = () => {
         } : undefined}
         onDeleteColumn={hasAccess('roleDelete') ? (row) => setRoleId(row._id) : undefined}
         searchable
+        exQueryParams={{}}
       />
       <WarningModal open={roleId} setOpen={setRoleId} url="role/delete" />
       <FormDrawer

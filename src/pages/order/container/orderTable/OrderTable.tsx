@@ -74,6 +74,9 @@ const OrderTable = () => {
         //     : undefined
         // }
         onRowClick={(row) => navigate(`/order/${row._id}`)}
+        exQueryParams={{
+          stateId: undefined,
+        }}
       />
     </>
   );

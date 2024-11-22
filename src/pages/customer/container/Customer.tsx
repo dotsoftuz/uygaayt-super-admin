@@ -6,7 +6,9 @@ const Client = () => {
 
   return (
     <>
-      <Table columns={columns} dataUrl="customer/paging" searchable />
+      <Table columns={columns} dataUrl="customer/paging" searchable exQueryParams={{
+          stateId: undefined,
+        }} />
     </>
   );
 };

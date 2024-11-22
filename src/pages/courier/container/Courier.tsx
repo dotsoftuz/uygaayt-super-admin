@@ -48,6 +48,7 @@ const Employee = () => {
           dis(setOpenDrawer(true));
         } : undefined}
         onDeleteColumn={hasAccess('employeeDelete') ? (row) => setCourierId(row._id) : undefined}
+        exQueryParams={{}}
       />
       <WarningModal open={courierId} setOpen={setCourierId} url="courier/delete" />
       <FormDrawer

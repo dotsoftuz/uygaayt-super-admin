@@ -9,7 +9,6 @@ export const useBannerColumns = (): GridColumns => {
     {
       field: t("common.name"),
       renderCell({ row }) {
-        console.log(row);
         return row.title;
       },
     },

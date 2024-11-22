@@ -78,8 +78,6 @@ const Select = ({
     }
   }, [options]);
 
-  console.log(optionsUrlData)
-
   const [searchParams, setSearchParams] = useSearchParams();
   const allParams = useAllQueryParams();
   const [value, setValue] = useState<string | IOption[]>(!multiple ? "" : []);

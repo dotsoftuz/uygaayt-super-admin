@@ -32,9 +32,6 @@ const Banner = () => {
     "post"
   );
 
-
-  console.log(data)
-
   return (
     <>
       <Table
@@ -47,6 +44,7 @@ const Banner = () => {
           dis(setOpenDrawer(true));
         }}
         onDeleteColumn={(row) => setBannerId(row._id)}
+        exQueryParams={{}}
       />
       <WarningModal open={bannerId} setOpen={setBannerId} url="banner/delete" />
       <FormDrawer

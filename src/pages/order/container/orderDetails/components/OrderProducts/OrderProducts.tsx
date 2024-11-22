@@ -46,7 +46,6 @@ const OrderProducts = ({ formStore, state, order }: any) => {
       ? 4
       : 0;
 
-  console.log(order);
   return (
     <OrderProductsStyled>
       <div className="steps">

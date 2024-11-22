@@ -24,7 +24,6 @@ const RolesForm = ({ formStore, editingRoleId, resetForm }: IRolesForm) => {
   })
 
   const submit = (data: IRoleData) => {
-    console.log(data)
     mutate(data);
   };
 

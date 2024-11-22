@@ -27,8 +27,6 @@ const Login = () => {
     data: responseData,
   } = useApiMutation<ILoginBody, ILoginData>("/employee/login", "post", {
     onSuccess(data) {
-      console.log("data", data.data);
-  
       const updatedLoginData: ILoginData = {
         token: data.data.token, 
         employee: {

@@ -125,7 +125,6 @@ useEffect(() => {
   // };
 
 
-  console.log(addressByPointName)
 
   // const { data: storeData, status: storeStatus } = useApi(
   //   "store/get",

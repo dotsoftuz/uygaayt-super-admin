@@ -40,8 +40,6 @@ const Transaction = () => {
     });
   }, [mutate]);
 
-  console.log(data)
-
   return (
     <TransactionStyled>
       <Grid container spacing={2} mb={2}>
@@ -77,6 +75,7 @@ const Transaction = () => {
         columns={columns}
         dataUrl="balance/paging"
         headerChildren={renderHeader}
+        exQueryParams={{}}
       />
     </TransactionStyled>
   );
