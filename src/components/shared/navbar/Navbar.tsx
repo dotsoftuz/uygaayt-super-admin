@@ -129,7 +129,7 @@ const Navbar = ({ hasNavbar }: { hasNavbar: boolean }) => {
       replace: false,
     });
   };
-  const { mutate: changePassword } = useApiMutation("/profile", "put", {
+  const { mutate: changePassword } = useApiMutation("profile/password/update", "put", {
     onSuccess(data) {
       setisChange(false);
       toast.success("Parol o'zgartirildi!");

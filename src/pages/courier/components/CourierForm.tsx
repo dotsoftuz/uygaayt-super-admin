@@ -37,19 +37,18 @@ const CourierFrom: FC<ICourierForm> = ({
   const [checkData, setCheckData] = useState<any>();
   const { courierImages, setCourierImages, mainImageId, setMainImageId } =
     productProps;
-  const dis = useAppDispatch();
 
-  const { } = useApi(
-    `employee/check?phoneNumber=${watch("phoneNumber")}`,
-    {},
-    {
-      enabled: watch("phoneNumber")?.length > 12 && !editingCourierId,
-      suspense: false,
-      onSuccess({ data }) {
-        setCheckData(data);
-      },
-    }
-  );
+  // const { } = useApi(
+  //   `employee/check?phoneNumber=${watch("phoneNumber")}`,
+  //   {},
+  //   {
+  //     enabled: watch("phoneNumber")?.length > 12 && !editingCourierId,
+  //     suspense: false,
+  //     onSuccess({ data }) {
+  //       setCheckData(data);
+  //     },
+  //   }
+  // );
 
   const { mutate, status } = useApiMutation(
     editingCourierId ? `courier/update` : "courier/create",
@@ -94,10 +93,7 @@ const CourierFrom: FC<ICourierForm> = ({
   const submit = (data: any) => {
     mutate({
       ...data,
-      imageId: courierImages.map((image) => image._id),
-      mainImageId: courierImages.length
-        ? mainImageId || courierImages?.[0]?._id
-        : null,
+      imageId: data.imageId?._id,
       _id: editingCourierId,
     });
   };
@@ -106,25 +102,10 @@ const CourierFrom: FC<ICourierForm> = ({
     if (getByIdStatus === 'success') {
       reset({
         ...getByIdData.data,
+        imageId: getByIdData.data.image,
       });
-      setCourierImages(getByIdData.data?.images || []);
-      const foundMain = getByIdData.data?.images?.find(
-        (img: any) => img?._id === getByIdData.data.mainImage?._id
-      );
-      if (foundMain && !!getByIdData.data?.images?.length) {
-        setMainImageId(getByIdData.data.mainImage?._id);
-      } else setMainImageId(getByIdData.data?.images?.[0]?._id);
     }
   }, [getByIdData, getByIdStatus]);
-
-  useEffect(() => {
-    const foundMain = courierImages.find((main) => main._id === mainImageId);
-    if (foundMain) {
-      setMainImageId(foundMain._id);
-    } else if (courierImages.length) {
-      setMainImageId(courierImages[0]._id);
-    }
-  }, [courierImages]);
 
   return (
     <div className="custom-drawer">
@@ -207,40 +188,7 @@ const CourierFrom: FC<ICourierForm> = ({
           </Grid>
           <Grid item md={12}>
             <div className="product-images">
-              <ImageInput
-                control={control}
-                setValue={setValue}
-                name="image"
-                rules={{ required: false }}
-                multiple
-                getImage={(img) => setCourierImages((prev) => [...prev, img])}
-                accept=".png, .jpg, .jpeg"
-              />
-              {courierImages?.map((image: any) => (
-                <div className="product-image" key={image._id}>
-                  <img
-                    src={process.env.REACT_APP_BASE_URL + image.url}
-                    alt="product"
-                  />
-                  <div className="on-hover">
-                    <span
-                      className="delete"
-                      onClick={() =>
-                        setCourierImages((prev) =>
-                          prev.filter((prevImg) => prevImg._id !== image._id)
-                        )
-                      }
-                    >
-                      <DeleteIcon />
-                    </span>
-                    <span
-                      className={`main-image ${image._id === mainImageId && "active"
-                        }`}
-                      onClick={() => setCourierImages(image._id)}
-                    ></span>
-                  </div>
-                </div>
-              ))}
+              <ImageInput control={control} setValue={setValue} name="imageId" />
             </div>
           </Grid>
         </Grid>
