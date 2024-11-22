@@ -1,13 +1,15 @@
-import { Loading, MainButton } from "components";
-import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 // @ts-ignore
 import Board, { createTranslate } from "react-trello";
-
 import { useNavigate } from "react-router-dom";
-import { OrderBoardStyled } from "./OrderBoard.styled";
-import LaneHeader from "./components/LaneHeader";
+import { useTranslation } from "react-i18next";
+import { MainButton, Loading } from "components";
+import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
+import { useRoleManager } from "services/useRoleManager";
+import SwitchView from "pages/order/components/SwitchView/SwitchView";
+import LaneHeader from "./components/LaneHeader";
+import { OrderBoardStyled } from "./OrderBoard.styled";
 import {
   Card,
   IOrderByStatus,
@@ -15,9 +17,6 @@ import {
   mapBoardLanes,
   translateUz,
 } from "./OrderBoard.constants";
-import { useTranslation } from "react-i18next";
-import SwitchView from "pages/order/components/SwitchView/SwitchView";
-import { useRoleManager } from "services/useRoleManager";
 
 const customTranslation = createTranslate(translateUz);
 
@@ -25,16 +24,14 @@ const OrderBoard = () => {
   const allParams = useAllQueryParams();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [stateIndex, setStateIndex] = useState(0);
   const [boardData, setBoardData] = useState<any>();
   const [getBoardDataFinished, setGetBoardDataFinished] = useState(false);
   const [orderId, setOrderId] = useState("");
-  const [stateId, setStateId] = useState("");
-  const [page, setPage] = useState<any>({});
+  const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({});
+  const [pagesMap, setPagesMap] = useState<Record<string, number>>({});
   const hasAccess = useRoleManager();
-  const enabled = !!stateIndex || !!stateId;
 
-  const { data, status } = useApi<IOrderByStatus[]>(
+  const { data: statesData, status: statesStatus } = useApi<IOrderByStatus[]>(
     "order-state/get-all",
     {
       ...allParams,
@@ -42,114 +39,144 @@ const OrderBoard = () => {
     { suspense: false }
   );
 
-  const { mutate: fetchOrders } = useApiMutation("order/paging", "post", {
-    onSuccess({ data }) {
-      setBoardData((prev: any) =>
-        prev.map((item: any, index: number) => {
-          if ((stateId && stateId === item._id) || index === stateIndex - 1) {
-            const oldOrders = item.orders || [];
-            const newOrders = data?.data?.map((order: any) => ({
-              number: order.number,
-              totalPrice: order.totalPrice,
-              addressName: order.addressName,
-              createdAt: order.createdAt,
-              state: order.state?.state,
-              _id: order._id,
-            }));
-            return {
-              ...item,
-              orders: oldOrders.concat(newOrders),
-            };
-          }
-          return item;
-        })
-      );
-      if (stateId) return;
-      if (stateIndex < boardData.length) {
-        setTimeout(() => setStateIndex((prev) => prev + 1), 0);
-      } else {
-        setGetBoardDataFinished(true);
-        setStateIndex(0);
-      }
-    },
-  });
+  const { mutate: fetchOrders } = useApiMutation(
+    "order/paging",
+    "post",
+    {
+      onSuccess({ data }, variables) {
+        const { stateId } = variables;
+        setBoardData((prev: any) => {
+          if (!prev) return prev;
+          return prev.map((item: any) => {
+            if (item._id === stateId) {
+              const oldOrders = pagesMap[stateId] === 1 ? [] : (item.orders || []);
+              const existingOrderIds = new Set(oldOrders.map((order: any) => order._id));
 
-  useEffect(() => {
-    if (enabled) {
-      const currentStateId = stateId || boardData?.[stateIndex - 1]?._id;
-      const currentPage = stateId
-        ? page[stateId]
-        : page[boardData?.[stateIndex - 1]?._id] || 1;
+              const newOrders = data?.data
+                ?.filter((order: any) => !existingOrderIds.has(order._id))
+                ?.map((order: any) => ({
+                  number: order.number,
+                  totalPrice: order.totalPrice,
+                  addressName: order.addressName,
+                  createdAt: order.createdAt,
+                  state: order.state?.state,
+                  _id: order._id,
+                  uniqueId: `${order._id}-${order.createdAt}`
+                }));
 
-      fetchOrders({
-        page: currentPage,
-        limit: 10,
-        stateId: currentStateId,
-        hasCourier: true,
-      });
-    }
-  }, [enabled, stateId, stateIndex, boardData, page, fetchOrders]);
+              return {
+                ...item,
+                orders: [...oldOrders, ...(newOrders || [])]
+              };
+            }
+            return item;
+          });
+        });
 
-
-  useEffect(() => {
-    if (status === "success") {
-      setBoardData(data?.data);
-      setStateIndex(1);
-      data?.data?.map((e) => {
-        setPage((prev: any) => ({
+        setLoadingStates(prev => ({
           ...prev,
-          [e._id]: 1,
+          [stateId]: false
         }));
+      },
+      onError(error, variables) {
+        const { stateId } = variables;
+        setLoadingStates(prev => ({
+          ...prev,
+          [stateId]: false
+        }));
+      }
+    }
+  );
+
+  // Initialize board data and fetch initial orders
+  useEffect(() => {
+    if (statesStatus === "success" && statesData?.data) {
+      setBoardData(statesData.data);
+      
+      // Initialize pages map
+      const initialPagesMap = statesData.data.reduce((acc, state) => ({
+        ...acc,
+        [state._id]: 1
+      }), {});
+      setPagesMap(initialPagesMap);
+
+      // Fetch initial orders for each state
+      statesData.data.forEach(state => {
+        setLoadingStates(prev => ({
+          ...prev,
+          [state._id]: true
+        }));
+        
+        fetchOrders({
+          page: 1,
+          limit: 10,
+          stateId: state._id,
+        });
       });
     }
-  }, [status, data?.data]);
+  }, [statesStatus, statesData?.data]);
 
-  const readyBoardData = useMemo(() => {
-    if (getBoardDataFinished) {
-      return mapBoardLanes(boardData || []);
+  // Set board data as finished when all initial loads are complete
+  useEffect(() => {
+    if (boardData && Object.values(loadingStates).every(state => !state)) {
+      setGetBoardDataFinished(true);
     }
-  }, [boardData, getBoardDataFinished]);
+  }, [boardData, loadingStates]);
 
-  // to update card status
+  const handleLoadMore = (laneId: string) => {
+    if (loadingStates[laneId]) return;
+
+    setLoadingStates(prev => ({
+      ...prev,
+      [laneId]: true
+    }));
+
+    const nextPage = (pagesMap[laneId] || 1) + 1;
+    setPagesMap(prev => ({
+      ...prev,
+      [laneId]: nextPage
+    }));
+
+    fetchOrders({
+      page: nextPage,
+      limit: 10,
+      stateId: laneId,
+    });
+  };
+
   const { mutate: cardUpdate } = useApiMutation<{
     stateId: string;
     position: number;
-    _id: string;
+    _id?: string;
   }>(`order/state/${orderId}`, "put", {
     onSuccess() {
       setOrderId("");
     },
   });
-  // to update lane position
+
   const { mutate: laneUpdate } = useApiMutation<{
     position: number;
     _id: string;
-  }>("status", "put", {
-    onSuccess() { },
-  });
-  // to delete lane
+  }>("status", "put");
+
   const { mutate: laneDelete } = useApiMutation<{
     ids: string[];
-  }>("status", "delete", {
-    onSuccess(data, variables, context) {
-      // refetch();
-    },
-  });
+  }>("status", "delete");
 
   const onCardDragEnd = (
-    cardId: Card["ids"],
+    cardId: Card["id"],
     sourceLandId: Lane["id"],
     targetLaneId: Lane["id"],
     position: number,
     card: Card
   ) => {
-    setOrderId(card.ids);
+    setOrderId(card.metadata?.originalId || card.id);
     setTimeout(
       () =>
         cardUpdate({
           position,
           stateId: targetLaneId,
-          _id: card.ids
+          _id: card?.metadata?.originalId
         }),
       0
     );
@@ -166,18 +193,24 @@ const OrderBoard = () => {
     });
   };
 
+  const handleCardClick = (cardId: string, metadata?: { originalId?: string }) => {
+    const originalId = metadata?.originalId;
+    if (originalId) {
+      navigate(`/order/${originalId}`);
+    }
+  };
+
+  const readyBoardData = useMemo(() => {
+    if (getBoardDataFinished) {
+      return mapBoardLanes(boardData || []);
+    }
+    return { lanes: [] };
+  }, [boardData, getBoardDataFinished]);
+
   return (
     <OrderBoardStyled>
       <div className="header">
         <SwitchView />
-        {/* {hasAccess("orderCreate") && (
-          <MainButton
-            className="ms-3"
-            title={t("general.add")}
-            variant="contained"
-            onClick={() => navigate("/order/add")}
-          />
-        )} */}
       </div>
       {!getBoardDataFinished ? (
         <Loading />
@@ -190,29 +223,18 @@ const OrderBoard = () => {
           editLaneTitle={false}
           canAddLanes={false}
           hideCardDeleteIcon
-          onCardClick={(cardId: string) => {
-            const processedId = cardId.split("-")[0];
-            navigate(`/order/${processedId}`);
-          }}
-
+          onCardClick={handleCardClick}
           components={{
             LaneHeader: (lane: any) => LaneHeader(lane, laneDelete),
-            AddCardLink: (e: any) => (
+            AddCardLink: ({ laneId }: { laneId: string }) => (
               <MainButton
-                title={t("general.loadMore")}
+                title={loadingStates[laneId] ? t("general.loading") : t("general.loadMore")}
                 className="load-more"
-                onClick={() => {
-                  setPage((prev: any) => ({
-                    ...prev,
-                    [e.laneId]: prev[e.laneId] + 1,
-                  }));
-                  // setStateId(e.laneId)
-                  setTimeout(() => setStateId(e.laneId), 0);
-                }}
+                disabled={loadingStates[laneId]}
+                onClick={() => handleLoadMore(laneId)}
               />
             ),
           }}
-          // draggable
           lang="ru"
           t={customTranslation}
         />

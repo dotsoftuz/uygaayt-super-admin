@@ -15,6 +15,7 @@
     "save": "Сохранить",
     "required": "Обязательно",
     "loadMore": "Загрузить ещё",
+    "loading": "Loading...",
     "search": "Поиск",
     "addBanner": "Добавить категорию"
   },

@@ -15,6 +15,7 @@
     "save": "Saqlash",
     "required": "Majburiy",
     "loadMore": "Yana yuklash",
+    "loading": "Loading...",
     "search": "Izlash",
     "addBanner": "Kategoriya qo'shish"
   },

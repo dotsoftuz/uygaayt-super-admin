@@ -1,6 +1,5 @@
 import { CSSProperties } from "react";
 
-
 export const translateUz = {
   "Add another lane": "+Status qo'shish",
   "Click to add card": "Buyurtma qo'shish",
@@ -23,12 +22,14 @@ export function mapBoardLanes(lanes: any[]): BoardData {
   return {
     lanes: lanes?.map((lane) => ({
       cards: lane.orders?.map((order: any, index: number) => ({
-        ids: order._id,
-        id: `${order._id}-${index}`, 
+        id: order.uniqueId || order._id,
         label: `${order.totalPrice} UZS`,
         title: `#${order.number}`,
         description: order.addressName,
         draggable: !["completed", "cancelled"].includes(order.state),
+        metadata: { 
+          originalId: order._id 
+        }
       })) || [],
       id: lane?._id,
       title: lane.name?.[currentLang],
@@ -42,7 +43,6 @@ export function mapBoardLanes(lanes: any[]): BoardData {
     })),
   };
 }
-
 
 export interface BoardData {
   lanes: Lane[];
@@ -63,13 +63,15 @@ export interface Lane {
 
 export interface Card {
   id: string;
-  ids: string;
   title?: string;
   label?: string;
   description?: string;
   laneId?: string;
   style?: CSSProperties;
   draggable?: boolean;
+  metadata?: {
+    originalId: string;
+  };
 }
 
 export interface IOrderByStatus {
