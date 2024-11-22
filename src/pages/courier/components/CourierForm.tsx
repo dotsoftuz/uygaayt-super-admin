@@ -181,28 +181,28 @@ const CourierFrom: FC<ICourierForm> = ({
             <TextInput
               control={control}
               name="carBrand"
-              label={t("common.carBrand")}
+              label={t("COURIER.carBrand")}
             />
           </Grid>
           <Grid item md={12}>
             <TextInput
               control={control}
               name="carModel"
-              label={t("common.carModel")}
+              label={t("COURIER.carModel")}
             />
           </Grid>
           <Grid item md={12}>
             <TextInput
               control={control}
               name="carNumber"
-              label={t("common.carNumber")}
+              label={t("COURIER.carNumber")}
             />
           </Grid>
           <Grid item md={12}>
             <TextInput
               control={control}
               name="carColor"
-              label={t("common.carColor")}
+              label={t("COURIER.carColor")}
             />
           </Grid>
           <Grid item md={12}>
