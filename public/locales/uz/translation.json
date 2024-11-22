@@ -140,5 +140,11 @@
   "FORMDRAWER": {
     "SAVE": "Saqlash",
     "BACK": "Ortga"
+  },
+  "COURIER": {
+    "carBrand": "Avtomobil brandi",
+    "carModel": "Avtomboil Modeli",
+    "carNumber": "Avtomobil raqami",
+    "carColor": "Avtomobil raqami"
   }
 }
