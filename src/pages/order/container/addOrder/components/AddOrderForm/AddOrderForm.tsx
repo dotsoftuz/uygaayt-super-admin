@@ -160,7 +160,7 @@ const AddOrderForm = ({
     mutate(requestData);
   };
 
-  const { data:orderData } = useApi<any>(
+  const { data: orderData } = useApi<any>(
     `order/get-by-id/${id}`,
     {},
     {
@@ -300,20 +300,24 @@ const AddOrderForm = ({
               label={t("common.paymentType")}
             />
           </Grid>
-          <Grid item sm={12}>
-            <SelectPost
-              control={formStore ? formStore?.control : control}
-              name="setCourier"
-              label={t("common.courier")}
-              optionsUrl="courier/paging"
-              value={selectedCourier}
-              defaultValue={courierId}
-              onChange={(selectedValue) => {
-                setSelectedCourier(selectedValue);
-                setCourier({ courierId: selectedValue, _id: id });
-              }}
-            />
-          </Grid>
+          {id &&
+            <Grid item sm={12}>
+              <SelectPost
+                control={formStore ? formStore?.control : control}
+                name="setCourier"
+                label={t("common.courier")}
+                optionsUrl="courier/paging"
+                value={selectedCourier}
+                defaultValue={courierId}
+                onChange={(selectedValue) => {
+                  setSelectedCourier(selectedValue);
+                  setCourier({ courierId: selectedValue, _id: id });
+                }}
+                rules={{ required: false }}
+              />
+            </Grid>
+          }
+
           <Grid item sm={12}>
             <label className="custom-label">{t("common.description")}</label>
             <TextEditor
