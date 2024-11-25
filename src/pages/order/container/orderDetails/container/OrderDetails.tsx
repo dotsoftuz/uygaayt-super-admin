@@ -8,22 +8,24 @@ import OrderInfo from "../components/OrderInfo/OrderInfo";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import { useTranslation } from "react-i18next";
 import { IOrder } from "types/common.types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { get } from "lodash";
 import { useAppSelector } from "store/storeHooks";
 import { useDispatch } from "react-redux";
 import { socketReRender } from "store/reducers/SocketSlice";
+import SelectPost from 'components/form/SelectPost/SelectFormPost';
 
 const OrderDetails = () => {
   const { id } = useParams();
   const { t } = useTranslation();
   const formStore = useForm();
-  const { setValue, reset, handleSubmit } = formStore;
+  const { setValue, reset, handleSubmit, control } = formStore;
   const socketRender = useAppSelector((store) => store.SocketState.render);
   const dis = useDispatch();
   const currentLang = localStorage.getItem("i18nextLng") || "uz";
+  const [selectedCourier, setSelectedCourier] = useState("");
 
   const { data, status, refetch } = useApi<IOrder>(
     `order/get-by-id/${id}`,
@@ -36,6 +38,7 @@ const OrderDetails = () => {
   const isCompleted = order?.state?.state === "completed";
   const isCancelled = order?.state?.state === "cancelled";
 
+ 
 
   const { data: orderStates, refetch: refetchOrderState } = useApi(
     "order-state/get-all",
@@ -105,6 +108,8 @@ const OrderDetails = () => {
     }
   }, [socketRender]);
 
+  
+
   return (
     <OrderDetailsStyled>
       <Grid container columnSpacing={3}>
@@ -169,6 +174,7 @@ const OrderDetails = () => {
             order={order}
           />
         </Grid>
+      
         <Grid item md={4}>
           <OrderInfo formStore={formStore} order={order} />
         </Grid>

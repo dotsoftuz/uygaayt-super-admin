@@ -11,12 +11,12 @@ export const socket = io(url!, {
   transports: ["websocket"],
   auth: {
     token: tokenData,
-    storeid: storeId, // required when employee connected
+    // storeid: storeId, // required when employee connected
   },
   path: path,
 });
 
-export const initializeSocket = (token: any, storeId: string) => {
-  socket.auth = { token, storeid: storeId };
+export const initializeSocket = (token: any) => {
+  socket.auth = { token };
   socket.connect();
 };

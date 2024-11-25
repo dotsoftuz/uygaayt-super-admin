@@ -21,7 +21,7 @@ const usePostImage = (onSuccess?: (idImage: IIdImage) => void) => {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
-          storeId: localStorage.getItem("storeId"),
+          // storeId: localStorage.getItem("storeId"),
         },
         data: {
           file: image.imageFile,

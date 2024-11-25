@@ -5,6 +5,7 @@ export interface IOrder {
   createdAt: string;
   storeId: string;
   customerId: string;
+  courierId?: string;
   stateId: string;
   itemPrice: number;
   totalPrice: number;

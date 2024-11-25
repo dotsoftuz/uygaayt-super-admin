@@ -10,7 +10,7 @@ api.interceptors.request.use(
     const token = localStorage.getItem("token");
     config.headers["Authorization"] = `Bearer ${token}`;
     config.headers["Accept-Language"] = localStorage.getItem("i18nextLng");
-    config.headers["storeId"] = localStorage.getItem("storeId");
+    // config.headers["storeId"] = localStorage.getItem("storeId");
     return config;
   },
   (error) => {

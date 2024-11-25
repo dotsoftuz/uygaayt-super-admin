@@ -52,8 +52,9 @@ const Login = () => {
       localStorage.setItem("employeeId", updatedLoginData.employee._id);
       localStorage.setItem("roleId", updatedLoginData.employee.roleId);
       localStorage.setItem("i18nextLng", "uz");
+      // localStorage.setItem("storeId", data.data.stores?.[0]?._id);
   
-      initializeSocket(updatedLoginData.token, "");
+      initializeSocket(updatedLoginData.token);
         navigate("/home");
     },
   });

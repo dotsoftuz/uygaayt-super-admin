@@ -25,7 +25,7 @@ import { LeftArrowIcon } from "assets/svgs";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import useDebounce from "hooks/useDebounce";
 import { PAYMENT_TYPES } from "types/enums";
-import { IProduct } from "types/common.types";
+import { IOrder, IProduct } from "types/common.types";
 import { useNavigate, useParams } from "react-router-dom";
 import { numberFormat } from "utils/numberFormat";
 import { toast } from "react-toastify";
@@ -33,6 +33,7 @@ import dayjs from "dayjs";
 import useCommonContext from "context/useCommon";
 import { get } from "lodash";
 import YandexMap from "components/common/YandexMap/YandexMap";
+import SelectPost from "components/form/SelectPost/SelectFormPost";
 
 const AddOrderForm = ({
   basketItems,
@@ -55,6 +56,7 @@ const AddOrderForm = ({
     0
   );
   const deliveryPrice = 0;
+  const [selectedCourier, setSelectedCourier] = useState("");
 
   const {
     state: { data: settingsData },
@@ -63,7 +65,7 @@ const AddOrderForm = ({
 
   const { mutate: addressByName, data } = useApiMutation(
     `address/by-name`,
-    "post", 
+    "post",
     {
       onSuccess() {
         setShowOptions(true);
@@ -73,13 +75,13 @@ const AddOrderForm = ({
       },
     }
   );
-  
-useEffect(() => {
+
+  useEffect(() => {
     if (typeof address === "string" && address.trim()) {
-      addressByName({ name: address }); 
+      addressByName({ name: address });
     }
   }, [address]);
-  
+
 
 
   const { mutate, status } = useApiMutation("order/create", "post", {
@@ -95,11 +97,11 @@ useEffect(() => {
         if (formStore) {
           formStore?.setValue("addressName", data?.name);
           formStore?.setValue("addressLocation", coordinate);
-          formStore?.setError("addressName", {}); 
+          formStore?.setError("addressName", {});
         } else {
           setValue("addressName", data?.name);
           setValue("addressLocation", coordinate);
-          setError("addressName", {}); 
+          setError("addressName", {});
         }
       },
       onError(error) {
@@ -158,6 +160,28 @@ useEffect(() => {
     mutate(requestData);
   };
 
+  const { data:OrderData } = useApi<any>(
+    `order/get-by-id/${id}`,
+    {},
+    {
+      enabled: !!id,
+    }
+  );
+
+  const { courierId } :any = OrderData?.data
+
+  const { mutate: setCourier, data: setCourierData, status: setCourierStatus, isLoading: isSettingCourier } = useApiMutation<any>(
+    "order/set-courier",
+    "post",
+    {
+      onSuccess(data) {
+        setSelectedCourier(data.data.courierId);
+      },
+      onError(error) {
+        console.error("API Error:", error);
+      },
+    }
+  );
   return (
     <AddOrderFormStyled>
       {!id && <h3 className="mb-3">{t("order.formalization")}</h3>}
@@ -172,39 +196,39 @@ useEffect(() => {
                 searchIcon
               /> */}
               <TextInput
-                      control={formStore ? formStore.control : control}
-                      name="addressName"
-                      placeholder="Yetkazib berish manzili"
-                      searchIcon
-                      onCustomChange={(value) => {
-                        setAddress(value); 
+                control={formStore ? formStore.control : control}
+                name="addressName"
+                placeholder="Yetkazib berish manzili"
+                searchIcon
+                onCustomChange={(value) => {
+                  setAddress(value);
+                }}
+              />
+              <div className="address-options">
+                {showOptions &&
+                  // @ts-ignore
+                  data?.data?.map((item: any) => (
+                    <div
+                      className="option"
+                      onClick={() => {
+                        setValue("addressName", item.name);
+                        setValue("addressLocation", {
+                          latitude: item.latitude,
+                          longitude: item.longitude,
+                          name: item.name,
+                        });
+                        setCoordinate({
+                          latitude: item.latitude,
+                          longitude: item.longitude,
+                          name: item.name,
+                        });
+                        setShowOptions(false);
                       }}
-                    />
-                    <div className="address-options">
-                      {showOptions &&
-                        // @ts-ignore
-                        data?.data?.map((item: any) => (
-                          <div
-                            className="option"
-                            onClick={() => {
-                              setValue("addressName", item.name);
-                              setValue("addressLocation", {
-                                latitude: item.latitude,
-                                longitude: item.longitude,
-                                name: item.name,
-                              });
-                              setCoordinate({
-                                latitude: item.latitude,
-                                longitude: item.longitude,
-                                name: item.name,
-                              });
-                              setShowOptions(false);
-                            }}
-                          >
-                            {item.name}
-                          </div>
-                        ))}
+                    >
+                      {item.name}
                     </div>
+                  ))}
+              </div>
             </div>
           </Grid>
           <Grid item md={6}>
@@ -276,6 +300,20 @@ useEffect(() => {
             />
           </Grid>
           <Grid item sm={12}>
+            <SelectPost
+              control={formStore ? formStore?.control : control}
+              name="setCourier"
+              label={t("common.courier")}
+              optionsUrl="courier/paging"
+              value={selectedCourier}
+              defaultValue={courierId}
+              onChange={(selectedValue) => {
+                setSelectedCourier(selectedValue);
+                setCourier({ courierId: selectedValue, _id: id });
+              }}
+            />
+          </Grid>
+          <Grid item sm={12}>
             <label className="custom-label">{t("common.description")}</label>
             <TextEditor
               value={formStore?.watch("comment")}
@@ -341,7 +379,7 @@ useEffect(() => {
                       placeholder="Yetkazib berish manzili"
                       searchIcon
                       onCustomChange={(value) => {
-                        setAddress(value); 
+                        setAddress(value);
                       }}
                     />
                     <div className="address-options">
@@ -418,10 +456,10 @@ useEffect(() => {
             </Grid>
             <Grid item md={6}>
               <div className="map">
-              <YandexMap
-                getCoordinate={setCoordinate}
-                center={watch("addressLocation")}
-              />
+                <YandexMap
+                  getCoordinate={setCoordinate}
+                  center={watch("addressLocation")}
+                />
                 {/* <YMaps >
                   <Map
                     width="100%"

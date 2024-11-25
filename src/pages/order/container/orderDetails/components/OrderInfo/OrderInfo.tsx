@@ -5,6 +5,9 @@ import { get } from "lodash";
 import { Rating } from "@mui/material";
 
 const OrderInfo = ({ formStore, order }: any) => {
+
+  console.log(order)
+
   return (
     <OrderInfoStyled>
       <AddOrderForm basketItems={[]} formStore={formStore} />
@@ -58,13 +61,15 @@ const OrderInfo = ({ formStore, order }: any) => {
           </div>
         )}
       </div>
-      {order.driver && (
+      {order.courier && (
         <div className="card">
           <h4 className="title">Kuryer</h4>
           <div className="info">
             <div className="image">
-              {order?.driver?.image ? (
-                <img src="https://picsum.photos/100" alt="" />
+              {order?.courier?.image ? (
+                <img src={process.env.REACT_APP_BASE_URL + "/" +
+                  order?.courier?.image?.url
+                } alt="" />
               ) : (
                 <span>
                   <DefaultImage />
@@ -73,17 +78,17 @@ const OrderInfo = ({ formStore, order }: any) => {
             </div>
             <div>
               <h4 className="name">
-                {get(order, "driver.firstName", "")}{" "}
-                {get(order, "driver.lastName", "")}
+                {get(order, "courier.firstName", "")}{" "}
+                {get(order, "courier.lastName", "")}
               </h4>
               <span className="phone">
-                {get(order, "driver.phoneNumber", "")}
+                {get(order, "courier.phoneNumber", "")}
               </span>
             </div>
           </div>
           <div className="car">
-            <span className="name">{get(order, "driver.carBrand", "")}</span>
-            <span className="number">{get(order, "driver.carNumber", "")}</span>
+            <span className="name">{get(order, "courier.carBrand", "")}</span>
+            <span className="number">{get(order, "courier.carNumber", "")}</span>
           </div>
         </div>
       )}
