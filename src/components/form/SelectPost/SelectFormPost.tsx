@@ -66,12 +66,11 @@ function Select<FormNames extends Record<string, any>>({
     "post",
     {
       onSuccess() {
-        console.log(optionsFromUrl)
+        console.log("success")
       },
     });
 
   useEffect(() => {
-    console.log("Mutating with optionsUrl:", optionsUrl); 
     mutate({
       optionsFromUrl
     });
@@ -79,7 +78,7 @@ function Select<FormNames extends Record<string, any>>({
 
   useEffect(() => {
     if (optionsFromUrl) {
-      console.log("Fetched optionsFromUrl:", optionsFromUrl);
+      console.log("Fetched optionsFromUrl:");
     } else {
       console.warn("optionsFromUrl is undefined");
     }

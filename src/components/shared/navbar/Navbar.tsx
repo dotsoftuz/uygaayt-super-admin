@@ -87,7 +87,6 @@ const Navbar = ({ hasNavbar }: { hasNavbar: boolean }) => {
   useEffect(() => {
     function OrderUpdate(data: any) {
       dis(socketReRender(true));
-      console.log(data);
       if (!!data.data.state?.isSoundable) makeNoiceCompleted();
     }
     function OrderCreate(data: any) {

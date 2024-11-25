@@ -6,8 +6,6 @@ import { Rating } from "@mui/material";
 
 const OrderInfo = ({ formStore, order }: any) => {
 
-  console.log(order)
-
   return (
     <OrderInfoStyled>
       <AddOrderForm basketItems={[]} formStore={formStore} />

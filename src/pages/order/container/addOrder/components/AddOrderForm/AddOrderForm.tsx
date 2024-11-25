@@ -160,7 +160,7 @@ const AddOrderForm = ({
     mutate(requestData);
   };
 
-  const { data:OrderData } = useApi<any>(
+  const { data:orderData } = useApi<any>(
     `order/get-by-id/${id}`,
     {},
     {
@@ -168,7 +168,8 @@ const AddOrderForm = ({
     }
   );
 
-  const { courierId } :any = OrderData?.data
+  const courierId = orderData?.data?.courierId
+
 
   const { mutate: setCourier, data: setCourierData, status: setCourierStatus, isLoading: isSettingCourier } = useApiMutation<any>(
     "order/set-courier",
