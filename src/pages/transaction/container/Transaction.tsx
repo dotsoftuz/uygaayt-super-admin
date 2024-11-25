@@ -24,21 +24,20 @@ const Transaction = () => {
   );
 
 
-  const { mutate, reset, data } = useApiMutation("balance/total", "post", {
+  const { mutate,data, reset  } = useApiMutation("balance/total", "post", {
     onSuccess() {
       // toast.success(t("general.success"));
-      reset();
     },
   });
 
 
+
   useEffect(() => {
-    mutate({
-      // ...queryParams,
-      // ...allParams,
-      // ...exQueryParams,
-    });
+    mutate(data);
   }, [mutate]);
+
+  console.log(data)
+
 
   return (
     <TransactionStyled>
@@ -46,7 +45,7 @@ const Transaction = () => {
         <Grid item sm={6}>
           <div className="total-balance">
             <span className="amount">
-              {numberFormat(data?.data.amount)}{" "}
+              {numberFormat(data?.data?.storeBalance)}{" "}
               {get(settingsData, "currency", "uzs")}
             </span>
             <span className="text">umumiy balansi</span>
@@ -57,14 +56,14 @@ const Transaction = () => {
             <div className="amount-wrapper">
               <span className="title">Umumiy to'ldirilgan miqdor:</span>
               <span className="amount">
-                {numberFormat(data?.data.income)}{" "}
+                {numberFormat(data?.data?.income)}{" "}
                 {get(settingsData, "currency", "uzs")}
               </span>
             </div>
             <div className="amount-wrapper">
               <span className="title">Umumiy chiqarilgan miqdor:</span>
               <span className="amount">
-                {numberFormat(data?.data.expence)}{" "}
+                {numberFormat(data?.data?.expense)}{" "}
                 {get(settingsData, "currency", "uzs")}
               </span>
             </div>
