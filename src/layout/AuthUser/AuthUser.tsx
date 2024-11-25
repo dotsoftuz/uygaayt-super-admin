@@ -16,7 +16,7 @@ const AuthUser = () => {
   const dis = useAppDispatch();
   const hasToken = !!localStorage.getItem("token");
   const navigate = useNavigate();
-  const { isLoading, isFetching } = useApi<ILoginData>(
+  const { isLoading, isFetching } = useApi<ILoginData | any>(
     "profile/get",
     {},
     {
@@ -25,7 +25,7 @@ const AuthUser = () => {
       staleTime: Infinity,
       onSuccess(data) {
         dis(setLoginData(data.data));
-        localStorage.setItem("employeeId", data.data.employee._id);
+        localStorage.setItem("employeeId", data.data._id);
         // localStorage.setItem("stores", JSON.stringify(data.data.stores));
         // localStorage.setItem("storeId", data.data.stores?.[0]?._id);
 
