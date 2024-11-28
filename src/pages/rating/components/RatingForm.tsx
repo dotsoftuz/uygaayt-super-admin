@@ -22,11 +22,11 @@ const RatingForm: FC<IRatingForm> = ({
   const { control, handleSubmit, reset, watch, setValue } = formStore;
 
   const { mutate, status } = useApiMutation(
-    editingRatingId ? `rate-comment/${editingRatingId}` : "rate-comment",
+    editingRatingId ? `rate-comment/update` : "rate-comment/create",
     editingRatingId ? "put" : "post"
   );
 
-  const { data: getByIdData, status: getByIdStatus } = useApi(`rate-comment/${editingRatingId}`, {}, {
+  const { data: getByIdData, status: getByIdStatus } = useApi(`rate-comment/get-by-id/${editingRatingId}`, {}, {
     enabled: !!editingRatingId,
     suspense: false,
   })

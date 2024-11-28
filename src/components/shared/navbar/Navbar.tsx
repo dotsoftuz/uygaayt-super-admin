@@ -26,6 +26,7 @@ import CommonButton from "components/common/commonButton/Button";
 import { useTranslation } from "react-i18next";
 import useOutsideClick from "services/useOutsideClick/useOutsideClick";
 import BackButton from "components/common/backButton/BackButton";
+// import Notifications from "./components/Notifications/Notifications";
 
 interface IPassword {
   currentPassword: string;
@@ -148,14 +149,16 @@ const Navbar = ({ hasNavbar }: { hasNavbar: boolean }) => {
         <BackButton />
 
         <div className="d-flex align-items-center justify-content-end gap-3">
+          {/* <Notifications /> */}
+
           <LanguageBox ref={refLang}>
             <CommonButton
               title={
                 language === "uz"
                   ? "O'zbek"
                   : language === "ru"
-                  ? "Русский"
-                  : "English"
+                    ? "Русский"
+                    : "English"
               }
               endIcon={<ArrowDown />}
               onClick={() => setPop(!open)}
@@ -285,7 +288,7 @@ const Navbar = ({ hasNavbar }: { hasNavbar: boolean }) => {
                         onClick={() => setisChange(false)}
                         color="secondary"
                         title="Orqaga"
-                        // variant="contained"
+                      // variant="contained"
                       />
                       <MainButton
                         type="submit"

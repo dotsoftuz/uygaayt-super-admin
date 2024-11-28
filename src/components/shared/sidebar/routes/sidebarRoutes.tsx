@@ -56,11 +56,11 @@ export const sidebarRoutes: ISidebarRoute[] = [
     role: "role", // o'zgartirish kerak banner
     translate: "banner",
   },
-  // {
-  //   path: "/rating",
-  //   translate: "rating", 
-  //   role: "role", // o'zgartirish kerak rating
-  // },
+  {
+    path: "/rating",
+    translate: "rating", 
+    role: "role", // o'zgartirish kerak rating
+  },
   {
     path: "/transaction",
     translate: "transaction",

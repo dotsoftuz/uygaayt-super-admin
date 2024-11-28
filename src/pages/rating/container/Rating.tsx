@@ -55,8 +55,7 @@ const Rating = () => {
   return (
     <RatingStyled>
       <Table
-        dataUrl="rate-comment"
-        isGetAll
+        dataUrl="rate-comment/paging"
         columns={columns}
         headerChildren={renderHeader}
         exQueryParams={{
@@ -68,7 +67,7 @@ const Rating = () => {
             : undefined
         }
         onEditColumn={
-          hasAccess("rateCommentUpdate")
+          hasAccess("role")
             ? (row) => {
                 setEditingRatingId(row._id);
                 dis(setOpenDrawer(true));
@@ -76,12 +75,12 @@ const Rating = () => {
             : undefined
         }
         onDeleteColumn={
-          hasAccess("rateCommentDelete")
+          hasAccess("role")
             ? (row) => setRatingId(row._id)
             : undefined
         }
       />
-      <WarningModal open={ratingId} setOpen={setRatingId} url="rate-comment" />
+      <WarningModal open={ratingId} setOpen={setRatingId} url="rate-comment/delete" />
       <FormDrawer
         FORM_ID="rating"
         isEditing={!!editingRatingId}
