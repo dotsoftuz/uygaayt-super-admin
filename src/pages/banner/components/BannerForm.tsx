@@ -68,19 +68,19 @@ const BannerForm: FC<IEmployeesForm> = ({
               label={t("common.name")}
             />
           </Grid>
-          {/* <Grid item md={12}>
+          <Grid item md={12}>
             <AutoCompleteForm
               control={control}
-              name="storeId"
-              optionsUrl="/store/pagin"
+              name="productId"
+              optionsUrl="product/choose"
               dataProp="data.data"
-              label={t("common.store")}
+              label={t("common.product")}
               exQueryParams={{
                 page: 1,
                 limit: 10,
               }}
             />
-          </Grid> */}
+          </Grid>
           <Grid item md={12}>
             <TextEditor
               value={watch("description")}
