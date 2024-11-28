@@ -75,7 +75,6 @@ const About = () => {
       const about = data?.data;
       reset({
         ...about,
-        imageId: about.image,
         startTime:
           about.workTime?.length === 11 ? about.workTime?.slice(0, 5) : "",
         endTime: about.workTime?.length === 11 ? about.workTime?.slice(-5) : "",
@@ -87,7 +86,6 @@ const About = () => {
   const submit = (data: any) => {
     const requestData = {
       name: data.name,
-      imageId: data.imageId._id,
       description: data.description,
       workTime: data.startTime
         ? `${data.startTime}-${data.endTime}`
@@ -102,32 +100,8 @@ const About = () => {
   return (
     <AboutStyled>
       <form onSubmit={handleSubmit(submit)}>
-        <Grid container spacing={3}>
-          <Grid item md={6}>
-            <div className="d-flex gap-4">
-              <ImageInput
-                control={control}
-                setValue={setValue}
-                name="imageId"
-                rules={{ required: false }}
-                className="mb-3"
-                accept=".png, .jpg, .jpeg"
-              />
-              {/* <div className="d-flex gap-2 flex-column">
-                <span>Dokon to'lov ID</span>
-                <span className="d-flex gap-5 align-items-center">
-                  {get(data, "data.number", "")}{" "}
-                  <IconButton
-                    className="copyBtn"
-                    onClick={() => {
-                      copy(get(data, "data.number", ""));
-                    }}
-                  >
-                    <CopyIcon />
-                  </IconButton>
-                </span>
-              </div> */}
-            </div>
+        <Grid container spacing={3} style={{display: "flex", alignItems: "center"}}>
+          <Grid item md={6} p={4}>
             <div className="mb-3">
               <TextInput
                 control={control}

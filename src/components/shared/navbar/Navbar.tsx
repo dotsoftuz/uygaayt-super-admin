@@ -7,7 +7,7 @@ import { LanguageBox, NavbarContainer } from "./Navbar.style";
 
 import { useRoleManager } from "services/useRoleManager";
 import { ArrowDown, ProfileIcon } from "assets/svgs";
-import { Grid, MenuItem, MenuList, Paper, Popover } from "@mui/material";
+import { Badge, Grid, IconButton, MenuItem, MenuList, Paper, Popover } from "@mui/material";
 import { get } from "lodash";
 import WarningModal from "components/common/WarningModal/WarningModal";
 import MainButton from "components/common/button/MainButton";
@@ -26,7 +26,8 @@ import CommonButton from "components/common/commonButton/Button";
 import { useTranslation } from "react-i18next";
 import useOutsideClick from "services/useOutsideClick/useOutsideClick";
 import BackButton from "components/common/backButton/BackButton";
-// import Notifications from "./components/Notifications/Notifications";
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import Notification from "./components/Notification";
 
 interface IPassword {
   currentPassword: string;
@@ -140,6 +141,7 @@ const Navbar = ({ hasNavbar }: { hasNavbar: boolean }) => {
     changePassword(data);
   };
 
+
   return (
     <NavbarContainer>
       <div
@@ -149,8 +151,8 @@ const Navbar = ({ hasNavbar }: { hasNavbar: boolean }) => {
         <BackButton />
 
         <div className="d-flex align-items-center justify-content-end gap-3">
-          {/* <Notifications /> */}
-
+        
+          <Notification/>
           <LanguageBox ref={refLang}>
             <CommonButton
               title={
