@@ -1,5 +1,5 @@
 import { DragTable, FormDrawer, Table } from "components";
-import { useCategoryCol, useCategoryColumns } from "./category.columns";
+import { useCategoryCol, useCategoryColumns } from "./categoryChild.columns"
 import { useAppDispatch } from "store/storeHooks";
 import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
 import { useTranslation } from "react-i18next";
@@ -8,8 +8,10 @@ import CategoryForm from "../components/CategoryForm";
 import { useForm } from "react-hook-form";
 import WarningModal from "components/common/WarningModal/WarningModal";
 import { useRoleManager } from "services/useRoleManager";
+import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
+import CategoryChildForm from "./CategoryChildForm";
 
-const Category = () => {
+const CategoryChild = () => {
   const [render, setRender] = useState<boolean>(false);
   // const columns = useCategoryColumns();
   const [editingCategoryId, setEditingCategoryId] = useState<any>();
@@ -28,6 +30,8 @@ const Category = () => {
     });
   };
 
+  const allParams = useAllQueryParams();
+
   return (
     <>
       {/* <Table
@@ -44,13 +48,15 @@ const Category = () => {
 
       <DragTable
         columns={columnsDrag}
-        dataUrl="/category/paging"
+        dataUrl={`/category/paging`}
         dragUrl="/category/positions"
         dragKey="categoryIds"
         render={render}
         setRender={setRender}
         onAddButton={() => dis(setOpenDrawer(true))}
-        
+        exQueryParams={{
+          parentId: allParams.parentId,
+        }}
       />
       <WarningModal
         open={categoryId}
@@ -64,7 +70,7 @@ const Category = () => {
         customTitle={t("general.addCategory")}
         onClose={resetForm}
       >
-        <CategoryForm
+        <CategoryChildForm
           formStore={formStore}
           setRender={setRender}
           resetForm={resetForm}
@@ -75,4 +81,4 @@ const Category = () => {
   );
 };
 
-export default Category;
+export default CategoryChild;

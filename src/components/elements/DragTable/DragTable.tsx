@@ -107,6 +107,7 @@ interface IDragTable {
 
   setRender: React.Dispatch<React.SetStateAction<boolean>>;
   onAddButton?: () => void;
+  exQueryParams?: any;
 }
 const DragTable: React.FC<IDragTable> = ({
   columns,
@@ -117,6 +118,8 @@ const DragTable: React.FC<IDragTable> = ({
   hasPagination = true,
   searchable = true,
   render,
+
+  exQueryParams = {},
 
   onAddButton,
   setRender,
@@ -155,6 +158,7 @@ const DragTable: React.FC<IDragTable> = ({
     });
     setSearchParams({
       ...queryParams,
+      ...exQueryParams,
       page: searchParams.get("page") || queryParams?.page,
       limit: searchParams.get("limit") || queryParams?.limit,
     });
@@ -175,6 +179,7 @@ const DragTable: React.FC<IDragTable> = ({
         setSearchParams({
           ...queryParams,
           ...allParams,
+          ...exQueryParams,
           search: searchParams.get("search") || "",
           page: searchParams.get("page"),
           limit: searchParams.get("limit"),
@@ -187,8 +192,9 @@ const DragTable: React.FC<IDragTable> = ({
     dataUrlMutate({
       ...queryParams,
       ...allParams,
+      ...exQueryParams
     });
-  }, [debValue, search, dataUrlMutate, reRender, searchParams]);
+  }, [debValue, search, dataUrlMutate, reRender, searchParams ]);
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
     if (active.id !== over?.id) {

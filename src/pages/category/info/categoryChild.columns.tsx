@@ -5,7 +5,6 @@ import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
 import EditIcon from "components/elements/Table/assets/EditIcon";
 import { get } from "lodash";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { useRoleManager } from "services/useRoleManager";
 import { useAppDispatch } from "store/storeHooks";
 
@@ -34,7 +33,6 @@ export const useCategoryCol = ({
   const dis = useAppDispatch();
   const { t } = useTranslation();
   const hasAccess = useRoleManager();
-  const navigate = useNavigate();
 
   return [
     {
@@ -51,15 +49,6 @@ export const useCategoryCol = ({
     {
       title: t("common.categoryName"),
       dataIndex: "name",
-      key: "name",
-      render: (text: string, record: any) => (
-        <p style={{cursor: "pointer"}}
-          className="text-blue-600 hover:text-blue-800 font-medium"
-          onClick={() => navigate(`/category_child?parentId=${record._id}`, { state: { categoryId: record._id } })}
-        >
-          {text}
-        </p>
-      ),
     },
     {
       title: "",

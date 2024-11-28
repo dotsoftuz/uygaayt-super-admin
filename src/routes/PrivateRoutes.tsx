@@ -7,6 +7,7 @@ const Order = lazy(() => import("pages/order"));
 const Customer = lazy(() => import("pages/customer"));
 const Product = lazy(() => import("pages/product"));
 const Category = lazy(() => import("pages/category"));
+const CategoryChild = lazy(() => import("pages/category/info/CategoryChild"));
 const About = lazy(() => import("pages/about"));
 const Employee = lazy(() => import("pages/employee"));
 const Role = lazy(() => import("pages/role"));
@@ -52,6 +53,11 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   {
     element: <Category />,
     path: "category",
+    role: "employee",
+  },
+  {
+    element: <CategoryChild />,
+    path: "category_child",
     role: "employee",
   },
   {
