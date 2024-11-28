@@ -163,6 +163,7 @@ const CourierFrom: FC<ICourierForm> = ({
               control={control}
               name="carBrand"
               label={t("COURIER.carBrand")}
+              rules={{ required: false }}
             />
           </Grid>
           <Grid item md={12}>
@@ -170,6 +171,7 @@ const CourierFrom: FC<ICourierForm> = ({
               control={control}
               name="carModel"
               label={t("COURIER.carModel")}
+              rules={{ required: false }}
             />
           </Grid>
           <Grid item md={12}>
@@ -177,6 +179,7 @@ const CourierFrom: FC<ICourierForm> = ({
               control={control}
               name="carNumber"
               label={t("COURIER.carNumber")}
+              rules={{ required: false }}
             />
           </Grid>
           <Grid item md={12}>
@@ -184,6 +187,7 @@ const CourierFrom: FC<ICourierForm> = ({
               control={control}
               name="carColor"
               label={t("COURIER.carColor")}
+              rules={{ required: false }}
             />
           </Grid>
           <Grid item md={12}>
