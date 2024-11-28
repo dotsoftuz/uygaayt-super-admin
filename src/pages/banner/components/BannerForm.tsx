@@ -44,6 +44,7 @@ const BannerForm: FC<IEmployeesForm> = ({
       _id: editingBannerId,
       ...data,
       imageId: data.imageId?._id,
+      productId: data.productId,
     });
   };
 
@@ -52,6 +53,7 @@ const BannerForm: FC<IEmployeesForm> = ({
       reset({
         title: getByIdData.data.title,
         imageId: getByIdData.data.image,
+        productId: getByIdData.data.image,
         description: getByIdData.data.description,
       });
     }
