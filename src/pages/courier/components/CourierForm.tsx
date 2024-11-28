@@ -95,6 +95,10 @@ const CourierFrom: FC<ICourierForm> = ({
       ...data,
       imageId: data.imageId?._id,
       _id: editingCourierId,
+      carBrand: data.carBrand || "",
+      carModel: data.carModel || "",
+      carNumber: data.carNumber || "",
+      carColor: data.carColor || ""
     });
   };
 
