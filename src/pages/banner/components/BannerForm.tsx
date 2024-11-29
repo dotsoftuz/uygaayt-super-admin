@@ -53,11 +53,13 @@ const BannerForm: FC<IEmployeesForm> = ({
       reset({
         title: getByIdData.data.title,
         imageId: getByIdData.data.image,
-        productId: getByIdData.data.image,
+        productId: getByIdData.data.productId,
         description: getByIdData.data.description,
       });
     }
-  }, [getByIdStatus, getByIdData]);
+  }, [getByIdStatus, getByIdData, reset]);
+  
+  
 
   return (
     <div className="custom-drawer">
@@ -77,10 +79,6 @@ const BannerForm: FC<IEmployeesForm> = ({
               optionsUrl="product/choose"
               dataProp="data.data"
               label={t("common.product")}
-              exQueryParams={{
-                page: 1,
-                limit: 10,
-              }}
             />
           </Grid>
           <Grid item md={12}>

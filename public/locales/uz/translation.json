@@ -155,5 +155,9 @@
   },
   "tabs" : {
     "orders": "Buyurtmalar"
+  },
+  "notification" : {
+    "confirmation": "Tasdiqlash",
+    "approved": "Tasdiqlangan"
   }
 }

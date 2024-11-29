@@ -8,64 +8,9 @@ import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { useApiMutation } from 'hooks/useApi/useApiHooks';
 import { useSearchParams } from 'react-router-dom';
 
-export function NotificationList() {
-    const [notifications, setNotifications] = useState<any[]>([]);
-    const [page, setPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
-    const [searchParams] = useSearchParams();
-
-    const queryParams = {
-        page: searchParams.get('page') || 1,
-        limit: searchParams.get('limit') || 10,
-        search: searchParams.get('search') || '',
-    };
-
-    const { mutate, reset, data, isLoading } = useApiMutation(
-        'notification/paging',
-        'post',
-        {
-            onSuccess(response) {
-                const newNotifications = response?.data?.data || [];
-                const total = response?.data?.total || 0;
-
-                setNotifications((prev) => [...prev, ...newNotifications]);
-                setHasMore(newNotifications.length > 0 && notifications.length < total);
-            },
-        }
-    );
-
-    const loadMore = async () => {
-        if (!hasMore || isLoading) return;
-        const nextPage = page + 1;
-
-        setPage(nextPage);
-
-        await mutate({
-            page: nextPage,
-            limit: queryParams.limit,
-            search: queryParams.search,
-        });
-    };
-
-    const { loadMoreRef, loading } = useInfiniteScroll({
-        onLoadMore: loadMore,
-        hasMore,
-    });
-
-    const unreadCount = notifications.filter((n) => !n.read).length;
-
-    useEffect(() => {
-        reset();
-        setPage(1);
-        setNotifications([]);
-        setHasMore(true);
-
-        mutate({
-            page: 1,
-            limit: queryParams.limit,
-            search: queryParams.search,
-        });
-    }, [searchParams, reset, mutate, queryParams.limit, queryParams.search]);
+export function NotificationList(props:any) {
+   
+    const {notifications, unreadCount, loadMoreRef, loading, hasMore} = props
 
     return (
         <Box>
@@ -86,7 +31,7 @@ export function NotificationList() {
             </Box>
             <Divider />
             <Box sx={{ maxHeight: 400, overflow: 'auto' }}>
-                {notifications.map((notification, index) => (
+                {notifications.map((notification:any, index:any) => (
                     <Box key={notification.id}>
                         <NotificationItem notification={notification} />
                         {index < notifications.length - 1 && <Divider />}
