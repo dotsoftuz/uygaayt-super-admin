@@ -35,7 +35,8 @@
     "measure": "Единицы измерения",
     "control": "Управление",
     "courier": "Курьеры",
-    "rating": "Рейтинг"
+    "rating": "Рейтинг",
+     "news": "Новости"
   },
   "common": {
     "fullName": "Ф.И.О.",
@@ -49,6 +50,7 @@
     "category": "Категория",
     "status": "Статус",
     "description": "Описание",
+    "title": "Заголовок",
     "discount": "Скидка",
     "isActive": "Активен",
     "categoryName": "Название категории",

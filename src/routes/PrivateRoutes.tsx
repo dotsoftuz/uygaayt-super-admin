@@ -15,6 +15,7 @@ const Transaction = lazy(() => import("pages/transaction"));
 const Integration = lazy(() => import("pages/integration"));
 const Settings = lazy(() => import("pages/settings"));
 const Banner = lazy(() => import("pages/banner"));
+const News = lazy(() => import("pages/news"));
 const Measure = lazy(() => import("pages/measure"));
 const Courier = lazy(() => import("pages/courier"));
 const Rating = lazy(() => import("pages/rating"));
@@ -78,6 +79,11 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   {
     element: <Banner />,
     path: "banner",
+    role: "role", // o'zgartirish kerak banner
+  },
+    {
+    element: <News />,
+    path: "news",
     role: "role", // o'zgartirish kerak banner
   },
   {

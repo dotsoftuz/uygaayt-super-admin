@@ -57,6 +57,11 @@ export const sidebarRoutes: ISidebarRoute[] = [
     translate: "banner",
   },
   {
+    path: "/news",
+    role: "role", // o'zgartirish kerak banner
+    translate: "news",
+  },
+  {
     path: "/rating",
     translate: "rating", 
     role: "role", // o'zgartirish kerak rating
