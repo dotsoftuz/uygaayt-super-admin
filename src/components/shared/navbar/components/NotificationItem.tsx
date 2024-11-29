@@ -7,6 +7,7 @@ import CommonButton from 'components/common/commonButton/Button';
 import { useApi, useApiMutation } from 'hooks/useApi/useApiHooks';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/system';
+import { useNavigate } from 'react-router-dom';
 
 function getIcon(type: any) {
     switch (type) {
@@ -18,6 +19,7 @@ function getIcon(type: any) {
             return <NotificationsIcon fontSize="small" />;
     }
 }
+
 
 interface NotificationItemProps {
     notification: any;
@@ -42,7 +44,7 @@ const AcceptedButton = styled(Button)(({ theme }) => ({
 
 
 export function NotificationItem({ notification }: NotificationItemProps) {
-
+    const navigate = useNavigate();
     const currentLang = localStorage.getItem("i18nextLng") || "uz";
 
 
@@ -57,6 +59,8 @@ export function NotificationItem({ notification }: NotificationItemProps) {
         mutate({})
     };
 
+    console.log(notification)
+
     return (
         <Box
             sx={{
@@ -67,8 +71,9 @@ export function NotificationItem({ notification }: NotificationItemProps) {
                     bgcolor: 'action.hover',
                 },
             }}
+            onClick={() => navigate(`/courier/${notification.courierId}`)}
         >
-            <Box
+            <Box 
                 sx={{
                     display: 'flex',
                     alignItems: 'center',
@@ -85,7 +90,6 @@ export function NotificationItem({ notification }: NotificationItemProps) {
             <Box sx={{ flex: 1 }}>
                 <Typography variant="body1" sx={{ fontWeight: 500 }}>
                     {notification.shortText?.[currentLang]}:{' '}
-
                 </Typography>
                 {notification.isRead === false ? (
                     <AcceptButton variant="contained" onClick={handleAcceptClick}>

@@ -1,4 +1,5 @@
 import { GridColumns } from "@mui/x-data-grid";
+import { Tooltip } from "antd";
 import { get } from "lodash";
 import { useTranslation } from "react-i18next";
 
@@ -10,9 +11,17 @@ export const useBannerColumns = (): GridColumns => {
     {
       field: t("common.name"),
       renderCell({ row }) {
-        return row?.title?.[currentLang];
+        const title = row?.title?.[currentLang];
+        const truncatedTitle = title?.length > 50 ? `${title.substring(0, 50)}...` : title;
+    
+        return (
+          <Tooltip title={title} arrow>
+            <span>{truncatedTitle}</span>
+          </Tooltip>
+        );
       },
-    },
+    }
+    
     // {
     //   field: t("common.store"),
     //   renderCell({ row }) {

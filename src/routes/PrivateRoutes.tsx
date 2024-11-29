@@ -93,7 +93,7 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   },
   {
     element: <Courier />,
-    path: "courier",
+    path: "courier/*",
     role: "role", // o'zgartirish kerak courier
   },
   {

@@ -9,6 +9,7 @@ import { useRoleManager } from "services/useRoleManager";
 import { IIdImage } from "hooks/usePostImage";
 import CourierFrom from "../components/CourierForm";
 import WarningModal from "components/common/WarningModalPost/WarningModal";
+import { useNavigate } from "react-router-dom";
 
 const Employee = () => {
   const [editingCourierId, setEditingCourierId] = useState<any>();
@@ -20,6 +21,7 @@ const Employee = () => {
   const formStore = useForm<any>();
   const [courierImages, setCourierImages] = useState<IIdImage[]>([]);
   const [mainImageId, setMainImageId] = useState<any>();
+  const navigate = useNavigate();
 
   const resetForm = () => {
     setEditingCourierId(undefined);
@@ -48,6 +50,7 @@ const Employee = () => {
           dis(setOpenDrawer(true));
         } : undefined}
         onDeleteColumn={hasAccess('employeeDelete') ? (row) => setCourierId(row._id) : undefined}
+        onRowClick={(row) => navigate(`/courier/${row._id}`)}
         exQueryParams={{}}
       />
       <WarningModal open={courierId} setOpen={setCourierId} url="courier/delete" />

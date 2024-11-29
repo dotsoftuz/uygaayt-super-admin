@@ -47,7 +47,7 @@ const News = () => {
       <FormDrawer
         FORM_ID="banner"
         isEditing={!!editingNewsId}
-        customTitle={t("general.addBanner")}
+        customTitle={t("general.addNews")}
         onClose={resetForm}
       >
         <BannerForm

@@ -5,6 +5,7 @@
     "addCategory": "Kategoriya qo'shish",
     "addEmployee": "Xodim qo'shish",
     "addCourier": "Kuryer qo'shish",
+    "addNews": "Yangilik qo'shish",
     "addRole": "Rol qo'shish",
     "addStore": "Do'kon qo'shish",
     "success": "Muvaffaqiyatli",
@@ -17,7 +18,7 @@
     "loadMore": "Yana yuklash",
     "loading": "Loading...",
     "search": "Izlash",
-    "addBanner": "Kategoriya qo'shish"
+    "addBanner": "Banner qo'shish"
   },
   "sidebar": {
     "store": "Do'konlar",
@@ -151,5 +152,8 @@
     "carModel": "Avtomboil Modeli",
     "carNumber": "Avtomobil raqami",
     "carColor": "Avtomobil rangi"
+  },
+  "tabs" : {
+    "orders": "Buyurtmalar"
   }
 }

@@ -1,4 +1,5 @@
 import { GridColumns } from "@mui/x-data-grid";
+import { Tooltip } from "antd";
 import { Select } from "components";
 import dayjs from "dayjs";
 import { get } from "lodash";
@@ -43,13 +44,29 @@ export const useOrderTableColumns = (setStateUpdateData: any): GridColumns => {
       },
       flex: 0.6,
     },
+    // {
+    //   field: t("common.customer"),
+    //   renderCell({ row }) {
+    //     return (
+    //       get(row, "customer.firstName", "") +
+    //       " " +
+    //       get(row, "customer.lastName", "")
+    //     );
+    //   },
+    // },
     {
-      field: t("common.customer"),
+      field: t("common.productName"),
       renderCell({ row }) {
+        const firstName = row?.customer?.firstName;
+        const shortFirst = firstName?.length > 10 ? `${firstName.substring(0, 10)}...` : firstName;
+
+        const lastName = row?.customer?.firstName;
+        const shortLast = lastName?.length > 10 ? `${lastName.substring(0, 10)}...` : lastName;
+    
         return (
-          get(row, "customer.firstName", "") +
-          " " +
-          get(row, "customer.lastName", "")
+          <Tooltip title={firstName + " " + lastName} arrow>
+            <span>{shortFirst + " " + shortLast}</span>
+          </Tooltip>
         );
       },
     },

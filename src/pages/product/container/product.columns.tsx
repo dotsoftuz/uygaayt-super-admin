@@ -1,4 +1,5 @@
 import { GridColumns } from "@mui/x-data-grid";
+import { Tooltip } from "antd";
 import { get } from "lodash";
 import { useTranslation } from "react-i18next";
 import { numberFormat } from "utils/numberFormat";
@@ -10,7 +11,14 @@ export const useProductColumns = (): GridColumns => {
     {
       field: t("common.productName"),
       renderCell({ row }) {
-        return get(row, "name", "");
+        const title = row?.name;
+        const truncatedTitle = title?.length > 30 ? `${title.substring(0, 30)}...` : title;
+    
+        return (
+          <Tooltip title={title} arrow>
+            <span>{truncatedTitle}</span>
+          </Tooltip>
+        );
       },
     },
     {
