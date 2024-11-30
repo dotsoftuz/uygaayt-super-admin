@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import { useSearchParams } from "react-router-dom";
 import MainAddress from "../components/MainAddress";
 import WebsiteConditions from "../components/WebsiteConditions";
-import MinimumOrderPrice from "../components/MinimumOrderPrice";
+import DiscountOrder from "../components/DiscountOrder";
 
 const Settings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -201,7 +201,7 @@ const Settings = () => {
           )}
             {activeTab === "clientSettings" && (
             <div className="settings">
-              <MinimumOrderPrice />
+              <DiscountOrder data={data} />
             </div>
           )}
            {activeTab === "mainAddress" && (

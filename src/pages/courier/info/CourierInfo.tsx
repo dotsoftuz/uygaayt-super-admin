@@ -89,7 +89,7 @@ const CourierInfo = () => {
               }
               {
                 active === "basket" && (
-                  <> {t("tabs.basket")}t</>
+                  <> {t("tabs.basket")}</>
                 )
               }
             </TabStyled >

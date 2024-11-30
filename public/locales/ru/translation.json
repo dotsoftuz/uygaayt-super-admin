@@ -153,10 +153,16 @@
     "carColor": "Цвет автомобиля"
   },
   "tabs" : {
-    "orders": "Заказы"
+    "orders": "Заказы",
+    "basket": "Корзина"
   },
   "notification" : {
     "confirmation": "Подтверждение",
     "approved": "Одобренный"
+  },
+  "driver": {
+    "title": "Бонус водителю",
+    "percent": "Процент",
+    "amount": "Количество"
   }
 }

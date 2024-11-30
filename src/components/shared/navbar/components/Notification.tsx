@@ -21,6 +21,7 @@ const Notification = () => {
     const open = Boolean(anchorEl);
 
     const [notifications, setNotifications] = useState<any[]>([]);
+    const [notificationsTotal, setNotificationsTotal] = useState<any[]>([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     const [searchParams] = useSearchParams();
@@ -39,7 +40,8 @@ const Notification = () => {
                 const newNotifications = response?.data?.data || [];
                 const total = response?.data?.total || 0;
 
-                setNotifications((prev) => [...prev, ...newNotifications]);
+                setNotifications(() => [...newNotifications]);
+                setNotificationsTotal(total);
                 setHasMore(newNotifications.length > 0 && notifications.length < total);
             },
         }
@@ -78,6 +80,8 @@ const Notification = () => {
         });
     }, [searchParams, reset, mutate, queryParams.limit, queryParams.search]);
 
+    console.log(notifications)
+
     return (
         <>
             <IconButton
@@ -86,7 +90,7 @@ const Notification = () => {
                 onClick={handleClick}
                 aria-label="notifications"
             >
-                <Badge badgeContent={unreadCount} color="primary">
+                <Badge badgeContent={notificationsTotal} color="primary">
                     <NotificationsIcon />
                 </Badge>
             </IconButton>

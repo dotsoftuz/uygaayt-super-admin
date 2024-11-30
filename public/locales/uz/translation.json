@@ -154,10 +154,16 @@
     "carColor": "Avtomobil rangi"
   },
   "tabs" : {
-    "orders": "Buyurtmalar"
+    "orders": "Buyurtmalar",
+    "basket": "Savat"
   },
   "notification" : {
     "confirmation": "Tasdiqlash",
     "approved": "Tasdiqlangan"
+  },
+  "driver": {
+    "title": "Haydovchiga bonus",
+    "percent": "Foiz",
+    "amount": "Miqdor"
   }
 }

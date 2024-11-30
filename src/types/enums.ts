@@ -39,7 +39,7 @@ export const SETTINGS_TABS: ISettingsTabs[] = [
     role: "role",  // o'zgartirish kere measure
   },
   {
-    name: "Minimal buyurtma bahosi",
+    name: "Chegirmalar",
     key: "clientSettings",
     role: "role",  // o'zgartirish kere 
   },

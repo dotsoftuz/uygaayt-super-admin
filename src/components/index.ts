@@ -25,6 +25,7 @@ import ImageInput from "./form/ImageInput/ImageInput";
 import SelectForm from "./form/Select/SelectForm";
 import MoneyInput from "./form/TextInput/MoneyInput/MoneyInput";
 import TextInput from "./form/TextInput/TextInput";
+import Input from "./form/Input/Input";
 import TimeInput from "./form/TimeInput/TimeInput";
 import Modal from "./shared/modal/modal";
 import Navbar from "./shared/navbar/Navbar";
@@ -69,5 +70,6 @@ export {
   AutocompleteMultiple,
   CommonLoader,
   DatePickerTime,
-  DragTable
+  DragTable,
+  Input
 };
