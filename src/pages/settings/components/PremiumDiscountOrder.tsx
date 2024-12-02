@@ -75,7 +75,7 @@ const PremiumDiscountOrder = ({ data }: any) => {
   return (
     <form id="website_conditions" onSubmit={handleSubmit(onSubmit)}>
       <HeaderOfSettings>
-        <SettingTitle>Dastlabki chegirmalar</SettingTitle>
+        <SettingTitle>Premium chegirmalar</SettingTitle>
         <MainButton
           title={t("general.save")}
           variant="contained"
