@@ -39,7 +39,7 @@ const WebsiteConditions = () => {
   return (
     <form id="website_conditions" onSubmit={handleSubmit(onSubmit)}>
       <HeaderOfSettings>
-        <SettingTitle>Veb-sayt shartlari</SettingTitle>
+        <SettingTitle>{t("settings.website_conditions")}</SettingTitle>
         <MainButton
           title={t("general.save")}
           variant="contained"

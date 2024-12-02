@@ -1,4 +1,6 @@
+import { useTranslation } from "react-i18next";
 import { IRoleData } from "store/reducers/LoginSlice";
+
 
 export const PAYMENT_TYPES = [
   {
@@ -34,27 +36,27 @@ interface ISettingsTabs {
 
 export const SETTINGS_TABS: ISettingsTabs[] = [
   {
-    name: "Funksionallik",
+    name: "functionality",
     key: "functionality",
     role: "role",  // o'zgartirish kere measure
   },
   {
-    name: "Chegirmalar",
+    name: "discounts",
     key: "discountOrder",
     role: "role",  // o'zgartirish kere 
   },
   {
-    name: "Premium chegirmalar",
+    name: "premium_discounts",
     key: "premiumDiscountOrder",
     role: "role",  // o'zgartirish kere 
   },
   {
-    name: "Asosiy manzil radiusi",
+    name: "main_address",
     key: "mainAddress",
     role: "role",  // o'zgartirish kere measure
   },
   {
-    name: "Veb-sayt shartlari",
+    name: "website_conditions",
     key: "websiteConditions",
     role: "role", // o'zgartirish kere siteSettings
   },

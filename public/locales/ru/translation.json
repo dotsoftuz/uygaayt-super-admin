@@ -164,5 +164,21 @@
     "title": "Бонус водителю",
     "percent": "Процент",
     "amount": "Количество"
+  },
+  "settings": {
+    "functionality": "Функциональность",
+    "discounts": "Скидки",
+    "premium_discounts": "Премиальные скидки",
+    "main_address": "Радиус базового адреса",
+    "website_conditions": "Условия использования веб-сайта",
+    "minimum_order_amount": "Минимальная сумма заказа",
+    "banner_time": "Время вращения баннера (секунды)",
+    "store_radius": "Магазины Радиус видимости (км)",
+    "currency": "Валюта",
+    "order_delivery_time": "Время доставки заказа (секунды)",
+    "couirer_return_time": "Время возврата курьера на склад (секунды)",
+    "initial_discount": "Первоначальные скидки",
+    "number": "Число",
+    "map_address": "Адрес карты"
   }
 }

@@ -81,7 +81,7 @@ const DiscountOrder = ({data}:any) => {
   return (
     <form id="website_conditions" onSubmit={handleSubmit(onSubmit)}>
       <HeaderOfSettings>
-        <SettingTitle>Dastlabki chegirmalar</SettingTitle>
+        <SettingTitle>{t("settings.initial_discount")}</SettingTitle>
         <MainButton
           title={t("general.save")}
           variant="contained"
@@ -103,7 +103,7 @@ const DiscountOrder = ({data}:any) => {
                 name={`discounts.${index}.number`}
                 type="number"
                 rules={{ required: false }}
-                label={"Soni"}
+                label={t("settings.number")}
               />
             </Grid>
             <Grid item md={3} xs={3}>
@@ -222,6 +222,7 @@ const DiscountOrder = ({data}:any) => {
           <CommonButton
             startIcon={<PlusIcon />}
             type="button"
+            title={`${t("general.add")}`}
             onClick={() => {
               const newValue = {
                 number: 0,

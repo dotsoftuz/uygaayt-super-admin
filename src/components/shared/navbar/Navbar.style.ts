@@ -297,12 +297,15 @@ export const LanguageBox = styled(Box)`
 
     &.show {
       display: block;
+      z-index: 99 !important;
     }
 
     .MuiList-root {
       .MuiMenuItem-root {
         &.active {
           background-color: #f3f3f8 !important;
+      z-index: 999 !important;
+
         }
       }
     }

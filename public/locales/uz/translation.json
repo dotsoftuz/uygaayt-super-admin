@@ -165,5 +165,21 @@
     "title": "Haydovchiga bonus",
     "percent": "Foiz",
     "amount": "Miqdor"
+  },
+  "settings": {
+    "functionality": "Funksionallik",
+    "discounts": "Chegirmalar",
+    "premium_discounts": "Premium chegirmalar",
+    "main_address": "Asosiy manzil radiusi",
+    "website_conditions": "Veb-sayt shartlari",
+    "minimum_order_amount": "Minimal buyurtma summasi",
+    "banner_time": "Banner aylanish vaqti (sekund)",
+    "store_radius": "Do'konlar ko'rinish radiusi (km)",
+    "currency": "Valyuta",
+    "order_delivery_time": "Buyurtmani yetkazib berish vaqti (sekund)",
+    "couirer_return_time": "Kuryer skladga qaytish vaqti (sekund)",
+    "initial_discount": "Dastlabki chegirmalar",
+    "number": "Soni",
+    "map_address": "Xarita manzili"
   }
 }

@@ -60,7 +60,7 @@ const MainAddress = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} id="main-map-center">
       <HeaderOfSettings>
-        <h2>Xarita manzili</h2>
+        <h2>{t("settings.map_address")}</h2>
         <MainButton
           title={t("general.save")}
           variant="contained"

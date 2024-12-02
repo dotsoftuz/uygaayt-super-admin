@@ -67,8 +67,6 @@ const Settings = () => {
   };
 
 
-  console.log(data)
-
   return (
     <SettingsStyled>
       <Grid container spacing={3}>
@@ -78,10 +76,11 @@ const Settings = () => {
               if (hasAccess(tab.role)) {
                 return (
                   <div
+                    key={tab.key}
                     className={`tab ${activeTab === tab.key && "active"}`}
                     onClick={() => setActiveTab(tab.key)}
                   >
-                    {tab.name}
+                    {t(`settings.${tab.name}`)} {/* Tarjima qilish */}
                     {activeTab === tab.key && (
                       <div className="left-border"></div>
                     )}
@@ -89,13 +88,14 @@ const Settings = () => {
                 );
               }
             })}
+
           </div>
         </Grid>
         <Grid item sm={9}>
-        {activeTab === "functionality" && (
+          {activeTab === "functionality" && (
             <div className="settings">
               <HeaderOfSettings>
-                <SettingTitle>Funksionallik</SettingTitle>
+                <SettingTitle>{t("settings.functionality")}</SettingTitle>
                 <MainButton
                   title={t("general.save")}
                   variant="contained"
@@ -105,7 +105,7 @@ const Settings = () => {
               <Grid container spacing={2}>
                 <Grid item md={12} xs={12}>
                   <div className="item">
-                    <span className="key">Minimal buyurtma summasi</span>
+                    <span className="key">{t("settings.minimum_order_amount")}</span>
                     <TextInput
                       control={control}
                       name="orderMinimumPrice"
@@ -131,7 +131,7 @@ const Settings = () => {
                 </Grid> */}
                 <Grid item md={12} xs={12}>
                   <div className="item">
-                    <span className="key">Banner aylanish vaqti (sekund)</span>
+                    <span className="key">{t("settings.banner_time")}</span>
                     <TextInput
                       control={control}
                       name="bannerTime"
@@ -143,7 +143,7 @@ const Settings = () => {
                 <Grid item md={12} xs={12}>
                   <div className="item">
                     <span className="key">
-                      Do'konlar ko'rinish radiusi (km)
+                      {t("settings.store_radius")}
                     </span>
                     <TextInput
                       control={control}
@@ -156,13 +156,13 @@ const Settings = () => {
 
                 <Grid item md={12} xs={12}>
                   <div className="item">
-                    <span className="key">Valyuta</span>
+                    <span className="key">{t("settings.currency")}</span>
                     <TextInput control={control} name="currency" type="text" />
                   </div>
                 </Grid>
                 <Grid item md={12} xs={12}>
                   <div className="item">
-                    <span className="key">Buyurtmani yetkazib berish vaqti (sekund)</span>
+                    <span className="key">{t("settings.order_delivery_time")}</span>
                     <TextInput
                       control={control}
                       name="maxDeliveryTime"
@@ -173,7 +173,7 @@ const Settings = () => {
                 </Grid>
                 <Grid item md={12} xs={12}>
                   <div className="item">
-                    <span className="key">Kuryer skladga qaytish vaqti (sekund)</span>
+                    <span className="key">{t("settings.couirer_return_time")}</span>
                     <TextInput
                       control={control}
                       name="maxArrivalTime"
@@ -225,7 +225,7 @@ const Settings = () => {
               </Grid>
             </div>
           )}
-            {activeTab === "discountOrder" && (
+          {activeTab === "discountOrder" && (
             <div className="settings">
               <DiscountOrder data={data} />
             </div>
@@ -235,12 +235,12 @@ const Settings = () => {
               <PremiumDiscountOrder data={data} />
             </div>
           )}
-           {activeTab === "mainAddress" && (
+          {activeTab === "mainAddress" && (
             <div className="settings">
               <MainAddress />
             </div>
           )}
-            {activeTab === "websiteConditions" && (
+          {activeTab === "websiteConditions" && (
             <div className="settings">
               <WebsiteConditions />
             </div>
