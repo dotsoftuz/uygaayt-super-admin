@@ -152,7 +152,7 @@ const Navbar = ({ hasNavbar }: { hasNavbar: boolean }) => {
 
         <div className="d-flex align-items-center justify-content-end gap-3">
         
-          {/* <Notification/> */}
+          <Notification/>
           <LanguageBox ref={refLang}>
             <CommonButton
               title={
