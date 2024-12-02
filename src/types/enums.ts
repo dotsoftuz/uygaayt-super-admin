@@ -40,7 +40,12 @@ export const SETTINGS_TABS: ISettingsTabs[] = [
   },
   {
     name: "Chegirmalar",
-    key: "clientSettings",
+    key: "discountOrder",
+    role: "role",  // o'zgartirish kere 
+  },
+  {
+    name: "Premium chegirmalar",
+    key: "premiumDiscountOrder",
     role: "role",  // o'zgartirish kere 
   },
   {

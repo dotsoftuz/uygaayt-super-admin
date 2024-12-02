@@ -31,7 +31,7 @@ const DiscountOrder = ({data}:any) => {
     defaultValues: {
       // orderCashback: 0,
       // orderCashbackType: "amount",
-      discounts: [{ value: 0, amount: 0, type: "amount" }],
+      discounts: [{ number: 0, amount: 0, type: "amount" }],
     },
   });
 
@@ -46,7 +46,7 @@ const DiscountOrder = ({data}:any) => {
 
   const onSubmit = (data: any) => {
     mutate({
-      _id: getData?.data._id,
+      // _id: getData?.data._id,
       discounts: data.discounts?.map((item: any) => ({
         ...item,
         amount: Number(String(item.amount)?.replace(" ", "")),
@@ -60,7 +60,7 @@ const DiscountOrder = ({data}:any) => {
       const cashback = getData?.data?.discounts || [];
       reset({
         discounts: cashback.map((item: any) => ({
-          value: item.value || 0,
+          number: item.number || 0,
           amount: item.amount || 0,
           type: item.type || "amount",
         })),
@@ -92,15 +92,15 @@ const DiscountOrder = ({data}:any) => {
       </HeaderOfSettings>
 
       <Grid container display={'block'}>
-        <Grid md={12} sm={12} style={{ paddingBottom: "20px" }}>
+        {/* <Grid md={12} sm={12} style={{ paddingBottom: "20px" }}>
           <Alert severity="warning">Dastlabni 3ta buyurtma uchun kiritilgan foiz umumiy buyurtma narxidan ayiriladi</Alert>
-        </Grid>
+        </Grid> */}
         {fields.map((field: any, index: any) => (
           <Grid item md={6} xs={6} key={field.id} display={"flex"} gap={2} paddingBlock={1}>
             <Grid item md={3} xs={3}>
               <TextInput
                 control={control}
-                name={`discounts.${index}.value`}
+                name={`discounts.${index}.number`}
                 type="number"
                 rules={{ required: false }}
                 label={"Soni"}
@@ -224,7 +224,7 @@ const DiscountOrder = ({data}:any) => {
             type="button"
             onClick={() => {
               const newValue = {
-                value: 0,
+                number: 0,
                 amount: 0,
                 type: "amount",
               };

@@ -15,6 +15,7 @@ import { useSearchParams } from "react-router-dom";
 import MainAddress from "../components/MainAddress";
 import WebsiteConditions from "../components/WebsiteConditions";
 import DiscountOrder from "../components/DiscountOrder";
+import PremiumDiscountOrder from "../components/PremiumDiscountOrder";
 
 const Settings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -64,6 +65,9 @@ const Settings = () => {
   const onChangePhone = (event: any) => {
     setphonePrefix(event.target.value);
   };
+
+
+  console.log(data)
 
   return (
     <SettingsStyled>
@@ -156,6 +160,28 @@ const Settings = () => {
                     <TextInput control={control} name="currency" type="text" />
                   </div>
                 </Grid>
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">Buyurtmani yetkazib berish vaqti (sekund)</span>
+                    <TextInput
+                      control={control}
+                      name="maxDeliveryTime"
+                      type="number"
+                      rules={{ required: false }}
+                    />
+                  </div>
+                </Grid>
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">Kuryer skladga qaytish vaqti (sekund)</span>
+                    <TextInput
+                      control={control}
+                      name="maxArrivalTime"
+                      type="number"
+                      rules={{ required: false }}
+                    />
+                  </div>
+                </Grid>
 
                 <Grid item md={12} xs={12}>
                   <div className="item">
@@ -199,9 +225,14 @@ const Settings = () => {
               </Grid>
             </div>
           )}
-            {activeTab === "clientSettings" && (
+            {activeTab === "discountOrder" && (
             <div className="settings">
               <DiscountOrder data={data} />
+            </div>
+          )}
+          {activeTab === "premiumDiscountOrder" && (
+            <div className="settings">
+              <PremiumDiscountOrder data={data} />
             </div>
           )}
            {activeTab === "mainAddress" && (
