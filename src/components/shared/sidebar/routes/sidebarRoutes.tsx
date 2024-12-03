@@ -23,7 +23,7 @@ export const sidebarRoutes: ISidebarRoute[] = [
   },
   {
     path: "/about",
-    role: "store",
+    role: "_id",
     translate: "about",
   },
   {
@@ -41,7 +41,7 @@ export const sidebarRoutes: ISidebarRoute[] = [
       },
       {
         path: "/courier",
-        role: "role", // o'zgartirish kerak measure
+        role: "courier",
         translate: "courier",
       },
     ]
@@ -53,18 +53,18 @@ export const sidebarRoutes: ISidebarRoute[] = [
   // },
   {
     path: "/banner",
-    role: "role", // o'zgartirish kerak banner
+    role: "banner", 
     translate: "banner",
   },
   {
     path: "/news",
-    role: "role", // o'zgartirish kerak banner
+    role: "news", 
     translate: "news",
   },
   {
     path: "/rating",
     translate: "rating", 
-    role: "role", // o'zgartirish kerak rating
+    role: "rateComment", 
   },
   {
     path: "/transaction",
@@ -79,6 +79,6 @@ export const sidebarRoutes: ISidebarRoute[] = [
   {
     path: "/settings",
     translate: "settings",
-    role: "_id",
+    role: "settings",
   },
 ];

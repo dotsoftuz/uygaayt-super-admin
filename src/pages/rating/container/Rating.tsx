@@ -62,12 +62,12 @@ const Rating = () => {
           rate,
         }}
         onAddButton={
-          hasAccess("role")
+          hasAccess("rateCommentCreate")
             ? () => dis(setOpenDrawer(true))
             : undefined
         }
         onEditColumn={
-          hasAccess("role")
+          hasAccess("rateCommentUpdate")
             ? (row) => {
                 setEditingRatingId(row._id);
                 dis(setOpenDrawer(true));
@@ -75,7 +75,7 @@ const Rating = () => {
             : undefined
         }
         onDeleteColumn={
-          hasAccess("role")
+          hasAccess("rateCommentDelete")
             ? (row) => setRatingId(row._id)
             : undefined
         }

@@ -38,12 +38,14 @@ const Banner = () => {
         dataUrl="banner/paging"
         columns={columns}
         searchable
-        onAddButton={() => dis(setOpenDrawer(true))}
-        onEditColumn={(row) => {
+        onAddButton={hasAccess("bannerCreate")
+          ? () => dis(setOpenDrawer(true))
+          : undefined}
+        onEditColumn={hasAccess("bannerUpdate") ? (row) => {
           setEditingBannerId(row._id);
           dis(setOpenDrawer(true));
-        }}
-        onDeleteColumn={(row) => setBannerId(row._id)}
+        } : undefined}
+        onDeleteColumn={hasAccess("bannerDelete") ? (row) => setBannerId(row._id) : undefined}
         exQueryParams={{}}
       />
       <WarningModal open={bannerId} setOpen={setBannerId} url="banner/delete" />

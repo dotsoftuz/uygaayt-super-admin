@@ -112,7 +112,9 @@
     "banner":"Banner",
     "rateComment": "Reyting",
     "measure": "Birliklar",
-    "siteSettings": "Veb-sayt sozlamalari"
+    "siteSettings": "Veb-sayt sozlamalari",
+    "news": "Yangiliklar"
+    
   },
   "order": {
     "Created": "Yaratildi",

@@ -44,12 +44,12 @@ const Employee = () => {
         dataUrl="courier/paging"
         columns={columns}
         searchable
-        onAddButton={hasAccess('employeeCreate') ? () => dis(setOpenDrawer(true)) : undefined}
-        onEditColumn={hasAccess('employeeUpdate') ? (row) => {
+        onAddButton={hasAccess('courierCreate') ? () => dis(setOpenDrawer(true)) : undefined}
+        onEditColumn={hasAccess('courierUpdate') ? (row) => {
           setEditingCourierId(row._id);
           dis(setOpenDrawer(true));
         } : undefined}
-        onDeleteColumn={hasAccess('employeeDelete') ? (row) => setCourierId(row._id) : undefined}
+        onDeleteColumn={hasAccess('courierDelete') ? (row) => setCourierId(row._id) : undefined}
         onRowClick={(row) => navigate(`/courier/${row._id}`)}
         exQueryParams={{}}
       />

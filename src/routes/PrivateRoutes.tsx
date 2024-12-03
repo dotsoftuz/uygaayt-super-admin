@@ -54,7 +54,7 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   {
     element: <Category />,
     path: "category",
-    role: "employee",
+    role: "category",
   },
   {
     element: <CategoryChild />,
@@ -79,27 +79,27 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   {
     element: <Banner />,
     path: "banner",
-    role: "role", // o'zgartirish kerak banner
+    role: "banner",
   },
     {
     element: <News />,
     path: "news",
-    role: "role", // o'zgartirish kerak banner
+    role: "news", 
   },
   {
     element: <Measure />,
     path: "measure",
-    role: "role", // o'zgartirish kerak measure
+    role: "measure",
   },
   {
     element: <Courier />,
     path: "courier/*",
-    role: "role", // o'zgartirish kerak courier
+    role: "courier",
   },
   {
     element: <Rating />,
     path: "/rating",
-    role: "role", // o'zgartirish kerak rateComment
+    role: "rateComment",
   },
   {
     element: <Transaction />,
@@ -114,7 +114,7 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   {
     element: <Settings />,
     path: "settings",
-    role: "_id",
+    role: "settings",
   },
 ];
 

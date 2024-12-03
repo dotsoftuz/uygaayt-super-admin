@@ -38,24 +38,24 @@ export const ALL_ROLES: Array<{
       },
     ],
   },
-  {
-    role: "order",
-    label: "order",
-    childRoles: [
-      {
-        role: "orderCreate",
-        label: "create",
-      },
-      {
-        role: "orderUpdate",
-        label: "update",
-      },
-      {
-        role: "orderDelete",
-        label: "delete",
-      },
-    ],
-  },
+  // {
+  //   role: "order",
+  //   label: "order",
+  //   childRoles: [
+  //     {
+  //       role: "orderCreate",
+  //       label: "create",
+  //     },
+  //     {
+  //       role: "orderUpdate",
+  //       label: "update",
+  //     },
+  //     {
+  //       role: "orderDelete",
+  //       label: "delete",
+  //     },
+  //   ],
+  // },
   {
     role: "customer",
     label: "customer",
@@ -182,6 +182,24 @@ export const ALL_ROLES: Array<{
       },
     ],
   },
+  {
+    role: "news",
+    label: "news",
+    childRoles: [
+      {
+        role: "newsCreate",
+        label: "create",
+      },
+      {
+        role: "newsUpdate",
+        label: "update",
+      },
+      {
+        role: "newsDelete",
+        label: "delete",
+      },
+    ],
+  },
   // {
   //   role: "measure",
   //   label: "measure",
@@ -200,24 +218,24 @@ export const ALL_ROLES: Array<{
   //     },
   //   ],
   // },
-  // {
-  //   role: "rateComment",
-  //   label: "rateComment",
-  //   childRoles: [
-  //     {
-  //       role: "rateCommentCreate",
-  //       label: "create",
-  //     },
-  //     {
-  //       role: "rateCommentUpdate",
-  //       label: "update",
-  //     },
-  //     {
-  //       role: "rateCommentDelete",
-  //       label: "delete",
-  //     },
-  //   ],
-  // },
+  {
+    role: "rateComment",
+    label: "rateComment",
+    childRoles: [
+      {
+        role: "rateCommentCreate",
+        label: "create",
+      },
+      {
+        role: "rateCommentUpdate",
+        label: "update",
+      },
+      {
+        role: "rateCommentDelete",
+        label: "delete",
+      },
+    ],
+  },
   {
     role: "store",
     label: "store",

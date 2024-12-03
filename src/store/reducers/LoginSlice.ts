@@ -64,6 +64,10 @@ const initialState = {
     settingsUpdate: false,
     siteSettings: false,
     siteSettingsUpdate: false,
+    news: false,
+    newsCreate: false,
+    newsUpdate: false,
+    newsDelete: false,
   },
   loginData: {
     token: "string",

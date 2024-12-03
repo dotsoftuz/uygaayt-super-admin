@@ -70,7 +70,7 @@ const Client = () => {
         dataUrl="product/paging"
         searchable
         headerChildren={renderHeader}
-        onAddButton={() => dis(setOpenDrawer(true))}
+        onAddButton={hasAccess("productCreate") ?  () => dis(setOpenDrawer(true)) : undefined}
         onEditColumn={
           hasAccess("productUpdate")
             ? (row) => {

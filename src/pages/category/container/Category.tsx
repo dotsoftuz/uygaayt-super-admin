@@ -49,8 +49,7 @@ const Category = () => {
         dragKey="categoryIds"
         render={render}
         setRender={setRender}
-        onAddButton={() => dis(setOpenDrawer(true))}
-        
+        onAddButton={hasAccess("categoryCreate") ? () => dis(setOpenDrawer(true)) : undefined}
       />
       <WarningModal
         open={categoryId}
