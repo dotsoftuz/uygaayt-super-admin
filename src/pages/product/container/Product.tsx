@@ -1,4 +1,4 @@
-import { AutoCompleteFilter, Checkbox, FormDrawer, Table } from "components";
+import { AutoCompleteFilter, Checkbox, ExportButton, FormDrawer, Table } from "components";
 import { useProductColumns } from "./product.columns";
 import { useRoleManager } from "services/useRoleManager";
 import { useAppDispatch } from "store/storeHooks";
@@ -22,16 +22,21 @@ const Client = () => {
   const [productImages, setProductImages] = useState<IIdImage[]>([]);
   const [mainImageId, setMainImageId] = useState<any>();
 
+  const exportUrl = `/exams-table/export/`;
+
   const renderHeader = (
-    <Grid container width={400} spacing={2}>
-      <Grid item sm={6}>
+    <Grid container width={600} spacing={2}>
+      <Grid item sm={3} style={{paddingTop: "20px"}}>
+        <ExportButton url={exportUrl} />
+      </Grid>
+      <Grid item sm={4}>
         <AutoCompleteFilter
           optionsUrl="category/paging"
           filterName="categoryId"
           placeholder={t("common.category")}
         />
       </Grid>
-      <Grid item sm={6}>
+      <Grid item sm={4}>
         <Checkbox
           control={formStore.control}
           label={t("enum.active")}
@@ -70,13 +75,13 @@ const Client = () => {
         dataUrl="product/paging"
         searchable
         headerChildren={renderHeader}
-        onAddButton={hasAccess("productCreate") ?  () => dis(setOpenDrawer(true)) : undefined}
+        onAddButton={hasAccess("productCreate") ? () => dis(setOpenDrawer(true)) : undefined}
         onEditColumn={
           hasAccess("productUpdate")
             ? (row) => {
-                setEditingProductId(row._id);
-                dis(setOpenDrawer(true));
-              }
+              setEditingProductId(row._id);
+              dis(setOpenDrawer(true));
+            }
             : undefined
         }
         onDeleteColumn={

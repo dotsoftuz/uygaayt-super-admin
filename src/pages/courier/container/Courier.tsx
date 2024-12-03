@@ -1,4 +1,4 @@
-import { FormDrawer, Table } from "components";
+import { ExportButton, FormDrawer, Table } from "components";
 import { useState } from "react";
 import { useCourierColumns } from "./courier.columns";
 import { useAppDispatch } from "../../../store/storeHooks";
@@ -38,12 +38,15 @@ const Employee = () => {
     });
   };
 
+  const exportUrl = `/exams-table/export/`;
+
   return (
     <>
       <Table
         dataUrl="courier/paging"
         columns={columns}
         searchable
+        headerChildren={<ExportButton url={exportUrl} />}
         onAddButton={hasAccess('courierCreate') ? () => dis(setOpenDrawer(true)) : undefined}
         onEditColumn={hasAccess('courierUpdate') ? (row) => {
           setEditingCourierId(row._id);

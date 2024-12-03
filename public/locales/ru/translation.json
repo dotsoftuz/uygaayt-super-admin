@@ -91,7 +91,11 @@
     },
     "symbol": "Символ",
     "rating": "Рейтинг",
-    "product": "Продукт"
+    "product": "Продукт",
+    "late_order": "Поздние заказы",
+    "delivered_on_time": "Заказы доставлены вовремя",
+    "sold": "Распроданный",
+    "customer_bought_count" : "Купленные клиенты"
   },
   "role": {
     "order": "Заказы",

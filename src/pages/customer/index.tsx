@@ -1,9 +1,14 @@
-import Client from "./container/Customer";
+import {Route, Routes } from "react-router-dom";
+import Customer from "./container/Customer";
+import CustomerInfo from "./info/CustomerInfo";
 
-export default Client;
+const index = () => {
+  return (
+    <Routes>
+      <Route path=":id" element={<CustomerInfo />} />
+      <Route path="*" element={<Customer/>} />
+    </Routes>
+  );
+};
 
-/**
- *
- *
- *
- */
+export default index;

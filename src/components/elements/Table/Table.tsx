@@ -221,6 +221,32 @@ const Table = <TData extends { _id: string }>({
                 loading={isLoading}
                 hideFooterPagination
                 disableSelectionOnClick
+                sortingMode="server"
+                sortModel={
+                  allParams?.sortBy && !reset
+                    ? [
+                        {
+                          sort: allParams?.sortOrder === "1" ? "asc" : "desc",
+                          field: allParams?.sortBy,
+                        },
+                      ]
+                    : []
+                }
+                onSortModelChange={(model) => {
+                  if (model.length) {
+                    setSearchParams({
+                      ...allParams,
+                      sortBy: `${model[0].field}`,
+                      sortOrder: `${model[0].sort === "asc" ? 1 : -1}`,
+                    });
+                  } else {
+                    delete allParams.sortBy;
+                    delete allParams.sortOrder;
+                    setSearchParams({
+                      ...allParams,
+                    });
+                  }
+                }}
                 isRowSelectable={(params: GridRowParams<TData>) =>
                   isRowSelectable?.(params.row)
                 }

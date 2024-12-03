@@ -91,7 +91,11 @@
     },
     "symbol": "Belgi",
     "rating": "Reyting",
-    "product": "Mahsulot"
+    "product": "Mahsulot",
+    "late_order": "Kech qolgan buyurtmalar",
+    "delivered_on_time": "Vaqtida yetkazilgan buyurtmalar",
+    "sold": "Sotilgan",
+    "customer_bought_count" : "Sotib olgan mijozlar"
   },
   "role": {
     "order": "Buyurtmalar",

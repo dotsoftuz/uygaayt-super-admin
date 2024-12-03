@@ -28,9 +28,34 @@ export const useProductColumns = (): GridColumns => {
       },
     },
     {
+      field: t("common.discountValue"),
+      renderCell({ row }) {
+        return (
+          numberFormat(get(row, "discountValue", "")) + 
+          (row.discountType === "percent" ? "%" : "")
+        );
+      },
+    },
+    {
       field: t("common.residue"),
       renderCell({ row }) {
         return numberFormat(get(row, "inStock", ""));
+      },
+    },
+    {
+      field: "sold",
+      headerName: t("common.sold")!,
+      sortable: true,
+      renderCell({ row }) {
+        return numberFormat(get(row, "", ""));
+      },
+    },
+    {
+      field: "customer_bought_count",
+      headerName: t("common.customer_bought_count")!,
+      sortable: true,
+      renderCell({ row }) {
+        // return numberFormat(get(row, "inStock", ""));
       },
     },
     // {
