@@ -20,6 +20,11 @@ const Measure = lazy(() => import("pages/measure"));
 const Courier = lazy(() => import("pages/courier"));
 const Rating = lazy(() => import("pages/rating"));
 
+const CourierAnalytics = lazy(() => import("pages/courier_analytics"));
+const CustomerAnalytics = lazy(() => import("pages/customer_analytics"));
+const ProductAnalytics = lazy(() => import("pages/product_analytics"));
+
+
 const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   {
     element: <Navigate to="home" replace />,
@@ -117,17 +122,17 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
     role: "settings",
   },
   {
-    element: <Courier />,
+    element: <CourierAnalytics />,
     path: "courier_analytics",
     role: "courier",
   },
   {
-    element: <Customer />,
+    element: <CustomerAnalytics />,
     path: "customer_analytics",
     role: "customer",
   },
   {
-    element: <Product />,
+    element: <ProductAnalytics />,
     path: "product_analytics",
     role: "product",
   },

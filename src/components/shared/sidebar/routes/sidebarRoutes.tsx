@@ -82,17 +82,17 @@ export const sidebarRoutes: ISidebarRoute[] = [
       {
         path: "/courier_analytics",
         role: "employee",
-        translate: "employee",
+        translate: "courier_analytics",
       },
       {
         path: "/customer_analytics",
         role: "role",
-        translate: "role",
+        translate: "customer_analytics",
       },
       {
         path: "/product_analytics",
         role: "courier",
-        translate: "courier",
+        translate: "product_analytics",
       },
     ]
   },

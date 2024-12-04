@@ -38,7 +38,10 @@
     "courier": "Курьеры",
     "rating": "Рейтинг",
     "news": "Новости",
-    "analytics": "Аналитика"
+    "analytics": "Аналитика",
+    "customer_analytics": "Аналитика клиентов",
+    "courier_analytics": "Курьерская аналитика",
+    "product_analytics": "Аналитика продукта"
   },
   "common": {
     "fullName": "Ф.И.О.",

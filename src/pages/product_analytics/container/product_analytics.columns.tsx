@@ -42,5 +42,27 @@ export const useProductColumns = (): GridColumns => {
         return numberFormat(get(row, "inStock", ""));
       },
     },
+    {
+      field: "sold",
+      headerName: t("common.sold")!,
+      sortable: true,
+      renderCell({ row }) {
+        return numberFormat(get(row, "", ""));
+      },
+    },
+    {
+      field: "customer_bought_count",
+      headerName: t("common.customer_bought_count")!,
+      sortable: true,
+      renderCell({ row }) {
+        // return numberFormat(get(row, "inStock", ""));
+      },
+    },
+    // {
+    //   field: t("common.status"),
+    //   renderCell({ row }) {
+    //     return get(row, "status", "");
+    //   },
+    // },
   ];
 };

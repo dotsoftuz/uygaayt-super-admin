@@ -1,5 +1,5 @@
 import { AutoCompleteFilter, Checkbox, ExportButton, FormDrawer, Table } from "components";
-import { useProductColumns } from "./product.columns";
+import { useProductColumns } from "./product_analytics.columns";
 import { useRoleManager } from "services/useRoleManager";
 import { useAppDispatch } from "store/storeHooks";
 import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
@@ -22,8 +22,13 @@ const Client = () => {
   const [productImages, setProductImages] = useState<IIdImage[]>([]);
   const [mainImageId, setMainImageId] = useState<any>();
 
+  const exportUrl = `/exams-table/export/`;
+
   const renderHeader = (
-    <Grid  width={300} spacing={2}>
+    <Grid container width={600} spacing={2}>
+      <Grid item sm={3} style={{paddingTop: "20px"}}>
+        <ExportButton url={exportUrl} />
+      </Grid>
       <Grid item sm={4}>
         <AutoCompleteFilter
           optionsUrl="category/paging"
@@ -31,13 +36,13 @@ const Client = () => {
           placeholder={t("common.category")}
         />
       </Grid>
-      {/* <Grid item sm={4}>
+      <Grid item sm={4}>
         <Checkbox
           control={formStore.control}
           label={t("enum.active")}
           name="isActiveQuery"
         />
-      </Grid> */}
+      </Grid>
     </Grid>
   );
 

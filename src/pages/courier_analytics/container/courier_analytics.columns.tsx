@@ -25,5 +25,21 @@ export const useCourierColumns = (): GridColumns => {
         return params.row.role?.name;
       },
     },
+    {
+      field: "true",
+      headerName: t("common.late_order")!,
+      sortable: true,
+      renderCell(params) {
+        return params.row.role?.name;
+      },
+    },
+    {
+      sortable: true,
+      field: "false",
+      headerName: t("common.delivered_on_time")!,
+      renderCell(params) {
+        return params.row.role?.name;
+      },
+    },
   ];
 };

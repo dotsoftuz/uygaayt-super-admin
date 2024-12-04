@@ -38,7 +38,10 @@
     "courier": "Kuryerlar",
     "rating": "Reyting",
     "news": "Yangiliklar",
-    "analytics": "Analitika"
+    "analytics": "Analitika",
+    "customer_analytics": "Mijozlar analitikasi",
+    "courier_analytics": "Kuryerlar analitikasi",
+    "product_analytics": "Mahsulotlar analitikasi"
   },
   "common": {
     "fullName": "F.I.O",

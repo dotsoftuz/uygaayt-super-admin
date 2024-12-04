@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 
 export const StyledSwitch = styled("div")({
   position: "relative",
-  width: "90px",
+  minWidth: "90px",
   height: "51.6px",
   borderRadius: "0 8px 8px 0",
   display: "flex",

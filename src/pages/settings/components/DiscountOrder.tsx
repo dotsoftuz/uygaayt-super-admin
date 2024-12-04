@@ -16,7 +16,7 @@ import currencyFormatter from "utils/currencyFormatter";
 import { realNumberPattern } from "utils/pattern";
 import { useParams } from "react-router-dom";
 
-const DiscountOrder = ({data}:any) => {
+const DiscountOrder = ({ data }: any) => {
   const { t } = useTranslation();
   const { id } = useParams();
 
@@ -56,7 +56,7 @@ const DiscountOrder = ({data}:any) => {
 
   useEffect(() => {
     if (getStatus === "success") {
-      console.log(getData?.data?.discounts); 
+      console.log(getData?.data?.discounts);
       const cashback = getData?.data?.discounts || [];
       reset({
         discounts: cashback.map((item: any) => ({
@@ -96,8 +96,13 @@ const DiscountOrder = ({data}:any) => {
           <Alert severity="warning">Dastlabni 3ta buyurtma uchun kiritilgan foiz umumiy buyurtma narxidan ayiriladi</Alert>
         </Grid> */}
         {fields.map((field: any, index: any) => (
-          <Grid item md={6} xs={6} key={field.id} display={"flex"} gap={2} paddingBlock={1}>
-            <Grid item md={3} xs={3}>
+          <Grid
+            container
+            spacing={2}
+            key={field.id}
+            sx={{ paddingBlock: 1, display: "flex", flexWrap: "wrap" }}
+          >
+            <Grid item xs={12} sm={6} md={3}>
               <TextInput
                 control={control}
                 name={`discounts.${index}.number`}
@@ -106,11 +111,10 @@ const DiscountOrder = ({data}:any) => {
                 label={t("settings.number")}
               />
             </Grid>
-            <Grid item md={3} xs={3}>
+
+            <Grid item xs={12} sm={6} md={3}>
               <Input
-                label={t(
-                  `driver.${watch(`discounts.${index}.type`)}`
-                )}
+                label={t(`driver.${watch(`discounts.${index}.type`)}`)}
                 params={{
                   ...register(
                     `discounts.${index}.amount`,
@@ -118,19 +122,14 @@ const DiscountOrder = ({data}:any) => {
                       ? {
                         required: {
                           value: true,
-                          message: t(
-                            "error_messages.percent_field_required"
-                          ),
+                          message: t("error_messages.percent_field_required"),
                         },
                         pattern: {
                           value: realNumberPattern,
-                          message: t(
-                            "error_messages.place_enter_a_number"
-                          ),
+                          message: t("error_messages.place_enter_a_number"),
                         },
                         max:
-                          watch(`discounts.${index}.type`) ===
-                            "percent"
+                          watch(`discounts.${index}.type`) === "percent"
                             ? {
                               value: 100,
                               message: t(
@@ -149,9 +148,7 @@ const DiscountOrder = ({data}:any) => {
                       : {
                         required: {
                           value: true,
-                          message: t(
-                            "error_messages.percent_field_required"
-                          ),
+                          message: t("error_messages.percent_field_required"),
                         },
                         onChange: (e: any) =>
                           setValue(
@@ -167,56 +164,70 @@ const DiscountOrder = ({data}:any) => {
               />
             </Grid>
 
-            <Grid item md={2} xs={2}>
-              <Box display="flex" alignItems="start" marginTop={"22.6px"}>
-                <StyledSwitch
-                  className={
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={3}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              marginTop={"22.6px"}
+            >
+              <StyledSwitch
+                className={
+                  watch(`discounts.${index}.type`) === "percent" ? "show" : ""
+                }
+                onClick={() =>
+                  setValue(
+                    `discounts.${index}.type`,
                     watch(`discounts.${index}.type`) === "percent"
-                      ? "show"
-                      : ""
-                  }
-                  onClick={() =>
-                    setValue(
-                      `discounts.${index}.type`,
-                      watch(`discounts.${index}.type`) ===
-                        "percent"
-                        ? "amount"
-                        : "percent"
-                    )
-                  }
-                  style={{
-                    borderColor: errors.discounts?.[index]?.type
-                      ? "red"
-                      : "rgba(49,57,73,0.1)",
-                  }}
-                >
-                  <StyledPercent>
-                    <Percent />
-                  </StyledPercent>
-                  <StyledPercent style={{ fontWeight: "500" }}>
-                    {data?.data?.currency}
-                  </StyledPercent>
-                </StyledSwitch>
-              </Box>
+                      ? "amount"
+                      : "percent"
+                  )
+                }
+                style={{
+                  borderColor: errors.discounts?.[index]?.type
+                    ? "red"
+                    : "rgba(49,57,73,0.1)",
+                }}
+              >
+                <StyledPercent>
+                  <Percent />
+                </StyledPercent>
+                <StyledPercent style={{ fontWeight: 500 }}>
+                  {data?.data?.currency}
+                </StyledPercent>
+              </StyledSwitch>
             </Grid>
 
-            <Grid item md={1} xs={1}>
-              <span style={{
-                display: 'flex', justifyContent: 'center', alignItems: 'center', position: "relative",
-                top: "35px"
-              }}>
-                <Delete
-                  style={{
-                    cursor: "pointer",
-                    color: "#D54239",
-                  }}
-                  onClick={() => {
-                    remove(index);
-                  }}
-                />
-              </span>
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={3}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              marginTop={"22.6px"}
+            >
+              <Delete
+                sx={{
+                  cursor: "pointer",
+                  color: "#D54239",
+                  fontSize: "1.5rem",
+                }}
+                onClick={() => {
+                  remove(index);
+                }}
+              />
             </Grid>
           </Grid>
+
         ))}
         <Grid item md={8} xs={12} paddingBlock={2}>
           <CommonButton
