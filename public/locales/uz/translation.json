@@ -37,7 +37,8 @@
     "control": "Boshqaruv",
     "courier": "Kuryerlar",
     "rating": "Reyting",
-    "news": "Yangiliklar"
+    "news": "Yangiliklar",
+    "analytics": "Analitika"
   },
   "common": {
     "fullName": "F.I.O",

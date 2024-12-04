@@ -95,12 +95,18 @@ const Navbar = ({ hasNavbar }: { hasNavbar: boolean }) => {
       dis(socketReRender(true));
       if (!!data.data.state?.isSoundable) makeNoice();
     }
+    function Notification(data: any) {
+      dis(socketReRender(true));
+      if (!!data.data.state?.isSoundable) makeNoice();
+    }
 
     socket.on("orderCreated", OrderCreate);
     socket.on("orderUpdated", OrderUpdate);
+    socket.on("notification", Notification);
     return () => {
       socket.off("orderUpdated", OrderUpdate);
       socket.off("orderCreated", OrderCreate);
+      socket.off("notification", Notification);
     };
   }, []);
 

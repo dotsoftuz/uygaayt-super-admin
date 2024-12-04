@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import dayjs from 'dayjs';
 
 function getIcon(type: any) {
     switch (type) {
@@ -93,19 +94,26 @@ export function NotificationItem({ notification }: NotificationItemProps) {
                 <Typography variant="body1" sx={{ fontWeight: 500 }}>
                     {notification.shortText?.[currentLang]}:{' '}
                 </Typography>
-                {notification?.isRead !== undefined && notification.isRead === false ? (
-                    <AcceptButton variant="contained" onClick={handleAcceptClick}>
-                        {t("notification.confirmation")}
-                    </AcceptButton>
-                ) : notification?.isRead !== undefined ? (
-                    <AcceptedButton variant="contained" disabled>
-                        {t("notification.approved")}
-                    </AcceptedButton>
-                ) : null}
 
-                {/* <Typography variant="body2" color="text.secondary">
-                    {notification.date} | {notification.time}
-                </Typography> */}
+                <Typography my={1}>
+                    {
+                        notification?.type === "courier_arrived" ? (
+                            notification.isRead === false ? (
+                                <AcceptButton variant="contained" onClick={handleAcceptClick}>
+                                    {t("notification.confirmation")}
+                                </AcceptButton>
+                            ) : (
+                                <AcceptedButton variant="contained" disabled>
+                                    {t("notification.approved")}
+                                </AcceptedButton>
+                            )
+                        ) : null
+                    }
+                </Typography>
+
+                <Typography variant="body2" color="text.secondary" my={1}>
+                    {dayjs(notification.date).format('DD.MM.YYYY HH:mm')}
+                </Typography>
             </Box>
         </Box>
     );

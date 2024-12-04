@@ -1,5 +1,5 @@
 import { DragTable, FormDrawer, Table } from "components";
-import { useCategoryCol, useCategoryColumns } from "./category.columns";
+import { useCategoryCol } from "./category.columns";
 import { useAppDispatch } from "store/storeHooks";
 import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
 import { useTranslation } from "react-i18next";

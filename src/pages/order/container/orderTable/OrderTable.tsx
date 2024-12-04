@@ -6,17 +6,19 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useRoleManager } from "services/useRoleManager";
-import { useAppDispatch } from "store/storeHooks";
+import { useAppDispatch, useAppSelector } from "store/storeHooks";
 import { useOrderTableColumns } from "./orderTable.columns";
 import AutoCompleteFilter from "components/common/AutocompleteFilterGet/AutoCompleteFilter";
 import { Table } from "components";
+import { socketReRender } from "store/reducers/SocketSlice";
 
 const OrderTable = () => {
   const [stateUpdateData, setStateUpdateData] = useState<any>();
   const dis = useAppDispatch();
   const hasAccess = useRoleManager();
+  const socketRender = useAppSelector((store) => store.SocketState.render);
 
-  const { mutate } = useApiMutation(
+  const { mutate, reset } = useApiMutation(
     `order/state/${stateUpdateData?.orderId}`,
     "put",
     {
@@ -41,6 +43,13 @@ const OrderTable = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
+  useEffect(() => {
+    if (socketRender) {
+      reset();
+      dis(socketReRender(false));
+    }
+  }, [socketRender]);
+
   const renderHeader = (
     <>
       <Grid container width={200}>
@@ -56,6 +65,8 @@ const OrderTable = () => {
       <SwitchView />
     </>
   );
+
+  
 
   return (
     <>

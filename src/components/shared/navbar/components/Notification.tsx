@@ -5,10 +5,13 @@ import { NotificationList } from './NotificationList';
 import { useSearchParams } from 'react-router-dom';
 import { useApiMutation } from 'hooks/useApi/useApiHooks';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import { useAppDispatch, useAppSelector } from 'store/storeHooks';
+import { socketReRender } from 'store/reducers/SocketSlice';
 
 const Notification = () => {
-
+    const socketRender = useAppSelector((store) => store.SocketState.render);
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const dis = useAppDispatch();
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -80,7 +83,13 @@ const Notification = () => {
         });
     }, [searchParams, reset, mutate, queryParams.limit, queryParams.search]);
 
-    console.log(notifications)
+    
+    useEffect(() => {
+        if (socketRender) {
+          reset();
+          dis(socketReRender(false));
+        }
+      }, [socketRender, data]);
 
     return (
         <>

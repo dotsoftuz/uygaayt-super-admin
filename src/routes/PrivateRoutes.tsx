@@ -53,7 +53,7 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   },
   {
     element: <Category />,
-    path: "category",
+    path: "category/*",
     role: "category",
   },
   {
@@ -109,12 +109,27 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   {
     element: <Integration />,
     path: "integration",
-    role: "integration",
+    role: "_id",
   },
   {
     element: <Settings />,
     path: "settings",
     role: "settings",
+  },
+  {
+    element: <Courier />,
+    path: "courier_analytics",
+    role: "courier",
+  },
+  {
+    element: <Customer />,
+    path: "customer_analytics",
+    role: "customer",
+  },
+  {
+    element: <Product />,
+    path: "product_analytics",
+    role: "product",
   },
 ];
 

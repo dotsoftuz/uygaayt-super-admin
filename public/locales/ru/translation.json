@@ -37,7 +37,8 @@
     "control": "Управление",
     "courier": "Курьеры",
     "rating": "Рейтинг",
-     "news": "Новости"
+    "news": "Новости",
+    "analytics": "Аналитика"
   },
   "common": {
     "fullName": "Ф.И.О.",
