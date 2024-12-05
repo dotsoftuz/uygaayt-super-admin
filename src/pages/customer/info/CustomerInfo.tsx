@@ -26,13 +26,13 @@ const CustomerInfo = () => {
         id && (
           <Box sx={{
             // minHeight: '100vh',
-            py: 6,
-            px: 4
+            py: 2,
+            px: 2
           }}>
-            <Container maxWidth="lg" sx={{ py: 6 }}>
+            <Container maxWidth="lg" sx={{ py: 2 }}>
               <Box sx={{
                 display: 'flex',
-                gap: 4,
+                gap: 2,
                 flexDirection: { xs: 'column', md: 'row' }
               }}>
                 <Box sx={{

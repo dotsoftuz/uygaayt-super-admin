@@ -10,8 +10,9 @@ import { IIdImage } from "hooks/usePostImage";
 import CourierFrom from "../components/CourierForm";
 import WarningModal from "components/common/WarningModalPost/WarningModal";
 import { useNavigate } from "react-router-dom";
+import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
 
-const Employee = () => {
+const CourierAnalytics = () => {
   const [editingCourierId, setEditingCourierId] = useState<any>();
   const [courierId, setCourierId] = useState<any>();
   const columns = useCourierColumns();
@@ -22,6 +23,8 @@ const Employee = () => {
   const [courierImages, setCourierImages] = useState<IIdImage[]>([]);
   const [mainImageId, setMainImageId] = useState<any>();
   const navigate = useNavigate();
+  const allParams = useAllQueryParams();
+
 
   const resetForm = () => {
     setEditingCourierId(undefined);
@@ -38,12 +41,13 @@ const Employee = () => {
     });
   };
 
-  const exportUrl = `/exams-table/export/`;
+  const exportUrl = `/report/courier/export/${allParams.dateFrom ? `dateFrom=${allParams.dateFrom}&` : ""
+    }${allParams?.dateTo ? `dateTo=${allParams.dateTo}&` : ""}`;
 
   return (
     <>
       <Table
-        dataUrl="courier/paging"
+        dataUrl="report/courier"
         columns={columns}
         searchable
         headerChildren={<ExportButton url={exportUrl} />}
@@ -79,4 +83,4 @@ const Employee = () => {
   );
 };
 
-export default Employee;
+export default CourierAnalytics;

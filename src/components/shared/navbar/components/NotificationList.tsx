@@ -8,9 +8,11 @@ import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { useApiMutation } from 'hooks/useApi/useApiHooks';
 import { useSearchParams } from 'react-router-dom';
 
-export function NotificationList(props:any) {
-   
-    const {notifications, unreadCount, loadMoreRef, loading, hasMore} = props
+export function NotificationList(props: any) {
+
+    const { notifications, unreadCount, loadMoreRef, loading, hasMore , reset} = props
+
+    console.log(notifications)
 
     return (
         <Box>
@@ -26,17 +28,17 @@ export function NotificationList(props:any) {
                         borderRadius: 8,
                     }}
                 >
-                    {unreadCount} yangi
+                    {/* {unreadCount} yangi */}
                 </Typography>
             </Box>
             <Divider />
-                <Box sx={{ maxHeight: 400, overflow: 'auto' }}>
-                    {notifications.map((notification:any, index:any) => (
-                        <Box key={notification.id}>
-                            <NotificationItem notification={notification} />
-                            {index < notifications.length - 1 && <Divider />}
-                        </Box>
-                    ))}
+            <Box sx={{ maxHeight: 400, overflow: 'auto' }}>
+                {notifications?.map((notification: any, index: any) => (
+                    <Box key={notification.id}>
+                        <NotificationItem reset={reset} notification={notification} />
+                        {index < notifications.length - 1 && <Divider />}
+                    </Box>
+                ))}
                 <Box ref={loadMoreRef} sx={{ p: 2, textAlign: 'center' }}>
                     {loading && <CircularProgress size={24} />}
                     {!hasMore && notifications.length > 0 && (

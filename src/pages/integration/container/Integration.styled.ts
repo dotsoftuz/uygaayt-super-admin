@@ -22,7 +22,6 @@ export const IntegrationStyled = styled.div`
 export const InegrationCard = styled.div`
   padding: 20px;
   width: 880px;
-  height: 440px;
   border-radius: 12px;
   background-color: #ffffff;
   position: relative !important;

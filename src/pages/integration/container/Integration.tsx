@@ -1,6 +1,6 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Card, Grid, Typography } from "@mui/material";
 import { CopyIcon } from "assets/svgs";
-import { CommonLoader, Modal, SelectForm, TextInput } from "components";
+import { CommonLoader, Image, Modal, SelectForm, TextInput } from "components";
 import CommonButton from "components/common/commonButton/Button";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import useCopyToClipboard from "hooks/useClipboard";
@@ -27,20 +27,13 @@ const Integration = () => {
 
   const { t } = useTranslation();
 
-  // const { data, refetch, isLoading } = useApi("integration");
-  const { data, reset, isLoading} = useApiMutation(`integration`, "post", {
-    // onSuccess() {
-    //   refetch();
-    //   refetchInteg();
-    //   toast.success(t("general.success"));
-    // },
-  });
+  const { data, refetch, isLoading } = useApi("integration/get-all");
 
   const [copiedText, copy] = useCopyToClipboard();
 
-  const { mutate } = useApiMutation(`integration/${integrationId}`, "put", {
+  const { mutate } = useApiMutation(`integration/update`, "put", {
     onSuccess() {
-      reset();
+      refetch();
       refetchInteg();
       toast.success(t("general.success"));
     },
@@ -50,6 +43,7 @@ const Integration = () => {
     const requestData = {
       ...integration,
       fields: data.fields,
+      _id: integrationId
     };
     mutate(requestData);
   });
@@ -59,7 +53,7 @@ const Integration = () => {
     isFetching: loading,
     refetch: refetchInteg,
   } = useApi(
-    `integration/${integrationId}`,
+    `integration/get-by-id/${integrationId}`,
     {},
     {
       enabled: !!integrationId,
@@ -70,22 +64,59 @@ const Integration = () => {
   );
 
   const handleInstalled = (bool: boolean) => {
-    mutate({ isInstalled: bool });
+    mutate({ isInstalled: bool, _id: integrationId });
   };
 
   return (
     <IntegrationStyled>
-      {data?.data?.map((item: any) => (
-        <div
-          className="card"
-          onClick={() => {
-            setValue("fields", item.fields);
-            setIntegrationId(item._id);
-          }}
-        >
-          <h3 className="name">{item.name}</h3>
-        </div>
-      ))}
+      <Box sx={{ flexGrow: 1, p: 2 }}>
+        <Grid container spacing={3}>
+          {data?.data?.map((item: any) => (
+            <Grid
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              lg={2} 
+              key={item._id}
+            >
+              <Card
+                sx={{
+                  p: 2,
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  boxShadow: 2,
+                  borderRadius: 2,
+                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                    boxShadow: 1,
+                  },
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setValue("fields", item.fields);
+                  setIntegrationId(item._id);
+                }}
+              >
+                <Typography
+                  variant="h6"
+                  fontWeight="bold"
+                  textAlign="center"
+                  color="primary.main"
+                >
+                  {item.name}
+                </Typography>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+
+
       <Modal
         open={!!integrationId}
         onClose={() => {

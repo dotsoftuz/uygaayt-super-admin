@@ -151,7 +151,7 @@ export const SidebarContainer = styled.div<IValueProps>`
   }
 
   .sidebar-top {
-    height: 116px;
+    height: 70px;
     display: flex;
     align-items: center;
     padding-right: 6px;

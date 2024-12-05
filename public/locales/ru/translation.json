@@ -163,7 +163,8 @@
   },
   "tabs" : {
     "orders": "Заказы",
-    "basket": "Корзина"
+    "basket": "Корзина",
+    "avto": "Машина"
   },
   "notification" : {
     "confirmation": "Подтверждение",

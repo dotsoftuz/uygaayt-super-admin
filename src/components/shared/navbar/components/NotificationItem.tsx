@@ -10,6 +10,9 @@ import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
+import { useState } from 'react';
+import Notification from './Notification';
+import { toast } from 'react-toastify';
 
 function getIcon(type: any) {
     switch (type) {
@@ -22,9 +25,9 @@ function getIcon(type: any) {
     }
 }
 
-
 interface NotificationItemProps {
     notification: any;
+    reset: any;
 }
 
 const AcceptButton = styled(Button)(({ theme }) => ({
@@ -35,7 +38,6 @@ const AcceptButton = styled(Button)(({ theme }) => ({
     },
 }));
 
-// Custom styled button for 'accepted' state
 const AcceptedButton = styled(Button)(({ theme }) => ({
     backgroundColor: "red",
     color: "white",
@@ -45,24 +47,26 @@ const AcceptedButton = styled(Button)(({ theme }) => ({
 }));
 
 
-export function NotificationItem({ notification }: NotificationItemProps) {
+export function NotificationItem({ notification, reset: notificationPaging }: NotificationItemProps) {
     const navigate = useNavigate();
     const { t } = useTranslation();
     const currentLang = localStorage.getItem("i18nextLng") || "uz";
+    const [isDisabled, setIsDisabled] = useState(false);
 
-
-    const { mutate, reset } = useApiMutation(`courier/accept/${notification.documentId}`, "get", {
+    const { mutate, reset } = useApiMutation(`courier/accept/${notification?.documentId}`, "get", {
         onSuccess(data) {
             console.log("Success:", data);
+            setIsDisabled(true)
             reset();
+            notificationPaging()
+            toast.success("Tasdiqlandi!")
         },
     });
 
     const handleAcceptClick = () => {
         mutate({})
+        notificationPaging()
     };
-
-    console.log(notification)
 
     return (
         <Box
@@ -74,7 +78,7 @@ export function NotificationItem({ notification }: NotificationItemProps) {
                     bgcolor: 'action.hover',
                 },
             }}
-            onClick={() => navigate(`/courier/${notification.courierId}`)}
+            onClick={() => navigate(`/courier/${notification?.courierId}`)}
         >
             <Box
                 sx={{
@@ -84,24 +88,32 @@ export function NotificationItem({ notification }: NotificationItemProps) {
                     borderRadius: '50%',
                     width: 40,
                     height: 40,
-                    bgcolor: notification.read ? 'action.selected' : 'primary.main',
-                    color: notification.read ? 'text.secondary' : 'white',
+                    bgcolor: notification?.read ? 'action.selected' : 'primary.main',
+                    color: notification?.read ? 'text.secondary' : 'white',
                 }}
             >
-                {getIcon(notification.type)}
+                {getIcon(notification?.type)}
             </Box>
             <Box sx={{ flex: 1 }}>
                 <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                    {notification.shortText?.[currentLang]}:{' '}
+                    {notification?.shortText?.[currentLang]}:{' '}
                 </Typography>
 
                 <Typography my={1}>
                     {
                         notification?.type === "courier_arrived" ? (
-                            notification.isRead === false ? (
-                                <AcceptButton variant="contained" onClick={handleAcceptClick}>
+                            notification?.isRead === false || notification?.isRead === undefined ? (
+                                <AcceptButton
+                                    disabled={isDisabled}
+                                    variant="contained"
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        handleAcceptClick();
+                                    }}
+                                >
                                     {t("notification.confirmation")}
                                 </AcceptButton>
+
                             ) : (
                                 <AcceptedButton variant="contained" disabled>
                                     {t("notification.approved")}
@@ -112,7 +124,7 @@ export function NotificationItem({ notification }: NotificationItemProps) {
                 </Typography>
 
                 <Typography variant="body2" color="text.secondary" my={1}>
-                    {dayjs(notification.date).format('DD.MM.YYYY HH:mm')}
+                    {dayjs(notification?.date).format('DD.MM.YYYY HH:mm')}
                 </Typography>
             </Box>
         </Box>

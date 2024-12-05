@@ -108,9 +108,9 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
           <Tab
             icon={<DeliveryDining style={{ fontSize: 20 }} />}
             iconPosition="start"
-            label="Avtomobile"
+            label={t("tabs.avto")}
           />
-          <Tab
+          {/* <Tab
             icon={<ShoppingBag style={{ fontSize: 20 }} />}
             iconPosition="start"
             label="Recent Orders"
@@ -119,7 +119,7 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
             icon={<HistoryIcon style={{ fontSize: 20 }} />}
             iconPosition="start"
             label="History"
-          />
+          /> */}
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>

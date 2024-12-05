@@ -3,6 +3,7 @@ import { Tabs, Tab, Box, Typography, Paper, Chip, LinearProgress } from '@mui/ma
 import { Money, ShoppingBag } from '@mui/icons-material';
 import HistoryIcon from '@mui/icons-material/History';
 import BackpackIcon from '@mui/icons-material/Backpack';
+import { useTranslation } from 'react-i18next';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -12,6 +13,7 @@ interface TabPanelProps {
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
+
 
   return (
     <div
@@ -68,6 +70,8 @@ const OrderItem = ({ id, amount, status, date }: { id: string; amount: string; s
 
 export const CustomerTabs: React.FC = () => {
   const [value, setValue] = React.useState(0);
+  const { t } = useTranslation();
+
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -99,13 +103,13 @@ export const CustomerTabs: React.FC = () => {
           <Tab 
             icon={<ShoppingBag  style={{ fontSize: 20 }}/>} 
             iconPosition="start" 
-            label="Recent Orders" 
+            label={t('tabs.orders')} 
           />
-          <Tab 
+          {/* <Tab 
             icon={<HistoryIcon style={{ fontSize: 20 }} />} 
             iconPosition="start" 
             label="History" 
-          />
+          /> */}
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -128,7 +132,7 @@ export const CustomerTabs: React.FC = () => {
           date="Mar 8, 2024"
         />
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      {/* <TabPanel value={value} index={1}>
         <Box sx={{ p: 3 }}>
           <Box sx={{ mb: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
@@ -175,7 +179,7 @@ export const CustomerTabs: React.FC = () => {
             </Paper>
           </Box>
         </Box>
-      </TabPanel>
+      </TabPanel> */}
     </Paper>
   );
 };

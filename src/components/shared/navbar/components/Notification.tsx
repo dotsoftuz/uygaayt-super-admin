@@ -7,6 +7,8 @@ import { useApiMutation } from 'hooks/useApi/useApiHooks';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { useAppDispatch, useAppSelector } from 'store/storeHooks';
 import { socketReRender } from 'store/reducers/SocketSlice';
+import { socket } from 'socket';
+
 
 const Notification = () => {
     const socketRender = useAppSelector((store) => store.SocketState.render);
@@ -34,6 +36,11 @@ const Notification = () => {
         limit: searchParams.get('limit') || 10,
         search: searchParams.get('search') || '',
     };
+
+ 
+
+ 
+    
 
     const { mutate, reset, data, isLoading } = useApiMutation(
         'notification/paging',
@@ -68,7 +75,7 @@ const Notification = () => {
         hasMore,
     });
 
-    const unreadCount = notifications.filter((n) => !n.read).length;
+    // const unreadCount = notifications.filter((n) => !n.read).length;
 
     useEffect(() => {
         reset();
@@ -83,13 +90,21 @@ const Notification = () => {
         });
     }, [searchParams, reset, mutate, queryParams.limit, queryParams.search]);
 
-    
+
     useEffect(() => {
-        if (socketRender) {
-          reset();
-          dis(socketReRender(false));
+        function Notification(data: any) {
+            dis(socketReRender(true));
+            // Yangi obyektni massivning boshiga qo'shish
+            setNotifications((prevNotifications: any[]) => [data.data, ...prevNotifications]);
+            reset();
         }
-      }, [socketRender, data]);
+    
+        socket.on("notification", Notification);
+        return () => {
+            socket.off("notification", Notification);
+        };
+    }, [socketRender, data]);
+
 
     return (
         <>
@@ -123,7 +138,7 @@ const Notification = () => {
                     },
                 }}
             >
-                <NotificationList unreadCount={unreadCount} notifications={notifications} loadMoreRef={loadMoreRef} loading={loading} hasMore={hasMore} />
+                <NotificationList reset={reset}  notifications={notifications} loadMoreRef={loadMoreRef} loading={loading} hasMore={hasMore} />
             </Popover>
         </>
     )

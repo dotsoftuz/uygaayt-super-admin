@@ -123,17 +123,17 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   },
   {
     element: <CourierAnalytics />,
-    path: "courier_analytics",
+    path: "analytics_courier",
     role: "courier",
   },
   {
     element: <CustomerAnalytics />,
-    path: "customer_analytics",
+    path: "analytics_customer",
     role: "customer",
   },
   {
     element: <ProductAnalytics />,
-    path: "product_analytics",
+    path: "analytics_product",
     role: "product",
   },
 ];

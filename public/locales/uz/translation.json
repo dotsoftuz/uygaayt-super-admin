@@ -165,7 +165,8 @@
   },
   "tabs" : {
     "orders": "Buyurtmalar",
-    "basket": "Savat"
+    "basket": "Savat",
+    "avto": "Avtomobil"
   },
   "notification" : {
     "confirmation": "Tasdiqlash",
