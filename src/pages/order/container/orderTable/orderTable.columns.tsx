@@ -55,17 +55,20 @@ export const useOrderTableColumns = (setStateUpdateData: any): GridColumns => {
     //   },
     // },
     {
-      field: t("common.productName"),
+      field: t("order.receiver"),
       renderCell({ row }) {
         const firstName = row?.customer?.firstName;
         const shortFirst = firstName?.length > 10 ? `${firstName.substring(0, 10)}...` : firstName;
-
-        const lastName = row?.customer?.firstName;
+    
+        const lastName = row?.customer?.lastName;
         const shortLast = lastName?.length > 10 ? `${lastName.substring(0, 10)}...` : lastName;
     
+        const fullName = `${shortFirst}${lastName ? ` ${shortLast}` : ""}`;
+        const tooltipText = `${firstName}${lastName ? ` ${lastName}` : ""}`;
+    
         return (
-          <Tooltip title={firstName + " " + lastName} arrow>
-            <span>{shortFirst + " " + shortLast}</span>
+          <Tooltip title={tooltipText} arrow>
+            <span>{fullName}</span>
           </Tooltip>
         );
       },

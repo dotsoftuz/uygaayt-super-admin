@@ -2,12 +2,15 @@ import { ExportButton, RangeDatePicker, Table } from "components";
 import { useCustomerColumns } from "./customer_analytics.columns";
 import { useNavigate } from "react-router-dom";
 import { Grid } from "@mui/material";
+import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
 
 const Client = () => {
   const navigate = useNavigate();
   const columns = useCustomerColumns();
+  const allParams = useAllQueryParams();
 
-  const exportUrl = `/exams-table/export/`;
+   const exportUrl = `/report/customer/export/${allParams.dateFrom ? `dateFrom=${allParams.dateFrom}&` : ""
+    }${allParams?.dateTo ? `dateTo=${allParams.dateTo}&` : ""}`;
 
 
   const renderHeader = (
@@ -22,15 +25,17 @@ const Client = () => {
   );
 
 
+  console.log(allParams)
+
   return (
     <>
       <Table
         columns={columns}
-        dataUrl="customer/paging"
+        dataUrl="report/customer"
         headerChildren={renderHeader}
         searchable
         exQueryParams={{
-          stateId: undefined,
+          
         }}
         onRowClick={(row) => navigate(`/customer/${row._id}`)}
       />

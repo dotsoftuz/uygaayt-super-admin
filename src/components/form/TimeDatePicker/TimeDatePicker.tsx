@@ -16,6 +16,7 @@ interface IDatePicker<FormNames extends Record<string, any>> {
   minDate?: Dayjs;
   maxDate?: Dayjs;
   onlyTime?: boolean;
+  defaultValue?: any;
 }
 // const dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-(\d{4})$/;
 export const DATE_FORMAT = "DD-MM-YYYY | HH:mm";
@@ -27,6 +28,7 @@ function DatePickerForm<FormNames extends Record<string, any>>({
   minDate,
   maxDate,
   onlyTime,
+  defaultValue,
   rules = {
     required: {
       value: true,
@@ -48,8 +50,7 @@ function DatePickerForm<FormNames extends Record<string, any>>({
         control={control}
         name={name}
         rules={rules}
-        // @ts-ignore😐
-        defaultValue={null}
+        defaultValue={defaultValue}
         render={({ field, fieldState: { error } }) => (
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             {onlyTime ? (

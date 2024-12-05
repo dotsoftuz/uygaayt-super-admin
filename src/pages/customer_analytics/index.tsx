@@ -1,12 +1,12 @@
 import {Route, Routes } from "react-router-dom";
-import Customer from "./container/CustomerAnalytics";
-import CustomerInfo from "./info/CustomerInfo";
+import CustomerAnalytics from "./container/CustomerAnalytics";
+import CustomerAnalyticsInfo from "./info/CustomerInfo";
 
 const index = () => {
   return (
     <Routes>
-      <Route path=":id" element={<CustomerInfo />} />
-      <Route path="*" element={<Customer/>} />
+      <Route path=":id" element={<CustomerAnalyticsInfo />} />
+      <Route path="*" element={<CustomerAnalytics/>} />
     </Routes>
   );
 };

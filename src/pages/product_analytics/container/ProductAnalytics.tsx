@@ -1,4 +1,4 @@
-import { AutoCompleteFilter, Checkbox, ExportButton, FormDrawer, Table } from "components";
+import { AutoCompleteFilter, Checkbox, ExportButton, FormDrawer, RangeDatePicker, Table } from "components";
 import { useProductColumns } from "./product_analytics.columns";
 import { useRoleManager } from "services/useRoleManager";
 import { useAppDispatch } from "store/storeHooks";
@@ -10,8 +10,10 @@ import { useForm } from "react-hook-form";
 import ProductForm from "../components/ProductForm";
 import { IIdImage } from "hooks/usePostImage";
 import WarningModal from "components/common/WarningModal/WarningModal";
+import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
 
 const Client = () => {
+  const allParams = useAllQueryParams();
   const columns = useProductColumns();
   const hasAccess = useRoleManager();
   const dis = useAppDispatch();
@@ -22,28 +24,40 @@ const Client = () => {
   const [productImages, setProductImages] = useState<IIdImage[]>([]);
   const [mainImageId, setMainImageId] = useState<any>();
 
-  const exportUrl = `/exams-table/export/`;
+  const exportUrl = `/report/product/export/${allParams.dateFrom ? `dateFrom=${allParams.dateFrom}&` : ""
+  }${allParams?.dateTo ? `dateTo=${allParams.dateTo}&` : ""}`;
 
   const renderHeader = (
-    <Grid container width={600} spacing={2}>
-      <Grid item sm={3} style={{paddingTop: "20px"}}>
-        <ExportButton url={exportUrl} />
+    <Grid width={480} spacing={2} display={"flex"} justifyContent={"space-between"}>
+      <Grid  style={{display: "flex", justifyContent: "end"}}>
+        <RangeDatePicker />
       </Grid>
-      <Grid item sm={4}>
-        <AutoCompleteFilter
+      <Grid  style={{display: "flex", justifyContent: "end"}}>
+      <AutoCompleteFilter
           optionsUrl="category/paging"
           filterName="categoryId"
           placeholder={t("common.category")}
         />
       </Grid>
-      <Grid item sm={4}>
-        <Checkbox
-          control={formStore.control}
-          label={t("enum.active")}
-          name="isActiveQuery"
-        />
+      <Grid  style={{display: "flex", justifyContent: "end", alignItems: "center"}}>
+        <ExportButton url={exportUrl} />
       </Grid>
     </Grid>
+    // <Grid container width={800} spacing={2}>
+    //   <Grid item sm={4} style={{paddingTop: "20px"}}>
+    //     <ExportButton url={exportUrl} />
+    //   </Grid>
+    //   <Grid item sm={4}>
+    //     <AutoCompleteFilter
+    //       optionsUrl="category/paging"
+    //       filterName="categoryId"
+    //       placeholder={t("common.category")}
+    //     />
+    //   </Grid>
+    //   <Grid item sm={4} >
+    //     <RangeDatePicker />
+    //   </Grid>
+    // </Grid>
   );
 
   const resetForm = () => {
@@ -72,24 +86,12 @@ const Client = () => {
     <>
       <Table
         columns={columns}
-        dataUrl="product/paging"
+        dataUrl="report/product"
         searchable
         headerChildren={renderHeader}
-        onAddButton={hasAccess("productCreate") ? () => dis(setOpenDrawer(true)) : undefined}
-        onEditColumn={
-          hasAccess("productUpdate")
-            ? (row) => {
-              setEditingProductId(row._id);
-              dis(setOpenDrawer(true));
-            }
-            : undefined
-        }
-        onDeleteColumn={
-          hasAccess("productDelete")
-            ? (row) => setProductId(row._id)
-            : undefined
-        }
         exQueryParams={{
+          page: 1,
+          limit: 10,
           isActive: formStore.watch("isActiveQuery") || undefined,
         }}
       />

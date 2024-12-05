@@ -57,8 +57,8 @@ const Notification = () => {
         setPage(nextPage);
 
         await mutate({
-            page: nextPage,
-            limit: queryParams.limit,
+            page: nextPage || 1,
+            limit: queryParams.limit || 10,
             search: queryParams.search,
         });
     };

@@ -17,8 +17,6 @@ const CourierInfo = () => {
     suspense: false
   })
 
-  console.log(id)
-
   return (
     <>
       {

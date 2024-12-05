@@ -273,7 +273,6 @@ const AddOrderForm = ({
               control={formStore ? formStore?.control : control}
               name="receiverFirstName"
               label={t("order.receiver")}
-              rules={{ required: false }}
             />
           </Grid>
           <Grid item sm={12}>
@@ -289,7 +288,7 @@ const AddOrderForm = ({
               control={formStore ? formStore?.control : control}
               name="deliveryDate"
               minDate={dayjs(new Date())}
-
+              defaultValue={dayjs(new Date())}
             />
           </Grid>
           <Grid item sm={12}>

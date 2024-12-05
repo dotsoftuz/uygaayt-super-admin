@@ -10,25 +10,33 @@ export const useCustomerColumns = (): GridColumns => {
     {
       field: t("common.fullName"),
       renderCell({ row }) {
-        return get(row, "fullName", "");
+        const fullName = get(row, "customer.fullName", "");
+        const isLong = fullName.length > 20;
+        const displayText = isLong ? `${fullName.slice(0, 20)}...` : fullName;
+    
+        return (
+          <span title={isLong ? fullName : undefined}>
+            {displayText}
+          </span>
+        );
       },
     },
     {
       field: t("common.phoneNumber"),
       renderCell({ row }) {
-        return get(row, "phoneNumber", "");
+        return get(row, "customer.phoneNumber", "");
       },
     },
     {
       field: t("common.orderAmount"),
       renderCell({ row }) {
-        return get(row, "totalOrders", "");
+        return get(row, "customer.totalOrders", "");
       },
     },
     {
       field: t("common.orderPrice"),
       renderCell({ row }) {
-        return numberFormat(get(row, "totalOrdersPrice", ""));
+        return numberFormat(get(row, "customer.totalOrdersPrice", ""));
       },
     },
   ];

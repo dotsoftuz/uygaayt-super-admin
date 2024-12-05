@@ -346,7 +346,7 @@ const MultiLevel = ({ item }: { item: ISidebarRoute }) => {
 
       {value && (
         <Collapse in={open} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
+          <List sx={{paddingLeft: '20px'}} component="div" disablePadding>
             {item?.items?.map((child, key) => {
               if (hasAccess(child.role)) {
                 return <MenuItemCustom key={key} item={child} />;

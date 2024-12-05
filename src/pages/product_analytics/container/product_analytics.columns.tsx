@@ -11,7 +11,7 @@ export const useProductColumns = (): GridColumns => {
     {
       field: t("common.productName"),
       renderCell({ row }) {
-        const title = row?.name;
+        const title = row?.product.name;
         const truncatedTitle = title?.length > 30 ? `${title.substring(0, 30)}...` : title;
     
         return (
@@ -24,22 +24,22 @@ export const useProductColumns = (): GridColumns => {
     {
       field: t("common.price"),
       renderCell({ row }) {
-        return numberFormat(get(row, "price", ""));
+        return numberFormat(get(row, "product.price", ""));
       },
     },
     {
       field: t("common.discountValue"),
       renderCell({ row }) {
         return (
-          numberFormat(get(row, "discountValue", "")) + 
-          (row.discountType === "percent" ? "%" : "")
+          numberFormat(get(row, "product.discountValue", "")) + 
+          (row.product.discountType === "percent" ? "%" : "")
         );
       },
     },
     {
       field: t("common.residue"),
       renderCell({ row }) {
-        return numberFormat(get(row, "inStock", ""));
+        return numberFormat(get(row, "product.inStock", ""));
       },
     },
     {
@@ -47,7 +47,7 @@ export const useProductColumns = (): GridColumns => {
       headerName: t("common.sold")!,
       sortable: true,
       renderCell({ row }) {
-        return numberFormat(get(row, "", ""));
+        return numberFormat(get(row, "total_amount", ""));
       },
     },
     {
@@ -56,6 +56,12 @@ export const useProductColumns = (): GridColumns => {
       sortable: true,
       renderCell({ row }) {
         // return numberFormat(get(row, "inStock", ""));
+      },
+    },
+    {
+      field: t("order.totalPrice"),
+      renderCell({ row }) {
+        return numberFormat(get(row, "total_price", ""));
       },
     },
     // {
