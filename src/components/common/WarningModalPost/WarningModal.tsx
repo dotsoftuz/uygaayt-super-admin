@@ -13,8 +13,8 @@ const WarningModal = ({ open, setOpen, title, url, confirmFn }: any) => {
     if (status === "success") {
       setOpen(null);
     }
-  }, [status, mutate, open]);
-
+  }, [status]);
+  
   return (
     <Modal setOpen={setOpen} open={!!open}>
       <WarningModalStyled>

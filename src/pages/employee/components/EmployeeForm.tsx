@@ -24,17 +24,17 @@ const EmployeeFrom: FC<IEmployeesForm> = ({
   const { control, handleSubmit, reset, watch } = formStore;
   const [checkData, setCheckData] = useState<any>();
 
-  const { } = useApi(
-    `employee/check?phoneNumber=${watch("phoneNumber")}`,
-    {},
-    {
-      enabled: watch("phoneNumber")?.length > 12 && !editingEmployeeId,
-      suspense: false,
-      onSuccess({ data }) {
-        setCheckData(data);
-      },
-    }
-  );
+  // const { } = useApi(
+  //   `employee/check?phoneNumber=${watch("phoneNumber")}`,
+  //   {},
+  //   {
+  //     enabled: watch("phoneNumber")?.length > 12 && !editingEmployeeId,
+  //     suspense: false,
+  //     onSuccess({ data }) {
+  //       setCheckData(data);
+  //     },
+  //   }
+  // );
 
   const { mutate, status } = useApiMutation(
     editingEmployeeId ? `employee/update` : "employee/create",
