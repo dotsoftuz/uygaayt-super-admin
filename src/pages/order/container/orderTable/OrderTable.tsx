@@ -9,7 +9,7 @@ import { useRoleManager } from "services/useRoleManager";
 import { useAppDispatch, useAppSelector } from "store/storeHooks";
 import { useOrderTableColumns } from "./orderTable.columns";
 import AutoCompleteFilter from "components/common/AutocompleteFilterGet/AutoCompleteFilter";
-import { Table } from "components";
+import { RangeDatePicker, Table } from "components";
 import { socketReRender } from "store/reducers/SocketSlice";
 
 const OrderTable = () => {
@@ -52,8 +52,8 @@ const OrderTable = () => {
 
   const renderHeader = (
     <>
-      <Grid container width={200}>
-        <Grid item sm={12}>
+      <Grid container width={470} spacing={2}>
+        <Grid item sm={6}>
           <AutoCompleteFilter
             optionsUrl="order-state/get-all"
             filterName="stateId"
@@ -61,12 +61,15 @@ const OrderTable = () => {
             dataProp="data"
           />
         </Grid>
+        <Grid item sm={6}>
+          <RangeDatePicker />
+        </Grid>
       </Grid>
       <SwitchView />
     </>
   );
 
-  
+
 
   return (
     <>

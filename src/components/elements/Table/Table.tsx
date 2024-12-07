@@ -118,7 +118,7 @@ const Table = <TData extends { _id: string }>({
       ...allParams,
       ...exQueryParams,
     });
-  }, [debValue, search, mutate, searchParams, reRender]);
+  }, [debValue, search, searchParams, reRender, exQueryParams]);
   
   /** @todo to delete */
   const { mutate: deleteMutate, isSuccess: isDeleteSuccess } = useApiMutation(

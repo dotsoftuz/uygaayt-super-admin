@@ -6,9 +6,11 @@ import { Rating } from "@mui/material";
 
 const OrderInfo = ({ formStore, order }: any) => {
 
+  console.log(order.state.state)
+
   return (
     <OrderInfoStyled>
-      <AddOrderForm basketItems={[]} formStore={formStore} />
+      <AddOrderForm order={order} basketItems={[]} formStore={formStore} />
       <div className="card mt-3">
         <h4 className="title">Mijoz</h4>
         <div className="info border-bottom mb-3 pb-3">

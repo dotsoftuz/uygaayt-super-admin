@@ -1,53 +1,76 @@
-import { useEffect, useState } from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import CircularProgress from '@mui/material/CircularProgress';
 import { NotificationItem } from './NotificationItem';
-import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
-import { useApiMutation } from 'hooks/useApi/useApiHooks';
-import { useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { NotificationType } from '../types/notification';
 
-export function NotificationList(props: any) {
-
-    const { notifications, unreadCount, loadMoreRef, loading, hasMore , reset} = props
-
-    console.log(notifications)
-
-    return (
-        <Box>
-            <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="h6">Bildirishnomalar</Typography>
-                <Typography
-                    variant="caption"
-                    sx={{
-                        bgcolor: 'primary.main',
-                        color: 'white',
-                        px: 1,
-                        py: 0.5,
-                        borderRadius: 8,
-                    }}
-                >
-                    {/* {unreadCount} yangi */}
-                </Typography>
-            </Box>
-            <Divider />
-            <Box sx={{ maxHeight: 400, overflow: 'auto' }}>
-                {notifications?.map((notification: any, index: any) => (
-                    <Box key={notification.id}>
-                        <NotificationItem reset={reset} notification={notification} />
-                        {index < notifications.length - 1 && <Divider />}
-                    </Box>
-                ))}
-                <Box ref={loadMoreRef} sx={{ p: 2, textAlign: 'center' }}>
-                    {loading && <CircularProgress size={24} />}
-                    {!hasMore && notifications.length > 0 && (
-                        <Typography variant="body2" color="text.secondary">
-                            Boshqa bildirishnomalar yo'q
-                        </Typography>
-                    )}
-                </Box>
-            </Box>
-        </Box>
-    );
+interface NotificationListProps {
+  notifications: NotificationType[];
+  unreadCount: number;
+  loadMoreRef: any;
+  loading: boolean;
+  hasMore: boolean;
+  onNotificationRead: (id: string) => void;
 }
+
+export const NotificationList: React.FC<NotificationListProps> = ({
+  notifications,
+  unreadCount,
+  loadMoreRef,
+  loading,
+  hasMore,
+  onNotificationRead,
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <Box>
+      <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="h6">{t('notifications')}</Typography>
+        {unreadCount > 0 && (
+          <Typography
+            variant="caption"
+            sx={{
+              bgcolor: 'primary.main',
+              color: 'white',
+              px: 1,
+              py: 0.5,
+              borderRadius: 8,
+            }}
+          >
+            {unreadCount} {t('new')}
+          </Typography>
+        )}
+      </Box>
+      <Divider />
+      <Box sx={{ maxHeight: 400, overflow: 'auto' }}>
+        {notifications?.length > 0 ? (
+          notifications.map((notification, index) => (
+            <Box key={notification.id}>
+              <NotificationItem 
+                notification={notification} 
+                onRead={onNotificationRead}
+              />
+              {index < notifications.length - 1 && <Divider />}
+            </Box>
+          ))
+        ) : (
+          <Typography variant="body2" color="text.secondary" sx={{ p: 2, textAlign: 'center' }}>
+            {t('no_notifications')}
+          </Typography>
+        )}
+        <Box ref={loadMoreRef} sx={{ p: 2, textAlign: 'center' }}>
+          {loading && <CircularProgress size={24} />}
+          {!hasMore && notifications.length > 0 && (
+            <Typography variant="body2" color="text.secondary">
+              {t('no_more_notifications')}
+            </Typography>
+          )}
+        </Box>
+      </Box>
+    </Box>
+  );
+};

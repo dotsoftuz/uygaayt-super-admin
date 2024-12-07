@@ -23,7 +23,7 @@ const Settings = () => {
   const hasAccess = useRoleManager();
   const { t } = useTranslation();
   const [phonePrefix, setphonePrefix] = useState<string>("");
-  const { control, reset, watch, register, handleSubmit } = useForm();
+  const { control, reset, watch, register, handleSubmit, setValue } = useForm();
 
 
   const { data, status, refetch } = useApi(
@@ -157,7 +157,15 @@ const Settings = () => {
                 <Grid item md={12} xs={12}>
                   <div className="item">
                     <span className="key">{t("settings.currency")}</span>
-                    <TextInput control={control} name="currency" type="text" />
+                    <TextInput
+                      control={control}
+                      name="currency"
+                      type="text"
+                      onCustomChange={(value) => {
+                        const allowedCharacters = value.replace(/[^a-zA-Z'`]/g, ""); 
+                        setValue("currency", allowedCharacters); 
+                      }}
+                    />
                   </div>
                 </Grid>
                 <Grid item md={12} xs={12}>

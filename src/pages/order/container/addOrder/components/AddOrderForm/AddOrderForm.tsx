@@ -32,22 +32,24 @@ import { toast } from "react-toastify";
 import dayjs from "dayjs";
 import useCommonContext from "context/useCommon";
 import { get } from "lodash";
-import YandexMap from "components/common/YandexMap/YandexMap";
+import YandexMapForOrder from "components/common/YandexMapForOrder/YandexMapForOrder";
 import SelectPost from "components/form/SelectPost/SelectFormPost";
 
 const AddOrderForm = ({
   basketItems,
   formStore,
+  order
 }: {
   basketItems: IProduct[];
   formStore?: any;
+  order?: any
 }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [open, setOpen] = useState(false);
   const [coordinate, setCoordinate] = useState<any>();
   const [address, setAddress] = useState("");
   const { t } = useTranslation();
-  const { control, setValue, handleSubmit, watch, setError } = useForm();
+  const { control, setValue, handleSubmit, watch, setError, reset } = useForm();
   const { debouncedValue } = useDebounce(address, 1000);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -141,10 +143,18 @@ const AddOrderForm = ({
     if (!basketItems.length) {
       return toast.warning(t("order.chooseProduct"));
     }
+
     const notValidItem = basketItems.find((e) => !(e.amount > 0));
     if (notValidItem) {
       return toast.warning(t("order.validAmount"));
     }
+
+    const minimumOrderPrice = get(settingsData, "orderMinimumPrice", 0); 
+
+    if (allProductPrice < minimumOrderPrice) {
+      return toast.warning(`${t("order.minimum_order_amount")} ${numberFormat(minimumOrderPrice)} ${get(settingsData, "currency", "uzs")}`);
+    }
+
     const requestData = {
       ...data,
       deliveryDate: dayjs(data.deliveryDate).format(),
@@ -157,8 +167,10 @@ const AddOrderForm = ({
         longitude: coordinate?.longitude,
       }
     };
+
     mutate(requestData);
   };
+
 
   const { data: orderData } = useApi<any>(
     `order/get-by-id/${id}`,
@@ -183,6 +195,7 @@ const AddOrderForm = ({
       },
     }
   );
+
   return (
     <AddOrderFormStyled>
       {!id && <h3 className="mb-3">{t("order.formalization")}</h3>}
@@ -204,6 +217,7 @@ const AddOrderForm = ({
                 onCustomChange={(value) => {
                   setAddress(value);
                 }}
+                disabled={order?.state?.state === "completed" ? true : false}
               />
               <div className="address-options">
                 {showOptions &&
@@ -273,6 +287,8 @@ const AddOrderForm = ({
               control={formStore ? formStore?.control : control}
               name="receiverFirstName"
               label={t("order.receiver")}
+              disabled={order?.state?.state === "completed" ? true : false}
+
             />
           </Grid>
           <Grid item sm={12}>
@@ -280,6 +296,7 @@ const AddOrderForm = ({
               control={formStore ? formStore?.control : control}
               name="phoneNumber"
               label={t("common.phoneNumber")}
+              disabled={order?.state?.state === "completed" ? true : false}
             />
           </Grid>
           <Grid item sm={12}>
@@ -289,6 +306,7 @@ const AddOrderForm = ({
               name="deliveryDate"
               minDate={dayjs(new Date())}
               defaultValue={dayjs(new Date())}
+              disabled={order?.state?.state === "completed" ? true : false}
             />
           </Grid>
           <Grid item sm={12}>
@@ -297,6 +315,7 @@ const AddOrderForm = ({
               name="paymentType"
               options={PAYMENT_TYPES}
               label={t("common.paymentType")}
+              disabled={order?.state?.state === "completed" ? true : false}
             />
           </Grid>
           {id &&
@@ -313,6 +332,7 @@ const AddOrderForm = ({
                   setCourier({ courierId: selectedValue, _id: id });
                 }}
                 rules={{ required: false }}
+                disabled={order?.state?.state === "completed" ? true : false}
               />
             </Grid>
           }
@@ -326,7 +346,7 @@ const AddOrderForm = ({
                   ? formStore?.setValue("comment", value)
                   : setValue("comment", value);
               }}
-            />
+            /> 
           </Grid>
         </Grid>
         {!id && (
@@ -460,7 +480,7 @@ const AddOrderForm = ({
             </Grid>
             <Grid item md={6}>
               <div className="map">
-                <YandexMap
+                <YandexMapForOrder
                   getCoordinate={setCoordinate}
                   center={watch("addressLocation")}
                 />

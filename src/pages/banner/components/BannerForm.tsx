@@ -57,7 +57,7 @@ const BannerForm: FC<IEmployeesForm> = ({
         description: getByIdData.data.description,
       });
     }
-  }, [getByIdStatus, getByIdData, reset]);
+  }, [getByIdStatus, getByIdData]);
   
   
 

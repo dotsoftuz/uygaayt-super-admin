@@ -114,7 +114,7 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   {
     element: <Integration />,
     path: "integration",
-    role: "_id",
+    role: "integration",
   },
   {
     element: <Settings />,

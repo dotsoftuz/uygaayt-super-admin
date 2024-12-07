@@ -17,6 +17,7 @@ interface IDatePicker<FormNames extends Record<string, any>> {
   maxDate?: Dayjs;
   onlyTime?: boolean;
   defaultValue?: any;
+  disabled?: boolean;
 }
 // const dateRegex = /^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-(\d{4})$/;
 export const DATE_FORMAT = "DD-MM-YYYY | HH:mm";
@@ -29,6 +30,7 @@ function DatePickerForm<FormNames extends Record<string, any>>({
   maxDate,
   onlyTime,
   defaultValue,
+  disabled,
   rules = {
     required: {
       value: true,
@@ -61,6 +63,7 @@ function DatePickerForm<FormNames extends Record<string, any>>({
                 label={label}
                 minTime={minDate ? minDate : null}
                 maxTime={maxDate ? maxDate : null}
+                disabled={disabled}
                 renderInput={(props) => <TextField {...props} />}
               />
             ) : (
@@ -71,6 +74,7 @@ function DatePickerForm<FormNames extends Record<string, any>>({
                 label={label}
                 minDate={minDate ? minDate : null}
                 maxDate={maxDate ? maxDate : null}
+                disabled={disabled}
                 renderInput={(props) => <TextField {...props} />}
               />
             )}

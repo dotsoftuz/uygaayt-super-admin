@@ -8,11 +8,11 @@ export const PAYMENT_TYPES = [
     name: "Naqd",
     trans_key: "cash",
   },
-  {
-    _id: "card",
-    name: "Karta",
-    trans_key: "card",
-  },
+  // {
+  //   _id: "card",
+  //   name: "Karta",
+  //   trans_key: "card",
+  // },
 ];
 
 export const DISCOUNT_TYPES = [

@@ -12,7 +12,7 @@ const initialState = {
     order: false,
     orderCreate: false,
     orderUpdate: false,
-    orderDelete: false,
+    orderCancel: false,
     orderState: false,
     orderStateCreate: false,
     orderStateUpdate: false,
@@ -68,6 +68,7 @@ const initialState = {
     newsCreate: false,
     newsUpdate: false,
     newsDelete: false,
+    report: false
   },
   loginData: {
     token: "string",

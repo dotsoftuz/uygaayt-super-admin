@@ -33,7 +33,7 @@ export const ALL_ROLES: Array<{
         label: "update",
       },
       {
-        role: "orderDelete",
+        role: "orderCancel",
         label: "delete",
       },
     ],
@@ -280,6 +280,10 @@ export const ALL_ROLES: Array<{
         label: "update",
       },
     ],
+  },
+  {
+    role: "report",
+    label: "report",
   },
   // {
   //   role: "siteSettings",

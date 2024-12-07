@@ -60,13 +60,13 @@ const Transaction = () => {
                 {get(settingsData, "currency", "uzs")}
               </span>
             </div>
-            <div className="amount-wrapper">
+            {/* <div className="amount-wrapper">
               <span className="title">Umumiy chiqarilgan miqdor:</span>
               <span className="amount">
                 {numberFormat(data?.data?.expense)}{" "}
                 {get(settingsData, "currency", "uzs")}
               </span>
-            </div>
+            </div> */}
           </div>
         </Grid>
       </Grid>

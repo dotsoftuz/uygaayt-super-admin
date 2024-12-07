@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-import { Grid } from "@mui/material";
+import { Grid, InputLabel } from "@mui/material";
 import {
   AutoCompleteForm,
   ImageInput,
@@ -196,7 +196,17 @@ const CourierFrom: FC<ICourierForm> = ({
           </Grid>
           <Grid item md={12}>
             <div className="product-images">
-              <ImageInput control={control} setValue={setValue} name="imageId" />
+              <InputLabel>
+                {t("Rasm")} <span style={{ color: "red" }}>*</span>
+              </InputLabel>
+
+              <ImageInput
+                control={control}
+                setValue={setValue}
+                name="imageId"
+                rules={{ required: true }}
+                accept=".png, .jpg, .jpeg"
+              />
             </div>
           </Grid>
         </Grid>

@@ -8,6 +8,7 @@ import { ALL_ROLES, IRoleBody, IRolesForm } from "./RoleForm.constants";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { IRoleData } from "store/reducers/LoginSlice";
+import { useFormContext } from "react-hook-form";
 
 const RolesForm = ({ formStore, editingRoleId, resetForm }: IRolesForm) => {
   const { control, handleSubmit, setValue, reset } = formStore;
@@ -42,11 +43,28 @@ const RolesForm = ({ formStore, editingRoleId, resetForm }: IRolesForm) => {
   }, [getByIdStatus, getByIdData]);
 
   const setAllRoles = (val: boolean) => {
+    if (!ALL_ROLES || !Array.isArray(ALL_ROLES)) return;
+  
     ALL_ROLES.forEach((role) => {
+      if (!role || typeof role.role === "undefined") {
+        console.warn("Noto'g'ri role:", role);
+        return;
+      }
+  
       setValue(role.role, val);
-      role.childRoles.forEach((child: any) => setValue(child.role, val));
+  
+      if (Array.isArray(role.childRoles)) {
+        role.childRoles.forEach((child: any) => {
+          if (child && typeof child.role !== "undefined") {
+            setValue(child.role, val);
+          } else {
+            console.warn("Noto'g'ri child role:", child);
+          }
+        });
+      }
     });
   };
+  
 
   return (
     <RoleFormStyled className="custom-drawer">
@@ -91,6 +109,7 @@ const CheckboxAccordion = ({ control, checkbox, setValue }: any) => {
       role.childRoles.map((child: any) => setValue(child.role, checked));
     }
   };
+
 
   return (
     <Accordion>

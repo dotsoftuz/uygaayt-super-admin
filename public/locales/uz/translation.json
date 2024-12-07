@@ -121,8 +121,8 @@
     "rateComment": "Reyting",
     "measure": "Birliklar",
     "siteSettings": "Veb-sayt sozlamalari",
-    "news": "Yangiliklar"
-    
+    "news": "Yangiliklar",
+    "report": "Analitika"
   },
   "order": {
     "Created": "Yaratildi",
@@ -139,7 +139,8 @@
     "deliveryPrice": "Yetkazib berish narxi",
     "totalPrice": "Umumiy narx",
     "chooseProduct": "Mahsulot tanlang",
-    "validAmount": "Mahsulot qiymati 0 dan katta bo'lishi kerak"
+    "validAmount": "Mahsulot qiymati 0 dan katta bo'lishi kerak",
+    "minimum_order_amount": "Minimal buyurtma summasi"
   },
   "enum": {
     "cash": "Naqd",

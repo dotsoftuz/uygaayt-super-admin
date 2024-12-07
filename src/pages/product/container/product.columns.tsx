@@ -30,12 +30,17 @@ export const useProductColumns = (): GridColumns => {
     {
       field: t("common.discountValue"),
       renderCell({ row }) {
+        const discountValue = get(row, "discountValue", "");
+        if (discountValue === 0) {
+          return ""; 
+        }
         return (
-          numberFormat(get(row, "discountValue", "")) + 
+          numberFormat(discountValue) + 
           (row.discountType === "percent" ? "%" : "")
         );
       },
     },
+    
     {
       field: t("common.residue"),
       renderCell({ row }) {
