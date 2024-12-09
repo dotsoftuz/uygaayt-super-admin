@@ -8,12 +8,21 @@ const Client = () => {
   const columns = useCustomerColumns();
 
 
+  const renderHeader = (
+    <Grid width={230} spacing={2} display={"flex"} justifyContent={"space-between"}>
+      <Grid style={{ display: "flex", justifyContent: "end" }}>
+        <RangeDatePicker />
+      </Grid>
+    </Grid>
+  );
+
   return (
     <>
       <Table
         columns={columns}
         dataUrl="customer/paging"
         searchable
+        headerChildren={renderHeader}
         exQueryParams={{
           stateId: undefined,
         }}

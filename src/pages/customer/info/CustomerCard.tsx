@@ -11,7 +11,7 @@ export const CustomerCard: React.FC<CustomerCardProps> = ({
     customerInfoData, }) => {
 
 
-        console.log(customerInfoData)
+    console.log(customerInfoData)
     return (
         <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
             <Box sx={{
@@ -24,7 +24,11 @@ export const CustomerCard: React.FC<CustomerCardProps> = ({
                 position: 'relative'
             }}>
                 <Avatar
-                    src={"https://images.unsplash.com/photo-1633332755192-727a05c4013d?auto=format&fit=crop&w=800&q=80"}
+                    src={
+                        process.env.REACT_APP_BASE_URL +
+                        '/' +
+                        customerInfoData?.data?.image?.url
+                    }
                     sx={{
                         width: 120,
                         height: 120,
