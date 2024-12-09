@@ -28,10 +28,6 @@ const Banner = () => {
     });
   };
 
-  const { mutate: data, status } = useApiMutation("/banner/paging",
-    "post"
-  );
-
   return (
     <>
       <Table

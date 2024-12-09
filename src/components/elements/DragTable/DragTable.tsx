@@ -134,6 +134,7 @@ const DragTable: React.FC<IDragTable> = ({
   const { debouncedValue: debValue } = useDebounce(search, 500);
   const allParams = useAllQueryParams();
   const reRender = useAppSelector((store) => store.tableState.render);
+  const defaultLimit = 10;
   /** @todo work with query params */
   const [queryParams, setQueryParams] = useState<any>(
     !isGetAll
@@ -305,9 +306,8 @@ const DragTable: React.FC<IDragTable> = ({
       {!!queryParams && hasPagination && (
         <TablePagination
           totalData={totalData}
-          queryParams={queryParams}
-          setQueryParams={setQueryParams}
           tableData={tableData}
+          defaultLimit={defaultLimit}
         />
       )}
     </DragTableStyled>

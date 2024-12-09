@@ -49,44 +49,36 @@ const Table = <TData extends { _id: string }>({
 }: ITable<TData>) => {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [search, setSearch] = useState<string | undefined>(
-    searchParams.get("search") || ""
-  );
-  const { debouncedValue: debValue } = useDebounce(search, 700);
   const allParams = useAllQueryParams();
+
+  const [search, setSearch] = useState<any>(allParams.search || "");
+  const { debouncedValue: debValue } = useDebounce(search, 500);
   const isOpen = useAppSelector((store) => store.formDrawerState.isOpen);
   const reRender = useAppSelector((store) => store.tableState.render);
   const socketRender = useAppSelector((store) => store.SocketState.render);
   const dis = useDispatch();
-  /** @todo work with query params */
-  const [queryParams, setQueryParams] = useState<any>(
-    !isGetAll
-      ? {
-          page: searchParams.get("page") || 1,
-          limit: searchParams.get("limit") || 10,
-          search: searchParams.get("search") || "",
-        }
-      : undefined
-  );
-  useEffect(() => {
-    setQueryParams((prev: any) => {
-      return prev
-        ? {
-            ...prev,
-            search: search || "",
-            page: searchParams.get("page") || queryParams?.page,
-            limit: searchParams.get("limit") || queryParams?.limit,
-          }
-        : undefined;
-    });
+  const defaultLimit = 10;
 
-    setSearchParams({
-      ...queryParams,
-      ...exQueryParams,
-      page: searchParams.get("page") || queryParams?.page,
-      limit: searchParams.get("limit") || queryParams?.limit,
-    });
-  }, [debValue, search]);
+  /** @todo work with query params */
+  // const [queryParams, setQueryParams] = useState<any>(
+  //   !isGetAll
+  //     ? {
+  //         page: searchParams.get("page") || 1,
+  //         limit: searchParams.get("limit") || 10,
+  //         search: searchParams.get("search") || "",
+  //       }
+  //     : undefined
+  // );
+  useEffect(() => {
+    if (!isGetAll) {
+      setSearchParams({
+        ...allParams,
+        search: search || "",
+        page: search ? "1" : allParams.page || "1",
+        limit: allParams.limit || "20",
+      });
+    }
+  }, [debValue]);
 
   /** @todo to get data */
   const { mutate, reset, data, isLoading } = useApiMutation(
@@ -99,13 +91,11 @@ const Table = <TData extends { _id: string }>({
         getAllData?.(response?.data);
         if (response?.data?.total > 0 && response?.data?.data?.length === 0) {
           setSearchParams({
-            ...queryParams,
             ...exQueryParams,
             ...allParams,
-            search: searchParams.get("search") || "",
-            page: searchParams.get("page"),
-            limit: searchParams.get("limit"),
-            suspense: false,
+            search: debValue || "",
+            page: search ? "1" : allParams.page || "1",
+            limit: allParams.limit || defaultLimit + "",
           });
         }
       },
@@ -114,11 +104,11 @@ const Table = <TData extends { _id: string }>({
 
   useEffect(() => {
     mutate({
-      ...queryParams,
+      // ...queryParams,
       ...allParams,
       ...exQueryParams,
     });
-  }, [debValue, search, searchParams, reRender, exQueryParams]);
+  }, [debValue, reRender, exQueryParams]);
   
   /** @todo to delete */
   const { mutate: deleteMutate, isSuccess: isDeleteSuccess } = useApiMutation(
@@ -253,9 +243,8 @@ const Table = <TData extends { _id: string }>({
                 }
                 onPageSizeChange={(newPageSize) => {
                   setSearchParams({
-                    ...queryParams,
-                    limit: searchParams.get("limit") || newPageSize,
-                    page: searchParams.get("page"),
+                    ...allParams,
+                    limit: String(newPageSize),
                   });
                 }}
                 onRowClick={(props) => {
@@ -275,12 +264,11 @@ const Table = <TData extends { _id: string }>({
             </div>
           )
         )}
-        {!!queryParams && hasPagination && (
+        {!!allParams && hasPagination && !isGetAll && (
           <TablePagination
             totalData={totalData}
-            queryParams={queryParams}
-            setQueryParams={setQueryParams}
             tableData={tableData}
+            defaultLimit={defaultLimit}
           />
         )}
       </TableContainerMain>

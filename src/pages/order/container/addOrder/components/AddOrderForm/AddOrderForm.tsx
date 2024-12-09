@@ -253,6 +253,7 @@ const AddOrderForm = ({
               placeholder="Uy raqami"
               rules={{ required: false }}
               label={"Uy raqami"}
+              disabled={order?.state?.state === "completed" ? true : false}
             />
           </Grid>
           <Grid item md={6}>
@@ -262,6 +263,7 @@ const AddOrderForm = ({
               placeholder="Kirish"
               rules={{ required: false }}
               label={"Kirish"}
+              disabled={order?.state?.state === "completed" ? true : false}
             />
           </Grid>
           <Grid item md={6}>
@@ -271,6 +273,7 @@ const AddOrderForm = ({
               placeholder="Qavat"
               rules={{ required: false }}
               label={"Qavat"}
+              disabled={order?.state?.state === "completed" ? true : false}
             />
           </Grid>
           <Grid item md={6}>
@@ -280,6 +283,7 @@ const AddOrderForm = ({
               placeholder="Kvartira raqami"
               rules={{ required: false }}
               label={"Kvartira raqami"}
+              disabled={order?.state?.state === "completed" ? true : false}
             />
           </Grid>
           <Grid item sm={12}>

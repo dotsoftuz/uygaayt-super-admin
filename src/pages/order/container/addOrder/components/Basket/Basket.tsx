@@ -143,20 +143,104 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
             );
             return (
               <Grid item md={4}>
-                <div className="product-card" onClick={() => basketFn(product)}>
+                <div
+                  className="product-card"
+                  style={{
+                    border: "1px solid #e0e0e0",
+                    borderRadius: "8px",
+                    padding: "16px",
+                    backgroundColor: "#F5F5F5",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: "12px",
+                    height: "170px", // Har bir kartaning balandligi bir xil bo'ladi
+                    justifyContent: "space-between", // Ichki elementlar orasida bir xil masofa
+                    transition: "transform 0.2s ease",
+                  }}
+                  onClick={() => basketFn(product)}
+                  onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.02)")}
+                  onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                >
                   {foundBasketItem && (
-                    <span className="amount">{foundBasketItem?.amount}</span>
+                    <div
+                      style={{
+                        background: "#f44336",
+                        color: "#fff",
+                        padding: "4px 8px",
+                        borderRadius: "12px",
+                        fontSize: "12px",
+                        position: "absolute",
+                        top: "12px",
+                        right: "12px",
+                      }}
+                    >
+                      {foundBasketItem.amount} dona
+                    </div>
                   )}
-                  <span className="name">{product.name}</span>
-                  <span className="price">
-                    {numberFormat(product.salePrice)}{" "}
-                    {get(settingsData, "currency", "uzs")}
-                  </span>
-                  <span className="in-stock">
-                    {numberFormat(product.inStock)}
-                  </span>
+
+                  <div
+                    style={{
+                      fontWeight: "600",
+                      fontSize: "16px",
+                      color: "#333",
+                      textAlign: "center",
+                    }}
+                  >
+                    {product.name}
+                  </div>
+
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "block",
+                      justifyContent: "space-between",
+                      fontSize: "14px",
+                      textAlign: "center",
+                    }}
+                  >
+                    {
+                      product?.discountEnabled === false ?  "" : <div style={{ color: "#ed0e0e" }}>
+                        Asl Narxi:
+                        <s style={{ marginLeft: "4px" }}>
+                          {numberFormat(product.price)} {get(settingsData, "currency", "uzs")}
+                        </s>
+                      </div>
+                    }
+                    {
+                      product?.discountEnabled && <div style={{ color: "#4caf50", fontWeight: "bold" }}>
+                        Chegirma: {numberFormat(product?.discountValue)}{" "}
+                        {product?.discountType  === "percent" ? "%" : get(settingsData, "currency", "uzs")}
+                      </div>
+                    }
+
+                  </div>
+
+                  <div
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: "700",
+                      color: "#000",
+                    }}
+                  >
+                    {numberFormat(product.salePrice)} {get(settingsData, "currency", "uzs")}
+                  </div>
+
+                  <div
+                    style={{
+                      fontSize: "12px",
+                      color: "#757575",
+                      marginTop: "8px",
+                    }}
+                  >
+                    Omborda: {numberFormat(product.inStock)} dona
+                  </div>
                 </div>
               </Grid>
+
+
+
+
             );
           })}
         </Grid>

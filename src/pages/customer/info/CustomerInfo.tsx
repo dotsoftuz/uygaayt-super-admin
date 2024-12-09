@@ -1,9 +1,9 @@
 import { Box, Container, Typography } from "@mui/material"
 import { CustomerCard } from './CustomerCard';
-import { useApi } from "hooks/useApi/useApiHooks";
+import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { TabStyled } from "./info.style";
 import { CustomerTabs } from "./TabPanel";
@@ -18,7 +18,25 @@ const CustomerInfo = () => {
     suspense: false
   })
 
-  console.log(id)
+
+  const { mutate, reset, data, isLoading } = useApiMutation(
+    "order/paging",
+    "post",
+    {
+      onSuccess(response) {
+      },
+    }
+  );
+
+  useEffect(() => {
+    mutate({
+      ...data,
+      id: id
+    });
+  }, [mutate]);
+
+
+  console.log(data)
 
   return (
     <>
@@ -40,7 +58,7 @@ const CustomerInfo = () => {
                   minWidth: 0
                 }}>
                   <CustomerCard
-                      customerInfoData={customerInfoData}
+                    customerInfoData={customerInfoData}
                   />
                 </Box>
                 <Box sx={{ flex: 1, minWidth: 0 }}>

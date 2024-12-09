@@ -1,59 +1,49 @@
 import Pagination from "@mui/material/Pagination";
-import { get } from "lodash";
-import React from "react";
-import { TSetState } from "types/form.types";
-import { IQueryParams } from "../Table.constants";
+import React, { useMemo } from "react";
 import PagIcon from "../assets/PagIcon";
 
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import Button from "@mui/material/Button";
 import Menu, { MenuProps } from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { styled } from "@mui/material/styles";
+import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
 const TablePagination: React.FC<{
-  setQueryParams: TSetState<IQueryParams | undefined>;
   tableData: any[];
-  queryParams: IQueryParams;
   totalData: number;
-}> = ({ setQueryParams, queryParams, totalData, tableData }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  defaultLimit: number;
+}> = ({ totalData, tableData, defaultLimit }) => {
+  const [getParams, setSearchParams] = useSearchParams();
+  const allParams = useAllQueryParams();
+
+  const pagination = useMemo(
+    () => (
+      <Pagination
+        count={Math.ceil(+totalData / (+allParams.limit || defaultLimit))}
+        variant="outlined"
+        page={+allParams.page || 1}
+        showFirstButton
+        showLastButton
+        shape="rounded"
+        onChange={(event, page) =>
+          setSearchParams({ ...allParams, page: String(page) })
+        }
+      />
+    ),
+    [allParams]
+  );
 
   return (
     <div className="pagination_container">
       <CustomizedMenus
-        currLimit={Number(searchParams.get("limit"))}
+        currLimit={+allParams.limit || defaultLimit}
         onLimitChange={(limit) => {
-          // @ts-ignore
-          // setQueryParams((prev) => ({ ...prev, limit }));
-          setSearchParams({ ...queryParams, limit });
+          setSearchParams({ ...allParams, limit: String(limit), page: "1" });
         }}
       />
 
-      {tableData?.length > 0 && (
-        <Pagination
-          count={Math.ceil(+totalData / Number(searchParams.get("limit")))}
-          variant="outlined"
-          shape="rounded"
-          showFirstButton
-          showLastButton
-          defaultPage={Number(searchParams.get("page")) || 1}
-          onChange={(event, page) => {
-            // @ts-ignore
-            // setQueryParams((prev) => ({
-            //   ...prev,
-            //   page,
-            // }));
-            setSearchParams({
-              ...queryParams,
-              limit: searchParams.get("limit"),
-              page: page,
-            });
-          }}
-        />
-      )}
+      {tableData?.length > 0 && pagination}
     </div>
   );
 };
@@ -103,7 +93,7 @@ function CustomizedMenus({
         open={open}
         onClose={handleClose}
       >
-        {[10, 20, 30, 40, 50].map((limit) => (
+        {[10, 20, 40, 50, 100].map((limit) => (
           <MenuItem
             disabled={currLimit === limit}
             onClick={() => {
