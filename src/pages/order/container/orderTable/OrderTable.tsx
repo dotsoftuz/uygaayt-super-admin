@@ -59,6 +59,7 @@ const OrderTable = () => {
             filterName="stateId"
             placeholder={t("common.status")}
             dataProp="data"
+            
           />
         </Grid>
         <Grid item sm={6}>

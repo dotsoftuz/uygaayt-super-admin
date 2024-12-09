@@ -3,7 +3,7 @@ import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import useDebounce from "hooks/useDebounce";
 import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
 import { get } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "store/storeHooks";
 import NoDataFound from "./components/noDataFound";
@@ -14,7 +14,7 @@ import { IQueryParams, ITable, ITableData } from "./Table.constants";
 import { TableContainerMain } from "./Table.style";
 import { getTableColumns, localization } from "./utils";
 import { socketReRender } from "store/reducers/SocketSlice";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 const Table = <TData extends { _id: string }>({
   onEditColumn,
@@ -46,6 +46,7 @@ const Table = <TData extends { _id: string }>({
   headerChildren,
   headerChildrenSecondRow,
   insteadOfTable,
+  processingParams
 }: ITable<TData>) => {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -58,6 +59,23 @@ const Table = <TData extends { _id: string }>({
   const socketRender = useAppSelector((store) => store.SocketState.render);
   const dis = useDispatch();
   const defaultLimit = 10;
+  const { search: locationSearch } = useLocation();
+
+  const filterParams = useMemo(() => {
+    if (processingParams) {
+      const params: Record<string, any> = {};
+      const queryData = processingParams(allParams);
+      Object.entries(queryData).forEach(([key, value]) => {
+        if (value) {
+          params[key] = value;
+        }
+      });
+
+      return params;
+    }
+
+    return undefined;
+  }, [locationSearch]);
 
   /** @todo work with query params */
   // const [queryParams, setQueryParams] = useState<any>(
@@ -91,6 +109,7 @@ const Table = <TData extends { _id: string }>({
         getAllData?.(response?.data);
         if (response?.data?.total > 0 && response?.data?.data?.length === 0) {
           setSearchParams({
+            ...(filterParams ? { ...filterParams } : { ...allParams }),
             ...exQueryParams,
             ...allParams,
             search: debValue || "",
@@ -108,8 +127,8 @@ const Table = <TData extends { _id: string }>({
       ...allParams,
       ...exQueryParams,
     });
-  }, [debValue, reRender, exQueryParams]);
-  
+  }, [debValue, reRender, exQueryParams, searchParams]);
+
   /** @todo to delete */
   const { mutate: deleteMutate, isSuccess: isDeleteSuccess } = useApiMutation(
     deleteUrl || dataUrl,
@@ -157,7 +176,7 @@ const Table = <TData extends { _id: string }>({
         i +
         1 +
         ((Number(searchParams.get("page")) || 1) - 1) *
-          (Number(searchParams.get("limit")) || 10),
+        (Number(searchParams.get("limit")) || 10),
     }));
   }, [data, search]);
 
@@ -216,11 +235,11 @@ const Table = <TData extends { _id: string }>({
                 sortModel={
                   allParams?.sortBy && !reset
                     ? [
-                        {
-                          sort: allParams?.sortOrder === "1" ? "asc" : "desc",
-                          field: allParams?.sortBy,
-                        },
-                      ]
+                      {
+                        sort: allParams?.sortOrder === "1" ? "asc" : "desc",
+                        field: allParams?.sortBy,
+                      },
+                    ]
                     : []
                 }
                 onSortModelChange={(model) => {

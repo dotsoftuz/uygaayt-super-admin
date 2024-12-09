@@ -22,7 +22,7 @@ export const useCourierColumns = (): GridColumns => {
     {
       field: t("common.rating"),
       renderCell(params) {
-        return params.row.role?.name;
+        return params?.row?.rating;
       },
     },
   ];

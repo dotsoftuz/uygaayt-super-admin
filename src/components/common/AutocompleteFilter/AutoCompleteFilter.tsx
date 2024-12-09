@@ -28,6 +28,7 @@ interface IAutocompleteFilter {
   dataProp?: string;
   mapData?: (options: IOption[]) => IOption[];
   onChange?: (options: IOption | null | undefined) => void;
+  getOptionLabel?: (option: IOption) => string;
 }
 
 function AutoCompleteFilter({
@@ -43,6 +44,7 @@ function AutoCompleteFilter({
   dataProp = "data.data" as const, //😐
   mapData,
   onChange,
+  getOptionLabel
 }: IAutocompleteFilter) {
   const [queryParams, setQueryParams] = useState<{ search?: string }>();
   const [search, setSearch] = useState<string>();
@@ -67,10 +69,10 @@ function AutoCompleteFilter({
   // );
 
   const { mutate, data, isLoading, status } = useApiMutation(
-    optionsUrl, 
+    optionsUrl,
     "post"
   );
-  
+
   // Trigger the mutation
   useEffect(() => {
     mutate({
@@ -103,7 +105,11 @@ function AutoCompleteFilter({
       <Autocomplete
         options={mapData ? mapData(OPTIONS) : OPTIONS}
         // @ts-ignore
-        getOptionLabel={(option) => option?.name || ""}
+        getOptionLabel={(option: IOption) =>
+          getOptionLabel
+            ? `${getOptionLabel?.(option)}`
+            : option?.name || option?.firstName + " " + option?.lastName || ""
+        }
         onChange={(e, data) => {
           // @ts-ignore
           onChange?.(data);

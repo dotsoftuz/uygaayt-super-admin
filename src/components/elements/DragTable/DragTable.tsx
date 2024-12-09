@@ -23,7 +23,7 @@ import { DragTableStyled } from "./DragTable.style";
 import DragTableHeader from "./components/DragTableHeader";
 import TablePagination from "../Table/components/tablePagination";
 import NoDataFound from "../Table/components/noDataFound";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 // interface DataType {
 //   key: string;
@@ -108,6 +108,7 @@ interface IDragTable {
   setRender: React.Dispatch<React.SetStateAction<boolean>>;
   onAddButton?: () => void;
   exQueryParams?: any;
+  processingParams?: (params: Record<string, any>) => Record<string, any>;
 }
 const DragTable: React.FC<IDragTable> = ({
   columns,
@@ -124,6 +125,7 @@ const DragTable: React.FC<IDragTable> = ({
   onAddButton,
   setRender,
   headerChildren,
+  processingParams
 }) => {
   const [dataSource, setDataSource] = useState<any[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -135,35 +137,46 @@ const DragTable: React.FC<IDragTable> = ({
   const allParams = useAllQueryParams();
   const reRender = useAppSelector((store) => store.tableState.render);
   const defaultLimit = 10;
+
+  const { search: locationSearch } = useLocation();
+
+  const filterParams = useMemo(() => {
+    if (processingParams) {
+      const params: Record<string, any> = {};
+      const queryData = processingParams(allParams);
+      Object.entries(queryData).forEach(([key, value]) => {
+        if (value) {
+          params[key] = value;
+        }
+      });
+
+      return params;
+    }
+
+    return undefined;
+  }, [locationSearch]);
+
   /** @todo work with query params */
-  const [queryParams, setQueryParams] = useState<any>(
-    !isGetAll
-      ? {
-        page: searchParams.get("page") || 1,
-        limit: searchParams.get("limit") || 10,
-        search: searchParams.get("search") || "",
-      }
-      : undefined
-  );
+  // const [queryParams, setQueryParams] = useState<any>(
+  //   !isGetAll
+  //     ? {
+  //       page: searchParams.get("page") || 1,
+  //       limit: searchParams.get("limit") || 10,
+  //       search: searchParams.get("search") || "",
+  //     }
+  //     : undefined
+  // );
 
   useEffect(() => {
-    setQueryParams((prev: any) => {
-      return prev
-        ? {
-          ...prev,
-          search: search || "",
-          page: searchParams.get("page") || queryParams?.page,
-          limit: searchParams.get("limit") || queryParams?.limit,
-        }
-        : undefined;
-    });
-    setSearchParams({
-      ...queryParams,
-      ...exQueryParams,
-      page: searchParams.get("page") || queryParams?.page,
-      limit: searchParams.get("limit") || queryParams?.limit,
-    });
-  }, [debValue, search]);
+    if (!isGetAll) {
+      setSearchParams({
+        ...allParams,
+        search: search || "",
+        page: search ? "1" : allParams.page || "1",
+        limit: allParams.limit || "20",
+      });
+    }
+  }, [debValue]);
 
   const { mutate: dataUrlMutate, data, reset, isLoading } = useApiMutation<ITableData>(dataUrl, "post", {
     onSuccess: (data) => {
@@ -177,13 +190,21 @@ const DragTable: React.FC<IDragTable> = ({
       }
 
       if (data?.data?.total > 0 && data?.data?.data?.length === 0) {
+        // setSearchParams({
+        //   ...queryParams,
+        //   ...allParams,
+        //   ...exQueryParams,
+        //   search: searchParams.get("search") || "",
+        //   page: searchParams.get("page"),
+        //   limit: searchParams.get("limit"),
+        // });
         setSearchParams({
-          ...queryParams,
-          ...allParams,
+          ...(filterParams ? { ...filterParams } : { ...allParams }),
           ...exQueryParams,
-          search: searchParams.get("search") || "",
-          page: searchParams.get("page"),
-          limit: searchParams.get("limit"),
+          ...allParams,
+          search: debValue || "",
+          page: search ? "1" : allParams.page || "1",
+          limit: allParams.limit || defaultLimit + "",
         });
       }
     },
@@ -191,11 +212,10 @@ const DragTable: React.FC<IDragTable> = ({
 
   useEffect(() => {
     dataUrlMutate({
-      ...queryParams,
       ...allParams,
       ...exQueryParams
     });
-  }, [debValue, search, dataUrlMutate, reRender, searchParams ]);
+  }, [debValue, dataUrlMutate, reRender, searchParams ]);
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
     if (active.id !== over?.id) {
@@ -303,13 +323,13 @@ const DragTable: React.FC<IDragTable> = ({
           </SortableContext>
         </DndContext>
       )}
-      {!!queryParams && hasPagination && (
-        <TablePagination
-          totalData={totalData}
-          tableData={tableData}
-          defaultLimit={defaultLimit}
-        />
-      )}
+      {!!allParams && hasPagination && !isGetAll && (
+          <TablePagination
+            totalData={totalData}
+            tableData={tableData}
+            defaultLimit={defaultLimit}
+          />
+        )}
     </DragTableStyled>
   );
 };

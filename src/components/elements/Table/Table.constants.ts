@@ -28,6 +28,7 @@ export interface ITable<TData extends { _id: string }> {
   onRowClick?: (row: TData) => void;
   onSeenClick?: (row: TData) => void;
   isRowSelectable?: (row: TData) => boolean;
+  processingParams?: (params: Record<string, any>) => Record<string, any>;
 
   headerChildren?: React.ReactNode;
   headerChildrenSecondRow?: React.ReactNode;

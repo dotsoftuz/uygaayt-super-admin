@@ -10,7 +10,7 @@ export const useCustomerColumns = (): GridColumns => {
     {
       field: t("common.fullName"),
       renderCell({ row }) {
-        const fullName = get(row, "customer.fullName", "");
+        const fullName = get(row, "customer.firstName", "");
         const isLong = fullName.length > 20;
         const displayText = isLong ? `${fullName.slice(0, 20)}...` : fullName;
     
