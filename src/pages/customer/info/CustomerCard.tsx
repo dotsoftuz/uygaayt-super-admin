@@ -90,6 +90,25 @@ export const CustomerCard: React.FC<CustomerCardProps> = ({
                             {customerInfoData?.data?.phoneNumber}
                         </Typography>
                     </Box>
+                    <Box sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 2,
+                        p: 2,
+                        backgroundColor: '#F7FAFC',
+                        borderRadius: 2,
+                        transition: 'transform 0.2s ease',
+                        '&:hover': {
+                            transform: 'translateX(8px)'
+                        }
+                    }}>
+                        <Typography variant="body1" color="text.primary">
+                            {customerInfoData?.data?.isPremium
+                                ? "Ushbu mijoz Premium obunasini sotib olgan."
+                                : "Ushbu mijoz hali Premium obunasini sotib olmagan."}
+                        </Typography>
+
+                    </Box>
                 </Box>
             </CardContent>
         </Paper>

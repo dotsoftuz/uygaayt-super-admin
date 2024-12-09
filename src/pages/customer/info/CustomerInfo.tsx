@@ -30,13 +30,12 @@ const CustomerInfo = () => {
 
   useEffect(() => {
     mutate({
-      ...data,
-      id: id
+      customerId: id
     });
   }, [mutate]);
 
 
-  console.log(data)
+  // console.log(data)
 
   return (
     <>
@@ -62,11 +61,10 @@ const CustomerInfo = () => {
                   />
                 </Box>
                 <Box sx={{ flex: 1, minWidth: 0 }}>
-                  <CustomerTabs />
+                  <CustomerTabs historyOrders={data?.data} />
                 </Box>
               </Box>
             </Container>
-
           </Box >
         )
       }

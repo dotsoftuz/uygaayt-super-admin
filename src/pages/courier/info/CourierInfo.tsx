@@ -1,8 +1,8 @@
 import { Box, Container, Typography } from "@mui/material"
-import { useApi } from "hooks/useApi/useApiHooks";
+import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { TabStyled } from "./info.style";
 import { CourierCard } from "./CouirierCard";
@@ -18,6 +18,25 @@ const CourierInfo = () => {
     enabled: !!id,
     suspense: false
   })
+
+  const { mutate, reset, data, isLoading } = useApiMutation(
+    "order/paging",
+    "post",
+    {
+      onSuccess(response) {
+       
+      },
+    }
+  );
+
+  useEffect(() => {
+    mutate({
+      courierId: id
+    });
+  }, [mutate]);
+
+  console.log(data)
+
 
   return (
     <>

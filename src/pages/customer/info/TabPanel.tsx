@@ -4,6 +4,9 @@ import { Money, ShoppingBag } from '@mui/icons-material';
 import HistoryIcon from '@mui/icons-material/History';
 import BackpackIcon from '@mui/icons-material/Backpack';
 import { useTranslation } from 'react-i18next';
+import { get } from 'lodash';
+import useCommonContext from 'context/useCommon';
+import dayjs from 'dayjs';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -11,8 +14,13 @@ interface TabPanelProps {
   value: number;
 }
 
+interface CustomerTabsProps {
+  historyOrders: any
+}
+
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
+
 
 
   return (
@@ -32,8 +40,8 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-const OrderItem = ({ id, amount, status, date }: { id: string; amount: string; status: string; date: string }) => (
-  <Box sx={{ 
+const OrderItem = ({ id, amount, status, currency, date, status_color }: { id: string; amount: string; status: string; currency: string, date: string, status_color: any }) => (
+  <Box sx={{
     mb: 2,
     p: 3,
     backgroundColor: '#F7FAFC',
@@ -51,27 +59,27 @@ const OrderItem = ({ id, amount, status, date }: { id: string; amount: string; s
           Order #{id}
         </Typography>
       </Box>
-      <Chip 
-        label={status}
-        color={status === 'Delivered' ? 'success' : 'primary'}
-        size="small"
-      />
+      <span  style={{backgroundColor: status_color, color: 'white', padding: '8px', borderRadius: "10px", fontSize: "13px"}}>{status}</span>
     </Box>
     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <Typography variant="body2" color="text.secondary">
         {date}
       </Typography>
       <Typography variant="subtitle1" fontWeight="bold" color="#6B46C1">
-        {amount}
+        {amount} {currency}
       </Typography>
     </Box>
   </Box>
 );
 
-export const CustomerTabs: React.FC = () => {
+export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders }) => {
   const [value, setValue] = React.useState(0);
   const { t } = useTranslation();
+  const {
+    state: { data: settingsData },
+  } = useCommonContext();
 
+  console.log(historyOrders?.data)
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -79,13 +87,13 @@ export const CustomerTabs: React.FC = () => {
 
   return (
     <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
-      <Box sx={{ 
-        borderBottom: 1, 
+      <Box sx={{
+        borderBottom: 1,
         borderColor: 'divider',
         backgroundColor: '#F7FAFC'
       }}>
-        <Tabs 
-          value={value} 
+        <Tabs
+          value={value}
           onChange={handleChange}
           sx={{
             '& .MuiTab-root': {
@@ -100,10 +108,10 @@ export const CustomerTabs: React.FC = () => {
             }
           }}
         >
-          <Tab 
-            icon={<ShoppingBag  style={{ fontSize: 20 }}/>} 
-            iconPosition="start" 
-            label={t('tabs.orders')} 
+          <Tab
+            icon={<ShoppingBag style={{ fontSize: 20 }} />}
+            iconPosition="start"
+            label={t('tabs.orders')}
           />
           {/* <Tab 
             icon={<HistoryIcon style={{ fontSize: 20 }} />} 
@@ -113,24 +121,16 @@ export const CustomerTabs: React.FC = () => {
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
-        <OrderItem 
-          id="12345"
-          amount="$150.00"
-          status="Delivered"
-          date="Mar 15, 2024"
-        />
-        <OrderItem 
-          id="12344"
-          amount="$89.99"
-          status="In Transit"
-          date="Mar 12, 2024"
-        />
-        <OrderItem 
-          id="12343"
-          amount="$245.50"
-          status="Delivered"
-          date="Mar 8, 2024"
-        />
+        {historyOrders?.data?.map((orders: any) => (
+          <OrderItem
+            id={orders?.number}
+            amount={orders?.totalPrice}
+            status={orders?.state?.name}
+            status_color={orders?.state?.color}
+            currency={get(settingsData, "currency", "uzs")}
+            date={orders?.completedAt ? dayjs(orders.completedAt).format("YYYY-MM-DD HH:mm:ss") : "N/A"}
+          />
+        ))}
       </TabPanel>
       {/* <TabPanel value={value} index={1}>
         <Box sx={{ p: 3 }}>
