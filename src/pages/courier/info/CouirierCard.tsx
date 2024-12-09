@@ -10,6 +10,8 @@ interface CourierCardProps {
 export const CourierCard: React.FC<CourierCardProps> = ({
     courierInfoData, }) => {
 
+    console.log(courierInfoData)
+
     return (
         <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
             <Box sx={{
@@ -100,8 +102,21 @@ export const CourierCard: React.FC<CourierCardProps> = ({
                             transform: 'translateX(8px)'
                         }
                     }}>
-                        <Typography variant="body2" sx={{ color: '#546e7a' }}>
-                            {courierInfoData?.rating}/5
+                        <Typography
+                            variant="body2"
+                            sx={{
+                                color: '#546e7a',
+                                fontWeight: 500,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 1
+                            }}
+                        >
+                            <span style={{ fontWeight: 'bold', color: '#333333' }}>Reyting:</span>
+                            <span style={{ fontSize: '0.9rem', color: 'goldenrod' }}>
+                                {Number(courierInfoData?.data?.rating.toFixed(1)) !== 5 ? courierInfoData?.data?.rating.toFixed(1) : '5'}
+                            </span>
+                            <span style={{ fontSize: '0.9rem', color: 'goldenrod' }}> / 5</span>
                         </Typography>
                     </Box>
                 </Box>

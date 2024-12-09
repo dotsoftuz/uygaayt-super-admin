@@ -27,6 +27,7 @@ export const useNotifications = () => {
         // @ts-ignore
         const total = response?.total || 0;
         const unreadCount = newNotifications.filter((n:any) => !n.isRead).length;
+        console.log(unreadCount)
 
         setState((prev) => ({
           ...prev,
@@ -51,25 +52,16 @@ export const useNotifications = () => {
     'post',
     {
       onSuccess: (response) => {
-         // @ts-ignore
-        const updatedId = response.id;
-        setState((prev) => ({
-          ...prev,
-          notifications: prev.notifications.map(notification =>
-            notification.id === updatedId
-              ? { ...notification, isRead: true }
-              : notification
-          ),
-          unreadCount: Math.max(0, prev.unreadCount - 1),
-        }));
+       
       },
     }
   );
 
   const handleNotificationRead = async (notificationId: string) => {
-    if (!state.notifications.find(n => n.id === notificationId)?.isRead) {
-      await markAsRead({ id: notificationId });
-    }
+    console.log(notificationId)
+    // if (!state.notifications.find(n => n.id === notificationId)?.isRead) {
+      await markAsRead({ _id: notificationId });
+    // }
   };
 
   const loadMore = useCallback(async () => {

@@ -22,8 +22,10 @@ export const useCourierColumns = (): GridColumns => {
     {
       field: t("common.rating"),
       renderCell(params) {
-        return params?.row?.rating;
+        // Rating qiymatini .toFixed(1) bilan formatlash
+        return params?.row?.rating.toFixed(1) !== 5 ? params?.row?.rating.toFixed(1) : '5';
       },
-    },
+    }
+
   ];
 };

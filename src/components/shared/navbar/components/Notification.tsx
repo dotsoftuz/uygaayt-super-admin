@@ -30,6 +30,8 @@ const Notification = () => {
     setAnchorEl(null);
   };
 
+
+  console.log(notifications)
   const open = Boolean(anchorEl);
 
   return (

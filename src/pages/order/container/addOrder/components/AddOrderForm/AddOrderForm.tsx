@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import {
   FullscreenControl,
   GeolocationControl,
@@ -19,7 +19,7 @@ import {
 import { AddOrderFormStyled, AddressModalStyled } from "./AddOrderForm.styled";
 import TextEditor from "components/form/TextEditor/TextEditor";
 import { useTranslation } from "react-i18next";
-import { Grid } from "@mui/material";
+import { Grid, TextareaAutosize } from "@mui/material";
 import { useEffect, useState } from "react";
 import { LeftArrowIcon } from "assets/svgs";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
@@ -49,7 +49,7 @@ const AddOrderForm = ({
   const [coordinate, setCoordinate] = useState<any>();
   const [address, setAddress] = useState("");
   const { t } = useTranslation();
-  const { control, setValue, handleSubmit, watch, setError, reset } = useForm();
+  const { control, setValue, handleSubmit, watch, setError, reset, getValues } = useForm();
   const { debouncedValue } = useDebounce(address, 1000);
   const navigate = useNavigate();
   const { id } = useParams();
@@ -149,7 +149,7 @@ const AddOrderForm = ({
       return toast.warning(t("order.validAmount"));
     }
 
-    const minimumOrderPrice = get(settingsData, "orderMinimumPrice", 0); 
+    const minimumOrderPrice = get(settingsData, "orderMinimumPrice", 0);
 
     if (allProductPrice < minimumOrderPrice) {
       return toast.warning(`${t("order.minimum_order_amount")} ${numberFormat(minimumOrderPrice)} ${get(settingsData, "currency", "uzs")}`);
@@ -196,6 +196,44 @@ const AddOrderForm = ({
     }
   );
 
+  const { mutate: deliveryMutate, data: deliveryData, status: deliveryStatus, isLoading: deliveryLoading } = useApiMutation<any>(
+    "delivery",
+    "post",
+    {
+      onSuccess(data) {
+        // setSelectedCourier(data.data.courierId);
+      },
+      onError(error) {
+        console.error("API Error:", error);
+      },
+    }
+  );
+
+  const DeliveryOnChange = () => {
+    const phoneNumber = formStore?.getValues("phoneNumber") || getValues("phoneNumber");
+    deliveryMutate({
+      paymentType: "cash",
+      addressLocation: {
+        latitude: coordinate?.latitude,
+        longitude: coordinate?.longitude,
+      },
+      items: basketItems.map((e) => ({
+        productId: e._id,
+        amount: e.amount,
+      })),
+      phoneNumber: phoneNumber
+    });
+  }
+
+
+  useEffect(() => {
+    if (basketItems.length > 0) {
+      DeliveryOnChange();
+    }
+  }, [basketItems, formStore, coordinate]);
+
+  console.log(deliveryData)
+
   return (
     <AddOrderFormStyled>
       {!id && <h3 className="mb-3">{t("order.formalization")}</h3>}
@@ -203,15 +241,10 @@ const AddOrderForm = ({
         <Grid container spacing={2}>
           <Grid item sm={12}>
             <div onClick={() => setOpen(true)}>
-              {/* <TextInput
-                control={formStore ? formStore?.control : control}
-                name="addressName"
-                label={t("order.deliveryAddress")}
-                searchIcon
-              /> */}
               <TextInput
                 control={formStore ? formStore.control : control}
                 name="addressName"
+                label={t("order.deliveryAddress")}
                 placeholder="Yetkazib berish manzili"
                 searchIcon
                 onCustomChange={(value) => {
@@ -292,7 +325,6 @@ const AddOrderForm = ({
               name="receiverFirstName"
               label={t("order.receiver")}
               disabled={order?.state?.state === "completed" ? true : false}
-
             />
           </Grid>
           <Grid item sm={12}>
@@ -301,6 +333,7 @@ const AddOrderForm = ({
               name="phoneNumber"
               label={t("common.phoneNumber")}
               disabled={order?.state?.state === "completed" ? true : false}
+              onChange={DeliveryOnChange}
             />
           </Grid>
           <Grid item sm={12}>
@@ -320,6 +353,7 @@ const AddOrderForm = ({
               options={PAYMENT_TYPES}
               label={t("common.paymentType")}
               disabled={order?.state?.state === "completed" ? true : false}
+              onChange={DeliveryOnChange}
             />
           </Grid>
           {id &&
@@ -343,14 +377,25 @@ const AddOrderForm = ({
 
           <Grid item sm={12}>
             <label className="custom-label">{t("common.description")}</label>
-            <TextEditor
+
+            <TextareaAutosize
+              minRows={3} // boshlang'ich satrlar soni
               value={formStore?.watch("comment")}
-              onChange={(value) => {
+              onChange={(event) => {
+                const value = event.target.value;
                 formStore
                   ? formStore?.setValue("comment", value)
                   : setValue("comment", value);
               }}
-            /> 
+              style={{
+                width: '100%',
+                padding: '8px',
+                borderRadius: '4px',
+                border: '1px solid #ccc',
+                fontSize: '1rem',
+              }}
+            />
+
           </Grid>
         </Grid>
         {!id && (
@@ -358,21 +403,28 @@ const AddOrderForm = ({
             <div className="item">
               <span className="key">{t("order.allProducts")}:</span>
               <span className="value">
-                {numberFormat(allProductPrice)}{" "}
+                {numberFormat(deliveryData?.data?.itemPrice)}{" "}
+                {get(settingsData, "currency", "uzs")}
+              </span>
+            </div>
+            <div className="item">
+              <span className="key">{t("settings.discounts")}:</span>
+              <span className="value">
+                {numberFormat(deliveryData?.data?.discount)}{" "}
                 {get(settingsData, "currency", "uzs")}
               </span>
             </div>
             <div className="item">
               <span className="key">{t("order.deliveryPrice")}:</span>
               <span className="value">
-                {numberFormat(deliveryPrice)}{" "}
+                {numberFormat(deliveryData?.data?.deliveryPrice)}{" "}
                 {get(settingsData, "currency", "uzs")}
               </span>
             </div>
             <div className="item">
               <span className="key">{t("order.totalPrice")}:</span>
               <span className="value">
-                {numberFormat(allProductPrice + deliveryPrice)}{" "}
+                {numberFormat(deliveryData?.data?.totalPrice)}{" "}
                 {get(settingsData, "currency", "uzs")}
               </span>
             </div>

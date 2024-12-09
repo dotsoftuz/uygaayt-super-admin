@@ -63,7 +63,7 @@ const CourierInfo = () => {
                     />
                   </Box>
                   <Box sx={{ flex: 1, minWidth: 0 }}>
-                    <CourierTabs courierInfoData={courierInfoData} />
+                    <CourierTabs historyOrders={data?.data} courierInfoData={courierInfoData} />
                   </Box>
                 </Box>
               </Container>

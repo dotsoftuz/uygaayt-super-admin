@@ -59,7 +59,7 @@ const OrderItem = ({ id, amount, status, currency, date, status_color }: { id: s
           Order #{id}
         </Typography>
       </Box>
-      <span  style={{backgroundColor: status_color, color: 'white', padding: '8px', borderRadius: "10px", fontSize: "13px"}}>{status}</span>
+      <span style={{ backgroundColor: status_color, color: 'white', padding: '8px', borderRadius: "10px", fontSize: "13px" }}>{status}</span>
     </Box>
     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <Typography variant="body2" color="text.secondary">
@@ -79,7 +79,6 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders }) => 
     state: { data: settingsData },
   } = useCommonContext();
 
-  console.log(historyOrders?.data)
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -120,18 +119,27 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders }) => 
           /> */}
         </Tabs>
       </Box>
-      <TabPanel value={value} index={0}>
-        {historyOrders?.data?.map((orders: any) => (
-          <OrderItem
-            id={orders?.number}
-            amount={orders?.totalPrice}
-            status={orders?.state?.name}
-            status_color={orders?.state?.color}
-            currency={get(settingsData, "currency", "uzs")}
-            date={orders?.completedAt ? dayjs(orders.completedAt).format("YYYY-MM-DD HH:mm:ss") : "N/A"}
-          />
-        ))}
+      <TabPanel value={value} index={1}>
+        <Box
+          sx={{
+            maxHeight: "500px",
+            overflowY: "auto", 
+          }}
+        >
+          {historyOrders?.data?.map((orders: any) => ( 
+            <OrderItem
+              key={orders?.number} 
+              id={orders?.number}
+              amount={orders?.totalPrice}
+              status={orders?.state?.name}
+              status_color={orders?.state?.color}
+              currency={get(settingsData, "currency", "uzs")}
+              date={orders?.completedAt ? dayjs(orders.completedAt).format("YYYY-MM-DD HH:mm:ss") : "N/A"}
+            />
+          ))}
+        </Box>
       </TabPanel>
+
       {/* <TabPanel value={value} index={1}>
         <Box sx={{ p: 3 }}>
           <Box sx={{ mb: 4 }}>

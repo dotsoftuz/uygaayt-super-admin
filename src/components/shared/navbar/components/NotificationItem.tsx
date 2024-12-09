@@ -41,7 +41,7 @@ function getIcon(type: string) {
 }
 
 interface NotificationItemProps {
-  notification: NotificationType;
+  notification: any;
   onRead: (id: string) => void;
 }
 
@@ -55,7 +55,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
     "get",
     {
       onSuccess() {
-        onRead(notification.id);
+        onRead(notification._id);
         toast.success("Tasdiqlandi!");
       },
     }
@@ -63,6 +63,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
 
   const handleAcceptClick = (event: React.MouseEvent) => {
     event.stopPropagation();
+    onRead(notification._id);
     acceptCourier({});
   };
 
@@ -70,9 +71,12 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
     if (notification?.type === "courier_arrived") {
       navigate(`/courier/${notification?.courierId}`);
     } else {
+      // onRead(notification._id);
       navigate('/product');
     }
   };
+
+  console.log(notification)
 
   return (
     <Box

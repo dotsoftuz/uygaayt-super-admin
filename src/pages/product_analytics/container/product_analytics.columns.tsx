@@ -55,7 +55,7 @@ export const useProductColumns = (): GridColumns => {
       headerName: t("common.customer_bought_count")!,
       sortable: true,
       renderCell({ row }) {
-        // return numberFormat(get(row, "inStock", ""));
+        return numberFormat(get(row, "customerCount", ""));
       },
     },
     {

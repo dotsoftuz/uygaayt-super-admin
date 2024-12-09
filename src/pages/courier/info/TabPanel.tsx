@@ -4,6 +4,9 @@ import { DeliveryDining, Money, ShoppingBag } from '@mui/icons-material';
 import HistoryIcon from '@mui/icons-material/History';
 import BackpackIcon from '@mui/icons-material/Backpack';
 import { t } from 'i18next';
+import useCommonContext from 'context/useCommon';
+import { get } from 'lodash';
+import dayjs from 'dayjs';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -31,7 +34,7 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-const OrderItem = ({ id, amount, status, date }: { id: string; amount: string; status: string; date: string }) => (
+const OrderItem = ({ id, amount, status, currency, date, status_color }: { id: string; amount: string; status: string; currency: string, date: string, status_color: any }) => (
   <Box sx={{
     mb: 2,
     p: 3,
@@ -50,37 +53,38 @@ const OrderItem = ({ id, amount, status, date }: { id: string; amount: string; s
           Order #{id}
         </Typography>
       </Box>
-      <Chip
-        label={status}
-        color={status === 'Delivered' ? 'success' : 'primary'}
-        size="small"
-      />
+      <span style={{ backgroundColor: status_color, color: 'white', padding: '8px', borderRadius: "10px", fontSize: "13px" }}>{status}</span>
     </Box>
     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
       <Typography variant="body2" color="text.secondary">
         {date}
       </Typography>
       <Typography variant="subtitle1" fontWeight="bold" color="#6B46C1">
-        {amount}
+        {amount} {currency}
       </Typography>
     </Box>
   </Box>
 );
 
 interface CourierTabProps {
-  courierInfoData: any
+  courierInfoData: any,
+  historyOrders: any,
 }
 
 
 export const CourierTabs: React.FC<CourierTabProps> = ({
-  courierInfoData, }) => {
+  courierInfoData, historyOrders }) => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  console.log(courierInfoData)
+  const {
+    state: { data: settingsData },
+  } = useCommonContext();
+
+
 
   return (
     <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
@@ -110,16 +114,12 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
             iconPosition="start"
             label={t("tabs.avto")}
           />
-          {/* <Tab
-            icon={<ShoppingBag style={{ fontSize: 20 }} />}
-            iconPosition="start"
-            label="Recent Orders"
-          />
           <Tab
             icon={<HistoryIcon style={{ fontSize: 20 }} />}
             iconPosition="start"
-            label="History"
-          /> */}
+            label={t('tabs.orders')}
+          />
+
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -165,25 +165,26 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
 
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <OrderItem
-          id="12345"
-          amount="$150.00"
-          status="Delivered"
-          date="Mar 15, 2024"
-        />
-        <OrderItem
-          id="12344"
-          amount="$89.99"
-          status="In Transit"
-          date="Mar 12, 2024"
-        />
-        <OrderItem
-          id="12343"
-          amount="$245.50"
-          status="Delivered"
-          date="Mar 8, 2024"
-        />
+        <Box
+          sx={{
+            maxHeight: "500px", 
+            overflowY: "auto",  
+          }}
+        >
+          {historyOrders?.data?.map((orders: any) => ( 
+            <OrderItem
+              key={orders?.number} 
+              id={orders?.number}
+              amount={orders?.totalPrice}
+              status={orders?.state?.name}
+              status_color={orders?.state?.color}
+              currency={get(settingsData, "currency", "uzs")}
+              date={orders?.completedAt ? dayjs(orders.completedAt).format("YYYY-MM-DD HH:mm:ss") : "N/A"}
+            />
+          ))}
+        </Box>
       </TabPanel>
+
       <TabPanel value={value} index={2}>
         <Box sx={{ p: 3 }}>
           <Box sx={{ mb: 4 }}>
