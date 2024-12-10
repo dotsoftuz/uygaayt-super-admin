@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Tabs, Tab, Box, Typography, Paper, Chip, LinearProgress } from '@mui/material';
 import { Money, ShoppingBag } from '@mui/icons-material';
 import HistoryIcon from '@mui/icons-material/History';
@@ -6,7 +6,12 @@ import BackpackIcon from '@mui/icons-material/Backpack';
 import { useTranslation } from 'react-i18next';
 import { get } from 'lodash';
 import useCommonContext from 'context/useCommon';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import { RangeDatePicker } from 'components';
+import useAllQueryParams from 'hooks/useGetAllQueryParams/useAllQueryParams';
+import isBetween from "dayjs/plugin/isBetween";
+
+dayjs.extend(isBetween);
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -75,6 +80,13 @@ const OrderItem = ({ id, amount, status, currency, date, status_color }: { id: s
 export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders }) => {
   const [value, setValue] = React.useState(0);
   const { t } = useTranslation();
+
+  const allParams = useAllQueryParams();
+
+  const dateFrom = allParams?.dateFrom ? dayjs(allParams.dateFrom) : null;
+  const dateTo = allParams?.dateTo ? dayjs(allParams.dateTo) : null;
+
+
   const {
     state: { data: settingsData },
   } = useCommonContext();
@@ -84,8 +96,13 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders }) => 
     setValue(newValue);
   };
 
+  const filteredOrders = historyOrders?.data?.filter((order:any) => {
+    if (!dateFrom || !dateTo) return true;
+    const orderDate = dayjs(order.completedAt);
+    return orderDate.isBetween(dateFrom, dateTo, "day", "[]");
+  });
 
-  console.log(historyOrders)
+
   return (
     <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
       <Box sx={{
@@ -122,13 +139,16 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders }) => 
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
+        <Box sx={{ pb: 2 }}>
+          <RangeDatePicker />
+        </Box>
         <Box
           sx={{
             maxHeight: "500px",
-            overflowY: "auto", 
+            overflowY: "auto",
           }}
         >
-          {historyOrders?.data?.map((orders: any) => ( 
+          {filteredOrders?.map((orders: any) => (
             <OrderItem
               key={orders?.number}
               id={orders?.number}

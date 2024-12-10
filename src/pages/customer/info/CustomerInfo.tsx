@@ -53,7 +53,7 @@ const CustomerInfo = () => {
                 flexDirection: { xs: 'column', md: 'row' }
               }}>
                 <Box sx={{
-                  flex: { xs: '1', md: '0 0 380px' },
+                  flex: { xs: '1', md: '0 0 500px' },
                   minWidth: 0
                 }}>
                   <CustomerCard

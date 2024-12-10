@@ -6,7 +6,13 @@ import BackpackIcon from '@mui/icons-material/Backpack';
 import { t } from 'i18next';
 import useCommonContext from 'context/useCommon';
 import { get } from 'lodash';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import { RangeDatePicker } from 'components';
+import useAllQueryParams from 'hooks/useGetAllQueryParams/useAllQueryParams';
+import isBetween from "dayjs/plugin/isBetween";
+
+dayjs.extend(isBetween);
+
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -76,6 +82,11 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
   courierInfoData, historyOrders }) => {
   const [value, setValue] = React.useState(0);
 
+  const allParams = useAllQueryParams();
+
+  const dateFrom = allParams?.dateFrom ? dayjs(allParams.dateFrom) : null;
+  const dateTo = allParams?.dateTo ? dayjs(allParams.dateTo) : null;
+
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -84,6 +95,12 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
     state: { data: settingsData },
   } = useCommonContext();
 
+
+  const filteredOrders = historyOrders?.data?.filter((order: any) => {
+    if (!dateFrom || !dateTo) return true;
+    const orderDate = dayjs(order.completedAt);
+    return orderDate.isBetween(dateFrom, dateTo, "day", "[]");
+  });
 
 
   return (
@@ -165,15 +182,18 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
 
       </TabPanel>
       <TabPanel value={value} index={1}>
+        <Box sx={{ pb: 2 }}>
+          <RangeDatePicker />
+        </Box>
         <Box
           sx={{
-            maxHeight: "500px", 
-            overflowY: "auto",  
+            maxHeight: "500px",
+            overflowY: "auto",
           }}
         >
-          {historyOrders?.data?.map((orders: any) => ( 
+          {filteredOrders?.map((orders: any) => (
             <OrderItem
-              key={orders?.number} 
+              key={orders?.number}
               id={orders?.number}
               amount={orders?.totalPrice}
               status={orders?.state?.name}
