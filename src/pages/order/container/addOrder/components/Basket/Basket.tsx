@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { numberFormat } from "utils/numberFormat";
 import { BasketStyled } from "./Basket.styled";
 import { DeleteIcon, MinusIcon, PlusIcon } from "assets/svgs";
-import { TextInput } from "components";
+import { SearchInput, TextInput } from "components";
 import { useForm } from "react-hook-form";
 import { Grid } from "@mui/material";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
@@ -13,6 +13,7 @@ import useCommonContext from "context/useCommon";
 import { get } from "lodash";
 import { useSearchParams } from "react-router-dom";
 import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
+import { useAppSelector } from "store/storeHooks";
 
 interface IBasketProps {
   basketItems: IProduct[];
@@ -21,11 +22,16 @@ interface IBasketProps {
 
 const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
   const [active, setActive] = useState("product");
-  const { control, watch } = useForm();
-  const { debouncedValue: search } = useDebounce(watch("search"), 500);
-  const { t } = useTranslation();
   const allParams = useAllQueryParams();
+  const { control, watch } = useForm();
+  const [search, setSearch] = useState<any>(allParams.search || "");
+
+  const { debouncedValue: debValue } = useDebounce(search, 500);
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
+  const defaultLimit = 10;
+  const reRender = useAppSelector((store) => store.tableState.render);
+
   const [queryParams, setQueryParams] = useState<any>(
     {
       page: searchParams.get("page") || 1,
@@ -33,6 +39,15 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
       search: searchParams.get("search") || "",
     }
   );
+
+  useEffect(() => {
+    setSearchParams({
+      ...allParams,
+      search: search || "",
+      page: search ? "1" : allParams.page || "1",
+      limit: allParams.limit || "20",
+    });
+  }, [debValue]);
 
   const {
     state: { data: settingsData },
@@ -44,6 +59,12 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
     {
       onSuccess: (data) => {
         console.log("Product created successfully:");
+        setQueryParams({
+          ...allParams,
+          search: debValue || "",
+          page: search ? "1" : allParams.page || "1",
+          limit: allParams.limit || defaultLimit + "",
+        });
       },
       onError: (error) => {
         console.error("Error creating product:", error);
@@ -56,7 +77,7 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
       ...queryParams,
       ...allParams,
     });
-  }, [mutate, search]);
+  }, [reRender, debValue, searchParams]);
 
 
   const basketFn = (
@@ -123,10 +144,11 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
       </div>
       <div className="mb-3 search">
         {active === "product" && (
-          <TextInput
-            control={control}
-            name="search"
-            placeholder={t("general.search")!}
+          <SearchInput
+            value={search}
+            onChange={(e: any) => {
+              setSearch(e?.target?.value);
+            }}
           />
         )}
         {active === "basket" && (
@@ -200,7 +222,7 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
                     }}
                   >
                     {
-                      product?.discountEnabled === false ?  "" : <div style={{ color: "#ed0e0e" }}>
+                      product?.discountEnabled === false ? "" : <div style={{ color: "#ed0e0e" }}>
                         Asl Narxi:
                         <s style={{ marginLeft: "4px" }}>
                           {numberFormat(product.price)} {get(settingsData, "currency", "uzs")}
@@ -210,7 +232,7 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
                     {
                       product?.discountEnabled && <div style={{ color: "#4caf50", fontWeight: "bold" }}>
                         Chegirma: {numberFormat(product?.discountValue)}{" "}
-                        {product?.discountType  === "percent" ? "%" : get(settingsData, "currency", "uzs")}
+                        {product?.discountType === "percent" ? "%" : get(settingsData, "currency", "uzs")}
                       </div>
                     }
 

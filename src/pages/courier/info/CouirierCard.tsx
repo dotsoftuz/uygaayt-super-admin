@@ -114,7 +114,7 @@ export const CourierCard: React.FC<CourierCardProps> = ({
                         >
                             <span style={{ fontWeight: 'bold', color: '#333333' }}>Reyting:</span>
                             <span style={{ fontSize: '0.9rem', color: 'goldenrod' }}>
-                                {Number(courierInfoData?.data?.rating.toFixed(1)) !== 5 ? courierInfoData?.data?.rating.toFixed(1) : '5'}
+                                {Number(courierInfoData?.data?.rating?.toFixed(1)) !== 5 ? courierInfoData?.data?.rating?.toFixed(1) : '5'}
                             </span>
                             <span style={{ fontSize: '0.9rem', color: 'goldenrod' }}> / 5</span>
                         </Typography>

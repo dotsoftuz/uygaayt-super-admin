@@ -87,11 +87,8 @@ const Client = () => {
       <Table
         columns={columns}
         dataUrl="report/product"
-        searchable
         headerChildren={renderHeader}
         exQueryParams={{
-          page: 1,
-          limit: 10,
           isActive: formStore.watch("isActiveQuery") || undefined,
         }}
       />

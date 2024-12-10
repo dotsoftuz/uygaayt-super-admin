@@ -1,14 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import { IOrderByStatus } from '../OrderBoard.constants';
+import { useAppDispatch, useAppSelector } from 'store/storeHooks';
+import { socketReRender } from 'store/reducers/SocketSlice';
 
 export const useBoardData = (allParams: any) => {
   const [boardData, setBoardData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const socketRender = useAppSelector((store) => store.SocketState.render);
+  const dis = useAppDispatch();
 
-  const { data: lanesData, status } = useApi<IOrderByStatus[]>(
+  const { data: lanesData, status, refetch } = useApi<IOrderByStatus[]>(
     "order-state/get-all",
     {
       ...allParams,
@@ -22,7 +26,7 @@ export const useBoardData = (allParams: any) => {
     }
   );
 
-  const { mutate: fetchOrders } = useApiMutation("order/paging", "post", {
+  const { mutate: fetchOrders, reset } = useApiMutation("order/paging", "post", {
     onSuccess({ data: orderData }) {
       if (!orderData?.data) {
         return;
@@ -66,6 +70,15 @@ export const useBoardData = (allParams: any) => {
       setLoading(false);
     },
   });
+
+
+  useEffect(() => {
+    if (socketRender) {
+      reset();
+      refetch()
+      dis(socketReRender(false));
+    }
+  }, [socketRender]);
 
   useEffect(() => {
     if (status === "success" && lanesData?.data) {

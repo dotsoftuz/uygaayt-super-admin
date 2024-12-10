@@ -46,6 +46,7 @@ const Table = <TData extends { _id: string }>({
   headerChildren,
   headerChildrenSecondRow,
   insteadOfTable,
+  getUniqueId,
   processingParams
 }: ITable<TData>) => {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
@@ -58,7 +59,7 @@ const Table = <TData extends { _id: string }>({
   const reRender = useAppSelector((store) => store.tableState.render);
   const socketRender = useAppSelector((store) => store.SocketState.render);
   const dis = useDispatch();
-  const defaultLimit = 10;
+  const defaultLimit = 20;
   const { search: locationSearch } = useLocation();
 
   const filterParams = useMemo(() => {
@@ -123,7 +124,6 @@ const Table = <TData extends { _id: string }>({
 
   useEffect(() => {
     mutate({
-      // ...queryParams,
       ...allParams,
       ...exQueryParams,
     });
@@ -153,7 +153,7 @@ const Table = <TData extends { _id: string }>({
 
   useEffect(() => {
     if (socketRender) {
-      reset();
+      // reset();
       dis(socketReRender(false));
     }
   }, [socketRender]);
@@ -170,14 +170,18 @@ const Table = <TData extends { _id: string }>({
           item?.car?.name?.toLowerCase()?.includes(search)
       );
     }
-    return dataKey?.map((item: any, i: number) => ({
-      ...item,
-      _number:
-        i +
-        1 +
-        ((Number(searchParams.get("page")) || 1) - 1) *
-        (Number(searchParams.get("limit")) || 10),
-    }));
+    return dataKey?.map((item: Record<string, any>, i: number) => {
+      const index = isGetAll
+        ? 0
+        : ((+allParams?.page || 1) - 1) * (+allParams?.limit || defaultLimit);
+      return {
+        ...item,
+        _id: getUniqueId
+          ? getUniqueId(item)
+          : item?._id || `${i}${i + 1 + index}`,
+        _number: i + 1 + index,
+      };
+    });
   }, [data, search]);
 
   const tableColumns: GridColumns<TData> = React.useMemo(
@@ -227,27 +231,28 @@ const Table = <TData extends { _id: string }>({
                 columns={tableColumns}
                 localeText={localization}
                 pageSize={Number(searchParams.get("limit"))}
+                // pageSize={+allParams?.limit || defaultLimit}
                 rowsPerPageOptions={[5, 10, 20]}
                 loading={isLoading}
                 hideFooterPagination
                 disableSelectionOnClick
                 sortingMode="server"
-                sortModel={
-                  allParams?.sortBy && !reset
-                    ? [
-                      {
-                        sort: allParams?.sortOrder === "1" ? "asc" : "desc",
-                        field: allParams?.sortBy,
-                      },
-                    ]
-                    : []
-                }
+                // sortModel={
+                //   allParams?.sortBy && !reset
+                //     ? [
+                //       {
+                //         sort: allParams?.sortOrder === "1" ? "asc" : "desc",
+                //         field: allParams?.sortBy,
+                //       },
+                //     ]
+                //     : []
+                // }
                 onSortModelChange={(model) => {
                   if (model.length) {
                     setSearchParams({
                       ...allParams,
                       sortBy: `${model[0].field}`,
-                      sortOrder: `${model[0].sort === "asc" ? 1 : -1}`,
+                      sortOrder: `${model[0].sort === "asc" ? 1 : -1}`
                     });
                   } else {
                     delete allParams.sortBy;

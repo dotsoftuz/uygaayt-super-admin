@@ -140,6 +140,11 @@ const AddOrderForm = ({
 
 
   const submit = (data: any) => {
+    const addressLocation = watch("addressLocation");
+    if (!addressLocation || !addressLocation.latitude || !addressLocation.longitude) {
+      toast.error("Manzil noto'g'ri kiritilgan yoki xaritada topilmadi!");
+      return;
+    }
     if (!basketItems.length) {
       return toast.warning(t("order.chooseProduct"));
     }
@@ -530,7 +535,14 @@ const AddOrderForm = ({
                   variant="contained"
                   color="success"
                   className="save-btn"
-                  onClick={() => setOpen(false)}
+                  onClick={() => {
+                    const addressLocation = watch("addressLocation");
+                    if (!addressLocation || !addressLocation.latitude || !addressLocation.longitude) {
+                      toast.error("Manzil noto'g'ri kiritilgan yoki xaritada topilmadi!");
+                      return;
+                    }
+                    setOpen(false);
+                  }}
                 />
               </div>
             </Grid>

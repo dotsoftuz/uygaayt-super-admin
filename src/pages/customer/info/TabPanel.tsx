@@ -84,6 +84,8 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders }) => 
     setValue(newValue);
   };
 
+
+  console.log(historyOrders)
   return (
     <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
       <Box sx={{
@@ -119,7 +121,7 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders }) => 
           /> */}
         </Tabs>
       </Box>
-      <TabPanel value={value} index={1}>
+      <TabPanel value={value} index={0}>
         <Box
           sx={{
             maxHeight: "500px",
@@ -128,7 +130,7 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders }) => 
         >
           {historyOrders?.data?.map((orders: any) => ( 
             <OrderItem
-              key={orders?.number} 
+              key={orders?.number}
               id={orders?.number}
               amount={orders?.totalPrice}
               status={orders?.state?.name}

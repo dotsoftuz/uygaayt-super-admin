@@ -43,7 +43,7 @@ export const useProductColumns = (): GridColumns => {
       },
     },
     {
-      field: "sold",
+      field: "total_amount",
       headerName: t("common.sold")!,
       sortable: true,
       renderCell({ row }) {
@@ -51,7 +51,7 @@ export const useProductColumns = (): GridColumns => {
       },
     },
     {
-      field: "customer_bought_count",
+      field: "customerCount",
       headerName: t("common.customer_bought_count")!,
       sortable: true,
       renderCell({ row }) {
@@ -59,7 +59,9 @@ export const useProductColumns = (): GridColumns => {
       },
     },
     {
-      field: t("order.totalPrice"),
+      field: "total_price",
+      headerName: t("order.totalPrice")!,
+      sortable: true,
       renderCell({ row }) {
         return numberFormat(get(row, "total_price", ""));
       },

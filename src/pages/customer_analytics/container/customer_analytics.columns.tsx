@@ -28,13 +28,17 @@ export const useCustomerColumns = (): GridColumns => {
       },
     },
     {
-      field: t("common.orderAmount"),
+      field: "totalOrders",
+      sortable: true,
+      headerName: t("common.orderAmount")!,
       renderCell({ row }) {
         return get(row, "customer.totalOrders", "");
       },
     },
     {
-      field: t("common.orderPrice"),
+      field: "totalOrdersPrice",
+      sortable: true,
+      headerName: t("common.orderPrice")!,
       renderCell({ row }) {
         return numberFormat(get(row, "customer.totalOrdersPrice", ""));
       },

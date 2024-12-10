@@ -17,6 +17,13 @@ import {
   mapBoardLanes,
   translateUz,
 } from "./OrderBoard.constants";
+import { useAppDispatch, useAppSelector } from "store/storeHooks";
+import { socketReRender } from "store/reducers/SocketSlice";
+import { reRenderTable } from "components/elements/Table/reducer/table.slice";
+import { socket } from "socket";
+
+// @ts-ignore
+import audio from "../../../../assets/order-voice.mp3";
 
 const customTranslation = createTranslate(translateUz);
 
@@ -30,8 +37,11 @@ const OrderBoard = () => {
   const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({});
   const [pagesMap, setPagesMap] = useState<Record<string, number>>({});
   const hasAccess = useRoleManager();
+  const socketRender = useAppSelector((store) => store.SocketState.render);
+  const dis = useAppDispatch();
+  const [stateUpdateData, setStateUpdateData] = useState<any>();
 
-  const { data: statesData, status: statesStatus } = useApi<IOrderByStatus[]>(
+  const { data: statesData, status: statesStatus, refetch } = useApi<IOrderByStatus[]>(
     "order-state/get-all",
     {
       ...allParams,
@@ -39,7 +49,28 @@ const OrderBoard = () => {
     { suspense: false }
   );
 
-  const { mutate: fetchOrders } = useApiMutation(
+  const { mutate, reset: resetUpdatedCard } = useApiMutation(
+    `order/state/${stateUpdateData?.orderId}`,
+    "put",
+    {
+      onSuccess() {
+        setStateUpdateData(undefined);
+        dis(reRenderTable(true));
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (stateUpdateData) {
+      mutate({
+        stateId: stateUpdateData.stateId,
+        _id: stateUpdateData.orderId,
+        position: 1,
+      });
+    }
+  }, [stateUpdateData]);
+
+  const { mutate: fetchOrders, reset } = useApiMutation(
     "order/paging",
     "post",
     {
@@ -88,11 +119,69 @@ const OrderBoard = () => {
     }
   );
 
+  useEffect(() => {
+    if (socketRender) {
+      resetUpdatedCard()
+      reset();
+      refetch()
+      dis(socketReRender(false));
+    }
+  }, [socketRender]);
+
+  const makeNoice = () => {
+    try {
+      new Audio(audio).play();
+    } catch (error) {
+      // console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const handleUpdateOrder = (data: { data: any }) => {
+      if (!!data.data.state?.isSoundable) makeNoice();
+      setBoardData((prev: any) => {
+        if (!prev) return prev;
+
+        return prev.map((item: any) => {
+          if (item._id === data.data.stateId) {
+            const newOrder = {
+              number: data.data.number,
+              totalPrice: data.data.totalPrice,
+              addressName: data.data.addressName,
+              createdAt: data.data.createdAt,
+              state: data.data.state?.state,
+              _id: data.data._id,
+              uniqueId: `${data.data._id}-${data.data.createdAt}`
+            };
+
+            const existingOrderIds = new Set((item.orders || []).map((order: any) => order._id));
+            if (existingOrderIds.has(newOrder._id)) {
+              return item; // Agar buyurtma mavjud bo'lsa, qo'shmang
+            }
+
+            return {
+              ...item,
+              orders: [...(item.orders || []), newOrder],
+            };
+          }
+          return item;
+        });
+      });
+    };
+
+    socket.on('orderCreated', handleUpdateOrder);
+
+    return () => {
+      socket.off('orderCreated', handleUpdateOrder);
+    };
+  }, []);
+
+
   // Initialize board data and fetch initial orders
   useEffect(() => {
     if (statesStatus === "success" && statesData?.data) {
       setBoardData(statesData.data);
-      
+
       // Initialize pages map
       const initialPagesMap = statesData.data.reduce((acc, state) => ({
         ...acc,
@@ -106,7 +195,7 @@ const OrderBoard = () => {
           ...prev,
           [state._id]: true
         }));
-        
+
         fetchOrders({
           page: 1,
           limit: 10,
@@ -199,6 +288,10 @@ const OrderBoard = () => {
       navigate(`/order/${originalId}`);
     }
   };
+
+
+
+
 
   const readyBoardData = useMemo(() => {
     if (getBoardDataFinished) {

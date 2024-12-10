@@ -49,9 +49,9 @@ const CourierAnalytics = () => {
       <Table
         dataUrl="report/courier"
         columns={columns}
-        searchable
+        // searchable
         headerChildren={<ExportButton url={exportUrl} />}
-        onAddButton={hasAccess('courierCreate') ? () => dis(setOpenDrawer(true)) : undefined}
+        // onAddButton={hasAccess('courierCreate') ? () => dis(setOpenDrawer(true)) : undefined}
         onEditColumn={hasAccess('courierUpdate') ? (row) => {
           setEditingCourierId(row._id);
           dis(setOpenDrawer(true));

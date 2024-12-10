@@ -21,23 +21,34 @@ const Client = () => {
   const [productId, setProductId] = useState("");
   const [productImages, setProductImages] = useState<IIdImage[]>([]);
   const [mainImageId, setMainImageId] = useState<any>();
+  const [subCategory, setSubCategory] = useState<any>();
+
 
   const renderHeader = (
-    <Grid  width={300} spacing={2}>
-      <Grid item sm={4}>
+    <Grid width={250} spacing={2} display={"flex"} justifyContent={"space-between"}>
+      <Grid style={{ display: "flex", justifyContent: "end" }}>
         <AutoCompleteFilter
           optionsUrl="category/paging"
           filterName="categoryId"
           placeholder={t("common.category")}
+          onChange={(item: any) => {
+            setSubCategory(item);
+          }}
         />
       </Grid>
-      {/* <Grid item sm={4}>
-        <Checkbox
-          control={formStore.control}
-          label={t("enum.active")}
-          name="isActiveQuery"
-        />
-      </Grid> */}
+      <Grid style={{ display: "flex", justifyContent: "end" }}>
+        {
+          subCategory && <AutoCompleteFilter
+            optionsUrl="category/paging"
+            filterName="categoryId"
+            placeholder={t("common.category")}
+            onChange={() => setSubCategory((prev: any) => prev)}
+            exQueryParams={{
+              parentId: subCategory._id
+            }}
+          />
+        }
+      </Grid>
     </Grid>
   );
 

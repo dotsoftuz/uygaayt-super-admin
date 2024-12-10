@@ -24,9 +24,9 @@ export const useNotifications = () => {
     {
       onSuccess: (response) => {
         const newNotifications = response.data.data || [];
-        // @ts-ignore
-        const total = response?.total || 0;
-        const unreadCount = newNotifications.filter((n:any) => !n.isRead).length;
+        const total = response?.data.total || 0;
+        console.log(response)
+        const unreadCount = response?.data?.unreadCount;
         console.log(unreadCount)
 
         setState((prev) => ({
@@ -47,12 +47,18 @@ export const useNotifications = () => {
     }
   );
 
+
+  useEffect(() => {
+    fetchNotifications("")
+  }, [socket])
+
+
   const { mutate: markAsRead } = useApiMutation(
     'notification/mark-read',
     'post',
     {
       onSuccess: (response) => {
-       
+        refreshNotifications();
       },
     }
   );
@@ -61,6 +67,7 @@ export const useNotifications = () => {
     console.log(notificationId)
     // if (!state.notifications.find(n => n.id === notificationId)?.isRead) {
       await markAsRead({ _id: notificationId });
+      refreshNotifications();
     // }
   };
 
@@ -99,19 +106,24 @@ export const useNotifications = () => {
   useEffect(() => {
     const handleNewNotification = (data: { data: any }) => {
       dispatch(socketReRender(true));
+  
       setState((prev) => ({
         ...prev,
         notifications: [data.data, ...prev.notifications],
         total: prev.total + 1,
         unreadCount: prev.unreadCount + 1,
       }));
+  
+      refreshNotifications();
     };
-
+  
     socket.on('notification', handleNewNotification);
+  
     return () => {
       socket.off('notification', handleNewNotification);
     };
-  }, [dispatch]);
+  }, [dispatch, refreshNotifications]);
+  
 
   return {
     ...state,

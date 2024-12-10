@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Box, Grid, Switch } from "@mui/material";
 import {
   AutoCompleteForm,
@@ -39,6 +39,9 @@ const ProductForm = ({
     productProps;
   const { t } = useTranslation();
   const { control, handleSubmit, reset, setValue, register, watch } = formStore;
+  const [subCategory, setSubCategory] = useState<any>();
+  const [subChildCategory, setChildCategory] = useState<any>();
+
   const discountEndMinDate = new Date(watch("discountStartAt"));
   discountEndMinDate.setDate(discountEndMinDate.getDate() + 1);
 
@@ -57,8 +60,10 @@ const ProductForm = ({
   );
 
   const submit = (data: any) => {
+    console.log(subChildCategory)
     const requestData: any = {
       ...data,
+      categoryId: subChildCategory === undefined ? data.categoryId : data.subCategoryId, 
       imageIds: productImages.map((image) => image._id),
       mainImageId: productImages.length
         ? mainImageId || productImages?.[0]?._id
@@ -66,13 +71,13 @@ const ProductForm = ({
       expiryDate: !data.isMyExpire
         ? null
         : typeof data.expiryDate === "string"
-        ? data.expiryDate
-        : typeof data.expiryDate === "object"
-        ? data.expiryDate?.toISOString()
-        : null,
+          ? data.expiryDate
+          : typeof data.expiryDate === "object"
+            ? data.expiryDate?.toISOString()
+            : null,
       _id: editingProductId,
     };
-  
+
     // discountEnabled = true bo'lganda discount ma'lumotlarini qo'shish
     if (data.discountEnabled) {
       requestData.discountType = data.discountType;
@@ -81,16 +86,16 @@ const ProductForm = ({
         typeof data.discountStartAt === "string"
           ? data.discountStartAt
           : typeof data.discountStartAt === "object"
-          ? data.discountStartAt?.toISOString()
-          : undefined;
+            ? data.discountStartAt?.toISOString()
+            : undefined;
       requestData.discountEndAt =
         typeof data.discountEndAt === "string"
           ? data.discountEndAt
           : typeof data.discountEndAt === "object"
-          ? data.discountEndAt?.toISOString()
-          : undefined;
+            ? data.discountEndAt?.toISOString()
+            : undefined;
     }
-  
+
     // discountEnabled = false bo'lganda chegirma maydonlarini olib tashlash
     if (!data.discountEnabled) {
       delete requestData.discountType;
@@ -98,7 +103,7 @@ const ProductForm = ({
       delete requestData.discountStartAt;
       delete requestData.discountEndAt;
     }
-  
+
     delete requestData.isMyExpire;
     console.log("requestData:", requestData);
 
@@ -114,8 +119,8 @@ const ProductForm = ({
       setValue("discountEndAt", undefined);
     }
   }, [watch("discountEnabled")]);
-  
-  
+
+
 
   useEffect(() => {
     if (status === "success") {
@@ -151,6 +156,9 @@ const ProductForm = ({
       setMainImageId(productImages[0]._id);
     }
   }, [productImages]);
+
+
+  // Update parentId when the parent category changes
 
   return (
     <ProductFormStyled className="custom-drawer">
@@ -214,8 +222,28 @@ const ProductForm = ({
               name="categoryId"
               optionsUrl="category/paging"
               dataProp="data.data"
-              label={t("common.category")}
+              label="Kategoriya"
+              onChange={(item: any) => {
+                setSubCategory(item);
+              }}
             />
+            {
+              subCategory && <AutoCompleteForm
+                control={control}
+                name="subCategoryId"
+                optionsUrl="category/paging"
+                dataProp="data.data"
+                label="Ichki Kategriya"
+                rules={{required: false}}
+                onChange={(item: any) => {
+                  setChildCategory(item);
+                }}
+                exQueryParams={{
+                  parentId: subCategory._id
+                }}
+              />
+            }
+
           </Grid>
           <Grid item md={12}>
             <label className="custom-label">{t("common.description")}</label>

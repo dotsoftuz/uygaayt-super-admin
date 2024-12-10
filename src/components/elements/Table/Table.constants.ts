@@ -16,6 +16,7 @@ export interface ITable<TData extends { _id: string }> {
   numerate?: boolean;
   hasPagination?: boolean;
   noRerender?: boolean;
+  getUniqueId?: any;
 
   // onRowClick?: (row: TData) => void;
   onAddButton?: () => void;

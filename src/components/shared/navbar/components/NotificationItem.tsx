@@ -71,7 +71,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
     if (notification?.type === "courier_arrived") {
       navigate(`/courier/${notification?.courierId}`);
     } else {
-      // onRead(notification._id);
+      onRead(notification._id);
       navigate('/product');
     }
   };
