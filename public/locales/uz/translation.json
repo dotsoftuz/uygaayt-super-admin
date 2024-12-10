@@ -99,7 +99,10 @@
     "late_order": "Kech qolgan buyurtmalar",
     "delivered_on_time": "Vaqtida yetkazilgan buyurtmalar",
     "sold": "Sotilgan",
-    "customer_bought_count" : "Sotib olgan mijozlar"
+    "customer_bought_count" : "Sotib olgan mijozlar",
+    "late_store": "Do'konga kechikish",
+    "on_time_store": "Do'konga o'z vaqtida kelish"
+
   },
   "role": {
     "order": "Buyurtmalar",

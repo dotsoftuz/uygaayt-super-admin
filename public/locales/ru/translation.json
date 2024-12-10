@@ -99,7 +99,9 @@
     "late_order": "Поздние заказы",
     "delivered_on_time": "Заказы доставлены вовремя",
     "sold": "Распроданный",
-    "customer_bought_count" : "Купленные клиенты"
+    "customer_bought_count" : "Купленные клиенты",
+    "late_store": "Опоздание в магазин",
+    "on_time_store": "Приходите в магазин вовремя"
   },
   "role": {
     "order": "Заказы",

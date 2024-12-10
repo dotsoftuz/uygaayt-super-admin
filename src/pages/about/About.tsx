@@ -44,14 +44,14 @@ const About = () => {
 
   useEffect(() => {
     if (typeof address === "string" && address.trim()) {
-      addressByName({ name: address }); 
+      addressByName({ name: address });
     }
   }, [address]);
 
   const { mutate } = useApiMutation("store/update", "put");
 
-  const {mutate: addressByPointName} = useApiMutation(`address/by-point`, "post", {
-   
+  const { mutate: addressByPointName } = useApiMutation(`address/by-point`, "post", {
+
     onSuccess({ data }) {
       setValue("addressName", data?.name);
     },
@@ -79,6 +79,7 @@ const About = () => {
           about.workTime?.length === 11 ? about.workTime?.slice(0, 5) : "",
         endTime: about.workTime?.length === 11 ? about.workTime?.slice(-5) : "",
         addressLocation: about.addressLocation,
+        deliveryPrice: about.deliveryPrice
       });
     }
   }, [status, data]);
@@ -93,6 +94,7 @@ const About = () => {
       phoneNumber: data.phoneNumber,
       addressName: data.addressName,
       addressLocation,
+      deliveryPrice: +data.deliveryPrice
     };
     mutate(requestData);
   };
@@ -100,7 +102,7 @@ const About = () => {
   return (
     <AboutStyled>
       <form onSubmit={handleSubmit(submit)}>
-        <Grid container spacing={3} style={{display: "flex", alignItems: "center"}}>
+        <Grid container spacing={3} style={{ display: "flex", alignItems: "center" }}>
           <Grid item md={6} p={4}>
             <div className="mb-3">
               <TextInput
@@ -122,6 +124,16 @@ const About = () => {
                 name="endTime"
                 errors={formState.errors}
                 rules={{ required: true }}
+              />
+            </div>
+            <div className="mb-3">
+              <TextInput
+                control={control}
+                name="deliveryPrice"
+                type="number"
+                label={"Dastavka narxi"}
+                rules={{ required: false }}
+                placeholder={"Dastavka narxi"}
               />
             </div>
             <div className="mb-3">

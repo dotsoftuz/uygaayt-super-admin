@@ -26,17 +26,33 @@ export const useCourierColumns = (): GridColumns => {
       },
     },
     {
-      field: "totalFinished",
+      field: "late_order",
       headerName: t("common.late_order")!,
-      sortable: true,
+      // sortable: true,
+      renderCell(params) {
+        return params.row.totalFinished - params.row.totalFinishedOnTime
+      },
+    },
+    {
+      // sortable: true,
+      field: "totalFinishedOnTime",
+      headerName: t("common.delivered_on_time")!,
+      renderCell(params) {
+        return params.row.totalFinishedOnTime
+      },
+    },
+    {
+      field: "late_store",
+      headerName: t("common.late_store")!,
+      // sortable: true,
       renderCell(params) {
         return params.row.totalFinished - params.row.totalArrivedOnTime
       },
     },
     {
-      sortable: true,
+      // sortable: true,
       field: "totalArrivedOnTime",
-      headerName: t("common.delivered_on_time")!,
+      headerName: t("common.on_time_store")!,
       renderCell(params) {
         return params.row.totalArrivedOnTime
       },
