@@ -35,8 +35,6 @@ const CustomerInfo = () => {
   }, [mutate]);
 
 
-  // console.log(data)
-
   return (
     <>
       {

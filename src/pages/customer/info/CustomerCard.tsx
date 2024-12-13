@@ -11,7 +11,6 @@ export const CustomerCard: React.FC<CustomerCardProps> = ({
     customerInfoData, }) => {
 
 
-    console.log(customerInfoData)
     return (
         <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
             <Box sx={{

@@ -76,7 +76,6 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
     }
   };
 
-  console.log(notification)
 
   return (
     <Box

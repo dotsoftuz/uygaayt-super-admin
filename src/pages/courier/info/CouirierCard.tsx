@@ -10,8 +10,6 @@ interface CourierCardProps {
 export const CourierCard: React.FC<CourierCardProps> = ({
     courierInfoData, }) => {
 
-    console.log(courierInfoData)
-
     return (
         <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
             <Box sx={{

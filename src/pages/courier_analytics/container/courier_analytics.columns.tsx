@@ -9,7 +9,7 @@ export const useCourierColumns = (): GridColumns => {
     {
       field: t("common.fullName"),
       renderCell(params) {
-        return get(params, 'row.courier.firstName', '') + " " + get(params, 'row.courier.lastName', '');
+        return get(params, 'row.courier.fullName', '');
       },
       flex: 1.5
     },

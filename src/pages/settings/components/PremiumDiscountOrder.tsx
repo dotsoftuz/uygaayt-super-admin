@@ -55,7 +55,6 @@ const PremiumDiscountOrder = ({ data }: any) => {
 
   useEffect(() => {
     if (getStatus === "success") {
-      console.log(getData?.data?.discounts);
       const cashback = getData?.data?.premiumDiscount;
       if (cashback) {
         reset({

@@ -90,7 +90,7 @@
     "start-prod": "env-cmd -f env/.env.cardin react-scripts start",
     "build-dev": "CI=false && env-cmd -f env/.env.development react-scripts build",
     "dev": "yarn run build && yarn run deploy",
-    "deploy": "scp -r build root@65.21.54.114:/var/www/uygaayt",
+    "deploy": "scp -r build root@65.108.218.206:/var/www/uygaayt",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

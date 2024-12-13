@@ -1,17 +1,22 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeftSharp";
 import { IconButton } from "@mui/material";
 import { BackStyled } from "./BackStyle.style";
 
 const BackButton = ({ to, onBack }: { to?: string; onBack?: () => void }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   return (
     <BackStyled>
       <IconButton
         onClick={() => {
           onBack?.();
           // @ts-ignore
-          navigate(to || -1);
+          if (location.pathname.includes("category_child")) {
+            navigate(-2); 
+          } else {
+            navigate(-1)
+          };
         }}
         className="back_btn"
       >

@@ -100,7 +100,6 @@ const ProductForm = ({
     }
   
     delete requestData.isMyExpire;
-    console.log("requestData:", requestData);
 
     mutate(requestData); // API so'rovini yuborish
   };

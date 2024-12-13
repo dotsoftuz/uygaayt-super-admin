@@ -39,8 +39,8 @@ const ProductForm = ({
     productProps;
   const { t } = useTranslation();
   const { control, handleSubmit, reset, setValue, register, watch } = formStore;
-  const [subCategory, setSubCategory] = useState<any>();
-  const [subChildCategory, setChildCategory] = useState<any>();
+  const [subCategory, setSubCategory] = useState<any>(null);
+  const [subChildCategory, setSubChildCategory] = useState<any>(null);
 
   const discountEndMinDate = new Date(watch("discountStartAt"));
   discountEndMinDate.setDate(discountEndMinDate.getDate() + 1);
@@ -60,10 +60,14 @@ const ProductForm = ({
   );
 
   const submit = (data: any) => {
-    console.log(subChildCategory)
     const requestData: any = {
-      ...data,
-      categoryId: subChildCategory === undefined ? data.categoryId : data.subCategoryId, 
+      // ...data,
+      name: data.name,
+      price: +data.price,
+      inStock: +data.inStock,
+      categoryId: subChildCategory ? data.categoryId : data.parentCategoryId,
+      // categoryId: data.categoryId,
+      // parentCategoryId: data.parentCategoryId,
       imageIds: productImages.map((image) => image._id),
       mainImageId: productImages.length
         ? mainImageId || productImages?.[0]?._id
@@ -105,7 +109,6 @@ const ProductForm = ({
     }
 
     delete requestData.isMyExpire;
-    console.log("requestData:", requestData);
 
     mutate(requestData); // API so'rovini yuborish
   };
@@ -127,14 +130,24 @@ const ProductForm = ({
       resetForm();
     }
   }, [status]);
+  useEffect(() => {
+    if (getByIdData?.data) {
+      setSubCategory(getByIdData.data.parentCategoryId || null);
+      setSubChildCategory(getByIdData.data.categoryId || null);
+    }
+  }, [getByIdData]);
+
 
   useEffect(() => {
     if (getByIdStatus === "success") {
       reset({
         ...getByIdData.data,
-        categoryId: getByIdData.data.category?._id,
+        // categoryId: subChildCategory === undefined ? getByIdData.data.parentCategoryId : getByIdData.data.categoryId,
+        parentCategoryId: getByIdData.data.parentCategoryId || getByIdData.data.categoryId || "",
+        categoryId: getByIdData.data.categoryId || "",
         isActiveQuery: formStore.watch("isActiveQuery"),
       });
+
       setValue("isMyExpire", !!watch("expiryDate"));
 
       setProductImages(getByIdData.data?.images || []);
@@ -219,30 +232,30 @@ const ProductForm = ({
           <Grid item md={12}>
             <AutoCompleteForm
               control={control}
-              name="categoryId"
+              name="parentCategoryId"
               optionsUrl="category/paging"
               dataProp="data.data"
               label="Kategoriya"
               onChange={(item: any) => {
-                setSubCategory(item);
+                setSubCategory(item || null);
+                setValue("categoryId", "");
               }}
             />
-            {
-              subCategory && <AutoCompleteForm
+            {(subCategory || getByIdData?.data?.parentCategoryId) ? (
+              <AutoCompleteForm
                 control={control}
-                name="subCategoryId"
+                name="categoryId"
                 optionsUrl="category/paging"
                 dataProp="data.data"
                 label="Ichki Kategriya"
-                rules={{required: false}}
-                onChange={(item: any) => {
-                  setChildCategory(item);
-                }}
+                rules={{ required: false }}
+                onChange={(item: any) => setSubChildCategory?.(item || null)}
                 exQueryParams={{
-                  parentId: subCategory._id
+                  parentId: subCategory?._id || getByIdData?.data?.parentCategoryId || "",
                 }}
               />
-            }
+            ) : null}
+
 
           </Grid>
           <Grid item md={12}>

@@ -7,6 +7,7 @@ import { get } from "lodash";
 import { useTranslation } from "react-i18next";
 import { useRoleManager } from "services/useRoleManager";
 import { useAppDispatch } from "store/storeHooks";
+import { numberFormat } from "utils/numberFormat";
 
 export const useCategoryColumns = (): GridColumns => {
   const { t } = useTranslation();
@@ -49,6 +50,14 @@ export const useCategoryCol = ({
     {
       title: t("common.categoryName"),
       dataIndex: "name",
+    },
+    {
+      title: t("common.product") + " soni",
+      dataIndex: "productCount",
+      key: "productCount",
+      render: (text: string, record: any) => {
+        return numberFormat(text);
+      },
     },
     {
       title: "",

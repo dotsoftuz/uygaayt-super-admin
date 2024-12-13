@@ -10,7 +10,7 @@ export const useCustomerColumns = (): GridColumns => {
     {
       field: t("common.fullName"),
       renderCell({ row }) {
-        const fullName = get(row, "customer.firstName", "");
+        const fullName = get(row, "customer.fullName", "");
         const isLong = fullName.length > 20;
         const displayText = isLong ? `${fullName.slice(0, 20)}...` : fullName;
     
@@ -32,7 +32,7 @@ export const useCustomerColumns = (): GridColumns => {
       sortable: true,
       headerName: t("common.orderAmount")!,
       renderCell({ row }) {
-        return get(row, "customer.totalOrders", "");
+        return get(row, "total_amount", "");
       },
     },
     {
@@ -40,7 +40,7 @@ export const useCustomerColumns = (): GridColumns => {
       sortable: true,
       headerName: t("common.orderPrice")!,
       renderCell({ row }) {
-        return numberFormat(get(row, "customer.totalOrdersPrice", ""));
+        return numberFormat(get(row, "total_price", ""));
       },
     },
   ];

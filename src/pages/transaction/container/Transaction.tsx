@@ -36,8 +36,6 @@ const Transaction = () => {
     mutate(data);
   }, [mutate]);
 
-  console.log(data)
-
 
   return (
     <TransactionStyled>

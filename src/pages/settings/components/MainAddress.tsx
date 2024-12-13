@@ -35,7 +35,7 @@ const MainAddress = () => {
   const { handleSubmit, watch, setValue } = useForm();
 
   const { data, status, refetch } = useApi("/settings-general");
-  const { mutate } = useApiMutation("/settings-general", "post", {
+  const { mutate } = useApiMutation("/settings-general", "put", {
     onSuccess() {
       refetch();
       toast.success(t("general.success"));

@@ -79,6 +79,7 @@ const BannerForm: FC<IEmployeesForm> = ({
               optionsUrl="product/choose"
               dataProp="data.data"
               label={t("common.product")}
+              rules={{required: false}}
             />
           </Grid>
           <Grid item md={12}>

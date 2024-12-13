@@ -101,7 +101,9 @@
     "sold": "Sotilgan",
     "customer_bought_count" : "Sotib olgan mijozlar",
     "late_store": "Do'konga kechikish",
-    "on_time_store": "Do'konga o'z vaqtida kelish"
+    "on_time_store": "Do'konga o'z vaqtida kelish",
+    "parent_category": "Yuqori katgoriya",
+    "child_category": "Ichki kategoriya"
 
   },
   "role": {

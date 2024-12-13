@@ -35,8 +35,6 @@ const CourierInfo = () => {
     });
   }, [mutate]);
 
-  console.log(data)
-
 
   return (
     <>

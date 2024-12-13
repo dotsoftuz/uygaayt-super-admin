@@ -72,6 +72,7 @@ export interface IProduct {
     _id: string;
     name: string;
   };
+  parentCategoryId?:string;
   categoryId: string;
   storeId: string;
   bitoId: string | null;

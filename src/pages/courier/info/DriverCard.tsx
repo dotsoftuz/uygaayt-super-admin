@@ -4,8 +4,6 @@ import { InfoSection } from "./InfoSelection"
 
 const DriverCard = ({ courierInfoData}: any) => {
 
-    console.log(courierInfoData)
-
     return (
         <Card sx={{
             width: '100%',

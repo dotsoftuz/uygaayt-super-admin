@@ -56,7 +56,6 @@ const DiscountOrder = ({ data }: any) => {
 
   useEffect(() => {
     if (getStatus === "success") {
-      console.log(getData?.data?.discounts);
       const cashback = getData?.data?.discounts || [];
       reset({
         discounts: cashback.map((item: any) => ({

@@ -40,11 +40,22 @@ export const useProductColumns = (): GridColumns => {
         );
       },
     },
-    
     {
       field: t("common.residue"),
       renderCell({ row }) {
         return numberFormat(get(row, "inStock", ""));
+      },
+    },
+    {
+      field: t("common.parent_category"),
+      renderCell({ row }) {
+        return get(row, "category.parent.name", "") || get(row, "category.name", "");
+      },
+    },
+    {
+      field: t("common.child_category"),
+      renderCell({ row }) {
+        return  get(row, "category.parent.name", "") && get(row, "category.name", "");
       },
     },
   ];

@@ -58,7 +58,6 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
     "post",
     {
       onSuccess: (data) => {
-        console.log("Product created successfully:");
         setQueryParams({
           ...allParams,
           search: debValue || "",

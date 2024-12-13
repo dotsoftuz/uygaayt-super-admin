@@ -25,9 +25,7 @@ export const useNotifications = () => {
       onSuccess: (response) => {
         const newNotifications = response.data.data || [];
         const total = response?.data.total || 0;
-        console.log(response)
         const unreadCount = response?.data?.unreadCount;
-        console.log(unreadCount)
 
         setState((prev) => ({
           ...prev,
@@ -64,7 +62,6 @@ export const useNotifications = () => {
   );
 
   const handleNotificationRead = async (notificationId: string) => {
-    console.log(notificationId)
     // if (!state.notifications.find(n => n.id === notificationId)?.isRead) {
       await markAsRead({ _id: notificationId });
       refreshNotifications();

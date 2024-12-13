@@ -17,9 +17,9 @@ const WebsiteConditions = () => {
     data: getData,
     refetch,
     status: getStatus,
-  } = useApi("/site-settings", {}, { suspense: false });
+  } = useApi("/settings-general", {}, { suspense: false });
 
-  const { mutate, status } = useApiMutation("/site-settings", "post", {
+  const { mutate, status } = useApiMutation("/settings-general", "put", {
     onSuccess({ data }) {
       if (data) {
         refetch();

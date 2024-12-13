@@ -237,8 +237,6 @@ const AddOrderForm = ({
     }
   }, [basketItems, formStore, coordinate]);
 
-  console.log(deliveryData)
-
   return (
     <AddOrderFormStyled>
       {!id && <h3 className="mb-3">{t("order.formalization")}</h3>}
@@ -408,28 +406,28 @@ const AddOrderForm = ({
             <div className="item">
               <span className="key">{t("order.allProducts")}:</span>
               <span className="value">
-                {numberFormat(deliveryData?.data?.itemPrice)}{" "}
+                {numberFormat(deliveryData?.data?.itemPrice || 0)}{" "}
                 {get(settingsData, "currency", "uzs")}
               </span>
             </div>
             <div className="item">
               <span className="key">{t("settings.discounts")}:</span>
               <span className="value">
-                {numberFormat(deliveryData?.data?.discount)}{" "}
+                {numberFormat(deliveryData?.data?.discount || 0)}{" "}
                 {get(settingsData, "currency", "uzs")}
               </span>
             </div>
             <div className="item">
               <span className="key">{t("order.deliveryPrice")}:</span>
               <span className="value">
-                {numberFormat(deliveryData?.data?.deliveryPrice)}{" "}
+                {numberFormat(deliveryData?.data?.deliveryPrice || 0)}{" "}
                 {get(settingsData, "currency", "uzs")}
               </span>
             </div>
             <div className="item">
               <span className="key">{t("order.totalPrice")}:</span>
               <span className="value">
-                {numberFormat(deliveryData?.data?.totalPrice)}{" "}
+                {numberFormat(deliveryData?.data?.totalPrice || 0)}{" "}
                 {get(settingsData, "currency", "uzs")}
               </span>
             </div>

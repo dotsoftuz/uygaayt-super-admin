@@ -11,8 +11,7 @@ const Client = () => {
   const columns = useCustomerColumns();
   const allParams = useAllQueryParams();
 
-  const exportUrl = `/report/customer/export/${allParams.dateFrom ? `dateFrom=${allParams.dateFrom}&` : ""
-    }${allParams?.dateTo ? `dateTo=${allParams.dateTo}&` : ""}`;
+  const exportUrl = `/report/customer/export/`;
 
 
   const renderHeader = (
@@ -21,7 +20,7 @@ const Client = () => {
         <AutoCompleteFilter
           optionsUrl="customer/paging"
           filterName="customer_id"
-          placeholder={t("common.category")}
+          placeholder={t("common.customer")}
           getOptionLabel={(option) => option?.firstName }
         />
       </Grid>
@@ -35,8 +34,6 @@ const Client = () => {
     </Grid>
   );
 
-
-  console.log(allParams)
 
   return (
     <>

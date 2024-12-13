@@ -24,8 +24,7 @@ const Client = () => {
   const [productImages, setProductImages] = useState<IIdImage[]>([]);
   const [mainImageId, setMainImageId] = useState<any>();
 
-  const exportUrl = `/report/product/export/${allParams.dateFrom ? `dateFrom=${allParams.dateFrom}&` : ""
-  }${allParams?.dateTo ? `dateTo=${allParams.dateTo}&` : ""}`;
+  const exportUrl = `/report/product/export`;
 
   const renderHeader = (
     <Grid width={480} spacing={2} display={"flex"} justifyContent={"space-between"}>
