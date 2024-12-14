@@ -18,7 +18,8 @@
     "loadMore": "Загрузить ещё",
     "loading": "Loading...",
     "search": "Поиск",
-    "addBanner": "Добавить баннер"
+    "addBanner": "Добавить баннер",
+     "editBanner": "Редактировать баннер"
   },
   "sidebar": {
     "store": "Магазины",

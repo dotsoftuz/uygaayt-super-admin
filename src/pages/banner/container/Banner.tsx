@@ -48,7 +48,7 @@ const Banner = () => {
       <FormDrawer
         FORM_ID="banner"
         isEditing={!!editingBannerId}
-        customTitle={t("general.addBanner")}
+        customTitle={editingBannerId ? t("general.editBanner") : t("general.addBanner")}
         onClose={resetForm}
       >
         <BannerForm
@@ -57,6 +57,7 @@ const Banner = () => {
           editingBannerId={editingBannerId}
         />
       </FormDrawer>
+
     </>
   );
 };

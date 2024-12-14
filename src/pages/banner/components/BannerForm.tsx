@@ -5,6 +5,7 @@ import { UseFormReturn } from "react-hook-form";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import { useTranslation } from "react-i18next";
 import TextEditor from "components/form/TextEditor/TextEditor";
+import { debounce } from "lodash";
 
 interface IEmployeesForm {
   formStore: UseFormReturn<any>;
@@ -60,6 +61,9 @@ const BannerForm: FC<IEmployeesForm> = ({
   }, [getByIdStatus, getByIdData]);
   
   
+  const submitDescription = debounce((value) => {
+    setValue("description", value);
+  }, 3000); 
 
   return (
     <div className="custom-drawer">
@@ -85,9 +89,7 @@ const BannerForm: FC<IEmployeesForm> = ({
           <Grid item md={12}>
             <TextEditor
               value={watch("description")}
-              onChange={(value) => {
-                setValue("description", value);
-              }}
+              onChange={(value) => submitDescription(value)}
             />
           </Grid>
           <Grid item md={12}>

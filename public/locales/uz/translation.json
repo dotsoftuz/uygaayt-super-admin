@@ -18,7 +18,8 @@
     "loadMore": "Yana yuklash",
     "loading": "Loading...",
     "search": "Izlash",
-    "addBanner": "Banner qo'shish"
+    "addBanner": "Banner qo'shish",
+    "editBanner": "Bannerni tahrirlash"
   },
   "sidebar": {
     "store": "Do'konlar",
