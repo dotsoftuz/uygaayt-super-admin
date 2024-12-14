@@ -49,7 +49,7 @@ const CategoryChildForm: React.FC<IBranchForm> = ({
   useEffect(() => {
     if (status === "success") {
       resetForm();
-      setRender?.(true);
+      setRender?.(prev => !prev);
     }
   }, [status]);
 

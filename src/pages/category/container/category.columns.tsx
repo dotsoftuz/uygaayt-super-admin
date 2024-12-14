@@ -86,7 +86,9 @@ export const useCategoryCol = ({
               </IconButton>
             )}
             {hasAccess("categoryDelete") && (
-              <IconButton onClick={() => setCategoryId?.(record?._id)}>
+              <IconButton onClick={() => {
+                setCategoryId?.(record?._id)
+              }}>
                 <DeleteIcon />
               </IconButton>
             )}

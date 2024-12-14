@@ -26,7 +26,7 @@ const CategoryForm: React.FC<IBranchForm> = ({
     editingCategoryId
       ? `category/update`
       : "category/create",
-    editingCategoryId ? "put" : "post"
+    editingCategoryId ? "put" : "post",
   );
 
   const { data: getByIdData, status: getByIdStatus } = useApi(`category/get-by-id/${editingCategoryId}`, {}, {
@@ -45,12 +45,12 @@ const CategoryForm: React.FC<IBranchForm> = ({
   useEffect(() => {
     if (status === "success") {
       resetForm();
-      setRender?.(true);
+      setRender?.(prev => !prev);
     }
   }, [status]);
 
   useEffect(() => {
-    if (getByIdStatus === 'success') {
+    if (getByIdStatus === 'success'  && getByIdData?.data) {
       reset({
         name: getByIdData.data.name,
         imageId: getByIdData.data.image,

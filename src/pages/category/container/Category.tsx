@@ -54,7 +54,7 @@ const Category = () => {
       <WarningModal
         open={categoryId}
         setOpen={setCategoryId}
-        // setRender={setRender}
+        setRender={setRender}
         url="category/delete"
       />
       <FormDrawer

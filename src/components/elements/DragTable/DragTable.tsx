@@ -190,14 +190,6 @@ const DragTable: React.FC<IDragTable> = ({
       }
 
       if (data?.data?.total > 0 && data?.data?.data?.length === 0) {
-        // setSearchParams({
-        //   ...queryParams,
-        //   ...allParams,
-        //   ...exQueryParams,
-        //   search: searchParams.get("search") || "",
-        //   page: searchParams.get("page"),
-        //   limit: searchParams.get("limit"),
-        // });
         setSearchParams({
           ...(filterParams ? { ...filterParams } : { ...allParams }),
           ...exQueryParams,
@@ -215,7 +207,7 @@ const DragTable: React.FC<IDragTable> = ({
       ...allParams,
       ...exQueryParams
     });
-  }, [debValue, dataUrlMutate, reRender, searchParams ]);
+  }, [debValue, dataUrlMutate, reRender, render, searchParams ]);
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
     if (active.id !== over?.id) {

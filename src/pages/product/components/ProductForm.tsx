@@ -66,6 +66,7 @@ const ProductForm = ({
       price: +data.price,
       inStock: +data.inStock,
       categoryId: subChildCategory ? data.categoryId : data.parentCategoryId,
+      isActive: data.isActive,
       // categoryId: data.categoryId,
       // parentCategoryId: data.parentCategoryId,
       imageIds: productImages.map((image) => image._id),
@@ -80,6 +81,7 @@ const ProductForm = ({
             ? data.expiryDate?.toISOString()
             : null,
       _id: editingProductId,
+      discountEnabled: data.discountEnabled
     };
 
     // discountEnabled = true bo'lganda discount ma'lumotlarini qo'shish
@@ -276,6 +278,7 @@ const ProductForm = ({
               <label htmlFor="isActive">{t("common.isActive")}</label>
               <Switch
                 checked={!!watch("isActive")}
+                name="isActive"
                 id="isActive"
                 {...register("isActive")}
               />

@@ -4,7 +4,7 @@ import { WarningModalStyled } from "./WarningModal.styled";
 import { useTranslation } from "react-i18next";
 import { useApiMutation } from "hooks/useApi/useApiHooks";
 
-const WarningModal = ({ open, setOpen, title, url, confirmFn }: any) => {
+const WarningModal = ({ open, setOpen, title, url, confirmFn, setRender }: any) => {
   const { t } = useTranslation();
 
   const { mutate, status } = useApiMutation(`${url}/${open}`, "delete");
@@ -12,6 +12,7 @@ const WarningModal = ({ open, setOpen, title, url, confirmFn }: any) => {
   useEffect(() => {
     if (status === "success") {
       setOpen(null);
+      setRender?.((prev:any) => !prev);
     }
   }, [status]);
 
