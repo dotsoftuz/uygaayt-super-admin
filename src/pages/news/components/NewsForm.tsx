@@ -5,6 +5,7 @@ import { UseFormReturn } from "react-hook-form";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import { useTranslation } from "react-i18next";
 import TextEditor from "components/form/TextEditor/TextEditor";
+import { debounce } from "lodash";
 
 interface IEmployeesForm {
   formStore: UseFormReturn<any>;
@@ -57,6 +58,18 @@ const BannerForm: FC<IEmployeesForm> = ({
     }
   }, [getByIdStatus, getByIdData]);
 
+
+  const submitDescriptionUz = debounce((value) => {
+    setValue("description.uz", value);
+  }, 2000);
+  const submitDescriptionRu = debounce((value) => {
+    setValue("description.ru", value);
+  }, 2000);
+  const submitDescriptionEn = debounce((value) => {
+    setValue("description.en", value);
+  }, 2000);
+
+
   return (
     <div className="custom-drawer">
       <form id="banner" onSubmit={handleSubmit(submit)}>
@@ -89,35 +102,29 @@ const BannerForm: FC<IEmployeesForm> = ({
               </Typography>
               <TextEditor
                 value={watch("description.uz")}
-                onChange={(value) => {
-                  setValue("description.uz", value);
-                }}
+                onChange={(value) => submitDescriptionUz(value)}
               />
             </Box>
           </Grid>
           <Grid item md={12}>
             <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle1" sx={{ mb: 1 }}>
+              <Typography variant="subtitle1" sx={{ mb: 1 }}>
                 {t('common.description') + '(Ru)'}
               </Typography>
               <TextEditor
                 value={watch("description.ru")}
-                onChange={(value) => {
-                  setValue("description.ru", value);
-                }}
+                onChange={(value) => submitDescriptionRu(value)}
               />
             </Box>
           </Grid>
           <Grid item md={12}>
             <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle1" sx={{ mb: 1 }}>
+              <Typography variant="subtitle1" sx={{ mb: 1 }}>
                 {t('common.description') + '(En)'}
               </Typography>
               <TextEditor
                 value={watch("description.en")}
-                onChange={(value) => {
-                  setValue("description.en", value);
-                }}
+                onChange={(value) => submitDescriptionEn(value)}
               />
             </Box>
 

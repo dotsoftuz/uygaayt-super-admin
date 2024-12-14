@@ -16,6 +16,7 @@ import { DeleteIcon } from "assets/svgs";
 import { DISCOUNT_TYPES } from "types/enums";
 import { IProduct } from "types/common.types";
 import dayjs from "dayjs";
+import { debounce } from "lodash";
 
 interface IProductForm {
   formStore: any;
@@ -65,6 +66,8 @@ const ProductForm = ({
       name: data.name,
       price: +data.price,
       inStock: +data.inStock,
+      redLine: +data.redLine,
+      yellowLine: +data.yellowLine,
       categoryId: subChildCategory ? data.categoryId : data.parentCategoryId,
       isActive: data.isActive,
       // categoryId: data.categoryId,
@@ -81,7 +84,8 @@ const ProductForm = ({
             ? data.expiryDate?.toISOString()
             : null,
       _id: editingProductId,
-      discountEnabled: data.discountEnabled
+      discountEnabled: data.discountEnabled,
+      description: data.description,
     };
 
     // discountEnabled = true bo'lganda discount ma'lumotlarini qo'shish
@@ -148,6 +152,7 @@ const ProductForm = ({
         parentCategoryId: getByIdData.data.parentCategoryId || getByIdData.data.categoryId || "",
         categoryId: getByIdData.data.categoryId || "",
         isActiveQuery: formStore.watch("isActiveQuery"),
+        description: getByIdData.data.description,
       });
 
       setValue("isMyExpire", !!watch("expiryDate"));
@@ -174,6 +179,11 @@ const ProductForm = ({
 
 
   // Update parentId when the parent category changes
+
+
+    const submitDescription = debounce((value) => {
+      setValue("description", value);
+    }, 500); 
 
   return (
     <ProductFormStyled className="custom-drawer">
@@ -262,11 +272,9 @@ const ProductForm = ({
           </Grid>
           <Grid item md={12}>
             <label className="custom-label">{t("common.description")}</label>
-            <TextEditor
+             <TextEditor
               value={watch("description")}
-              onChange={(value) => {
-                setValue("description", value);
-              }}
+              onChange={(value) => submitDescription(value)}
             />
           </Grid>
           <Grid item md={12}>

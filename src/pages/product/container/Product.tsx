@@ -71,6 +71,7 @@ const Client = () => {
       isActiveQuery: formStore.watch("isActiveQuery"),
       measureId: "",
       categoryId: "",
+      description: "",
     });
   };
 
