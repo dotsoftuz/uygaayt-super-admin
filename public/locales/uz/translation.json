@@ -19,7 +19,8 @@
     "loading": "Loading...",
     "search": "Izlash",
     "addBanner": "Banner qo'shish",
-    "editBanner": "Bannerni tahrirlash"
+    "editBanner": "Bannerni tahrirlash",
+    "share": "Ulush"
   },
   "sidebar": {
     "store": "Do'konlar",
@@ -42,7 +43,8 @@
     "analytics": "Analitika",
     "customer_analytics": "Mijozlar analitikasi",
     "courier_analytics": "Kuryerlar analitikasi",
-    "product_analytics": "Mahsulotlar analitikasi"
+    "product_analytics": "Mahsulotlar analitikasi",
+    "abc_analytics": "ABC analitikasi"
   },
   "common": {
     "fullName": "F.I.O",

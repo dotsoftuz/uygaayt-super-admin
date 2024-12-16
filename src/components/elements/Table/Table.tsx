@@ -160,7 +160,7 @@ const Table = <TData extends { _id: string }>({
 
   /** @constant memorize fetched data */
   const tableData: TData[] = React.useMemo(() => {
-    const dataKey: any[] = isGetAll ? get(data, "data", []) : data?.data?.data;
+    const dataKey: any[] = isGetAll ? get(data, "data.products", []) : data?.data?.data;
     if (isGetAll && searchable && search) {
       return dataKey?.filter(
         (item) =>

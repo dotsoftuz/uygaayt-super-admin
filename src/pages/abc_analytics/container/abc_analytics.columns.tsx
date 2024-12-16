@@ -22,48 +22,31 @@ export const useProductColumns = (): GridColumns => {
       },
     },
     {
-      field: t("common.price"),
-      renderCell({ row }) {
-        return numberFormat(get(row, "product.price", ""));
-      },
-    },
-    {
-      field: t("common.discountValue"),
-      renderCell({ row }) {
-        return (
-          numberFormat(get(row, "product.discountValue", "")) + 
-          (row?.product?.discountType === "percent" ? "%" : "")
-        );
-      },
-    },
-    {
-      field: t("common.residue"),
-      renderCell({ row }) {
-        return numberFormat(get(row, "product.inStock", ""));
-      },
-    },
-    {
       field: "total_amount",
       headerName: t("common.sold")!,
-      sortable: true,
       renderCell({ row }) {
         return numberFormat(get(row, "total_amount", ""));
       },
     },
     {
-      field: "customerCount",
-      headerName: t("common.customer_bought_count")!,
-      sortable: true,
+      field: "total_price",
+      headerName: t("order.totalPrice")!,
       renderCell({ row }) {
-        return numberFormat(get(row, "customerCount", ""));
+        return numberFormat(get(row, "total_price", ""));
       },
     },
     {
-      field: "total_price",
-      headerName: t("order.totalPrice")!,
-      sortable: true,
+      field: "share",
+      headerName: t("general.share")!,
       renderCell({ row }) {
-        return numberFormat(get(row, "total_price", ""));
+        return numberFormat(get(row, "share", ""));
+      },
+    },
+    {
+      field: "group",
+      headerName: t("common.type")!,
+      renderCell({ row }) {
+        return numberFormat(get(row, "group", ""));
       },
     },
     // {

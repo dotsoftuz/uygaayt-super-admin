@@ -19,7 +19,8 @@
     "loading": "Loading...",
     "search": "Поиск",
     "addBanner": "Добавить баннер",
-     "editBanner": "Редактировать баннер"
+    "editBanner": "Редактировать баннер",
+    "share": "Делиться"
   },
   "sidebar": {
     "store": "Магазины",
@@ -42,7 +43,8 @@
     "analytics": "Аналитика",
     "customer_analytics": "Аналитика клиентов",
     "courier_analytics": "Курьерская аналитика",
-    "product_analytics": "Аналитика продукта"
+    "product_analytics": "Аналитика продукта",
+    "abc_analytics": "ABC аналитика"
   },
   "common": {
     "fullName": "Ф.И.О.",

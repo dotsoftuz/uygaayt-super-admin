@@ -23,6 +23,7 @@ const Rating = lazy(() => import("pages/rating"));
 const CourierAnalytics = lazy(() => import("pages/courier_analytics"));
 const CustomerAnalytics = lazy(() => import("pages/customer_analytics"));
 const ProductAnalytics = lazy(() => import("pages/product_analytics"));
+const AbcAnalytics = lazy(() => import("pages/abc_analytics"));
 
 
 const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
@@ -134,6 +135,11 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   {
     element: <ProductAnalytics />,
     path: "analytics_product",
+    role: "report",
+  },
+  {
+    element: <AbcAnalytics />,
+    path: "abc_product",
     role: "report",
   },
 ];
