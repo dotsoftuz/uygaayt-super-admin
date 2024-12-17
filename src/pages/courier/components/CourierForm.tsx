@@ -204,7 +204,6 @@ const CourierFrom: FC<ICourierForm> = ({
                 control={control}
                 setValue={setValue}
                 name="imageId"
-                rules={{ required: true }}
                 accept=".png, .jpg, .jpeg"
               />
             </div>

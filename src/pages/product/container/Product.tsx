@@ -25,8 +25,15 @@ const Client = () => {
 
 
   const renderHeader = (
-    <Grid width={250} spacing={2} display={"flex"} justifyContent={"space-between"}>
-      <Grid style={{ display: "flex", justifyContent: "end" }}>
+    <Grid display={"flex"} alignItems={'center'} gap={2}>
+      <Grid item lg={2} md={4} xs={12}>
+        <Checkbox
+          control={formStore.control}
+          label={t("enum.active")}
+          name="isActiveQuery"
+        />
+      </Grid>
+      <Grid item lg={2} md={4} xs={12}>
         <AutoCompleteFilter
           optionsUrl="category/paging"
           filterName="categoryId"
@@ -36,7 +43,7 @@ const Client = () => {
           }}
         />
       </Grid>
-      <Grid style={{ display: "flex", justifyContent: "end" }}>
+      <Grid item lg={2} md={4} xs={12}>
         {
           subCategory && <AutoCompleteFilter
             optionsUrl="category/paging"

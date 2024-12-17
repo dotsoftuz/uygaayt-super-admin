@@ -1,7 +1,7 @@
 import { FC, useEffect } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { AutoCompleteForm, ImageInput, TextInput } from "components";
-import { UseFormReturn } from "react-hook-form";
+import { Controller, UseFormReturn } from "react-hook-form";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import { useTranslation } from "react-i18next";
 import TextEditor from "components/form/TextEditor/TextEditor";
@@ -59,16 +59,6 @@ const BannerForm: FC<IEmployeesForm> = ({
   }, [getByIdStatus, getByIdData]);
 
 
-  const submitDescriptionUz = debounce((value) => {
-    setValue("description.uz", value);
-  }, 2000);
-  const submitDescriptionRu = debounce((value) => {
-    setValue("description.ru", value);
-  }, 2000);
-  const submitDescriptionEn = debounce((value) => {
-    setValue("description.en", value);
-  }, 2000);
-
 
   return (
     <div className="custom-drawer">
@@ -100,9 +90,17 @@ const BannerForm: FC<IEmployeesForm> = ({
               <Typography variant="subtitle1" sx={{ mb: 1 }}>
                 {t('common.description') + '(Uz)'}
               </Typography>
-              <TextEditor
-                value={watch("description.uz")}
-                onChange={(value) => submitDescriptionUz(value)}
+              <Controller
+                name="description.uz"
+                control={control}
+                render={({ field }) => (
+                  <TextEditor
+                    value={field.value}
+                    onChange={(value) => {
+                      field.onChange(value);
+                    }}
+                  />
+                )}
               />
             </Box>
           </Grid>
@@ -111,9 +109,17 @@ const BannerForm: FC<IEmployeesForm> = ({
               <Typography variant="subtitle1" sx={{ mb: 1 }}>
                 {t('common.description') + '(Ru)'}
               </Typography>
-              <TextEditor
-                value={watch("description.ru")}
-                onChange={(value) => submitDescriptionRu(value)}
+              <Controller
+                name="description.ru"
+                control={control}
+                render={({ field }) => (
+                  <TextEditor
+                    value={field.value}
+                    onChange={(value) => {
+                      field.onChange(value);
+                    }}
+                  />
+                )}
               />
             </Box>
           </Grid>
@@ -122,9 +128,17 @@ const BannerForm: FC<IEmployeesForm> = ({
               <Typography variant="subtitle1" sx={{ mb: 1 }}>
                 {t('common.description') + '(En)'}
               </Typography>
-              <TextEditor
-                value={watch("description.en")}
-                onChange={(value) => submitDescriptionEn(value)}
+              <Controller
+                name="description.en"
+                control={control}
+                render={({ field }) => (
+                  <TextEditor
+                    value={field.value}
+                    onChange={(value) => {
+                      field.onChange(value);
+                    }}
+                  />
+                )}
               />
             </Box>
 

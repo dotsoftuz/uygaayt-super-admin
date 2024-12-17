@@ -17,6 +17,7 @@ import { DISCOUNT_TYPES } from "types/enums";
 import { IProduct } from "types/common.types";
 import dayjs from "dayjs";
 import { debounce } from "lodash";
+import { Controller } from "react-hook-form";
 
 interface IProductForm {
   formStore: any;
@@ -178,13 +179,6 @@ const ProductForm = ({
   }, [productImages]);
 
 
-  // Update parentId when the parent category changes
-
-
-    const submitDescription = debounce((value) => {
-      setValue("description", value);
-    }, 500); 
-
   return (
     <ProductFormStyled className="custom-drawer">
       <form id="product" onSubmit={handleSubmit(submit)}>
@@ -219,7 +213,6 @@ const ProductForm = ({
                 control={control}
                 type="number"
                 label={t("Qizil chiziq")}
-                rules={{ required: true }}
               />
             </Box>
             <Box>
@@ -228,7 +221,6 @@ const ProductForm = ({
                 control={control}
                 label={t("Sariq chiziq")}
                 type="number"
-                rules={{ required: true }}
               />
             </Box>
           </Grid>
@@ -272,9 +264,17 @@ const ProductForm = ({
           </Grid>
           <Grid item md={12}>
             <label className="custom-label">{t("common.description")}</label>
-             <TextEditor
-              value={watch("description")}
-              onChange={(value) => submitDescription(value)}
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <TextEditor
+                  value={field.value}
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                />
+              )}
             />
           </Grid>
           <Grid item md={12}>

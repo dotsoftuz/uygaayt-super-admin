@@ -70,7 +70,6 @@ const CategoryForm: React.FC<IBranchForm> = ({
               control={control}
               setValue={setValue}
               name="imageId"
-              rules={{ required: false }}
               accept=".png, .jpg, .jpeg"
             />
           </Grid>

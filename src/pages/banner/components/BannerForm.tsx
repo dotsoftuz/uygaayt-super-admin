@@ -1,7 +1,7 @@
 import { FC, useEffect } from "react";
 import { Grid } from "@mui/material";
 import { AutoCompleteForm, ImageInput, TextInput } from "components";
-import { UseFormReturn } from "react-hook-form";
+import { Controller, UseFormReturn } from "react-hook-form";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import { useTranslation } from "react-i18next";
 import TextEditor from "components/form/TextEditor/TextEditor";
@@ -59,11 +59,7 @@ const BannerForm: FC<IEmployeesForm> = ({
       });
     }
   }, [getByIdStatus, getByIdData]);
-  
-  
-  const submitDescription = debounce((value) => {
-    setValue("description", value);
-  }, 3000); 
+
 
   return (
     <div className="custom-drawer">
@@ -83,13 +79,21 @@ const BannerForm: FC<IEmployeesForm> = ({
               optionsUrl="product/choose"
               dataProp="data.data"
               label={t("common.product")}
-              rules={{required: false}}
+              rules={{ required: false }}
             />
           </Grid>
           <Grid item md={12}>
-            <TextEditor
-              value={watch("description")}
-              onChange={(value) => submitDescription(value)}
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <TextEditor
+                  value={field.value}
+                  onChange={(value) => {
+                    field.onChange(value);
+                  }}
+                />
+              )}
             />
           </Grid>
           <Grid item md={12}>
