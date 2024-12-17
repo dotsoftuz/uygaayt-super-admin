@@ -219,7 +219,7 @@ const ProductForm = ({
                 control={control}
                 type="number"
                 label={t("Qizil chiziq")}
-                rules={{ required: false }}
+                rules={{ required: true }}
               />
             </Box>
             <Box>
@@ -228,7 +228,7 @@ const ProductForm = ({
                 control={control}
                 label={t("Sariq chiziq")}
                 type="number"
-                rules={{ required: false }}
+                rules={{ required: true }}
               />
             </Box>
           </Grid>
