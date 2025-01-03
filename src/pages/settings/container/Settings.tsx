@@ -162,8 +162,8 @@ const Settings = () => {
                       name="currency"
                       type="text"
                       onCustomChange={(value) => {
-                        const allowedCharacters = value.replace(/[^a-zA-Z'`]/g, ""); 
-                        setValue("currency", allowedCharacters); 
+                        const allowedCharacters = value.replace(/[^a-zA-Z'`]/g, "");
+                        setValue("currency", allowedCharacters);
                       }}
                     />
                   </div>
@@ -185,6 +185,28 @@ const Settings = () => {
                     <TextInput
                       control={control}
                       name="maxArrivalTime"
+                      type="number"
+                      rules={{ required: false }}
+                    />
+                  </div>
+                </Grid>
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">{t("settings.premium_days")} (kun)</span>
+                    <TextInput
+                      control={control}
+                      name="premiumDays"
+                      type="number"
+                      rules={{ required: false }}
+                    />
+                  </div>
+                </Grid>
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">{t("settings.premium_price")}</span>
+                    <TextInput
+                      control={control}
+                      name="premiumPrice"
                       type="number"
                       rules={{ required: false }}
                     />

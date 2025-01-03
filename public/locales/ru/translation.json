@@ -197,6 +197,8 @@
     "couirer_return_time": "Время возврата курьера на склад (секунды)",
     "initial_discount": "Первоначальные скидки",
     "number": "Число",
-    "map_address": "Адрес карты"
+    "map_address": "Адрес карты",
+    "premium_days": "Premium muddati",
+    "premium_price": "Premium narxi"
   }
 }

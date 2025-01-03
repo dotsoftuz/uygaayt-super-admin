@@ -200,6 +200,8 @@
     "couirer_return_time": "Kuryer skladga qaytish vaqti (sekund)",
     "initial_discount": "Dastlabki chegirmalar",
     "number": "Soni",
-    "map_address": "Xarita manzili"
+    "map_address": "Xarita manzili",
+    "premium_days": "Premium muddati",
+    "premium_price": "Premium narxi"
   }
 }
