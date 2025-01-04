@@ -39,7 +39,7 @@ export const useProductColumns = (): GridColumns => {
       field: "share",
       headerName: t("general.share")!,
       renderCell({ row }) {
-        return numberFormat(get(row, "share", ""));
+        return numberFormat(get(row, "share", "")) + "%";
       },
     },
     {
