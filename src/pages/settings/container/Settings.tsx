@@ -136,7 +136,6 @@ const Settings = () => {
                       control={control}
                       name="bannerTime"
                       type="number"
-                      rules={{ required: false }}
                     />
                   </div>
                 </Grid>
