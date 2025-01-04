@@ -10,6 +10,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { RangeDatePicker } from 'components';
 import useAllQueryParams from 'hooks/useGetAllQueryParams/useAllQueryParams';
 import isBetween from "dayjs/plugin/isBetween";
+import { useNavigate } from 'react-router-dom';
 
 dayjs.extend(isBetween);
 
@@ -40,37 +41,44 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-const OrderItem = ({ id, amount, status, currency, date, status_color }: { id: string; amount: string; status: string; currency: string, date: string, status_color: any }) => (
-  <Box sx={{
-    mb: 2,
-    p: 3,
-    backgroundColor: '#F7FAFC',
-    borderRadius: 2,
-    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-    '&:hover': {
-      transform: 'translateY(-4px)',
-      boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-    }
-  }}>
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <BackpackIcon style={{ fontSize: 20, color: '#6B46C1' }} />
-        <Typography variant="subtitle1" fontWeight="bold">
-          Order #{id}
+const OrderItem = ({_id, id, amount, status, currency, date, status_color }: { _id: string, id: string; amount: string; status: string; currency: string, date: string, status_color: any }) => {
+  const navigate = useNavigate();
+
+  return (
+    <Box sx={{
+      mb: 2,
+      p: 3,
+      backgroundColor: '#F7FAFC',
+      borderRadius: 2,
+      cursor: "pointer",
+      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+      '&:hover': {
+        transform: 'translateY(-4px)',
+        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+      }
+    }}
+      onClick={() => navigate(`/order/${_id}`)} 
+    >
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <BackpackIcon style={{ fontSize: 20, color: '#6B46C1' }} />
+          <Typography variant="subtitle1" fontWeight="bold">
+            Order #{id}
+          </Typography>
+        </Box>
+        <span style={{ backgroundColor: status_color, color: 'white', padding: '8px', borderRadius: "10px", fontSize: "13px" }}>{status}</span>
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="body2" color="text.secondary">
+          {date}
+        </Typography>
+        <Typography variant="subtitle1" fontWeight="bold" color="#6B46C1">
+          {amount} {currency}
         </Typography>
       </Box>
-      <span style={{ backgroundColor: status_color, color: 'white', padding: '8px', borderRadius: "10px", fontSize: "13px" }}>{status}</span>
     </Box>
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <Typography variant="body2" color="text.secondary">
-        {date}
-      </Typography>
-      <Typography variant="subtitle1" fontWeight="bold" color="#6B46C1">
-        {amount} {currency}
-      </Typography>
-    </Box>
-  </Box>
-);
+  )
+};
 
 interface CourierTabProps {
   courierInfoData: any,
@@ -195,6 +203,7 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
             <OrderItem
               key={orders?.number}
               id={orders?.number}
+              _id={orders?._id}
               amount={orders?.totalPrice}
               status={orders?.state?.name}
               status_color={orders?.state?.color}
