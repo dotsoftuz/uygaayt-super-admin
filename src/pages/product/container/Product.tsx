@@ -47,9 +47,7 @@ const Client = () => {
               name: "Qizil chiziq"
             },
           ]}
-        // onChange={(item: any) => {
-        //   setSubCategory(item);
-        // }}
+          placeholder={'Omborni holati'}
         />
       </Grid>
       <Grid item lg={2} md={4} xs={12}>
