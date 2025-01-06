@@ -1,4 +1,4 @@
-import { AutoCompleteFilter, Checkbox, ExportButton, FormDrawer, Table } from "components";
+import { AutoCompleteFilter, AutoCompleteForm, Checkbox, ExportButton, FormDrawer, Table } from "components";
 import { useProductColumns } from "./product.columns";
 import { useRoleManager } from "services/useRoleManager";
 import { useAppDispatch } from "store/storeHooks";
@@ -31,6 +31,25 @@ const Client = () => {
           control={formStore.control}
           label={t("enum.active")}
           name="isActiveQuery"
+        />
+      </Grid>
+      <Grid item lg={2} md={4} xs={12}>
+        <AutoCompleteForm
+          control={formStore.control}
+          name="stockState"
+          options={[
+            {
+              _id: "yellowLine",
+              name: "Yellow"
+            },
+            {
+              _id: "redLine",
+              name: "Red"
+            },
+          ]}
+        // onChange={(item: any) => {
+        //   setSubCategory(item);
+        // }}
         />
       </Grid>
       <Grid item lg={2} md={4} xs={12}>
@@ -76,6 +95,7 @@ const Client = () => {
       isActive: false,
       discountEnabled: false,
       isActiveQuery: formStore.watch("isActiveQuery"),
+      stockState: formStore.watch("stockState"),
       measureId: "",
       categoryId: "",
       description: "",
@@ -105,6 +125,7 @@ const Client = () => {
         }
         exQueryParams={{
           isActive: formStore.watch("isActiveQuery") || undefined,
+          stockState: formStore.watch("stockState") || undefined,
         }}
       />
       <WarningModal open={productId} setOpen={setProductId} url="product/delete" />

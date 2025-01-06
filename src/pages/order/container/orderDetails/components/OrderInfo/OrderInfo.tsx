@@ -90,6 +90,33 @@ const OrderInfo = ({ formStore, order }: any) => {
           </div>
         </div>
       )}
+      {order?.employee && (
+        <div className="card">
+          <h4 className="title">Xodim</h4>
+          <div className="info">
+            <div className="image">
+              {order?.employee?.image ? (
+                <img src={process.env.REACT_APP_BASE_URL + "/" +
+                  order?.employee?.image?.url
+                } alt="" />
+              ) : (
+                <span>
+                  <DefaultImage />
+                </span>
+              )}
+            </div>
+            <div>
+              <h4 className="name">
+                {get(order, "employee.firstName", "")}{" "}
+                {get(order, "employee.lastName", "")}
+              </h4>
+              <span className="phone">
+                {get(order, "employee.phoneNumber", "")}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
       {/* <div className="card">
         <h4 className="title">Moderator</h4>
         <div className="info">

@@ -39,16 +39,18 @@ const OrderProducts = ({ formStore, state, order }: any) => {
     state === "created"
       ? 1
       : state === "inProcess"
-      ? 2
-      : state === "inDelivery"
-      ? 3
-      : state === "completed"
-      ? 4
-      : 0;
+        ? 2
+        : state === "inDelivery"
+          ? 3
+          : state === "completed"
+            ? 4
+            : 0;
+
+  console.log(products)
 
   return (
     <OrderProductsStyled>
-      <div className="steps">
+      <div className="steps" style={{ border: "none" }}>
         <span className={`icon ${index && "active"}`}>
           <TickIcon />
         </span>
@@ -63,6 +65,20 @@ const OrderProducts = ({ formStore, state, order }: any) => {
         <span className={`icon ${index > 3 && "active"}`}>
           <FlagIcon />
           <div className="line"></div>
+        </span>
+      </div>
+      <div className="steps">
+        <span className={`${index && "active"}`}>
+          {get(order, "createdAt", 0) ? new Date(new Date(order.createdAt).getTime() + 5 * 60 * 60 * 1000).toISOString().slice(11, 19) : ""}
+        </span>
+        <span className={`${index > 1 && "active"}`}>
+          {get(order, "acceptedAt", 0) ? new Date(new Date(order.acceptedAt).getTime() + 5 * 60 * 60 * 1000).toISOString().slice(11, 19) : ""}
+        </span>
+        <span className={`${index > 2 && "active"}`}>
+          {get(order, "inDeliveryAt", 0) ? new Date(new Date(order.inDeliveryAt).getTime() + 5 * 60 * 60 * 1000).toISOString().slice(11, 19) : ""}
+        </span>
+        <span className={`${index > 3 && "active"}`}>
+          {get(order, "completedAt", 0) ? new Date(new Date(order.completedAt).getTime() + 5 * 60 * 60 * 1000).toISOString().slice(11, 19) : ""}
         </span>
       </div>
       <div className="products">
