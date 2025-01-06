@@ -40,11 +40,11 @@ const Client = () => {
           options={[
             {
               _id: "yellowLine",
-              name: "Yellow"
+              name: "Sariq chiziq"
             },
             {
               _id: "redLine",
-              name: "Red"
+              name: "Qizil chiziq"
             },
           ]}
         // onChange={(item: any) => {
