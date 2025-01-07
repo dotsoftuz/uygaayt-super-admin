@@ -15,7 +15,7 @@ export const useTransactionColumns = (): GridColumns => {
       //    },
       // },
       {
-         field: "Miqdor",
+         field: t('enum.amount'),
          renderCell({ row }) {
             return (
                <span
@@ -29,13 +29,13 @@ export const useTransactionColumns = (): GridColumns => {
          },
       },
       {
-         field: "Sana",
+         field: t('common.date'),
          renderCell({ row }) {
             return row.createdAt && dayjs(row.createdAt).format('DD.MM.YYYY HH:mm');
          },
       },
       {
-         field: "Izoh",
+         field: t('common.comment'),
          renderCell({ row }) {
             return <Tooltip title={row.comment} placement="top"><span className="comment">{row.comment}</span></Tooltip>
          },

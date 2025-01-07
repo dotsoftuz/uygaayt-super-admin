@@ -131,9 +131,8 @@ const About = () => {
                 control={control}
                 name="deliveryPrice"
                 type="number"
-                label={"Dastavka narxi"}
+                label={t('order.deliveryPrice')}
                 rules={{ required: false }}
-                placeholder={"Dastavka narxi"}
               />
             </div>
             <div className="mb-3">

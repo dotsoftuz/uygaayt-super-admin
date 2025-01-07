@@ -7,9 +7,11 @@ import { numberFormat } from "utils/numberFormat";
 import useCommonContext from "context/useCommon";
 import { get } from "lodash";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 const Transaction = () => {
   const columns = useTransactionColumns();
+  const { t } = useTranslation();
 
   const {
     state: { data: settingsData },
@@ -24,7 +26,7 @@ const Transaction = () => {
   );
 
 
-  const { mutate,data, reset  } = useApiMutation("balance/total", "post", {
+  const { mutate, data, reset } = useApiMutation("balance/total", "post", {
     onSuccess() {
       // toast.success(t("general.success"));
     },
@@ -46,13 +48,13 @@ const Transaction = () => {
               {numberFormat(data?.data?.storeBalance)}{" "}
               {get(settingsData, "currency", "uzs")}
             </span>
-            <span className="text">umumiy balansi</span>
+            <span className="text">{t('transaction.total_balance')}</span>
           </div>
         </Grid>
         <Grid item sm={6}>
           <div className="balance">
             <div className="amount-wrapper">
-              <span className="title">Umumiy to'ldirilgan miqdor:</span>
+              <span className="title">{t('transaction.total_filled_amount')}:</span>
               <span className="amount">
                 {numberFormat(data?.data?.income)}{" "}
                 {get(settingsData, "currency", "uzs")}

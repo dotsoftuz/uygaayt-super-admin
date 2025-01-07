@@ -286,9 +286,8 @@ const AddOrderForm = ({
             <TextInput
               control={formStore ? formStore?.control : control}
               name="houseNumber"
-              placeholder="Uy raqami"
               rules={{ required: false }}
-              label={"Uy raqami"}
+              label={t('order.home_number')}
               disabled={order?.state?.state === "completed" ? true : false}
             />
           </Grid>
@@ -296,9 +295,8 @@ const AddOrderForm = ({
             <TextInput
               control={formStore ? formStore?.control : control}
               name="entrance"
-              placeholder="Kirish"
               rules={{ required: false }}
-              label={"Kirish"}
+              label={t('order.entrance')}
               disabled={order?.state?.state === "completed" ? true : false}
             />
           </Grid>
@@ -306,9 +304,8 @@ const AddOrderForm = ({
             <TextInput
               control={formStore ? formStore?.control : control}
               name="floor"
-              placeholder="Qavat"
               rules={{ required: false }}
-              label={"Qavat"}
+              label={t('order.floor')}
               disabled={order?.state?.state === "completed" ? true : false}
             />
           </Grid>
@@ -316,9 +313,8 @@ const AddOrderForm = ({
             <TextInput
               control={formStore ? formStore?.control : control}
               name="apartmentNumber"
-              placeholder="Kvartira raqami"
               rules={{ required: false }}
-              label={"Kvartira raqami"}
+              label={t('order.apartment_number')}
               disabled={order?.state?.state === "completed" ? true : false}
             />
           </Grid>
@@ -436,7 +432,7 @@ const AddOrderForm = ({
         {!id && (
           <MainButton
             variant="contained"
-            title={"Rasmiylashtirish"}
+            title={t('order.formalization')}
             className="submit-btn"
             type="submit"
             disabled={status === "loading"}
@@ -452,14 +448,14 @@ const AddOrderForm = ({
                   <span onClick={() => setOpen(false)}>
                     <LeftArrowIcon />
                   </span>
-                  <h2>Yangi manzil qo'shish</h2>
+                  <h2>{t('order.add_new_address')}</h2>
                 </div>
                 <Grid container spacing={2}>
                   <Grid item md={12} position="relative">
                     <TextInput
                       control={formStore ? formStore.control : control}
                       name="addressName"
-                      placeholder="Yetkazib berish manzili"
+                      placeholder={t('order.shipping_address')}
                       searchIcon
                       onCustomChange={(value) => {
                         setAddress(value);
@@ -495,41 +491,37 @@ const AddOrderForm = ({
                     <TextInput
                       control={formStore ? formStore?.control : control}
                       name="houseNumber"
-                      placeholder="Uy raqami"
                       rules={{ required: false }}
-                      label={"Uy raqami"}
+                      label={t('order.home_number')}
                     />
                   </Grid>
                   <Grid item md={6}>
                     <TextInput
                       control={formStore ? formStore?.control : control}
                       name="entrance"
-                      placeholder="Kirish"
                       rules={{ required: false }}
-                      label={"Kirish"}
+                      label={t('order.entrance')}
                     />
                   </Grid>
                   <Grid item md={6}>
                     <TextInput
                       control={formStore ? formStore?.control : control}
                       name="floor"
-                      placeholder="Qavat"
                       rules={{ required: false }}
-                      label={"Qavat"}
+                      label={t('order.floor')}
                     />
                   </Grid>
                   <Grid item md={6}>
                     <TextInput
                       control={formStore ? formStore?.control : control}
                       name="apartmentNumber"
-                      placeholder="Kvartira raqami"
-                      label={"Kvartira raqami"}
+                      label={t('order.apartment_number')}
                       rules={{ required: false }}
                     />
                   </Grid>
                 </Grid>
                 <MainButton
-                  title="Saqlash"
+                  title={t('FORMDRAWER.SAVE')}
                   variant="contained"
                   color="success"
                   className="save-btn"

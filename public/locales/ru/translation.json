@@ -106,7 +106,9 @@
     "late_store": "Опоздание в магазин",
     "on_time_store": "Приходите в магазин вовремя",
     "parent_category": "Высшая категория",
-    "child_category": "Внутренняя категория"
+    "child_category": "Внутренняя категория",
+    "delivery_price": "Начальная цена",
+    "comment": "Комментарий"
   },
   "role": {
     "order": "Заказы",
@@ -145,7 +147,15 @@
     "deliveryPrice": "Цена доставки",
     "totalPrice": "Общая цена",
     "chooseProduct": "Выберите продукт",
-    "validAmount": "Цена продукта должна быть больше 0"
+    "validAmount": "Цена продукта должна быть больше 0",
+    "home_number": "Номер дома",
+    "entrance": "Входить",
+    "floor": "Пол",
+    "apartment_number": "Номер квартиры",
+    "original_price": "Исходная цена",
+    "in_warehouse": "На складе",
+    "add_new_address": "Добавить новый адрес",
+    "shipping_address": "Адрес доставки"
   },
   "enum": {
     "cash": "Наличные",
@@ -200,5 +210,9 @@
     "map_address": "Адрес карты",
     "premium_days": "Premium muddati",
     "premium_price": "Premium narxi"
+  },
+  "transaction": {
+    "total_balance": "Общий баланс",
+    "total_filled_amount": "Общая сумма заполнена"
   }
 }

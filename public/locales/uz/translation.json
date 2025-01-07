@@ -106,8 +106,9 @@
     "late_store": "Do'konga kechikish",
     "on_time_store": "Do'konga o'z vaqtida kelish",
     "parent_category": "Yuqori katgoriya",
-    "child_category": "Ichki kategoriya"
-
+    "child_category": "Ichki kategoriya",
+    "delivery_price": "Dastavka narxi",
+    "comment": "Izoh"
   },
   "role": {
     "order": "Buyurtmalar",
@@ -148,7 +149,15 @@
     "totalPrice": "Umumiy narx",
     "chooseProduct": "Mahsulot tanlang",
     "validAmount": "Mahsulot qiymati 0 dan katta bo'lishi kerak",
-    "minimum_order_amount": "Minimal buyurtma summasi"
+    "minimum_order_amount": "Minimal buyurtma summasi",
+    "home_number": "Uy raqami",
+    "entrance": "Kirish",
+    "floor": "Qavat",
+    "apartment_number": "Kvartira raqami",
+    "original_price": "Asl narxi",
+    "in_warehouse": "Omborda",
+    "add_new_address": "Yangi manzil qo'shish",
+    "shipping_address": "Yetkazib berish manzili"
   },
   "enum": {
     "cash": "Naqd",
@@ -203,5 +212,9 @@
     "map_address": "Xarita manzili",
     "premium_days": "Premium muddati",
     "premium_price": "Premium narxi"
+  },
+  "transaction": {
+    "total_balance": "Umumiy balans",
+    "total_filled_amount": "Umumiy to'ldirilgan miqdor"
   }
 }

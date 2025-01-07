@@ -222,7 +222,7 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
                   >
                     {
                       product?.discountEnabled === false ? "" : <div style={{ color: "#ed0e0e" }}>
-                        Asl Narxi:
+                        {t('order.original_price')}:
                         <s style={{ marginLeft: "4px" }}>
                           {numberFormat(product.price)} {get(settingsData, "currency", "uzs")}
                         </s>
@@ -230,7 +230,7 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
                     }
                     {
                       product?.discountEnabled && <div style={{ color: "#4caf50", fontWeight: "bold" }}>
-                        Chegirma: {numberFormat(product?.discountValue)}{" "}
+                        {t('common.discount')}: {numberFormat(product?.discountValue)}{" "}
                         {product?.discountType === "percent" ? "%" : get(settingsData, "currency", "uzs")}
                       </div>
                     }
@@ -254,7 +254,7 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
                       marginTop: "8px",
                     }}
                   >
-                    Omborda: {numberFormat(product.inStock)} dona
+                    {t('order.in_warehouse')}: {numberFormat(product.inStock)}
                   </div>
                 </div>
               </Grid>
