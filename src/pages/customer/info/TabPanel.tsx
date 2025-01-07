@@ -165,7 +165,7 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders }) => 
               status={orders?.state?.name}
               status_color={orders?.state?.color}
               currency={get(settingsData, "currency", "uzs")}
-              date={orders?.completedAt ? dayjs(orders.completedAt).format("YYYY-MM-DD HH:mm:ss") : "N/A"}
+              date={orders?.createdAt ? dayjs(orders.createdAt).format("YYYY-MM-DD HH:mm:ss") : "N/A"}
             />
           ))}
         </Box>

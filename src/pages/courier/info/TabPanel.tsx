@@ -88,7 +88,7 @@ interface CourierTabProps {
 
 export const CourierTabs: React.FC<CourierTabProps> = ({
   courierInfoData, historyOrders }) => {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(1);
 
   const allParams = useAllQueryParams();
 
@@ -208,7 +208,7 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
               status={orders?.state?.name}
               status_color={orders?.state?.color}
               currency={get(settingsData, "currency", "uzs")}
-              date={orders?.completedAt ? dayjs(orders.completedAt).format("YYYY-MM-DD HH:mm:ss") : "N/A"}
+              date={orders?.createdAt ? dayjs(orders.createdAt).format("YYYY-MM-DD HH:mm:ss") : "N/A"}
             />
           ))}
         </Box>
