@@ -14,6 +14,7 @@ interface NotificationListProps {
   loading: boolean;
   hasMore: boolean;
   onNotificationRead: (id: string) => void;
+  refreshNotifications: any;
 }
 
 export const NotificationList: React.FC<NotificationListProps> = ({
@@ -23,6 +24,7 @@ export const NotificationList: React.FC<NotificationListProps> = ({
   loading,
   hasMore,
   onNotificationRead,
+  refreshNotifications
 }) => {
   const { t } = useTranslation();
 
@@ -53,6 +55,7 @@ export const NotificationList: React.FC<NotificationListProps> = ({
               <NotificationItem 
                 notification={notification} 
                 onRead={onNotificationRead}
+                refreshNotifications={refreshNotifications}
               />
               {index < notifications.length - 1 && <Divider />}
             </Box>

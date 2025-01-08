@@ -72,6 +72,7 @@ const Notification = () => {
           loading={loading}
           hasMore={hasMore}
           onNotificationRead={handleNotificationRead}
+          refreshNotifications={refreshNotifications}
         />
       </Popover>
     </>

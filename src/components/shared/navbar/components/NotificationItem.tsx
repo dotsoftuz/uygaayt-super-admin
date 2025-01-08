@@ -43,9 +43,10 @@ function getIcon(type: string) {
 interface NotificationItemProps {
   notification: any;
   onRead: (id: string) => void;
+  refreshNotifications: any;
 }
 
-export const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onRead }) => {
+export const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onRead, refreshNotifications }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const currentLang = localStorage.getItem("i18nextLng") || "uz";
@@ -55,7 +56,8 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
     "get",
     {
       onSuccess() {
-        onRead(notification._id);
+        // onRead(notification._id);
+        refreshNotifications()
         toast.success("Tasdiqlandi!");
       },
     }
@@ -63,7 +65,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
 
   const handleAcceptClick = (event: React.MouseEvent) => {
     event.stopPropagation();
-    onRead(notification._id);
+    // onRead(notification._id);
     acceptCourier({});
   };
 
