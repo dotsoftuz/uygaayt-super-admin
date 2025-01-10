@@ -15,8 +15,6 @@ import { IIdImage } from "hooks/usePostImage";
 import { DeleteIcon } from "assets/svgs";
 import { DISCOUNT_TYPES } from "types/enums";
 import { IProduct } from "types/common.types";
-import dayjs from "dayjs";
-import { debounce } from "lodash";
 import { Controller } from "react-hook-form";
 
 interface IProductForm {
@@ -236,7 +234,8 @@ const ProductForm = ({
           <Grid item md={12}>
             <AutoCompleteForm
               control={control}
-              name="parentCategoryId"
+              // name="parentCategoryId"
+              name={subChildCategory !== undefined  ? "parentCategoryId" : "categoryId"}
               optionsUrl="category/paging"
               dataProp="data.data"
               label="Kategoriya"

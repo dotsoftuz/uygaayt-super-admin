@@ -4,7 +4,7 @@ import { useRoleManager } from "services/useRoleManager";
 import { useAppDispatch } from "store/storeHooks";
 import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
 import { useTranslation } from "react-i18next";
-import { Grid } from "@mui/material";
+import { Grid, InputLabel, MenuItem, Select } from "@mui/material";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import ProductForm from "../components/ProductForm";
@@ -34,21 +34,25 @@ const Client = () => {
         />
       </Grid>
       <Grid item lg={2} md={4} xs={12}>
-        <AutoCompleteForm
-          control={formStore.control}
-          name="stockState"
-          options={[
-            {
-              _id: "yellowLine",
-              name: "Sariq chiziq"
-            },
-            {
-              _id: "redLine",
-              name: "Qizil chiziq"
-            },
-          ]}
+        <Select
+          style={{
+            width: "100px",
+            paddingBlock: "4px",
+            borderRadius: "10px"
+          }}
+          size="small"
+          labelId="stockState-label"
+          id="stockState"
+          value={formStore.watch("stockState") || ""}
+          onChange={(e) => formStore.setValue("stockState", e.target.value)}
           placeholder={'Omborni holati'}
-        />
+        >
+          {formStore.watch("stockState") && (
+            <MenuItem value="">Tozalash</MenuItem>
+          )}
+          <MenuItem value="yellowLine">Sariq chiziq</MenuItem>
+          <MenuItem value="redLine">Qizil chiziq</MenuItem>
+        </Select>
       </Grid>
       <Grid item lg={2} md={4} xs={12}>
         <AutoCompleteFilter
