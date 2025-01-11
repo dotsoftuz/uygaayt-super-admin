@@ -1,5 +1,8 @@
 {
   "general": {
+    "notifications": "Bildirishnomalar",
+    "no_more_notifications": "Boshqa bildirishnomalar yo‘q",
+    "no_notifications": "Hech qanday bildirishnoma yo'q",
     "add": "Qo'shish",
     "addProduct": "Mahsulot qo'shish",
     "addCategory": "Kategoriya qo'shish",
@@ -131,7 +134,8 @@
     "measure": "Birliklar",
     "siteSettings": "Veb-sayt sozlamalari",
     "news": "Yangiliklar",
-    "report": "Analitika"
+    "report": "Analitika",
+    "discount": "Chegirma"
   },
   "order": {
     "Created": "Yaratildi",

@@ -1,5 +1,8 @@
 {
   "general": {
+    "notifications": "Уведомления",
+    "no_more_notifications": "Больше никаких уведомлений",
+    "no_notifications": "Нет уведомлений",
     "add": "Добавить",
     "addProduct": "Добавить продукт",
     "addCategory": "Добавить категорию",
@@ -130,7 +133,8 @@
     "measure": "Единицы измерения",
     "siteSettings": "Настройки сайта",
     "news": "Новости",
-    "report": "Аналитика"
+    "report": "Аналитика",
+    "discount": "Скидка"
   },
   "order": {
     "Created": "Создан",

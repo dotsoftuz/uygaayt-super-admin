@@ -31,7 +31,7 @@ export const NotificationList: React.FC<NotificationListProps> = ({
   return (
     <Box>
       <Box sx={{ p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h6">{t('notifications')}</Typography>
+        <Typography variant="h6">{t('general.notifications')}</Typography>
         {unreadCount > 0 && (
           <Typography
             variant="caption"
@@ -52,8 +52,8 @@ export const NotificationList: React.FC<NotificationListProps> = ({
         {notifications?.length > 0 ? (
           notifications.map((notification, index) => (
             <Box key={notification.id}>
-              <NotificationItem 
-                notification={notification} 
+              <NotificationItem
+                notification={notification}
                 onRead={onNotificationRead}
                 refreshNotifications={refreshNotifications}
               />
@@ -62,14 +62,14 @@ export const NotificationList: React.FC<NotificationListProps> = ({
           ))
         ) : (
           <Typography variant="body2" color="text.secondary" sx={{ p: 2, textAlign: 'center' }}>
-            {t('no_notifications')}
+            {t('general.no_notifications')}
           </Typography>
         )}
         <Box ref={loadMoreRef} sx={{ p: 2, textAlign: 'center' }}>
           {loading && <CircularProgress size={24} />}
           {!hasMore && notifications.length > 0 && (
             <Typography variant="body2" color="text.secondary">
-              {t('no_more_notifications')}
+              {t('general.no_more_notifications')}
             </Typography>
           )}
         </Box>

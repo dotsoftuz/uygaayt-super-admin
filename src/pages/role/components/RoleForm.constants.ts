@@ -285,6 +285,16 @@ export const ALL_ROLES: Array<{
     role: "report",
     label: "report",
   },
+  {
+    role: "discount",
+    label: "discount",
+    childRoles: [
+      {
+        role: "discountUpdate",
+        label: "update",
+      },
+    ],
+  },
   // {
   //   role: "siteSettings",
   //   label: "siteSettings",

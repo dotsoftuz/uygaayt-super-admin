@@ -235,7 +235,7 @@ const ProductForm = ({
             <AutoCompleteForm
               control={control}
               // name="parentCategoryId"
-              name={subChildCategory !== undefined  ? "parentCategoryId" : "categoryId"}
+              name={subChildCategory !== undefined ? "parentCategoryId" : "categoryId"}
               optionsUrl="category/paging"
               dataProp="data.data"
               label="Kategoriya"
@@ -393,6 +393,7 @@ const ProductForm = ({
             )}
           </Grid>
           <Grid item md={12}>
+            <label className="py-2" htmlFor="">Tavsiya etilgan format .png .jpg</label><br /><br />
             <div className="product-images">
               <ImageInput
                 control={control}

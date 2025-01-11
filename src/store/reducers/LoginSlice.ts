@@ -68,7 +68,9 @@ const initialState = {
     newsCreate: false,
     newsUpdate: false,
     newsDelete: false,
-    report: false
+    report: false,
+    discount: false,
+    discountUpdate: false
   },
   loginData: {
     token: "string",
