@@ -1,5 +1,6 @@
 {
   "general": {
+    "recommendation_img": "Рекомендуемый формат .png .jpg",
     "notifications": "Уведомления",
     "no_more_notifications": "Больше никаких уведомлений",
     "no_notifications": "Нет уведомлений",

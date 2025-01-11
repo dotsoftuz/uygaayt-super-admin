@@ -393,7 +393,7 @@ const ProductForm = ({
             )}
           </Grid>
           <Grid item md={12}>
-            <label className="py-2" htmlFor="">Tavsiya etilgan format .png .jpg</label><br /><br />
+            <label className="py-2" htmlFor="">{t('general.recommendation_img')}</label><br /><br />
             <div className="product-images">
               <ImageInput
                 control={control}

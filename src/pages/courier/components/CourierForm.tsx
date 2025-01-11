@@ -196,10 +196,11 @@ const CourierFrom: FC<ICourierForm> = ({
           </Grid>
           <Grid item md={12}>
             <div className="product-images">
+
               <InputLabel>
                 {t("Rasm")} <span style={{ color: "red" }}>*</span>
               </InputLabel>
-
+              <label className="py-2" htmlFor="">{t('general.recommendation_img')}</label><br /><br />
               <ImageInput
                 control={control}
                 setValue={setValue}

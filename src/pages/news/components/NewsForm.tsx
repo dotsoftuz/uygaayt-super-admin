@@ -144,6 +144,7 @@ const BannerForm: FC<IEmployeesForm> = ({
 
           </Grid>
           <Grid item md={12}>
+            <label className="py-2" htmlFor="">{t('general.recommendation_img')}</label><br /><br />
             <ImageInput control={control} setValue={setValue} name="imageId" />
             <div className="d-flex justify-content-between mt-3">
               <span>O'lcham</span>

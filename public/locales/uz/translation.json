@@ -1,5 +1,6 @@
 {
   "general": {
+    "recommendation_img": "Tavsiya etilgan format .png .jpg",
     "notifications": "Bildirishnomalar",
     "no_more_notifications": "Boshqa bildirishnomalar yo‘q",
     "no_notifications": "Hech qanday bildirishnoma yo'q",
