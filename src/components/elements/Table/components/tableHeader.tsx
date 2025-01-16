@@ -34,51 +34,54 @@ const TableHeader: React.FC<{
   addButtonTitle,
   dataUrl,
 }) => {
-  const { t } = useTranslation();
+    const { t } = useTranslation();
 
-  return (
-    <div>
-      <div className="d-flex justify-content-end align-items-center mb-3 ">
-        {searchable && (
-          <Grid container className="search-box-container">
-            <Grid item md={5}>
-              <SearchInput
-                value={search}
-                onChange={(e: any) => {
-                  setSearch(e?.target?.value);
-                }}
-              />
+    return (
+      <div>
+        <div className={`lg:flex ${searchable || onAddButton ? "justify-between" : "justify-end"} items-center`}>
+          {searchable && (
+            <Grid className="lg:w-[20%] w-full py-2">
+              <Grid item >
+                <SearchInput
+                  value={search}
+                  onChange={(e: any) => {
+                    setSearch(e?.target?.value);
+                  }}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-        )}
-        <div className="actions d-flex align-items-center">
-          {headerChildren}
-          {onAddButton ? (
-            <MainButton
-              title={addButtonTitle || t("general.add")}
-              variant="contained"
-              onClick={() => {
-                onAddButton?.();
-              }}
-            />
-          ) : null}
-          {deletable && selectedRows?.length > 0 && (
-            <Button
-              style={{ borderRadius: 12 }}
-              onClick={onDelete}
-              sx={{ width: 40 }}
-              variant="outlined"
-              color="error"
-              className="table_add_button"
-            >
-              <DeleteIcon />
-            </Button>
           )}
+          {headerChildren}
+          {
+           onAddButton || (deletable && selectedRows?.length > 0) ? <div className={`lg:w-[20%] w-full flex justify-end py-2 items-center`}>
+              {onAddButton ? (
+                <MainButton
+                  title={addButtonTitle || t("general.add")}
+                  variant="contained"
+                  onClick={() => {
+                    onAddButton?.();
+                  }}
+                />
+              ) : null}
+              {deletable && selectedRows?.length > 0 && (
+                <Button
+                  style={{ borderRadius: 12 }}
+                  onClick={onDelete}
+                  sx={{ width: 40 }}
+                  variant="outlined"
+                  color="error"
+                  className="table_add_button"
+                >
+                  <DeleteIcon />
+                </Button>
+              )}
+            </div> : ""
+          }
+
         </div>
+        <div>{headerChildrenSecondRow}</div>
       </div>
-      <div>{headerChildrenSecondRow}</div>
-    </div>
-  );
-};
+    );
+  };
 
 export default TableHeader;

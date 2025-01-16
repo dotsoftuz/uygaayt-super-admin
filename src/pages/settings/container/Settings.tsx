@@ -69,8 +69,8 @@ const Settings = () => {
 
   return (
     <SettingsStyled>
-      <Grid container spacing={3}>
-        <Grid item sm={3}>
+      <Grid className="md:flex" spacing={1}>
+        <Grid item className="md:w-1/3 p-2" >
           <div className="tabs">
             {SETTINGS_TABS.map((tab) => {
               if (hasAccess(tab.role)) {
@@ -91,11 +91,11 @@ const Settings = () => {
 
           </div>
         </Grid>
-        <Grid item sm={9}>
+        <Grid item className="md:w-2/3 p-2" >
           {activeTab === "functionality" && (
             <div className="settings">
               <HeaderOfSettings>
-                <SettingTitle>{t("settings.functionality")}</SettingTitle>
+                <SettingTitle className="md:text-2xl">{t("settings.functionality")}</SettingTitle>
                 <MainButton
                   title={t("general.save")}
                   variant="contained"

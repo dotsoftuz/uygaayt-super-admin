@@ -8,7 +8,6 @@ import BannerForm from "../components/NewsForm";
 import { useTranslation } from "react-i18next";
 import { useRoleManager } from "services/useRoleManager";
 import WarningModal from "components/common/WarningModal/WarningModal";
-import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 
 const News = () => {
   const [editingNewsId, setEditingNewsId] = useState<any>();

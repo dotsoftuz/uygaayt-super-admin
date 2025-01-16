@@ -3,9 +3,8 @@ import styled from "styled-components";
 export const IntegrationStyled = styled.div`
   display: flex;
   background-color: #fff;
-  padding: 20px;
+  padding: 5px;
   border-radius: 12px;
-  height: 100%;
   .card {
     display: flex;
     align-items: center;

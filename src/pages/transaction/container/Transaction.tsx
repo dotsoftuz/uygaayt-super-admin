@@ -41,7 +41,7 @@ const Transaction = () => {
 
   return (
     <TransactionStyled>
-      <Grid container spacing={2} mb={2}>
+      <Grid className="grid md:grid-cols-2 gap-2">
         <Grid item sm={6}>
           <div className="total-balance">
             <span className="amount">

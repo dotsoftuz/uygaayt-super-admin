@@ -6,9 +6,6 @@ export const AboutStyled = styled.div`
   background: #fff;
   box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.07);
   .working-time {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
     > div {
       width: 48%;
     }

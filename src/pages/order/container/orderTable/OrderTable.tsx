@@ -52,21 +52,24 @@ const OrderTable = () => {
 
   const renderHeader = (
     <>
-      <Grid container width={470} spacing={2}>
-        <Grid item sm={6}>
+      <Grid className="lg:w-[60%] w-full gap-y-2 sm:gap-y-0 grid sm:grid-cols-3 items-center gap-x-2">
+        <Grid item className="">
           <AutoCompleteFilter
             optionsUrl="order-state/get-all"
             filterName="stateId"
             placeholder={t("common.status")}
             dataProp="data"
-            
+
           />
         </Grid>
-        <Grid item sm={6}>
+        <Grid item className="">
           <RangeDatePicker />
         </Grid>
+        <Grid item className=" flex justify-end">
+          <SwitchView />
+        </Grid>
       </Grid>
-      <SwitchView />
+
     </>
   );
 

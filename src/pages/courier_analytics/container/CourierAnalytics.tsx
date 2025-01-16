@@ -11,6 +11,7 @@ import CourierFrom from "../components/CourierForm";
 import WarningModal from "components/common/WarningModalPost/WarningModal";
 import { useNavigate } from "react-router-dom";
 import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
+import { Grid } from "@mui/material";
 
 const CourierAnalytics = () => {
   const [editingCourierId, setEditingCourierId] = useState<any>();
@@ -44,13 +45,23 @@ const CourierAnalytics = () => {
   const exportUrl = `/report/courier/export/${allParams.dateFrom ? `dateFrom=${allParams.dateFrom}&` : ""
     }${allParams?.dateTo ? `dateTo=${allParams.dateTo}&` : ""}`;
 
+  const renderHeader = (
+    <Grid className="w-full flex justify-end items-center pb-2">
+      <Grid>
+        <ExportButton url={exportUrl} />
+      </Grid>
+    </Grid>
+  );
+
+
+
   return (
     <>
       <Table
         dataUrl="report/courier"
         columns={columns}
         // searchable
-        headerChildren={<ExportButton url={exportUrl} />}
+        headerChildren={renderHeader}
         // onAddButton={hasAccess('courierCreate') ? () => dis(setOpenDrawer(true)) : undefined}
         onEditColumn={hasAccess('courierUpdate') ? (row) => {
           setEditingCourierId(row._id);

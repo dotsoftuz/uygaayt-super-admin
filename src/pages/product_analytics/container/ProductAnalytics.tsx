@@ -27,36 +27,21 @@ const Client = () => {
   const exportUrl = `/report/product/export`;
 
   const renderHeader = (
-    <Grid width={480} spacing={2} display={"flex"} justifyContent={"space-between"}>
-      <Grid  style={{display: "flex", justifyContent: "end"}}>
-        <RangeDatePicker />
-      </Grid>
-      <Grid  style={{display: "flex", justifyContent: "end"}}>
-      <AutoCompleteFilter
+    <Grid className="w-full lg:w-[60%] md:flex md:grid-cols-3 gap-3 justify-end items-center py-2" >
+      <Grid className="md:w-[30%] py-1" >
+        <AutoCompleteFilter
           optionsUrl="category/paging"
           filterName="categoryId"
           placeholder={t("common.category")}
         />
       </Grid>
-      <Grid  style={{display: "flex", justifyContent: "end", alignItems: "center"}}>
+      <Grid className="md:w-[40%] py-1 flex justify-end" >
+        <RangeDatePicker />
+      </Grid>
+      <Grid className="md:w-[30%] py-1" >
         <ExportButton url={exportUrl} />
       </Grid>
     </Grid>
-    // <Grid container width={800} spacing={2}>
-    //   <Grid item sm={4} style={{paddingTop: "20px"}}>
-    //     <ExportButton url={exportUrl} />
-    //   </Grid>
-    //   <Grid item sm={4}>
-    //     <AutoCompleteFilter
-    //       optionsUrl="category/paging"
-    //       filterName="categoryId"
-    //       placeholder={t("common.category")}
-    //     />
-    //   </Grid>
-    //   <Grid item sm={4} >
-    //     <RangeDatePicker />
-    //   </Grid>
-    // </Grid>
   );
 
   const resetForm = () => {

@@ -10,7 +10,8 @@ export const SearchInputStyled = styled.div`
   }
   .input-search {
     height: 45px;
-    width: 300px;
+    width: 100%;
+    max-width: 400px;
     border: none;
     padding: 10px 15px;
     font-size: 14px;

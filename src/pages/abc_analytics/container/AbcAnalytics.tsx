@@ -51,7 +51,7 @@ const Client = () => {
 
   const renderHeader = (
     <>
-      <Grid container display={"flex"} alignItems={'center'} spacing={2} >
+      <Grid className='pb-2' container display={"flex"} alignItems={'center'} spacing={2} >
         <Grid lg={3} md={6} xs={12} paddingBlockStart={5} paddingInlineStart={2}>
           <RangeDatePicker />
         </Grid>

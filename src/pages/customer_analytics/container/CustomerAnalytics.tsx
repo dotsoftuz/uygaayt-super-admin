@@ -15,22 +15,21 @@ const Client = () => {
 
 
   const renderHeader = (
-    <Grid width={480} spacing={2} display={"flex"} justifyContent={"space-between"}>
-      <Grid md={6} style={{display: "flex", justifyContent: "end"}}>
+    <Grid className="w-full lg:w-[60%] md:flex md:grid-cols-3 gap-3 justify-end items-center py-2">
+      <Grid className="md:w-[30%] py-1" >
         <AutoCompleteFilter
           optionsUrl="customer/paging"
           filterName="customer_id"
           placeholder={t("common.customer")}
-          getOptionLabel={(option) => option?.firstName }
+          getOptionLabel={(option) => option?.firstName}
         />
       </Grid>
-      <Grid style={{ display: "flex", justifyContent: "end" }}>
+      <Grid className="md:w-[40%] py-1 flex justify-end" >
         <RangeDatePicker />
       </Grid>
-      <Grid style={{ display: "flex", justifyContent: "end", alignItems: "center" }}>
+      <Grid className="md:w-[30%] py-1" >
         <ExportButton url={exportUrl} />
       </Grid>
-
     </Grid>
   );
 
@@ -42,9 +41,7 @@ const Client = () => {
         dataUrl="report/customer"
         headerChildren={renderHeader}
         // searchable
-        exQueryParams={{
-
-        }}
+        exQueryParams={{}}
         onRowClick={(row) => navigate(`/customer/${row._id}`)}
       />
     </>

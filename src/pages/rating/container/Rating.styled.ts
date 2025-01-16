@@ -3,11 +3,12 @@ import styled from "styled-components";
 export const RatingStyled = styled.div`
   margin-top: 10px;
   .ratings {
-    display: flex;
-    position: absolute;
     left: 20px;
+    padding: 10px 20px;
+    margin: auto !important;
     .rating {
       display: flex;
+      margin: auto !important;
       align-items: center;
       justify-content: center;
       margin-right: 8px;

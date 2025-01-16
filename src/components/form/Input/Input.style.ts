@@ -6,7 +6,7 @@ export const StyledInput = styled.input`
   box-sizing: border-box;
   width: 100%;
   color: gray;
-  padding: 13px;
+  padding: 11px;
   font-style: normal;
   font-weight: normal;
   font-size: 16px;

@@ -53,7 +53,7 @@ export const SidebarContainer = styled.div<IValueProps>`
     height: ${(props) => (props.value ? "auto" : "50px")};
 
     &.active {
-      background-color: #3E5089;
+      background-color: #2B6CB0;
     }
 
     .boxsOfChild {

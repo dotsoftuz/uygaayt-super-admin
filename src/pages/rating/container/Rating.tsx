@@ -34,11 +34,11 @@ const Rating = () => {
   };
 
   const renderHeader = (
-    <div className="ratings">
+    <div className="w-full lg:w-[80%] ratings gap-2 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5">
       {RATINGS.map((item) => {
         return (
           <div
-            className={`rating ${rate === item.rate && "active"}`}
+            className={`rating  ${rate === item.rate && "active"}`}
             onClick={() => setRate(item.rate)}
           >
             {Array.from({ length: item.rate }, (_, i) => i + 1).map((e) => (

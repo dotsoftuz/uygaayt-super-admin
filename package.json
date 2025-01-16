@@ -41,6 +41,7 @@
     "@types/react-toastify": "^4.1.0",
     "@types/socket.io-client": "^3.0.0",
     "@types/styled-components": "^5.1.26",
+    "@types/tailwindcss": "^3.1.0",
     "@types/uuid": "^9.0.0",
     "antd": "^5.4.0",
     "axios": "^1.2.6",
@@ -53,8 +54,10 @@
     "i18next": "^22.4.14",
     "i18next-browser-languagedetector": "^7.0.1",
     "i18next-http-backend": "^2.2.0",
+    "init": "^0.1.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
+    "npx": "^10.2.2",
     "number-to-words-ru": "2.3.4",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
@@ -115,6 +118,7 @@
     ]
   },
   "devDependencies": {
-    "@types/react": "^18.3.12"
+    "@types/react": "^18.3.12",
+    "tailwindcss": "^3.4.17"
   }
 }

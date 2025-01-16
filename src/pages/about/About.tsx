@@ -102,8 +102,17 @@ const About = () => {
   return (
     <AboutStyled>
       <form onSubmit={handleSubmit(submit)}>
-        <Grid container spacing={3} style={{ display: "flex", alignItems: "center" }}>
-          <Grid item md={6} p={4}>
+        <Grid className="w-full">
+          <div className="save-btn">
+            <MainButton
+              title={t("general.save")}
+              variant="contained"
+              type="submit"
+            />
+          </div>
+        </Grid>
+        <Grid className="block lg:flex">
+          <Grid className="lg:w-[50%] pr-3 py-3">
             <div className="mb-3">
               <TextInput
                 control={control}
@@ -111,7 +120,7 @@ const About = () => {
                 label={t("common.companyName")}
               />
             </div>
-            <div className="mb-3 working-time">
+            <div className="mb-3 sm:flex md:gap-0 gap-y-2 justify-between items-end working-time">
               <TimePicker
                 control={control}
                 name="startTime"
@@ -179,14 +188,7 @@ const About = () => {
               />
             </div>
           </Grid>
-          <Grid item md={6}>
-            <div className="save-btn">
-              <MainButton
-                title={t("general.save")}
-                variant="contained"
-                type="submit"
-              />
-            </div>
+          <Grid className="lg:w-[50%]">
             <div className="mt-5">
               <br />
               <YandexMap

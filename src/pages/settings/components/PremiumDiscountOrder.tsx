@@ -151,7 +151,7 @@ const PremiumDiscountOrder = ({ data }: any) => {
           </Grid>
 
           <Grid item md={3} xs={3}>
-            <Box display="flex" alignItems="start" marginTop={"22.6px"}>
+            <Box display="flex" alignItems="start" marginTop={"28px"}>
               <StyledSwitch
                 className={
                   watch(`premiumDiscount.type`) === "percent"

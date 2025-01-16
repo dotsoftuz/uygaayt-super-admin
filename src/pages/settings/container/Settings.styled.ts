@@ -3,8 +3,8 @@ import styled from "styled-components";
 
 export const SettingsStyled = styled.div`
   .tabs {
-    height: 330px;
     background: #fff;
+    border-radius: 0px 12px 12px 0px;
     .tab {
       position: relative;
       color: #454545;
@@ -28,7 +28,7 @@ export const SettingsStyled = styled.div`
   .settings {
     border-radius: 12px;
     background: #fff;
-    padding: 0 20px 0 20px;
+    padding: 0 20px;
     height: calc(100vh - 100px);
     box-sizing: border-box;
     overflow: auto;
@@ -48,7 +48,6 @@ export const SettingsStyled = styled.div`
 `;
 
 export const SettingTitle = styled.span`
-  font-size: 24px;
   color: #000;
 `;
 
@@ -64,11 +63,11 @@ export const HeaderOfSettings = styled.div`
 `;
 
 export const StyledPhoneCountrySelect = styled(Select)({
-  width: "250px",
+  width: "100%",
   borderRadius: "12px",
   border: "1px solid #e9e9e9",
   outline: "none",
-  minWidth: "300px",
+  maxWidth: "250px",
 
   "& .MuiSelect-select": {
     display: "flex",

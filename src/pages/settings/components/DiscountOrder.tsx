@@ -101,7 +101,7 @@ const DiscountOrder = ({ data }: any) => {
             key={field.id}
             sx={{ paddingBlock: 1, display: "flex", flexWrap: "wrap" }}
           >
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={6} md={3} className="flex items-end">
               <TextInput
                 control={control}
                 name={`discounts.${index}.number`}
@@ -111,7 +111,7 @@ const DiscountOrder = ({ data }: any) => {
               />
             </Grid>
 
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={6} md={3} className="flex items-end">
               <Input
                 label={t(`driver.${watch(`discounts.${index}.type`)}`)}
                 params={{
@@ -173,7 +173,7 @@ const DiscountOrder = ({ data }: any) => {
                 alignItems: "center",
                 justifyContent: "center",
               }}
-              marginTop={"22.6px"}
+              className="flex items-end mt-5"
             >
               <StyledSwitch
                 className={
@@ -212,7 +212,7 @@ const DiscountOrder = ({ data }: any) => {
                 alignItems: "center",
                 justifyContent: "center",
               }}
-              marginTop={"22.6px"}
+              className="flex items-end mt-5"
             >
               <Delete
                 sx={{
@@ -228,7 +228,7 @@ const DiscountOrder = ({ data }: any) => {
           </Grid>
 
         ))}
-        <Grid item md={8} xs={12} paddingBlock={2}>
+        <Grid item xs={12} md={6}  paddingBlock={2}>
           <CommonButton
             startIcon={<PlusIcon />}
             type="button"
