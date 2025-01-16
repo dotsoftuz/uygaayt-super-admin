@@ -1,3 +1,4 @@
+import { IconButton } from "@mui/material";
 import styled from "styled-components";
 interface IValueProps {
   value: boolean;
@@ -5,7 +6,6 @@ interface IValueProps {
 export const SidebarContainer = styled.div<IValueProps>`
   z-index: 99;
   .sidebar-item {
-    position: relative;
     width: 100%;
     display: flex;
     align-items: center;
@@ -14,14 +14,9 @@ export const SidebarContainer = styled.div<IValueProps>`
     padding-left: ${(props) => (props.value ? "27px" : "21px")};
     transition: all 0.3s ease;
     height: ${(props) => (props.value ? "auto" : "50px")};
-
-    .MuiListItemIcon-root {
-      color: #fff;
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-    }
+    color: #2B6CB0;
+    font-size: 14px;
+    font-weight: 400;
 
     .iconActive {
       padding-left: 15px;
@@ -29,30 +24,19 @@ export const SidebarContainer = styled.div<IValueProps>`
 
     .unical-logo {
       width: 1200px !important;
-      background-color: red;
     }
 
     svg {
-      color: #666687;
       transition: all 0.3s ease;
+      path {
+        stroke: white;
+      }
     }
-
-    color: #666687;
-    font-size: 14px;
-    font-weight: 400;
     &:hover {
       cursor: pointer !important;
-      background-color: #364880;
-      color: #0086ff;
+      background-color: #2B6CB0;
+      color: #2B6CB0 !important;
     }
-    &:hover svg {
-      color: #0086ff;
-      transition: all 0.3s ease;
-    }
-  }
-  .store_name {
-    color: #fff;
-    font-weight: 500;
   }
   .sidebar-item-parent {
     display: flex;
@@ -60,13 +44,17 @@ export const SidebarContainer = styled.div<IValueProps>`
     justify-content: space-between;
     gap: 10px;
     padding: 10px;
-    color: #666687;
+    color: #2B6CB0;
     padding-left: ${(props) => (props.value ? "27px" : "21px")};
     font-size: 14px;
     font-weight: 400;
     /* margin-bottom: 0.5rem; */
     transition: all 0.3s ease;
     height: ${(props) => (props.value ? "auto" : "50px")};
+
+    &.active {
+      background-color: #3E5089;
+    }
 
     .boxsOfChild {
       display: flex;
@@ -88,34 +76,39 @@ export const SidebarContainer = styled.div<IValueProps>`
         }
       }
     }
-
+    svg {
+      transition: all 0.3s ease;
+      path {
+        stroke: white;
+      }
+    }
     .upAndDownIcon {
       margin-right: 10px;
-    }
-
-    svg {
-      color: #666687;
-      transition: all 0.3s ease;
+      path {
+        stroke: none;
+        fill: #2B6CB0;
+      }
     }
 
     &:hover {
       cursor: pointer !important;
-      background-color: #364880;
-      color: #0086ff;
-    }
-    &:hover svg {
-      color: #0086ff;
-      transition: all 0.3s ease;
+      background-color: #2B6CB0;
+      color: #3E5089;
     }
   }
 
   .sideBar-active {
     cursor: pointer !important;
-    background-color: #364880;
-    color: #0086ff;
+    background-color: #2B6CB0;
+
+    span {
+      color: #fff !important;
+    }
 
     svg {
-      color: #0086ff;
+      path {
+        stroke: white;
+      }
     }
   }
   position: relative;
@@ -134,89 +127,130 @@ export const SidebarContainer = styled.div<IValueProps>`
       font-weight: 400;
       /* color: #666687; */
     }
-    svg {
-      color: #666687;
-    }
+
     white-space: nowrap;
   }
   .sidebar-content {
-    background-color: #3e5189;
+    background-color: #3E5089;
     width: 100%;
     left: 0;
     top: 0;
     height: 100vh;
     position: fixed;
     bottom: 0;
-    border-right: 1px solid #eaeaef;
+    border-right: 1px solid #E9E9E9;
   }
 
   .sidebar-top {
-    height: 70px;
+    height: 72px;
+    background-color: #3E5089;
     display: flex;
     align-items: center;
-    padding-right: 6px;
     justify-content: center;
     gap: 12px;
+    padding: 12px;
+    box-sizing: border-box;
+    position: relative;
+
     &.active {
-      height: 150px;
+      height: 72px;
+    }
+  }
+  .sidebar_arrow {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: 1px solid #E9E9E9;
+    bottom: -15px;
+    right: -15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 99999;
+    background-color: white;
+
+    svg {
+      path {
+        fill: #000;
+      }
+    }
+
+    &.active {
+      transform: rotateY(180deg);
+    }
+    &:hover {
+      background-color: white;
     }
   }
   .sidebar-top-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 19px;
     width: ${(props) => (props.value ? "auto" : "100%")};
-    padding-left: ${(props) => (props.value ? "24px" : "0")};
+    background-color: #2B6CB0;
+    border-radius: 10px;
+    padding: 6px;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: 0.3s ease;
 
-    .unical-logo {
-      width: 160px;
+    &:hover {
+      background-color: #2B6CB0;
     }
 
-    &.active {
-      flex-direction: column-reverse;
-      gap: 8px;
+    .school_head {
+      gap: 10px;
+      padding: 0 10px;
+      text-align: center;
+      p {
+        font-size: 22px;
+        color: white;
+        text-align: center;
+      }
     }
 
-    .logoFirst {
-      width: 80px;
-      height: 61px;
-    }
-    .sidebar_arrow {
-      cursor: pointer;
-      transition: all 0.3s ease;
+    .school_head-active {
+      align-items: center;
+      justify-content: center;
+      margin-left: 20px;
 
-      &.active {
-        transform: rotateY(180deg);
+      svg {
+        transform: scale(1.2);
+        path {
+          fill: #2B6CB0;
+        }
       }
     }
   }
 
   .sidebar-main {
     overflow-x: hidden;
-    height: calc(100vh - 126px);
     overflow-y: auto !important;
+    height: calc(100vh - 72px - 20px);
     display: grid;
     grid-template-columns: 1fr;
 
     /* width */
     ::-webkit-scrollbar {
       width: 4px;
+      transition: 0.2s;
     }
 
     /* Track */
     ::-webkit-scrollbar-track {
-      background: #f5f5f5;
+      background-color: #3E5089;
     }
 
     /* Handle */
     ::-webkit-scrollbar-thumb {
-      background: #888;
+      background-color: #3E5089;
     }
 
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
-      background: #555;
+      background-color: #3E5089;
     }
   }
 
@@ -226,74 +260,52 @@ export const SidebarContainer = styled.div<IValueProps>`
       font-size: 11px;
       font-weight: 600;
       text-transform: uppercase;
-      color: #666687;
+      color: #2B6CB0;
     }
   }
 
-  /* .sidebar-bottom {
+  .sidebar-bottom {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: #3e5189;
+    height: 48px;
+    border-top: 1px solid #3E5089;
+    background-color: black;
     display: flex;
     justify-content: right;
     align-items: right;
     padding: 1rem;
-    .balance {
-      display: flex;
-      flex-direction: column;
-      background-color: #364880;
-      padding: 10px;
-      border-radius: 10px;
-      width: 100%;
-      .title {
-        color: #fff;
-        font-size: 13px;
-        font-weight: 500;
-        margin-bottom: 5px;
-      }
-      .amount {
-        color: #fff;
-        font-size: 20px;
-        font-weight: 600;
-      }
-    }
-  } */
+  }
   .MuiTypography-root {
-    color: #ffffff;
+    color: white;
     font-size: 16px;
     font-weight: 500;
-    font-family: "SF Pro Display";
-    font-style: normal;
   }
-  .sidebar-bottom {
-    li {
-      svg {
-        transition: all 0.4s ease;
 
-        transform: ${(props) =>
-          props.value ? "rotateZ(0)" : "rotateZ(180deg)"};
+  .sidebar_footer {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid #3E5089;
+
+    .sidebar_foot_item {
+      position: relative;
+      width: 100%;
+      height: 52px;
+      color: #3E5089;
+
+      &:hover {
+        background-color: #3E5089;
       }
-    }
-  }
-
-  .copyBtn {
-    width: 30px;
-    height: 30px;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.3);
-
-    &:hover {
-      background-color: #f9f9f9;
-    }
-
-    svg {
-      width: 20px;
-      height: 20px;
-
-      path {
-        fill: blue;
+      .icon_foot {
+        height: 52px !important;
+        font-size: 16px;
+        padding: 0 27px;
+        color: #3E5089;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        cursor: pointer;
       }
     }
   }
@@ -301,28 +313,59 @@ export const SidebarContainer = styled.div<IValueProps>`
 
 export const HoveredItems = styled.div`
   width: 175px;
+
   ul {
     /* margin-bottom: 5px; */
     &:nth-child(1) {
       margin-top: 5px;
     }
   }
+  .hovered_title {
+    font-weight: 600;
+    font-size: 13px;
+    color: #3E5089;
+
+    svg {
+      path {
+        stroke: #3E5089 !important;
+      }
+    }
+  }
   li {
     list-style: none;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: flex-center;
     gap: 10px;
     transition: all 0.3s ease;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #3E5089 !important;
+    padding: 10px;
+    margin-bottom: 2px;
+    /* background: #3E5089; */
 
-    &:hover {
-      background: #364880;
+    cursor: pointer;
+
+    svg {
+      circle {
+        fill: #3E5089 !important;
+      }
+      &:hover {
+        fill: #fff !important;
+    }
     }
 
     &.sideBarHovered-active {
-      background: #364880;
+      background: #3E5089;
+      border-radius: 5px;
+      color: #fff !important;
+    }
+    &:hover {
+      border-radius: 5px;
+      background: #3E5089;
+      color: #fff !important;
+
     }
   }
 
@@ -334,12 +377,291 @@ export const HoveredItems = styled.div`
     font-weight: 600;
     gap: 10px;
     height: 34px;
-    border-bottom: 1px solid #364880;
+    border-bottom: 1px solid #3E5089;
 
     span {
       margin-top: 2px;
       img {
         width: 16px;
+      }
+    }
+  }
+`;
+
+export const SettingDrawerStyle = styled.div`
+  width: 360px;
+  height: 100%;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: black;
+
+  .top {
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+
+      h2 {
+        font-size: 33px;
+        font-weight: 700;
+        color: #3E5089;
+      }
+    }
+
+    .section {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+
+      .head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        svg {
+          width: 40px;
+          height: 40px;
+
+          path {
+            fill: #2B6CB0;
+          }
+        }
+
+        p {
+          font-size: 16px;
+          color: #3E5089;
+          cursor: pointer;
+
+          span {
+            color: #3E5089;
+            font-size: 14px;
+          }
+
+          &:hover {
+            color: #0086ff;
+          }
+        }
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 52px;
+        height: 24px;
+      }
+
+      /* Hide the default checkbox */
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      /* The slider (the rounded part of the switch) */
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #d9d8dd;
+        transition: 0.4s;
+        border-radius: 28px;
+      }
+
+      /* Rounded corners of slider */
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+
+      /* When the checkbox is checked, change the background color of the slider */
+      .switch input:checked + .slider {
+        background-color: white;
+      }
+
+      /* When the checkbox is checked, move the knob to the right */
+      .switch input:checked + .slider:before {
+        transform: translateX(28px);
+      }
+
+      /* Rounded corners of slider for dark mode */
+      .slider:before {
+        background-color: #f2f2f2;
+      }
+
+      /* Change knob color for dark mode */
+      .switch input:checked + .slider:before {
+        background-color: black;
+      }
+      .theme_title {
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        color: #3E5089;
+      }
+    }
+  }
+  .bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .theme_label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+  }
+`;
+
+export const LanguageBox = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 100%;
+  gap: 12px;
+
+  button {
+    width: 100%;
+    height: 42px;
+    border: none;
+    outline: none;
+    border-radius: 12px;
+    color: white;
+    background-color: #2B6CB0;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 1px solid #2B6CB0;
+
+    &:hover {
+      border: 1px solid red;
+    }
+
+    &.active {
+      background-color: white;
+      color: #fff;
+    }
+  }
+`;
+
+export const NotificationButton = styled(IconButton)`
+  svg {
+    path {
+      fill: #2B6CB0;
+    }
+  }
+`;
+
+export const NotificationContainer = styled("div")`
+  .ant-popover-inner {
+    padding: 0;
+    margin: 0;
+  }
+`;
+export const NotificationContent = styled("div")`
+  width: 400px;
+  min-height: 160px;
+  max-height: 420px;
+  overflow: auto;
+  padding: 0 16px 16px 16px;
+  border-radius: 10px;
+  background-color: black;
+
+  &::-webkit-scrollbar {
+    width: 7px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #3E5089;
+    border-radius: 12px;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: #3E5089;
+    border-radius: 12px;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    background-color: black;
+    position: sticky;
+    top: 0;
+    z-index: 99;
+
+    h2 {
+      font-size: 16px;
+      color: #3E5089;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .item {
+      display: flex;
+      gap: 6px;
+      flex-direction: column;
+      background-color: #2B6CB0;
+      padding: 12px;
+      border-radius: 10px;
+      background-color: ${({ theme }) => theme.background.body};
+
+      .title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h4 {
+          display: flex;
+          gap: 7px;
+          font-size: 14px;
+          color: #3E5089;
+        }
+        span {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          color: #666;
+        }
+      }
+
+      .message {
+        color: #3E5089;
+      }
+
+      .foot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .readable_box {
+          width: 10px;
+          height: 10px;
+          background-color: #3E5089;
+          border-radius: 10px;
+          display: inline-block;
+        }
+
+        .time {
+          font-size: 13px;
+          color: ${({ theme }) => theme.primary.secondary};
+        }
       }
     }
   }

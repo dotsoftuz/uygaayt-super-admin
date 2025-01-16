@@ -3,67 +3,35 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { IconButton, ListItemIcon, ListItemText } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
 import List from "@mui/material/List";
-import Tooltip from "@mui/material/Tooltip";
+import { Popover } from "antd";
+import { SidebarHideShow } from "assets/svgs";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAppSelector } from "store/storeHooks";
+import { useRoleManager } from "services/useRoleManager";
+import { closeSideBarFunc, openSideBarFunc } from "store/reducers/SidebarSlice";
+import { useAppDispatch, useAppSelector } from "store/storeHooks";
 import { SIDEBAR_CLOSE, SIDEBAR_OPEN } from "styles/global.style";
 import { hasChildPaths } from "utils";
-import Ellips from "./assets/Ellips";
-import LogoFirst from "./assets/logofirst.svg";
-import UnicalLogo from "./assets/unicalLogo.svg";
-import { sidebarRoutes } from "./routes/sidebarRoutes";
 import { HoveredItems, SidebarContainer } from "./Sidebar.style";
+import Ellips from "./assets/Ellips";
+import { sidebarRoutes } from "./routes/sidebarRoutes";
 import { ISidebarRoute } from "./sidebar.types";
-import { useRoleManager } from "services/useRoleManager";
-import { useTranslation } from "react-i18next";
-import { CopyIcon, SidebarArrowIcon } from "assets/svgs";
-import { useApi } from "hooks/useApi/useApiHooks";
-import { numberFormat } from "utils/numberFormat";
-import useCommonContext from "context/useCommon";
-import { get } from "lodash";
-import useCopyToClipboard from "hooks/useClipboard";
+import { useTheme } from "styled-components";
 
 const Sidebar = () => {
+  const [open, setOpen] = useState<boolean>(false);
+
   const { value } = useAppSelector((state) => state.sideBarData);
-  const url = window.location.href;
-  const isUnical = url.includes("unical-dev-bestune.kahero.uz");
-  const navigate = useNavigate();
-  const [copiedText, copy] = useCopyToClipboard();
-  //  ? Animation hide
-  const showAnimation = {
-    hidden: {
-      width: 0,
-      opacity: 0,
-      transition: {
-        duration: 0.5,
-      },
-    },
-    show: {
-      width: "auto",
-      opacity: 1,
-      transition: {
-        duration: 0.2,
-      },
-    },
-  };
+  const dispatch = useAppDispatch();
+
+  const { t } = useTranslation();
+  // const { firstName, lastName, type } = useAppSelector(
+  //   (state) => state.LoginState.loginData
+  // );
+
   const hasAccess = useRoleManager();
-  const {
-    state: { data: settingsData },
-  } = useCommonContext();
-
-  const storeId = localStorage.getItem("storeId");
-  const stores = JSON.parse(localStorage.getItem("stores") || "[]");
-  const currentStore = stores.find((store: any) => store?._id === storeId);
-
-  const { data } = useApi(
-    "store/get",
-    {},
-    {
-      suspense: false,
-    }
-  );
 
   return (
     <SidebarContainer value={value}>
@@ -72,74 +40,57 @@ const Sidebar = () => {
         className="sidebar-content"
       >
         <div className={value ? "sidebar-top" : "sidebar-top active"}>
-          <div
+          {/* <div
             className={value ? "sidebar-top-item" : "sidebar-top-item active"}
           >
             {value ? (
-              <Tooltip title="">
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <h2 className="store_name d-flex flex-column text-center gap-2">
-                    <span>{get(currentStore, "name", "")}</span>
-                  </h2>
-                </motion.div>
-              </Tooltip>
-            ) : (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
               >
-                {isUnical ? (
-                  <img
-                    src={UnicalLogo}
-                    alt="logo"
-                    onClick={() => navigate("home")}
-                    style={{ cursor: "pointer" }}
-                  />
-                ) : (
-                  <img
-                    src={LogoFirst}
-                    alt="logo"
-                    className="logoFirst"
-                    onClick={() => navigate("home")}
-                    style={{ cursor: "pointer" }}
-                  />
-                )}
+                <div className="school_head" onClick={() => setOpen(true)}>
+                  <p className="d-flex flex-column">
+                      UYGAAYT
+                  </p>
+                </div>
               </motion.div>
+            ) : (
+              <div>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="school_head-active">
+                  </div>
+                </motion.div>
+              </div>
             )}
-            {/* <img
-              src={ArrowIcon}
-              alt="arrow"
-              onClick={() =>
-                dispatch(value ? closeSideBarFunc() : openSideBarFunc())
-              }
-              className={value ? "sidebar_arrow " : "sidebar_arrow active"}
-            /> */}
-          </div>
-          {value && (
-            <motion.div
-              className="sidebar-top-item"
-              variants={showAnimation}
-              initial="hidden"
-              animate="show"
-              exit="hidden"
-            ></motion.div>
-          )}
+
+          </div> */}
+          <IconButton
+            className={value ? "sidebar_arrow " : "sidebar_arrow active"}
+            onClick={() =>
+              dispatch(value ? closeSideBarFunc() : openSideBarFunc())
+            }
+          >
+            <SidebarHideShow />
+          </IconButton>
         </div>
 
         <div className="sidebar-main">
           <div className="asosiy">
             {sidebarRoutes.map((item, key) => {
-              if (hasAccess(item.role)) {
-                return <MenuItemCustom key={key} item={item} />;
-              }
-            })}
+                  if (hasAccess(item.role)) {
+                    return <MenuItemCustom key={key} item={item} />;
+                  }
+                })
+             }
           </div>
         </div>
+
+        <div className="sidebar_footer"></div>
       </div>
     </SidebarContainer>
   );
@@ -147,51 +98,68 @@ const Sidebar = () => {
 
 export default Sidebar;
 
-const MenuItemCustom = ({ item }: { item: ISidebarRoute }) =>
+const MenuItemCustom = ({
+  item,
+  data,
+}: {
+  item: ISidebarRoute;
+  data?: string;
+}) =>
   hasChildPaths(item) ? (
     <MultiLevel item={item} />
   ) : (
-    <SingleLevel item={item} />
+    <SingleLevel data={data} item={item} />
   );
 
-const SingleLevel = ({ item }: { item: ISidebarRoute }) => {
+const SingleLevel = ({
+  item,
+  data,
+}: {
+  item: ISidebarRoute;
+  data?: string;
+}) => {
   const { t } = useTranslation();
   const { value } = useAppSelector((state) => state.sideBarData);
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const hasAccess = useRoleManager();
+  const theme = useTheme();
 
   return (
     <div
-      className={`sidebar-item ${
+      className={`sidebar-item relative ${
         pathname.includes(item.path || "") ? "sideBar-active" : ""
       }`}
-      onClick={() => item?.path && navigate(item?.path)}
+      onClick={() => {
+        item?.path && item?.path !== pathname && navigate(item?.path);
+      }}
     >
       {value ? (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.2 }}
+          className="relative"
         >
-          {/* <ListItemIcon>{item.icon}</ListItemIcon> */}
+          <ListItemIcon className="sidebar_icon">{item.icon}</ListItemIcon>
         </motion.div>
       ) : (
-        <Tooltip
-          title={!value && t("sidebar." + item?.translate)}
+        <Popover
           placement="right"
-          componentsProps={{
-            tooltip: {
-              sx: {
-                bgcolor: "#2A3042",
-                cursor: "pointer",
-                fontSize: "16px",
-                padding: "10px 15px",
-                "& .MuiTooltip-arrow": {
-                  color: "#2A3042",
-                },
-              },
-            },
+          content={
+            !value && (
+              <HoveredItems>
+                <ul>
+                  <li>{t("sidebar." + item?.translate)}</li>
+                </ul>
+              </HoveredItems>
+            )
+          }
+          overlayInnerStyle={{
+            // @ts-ignore
+            backgroundColor: `${theme?.sidebar?.main}`,
+            // @ts-ignore
+            boxShadow: `${theme?.boxShadow?.main}`,
           }}
         >
           <motion.div
@@ -199,9 +167,9 @@ const SingleLevel = ({ item }: { item: ISidebarRoute }) => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.2 }}
           >
-            <ListItemIcon className="iconActive">{item.icon}</ListItemIcon>
+            <ListItemIcon className="iconActive icon">{item.icon}</ListItemIcon>
           </motion.div>
-        </Tooltip>
+        </Popover>
       )}
       {value ? (
         <motion.div
@@ -210,11 +178,6 @@ const SingleLevel = ({ item }: { item: ISidebarRoute }) => {
           transition={{ duration: 0.2 }}
         >
           <ListItemText primary={t("sidebar." + item.translate)} />
-          {pathname.includes(item.path || "") && (
-            <ListItemIcon>
-              <SidebarArrowIcon />
-            </ListItemIcon>
-          )}
         </motion.div>
       ) : (
         <motion.div
@@ -228,6 +191,11 @@ const SingleLevel = ({ item }: { item: ISidebarRoute }) => {
           />
         </motion.div>
       )}
+      {!!data && (
+        <div className="rounded-full bg-red-500 text-white h-5 min-w-5 flex items-center justify-center text-[12px] absolute right-5 aspect-square p-1">
+          {data}
+        </div>
+      )}
     </div>
   );
 };
@@ -236,6 +204,7 @@ const MultiLevelHover = ({ item }: { item: ISidebarRoute }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const hasAccess = useRoleManager();
 
   return (
     <HoveredItems>
@@ -243,24 +212,24 @@ const MultiLevelHover = ({ item }: { item: ISidebarRoute }) => {
         <span>{item?.icon}</span> {t("sidebar." + item?.translate)}
       </div>
 
-      {item.items?.map((cur) => (
-        <ul>
-          <li
-            className={`sidebar-item-hovered ${
-              pathname.includes(cur?.path || "") ? "sideBarHovered-active" : ""
-            }`}
-            onClick={() => cur?.path && navigate(cur?.path)}
-            style={{
-              cursor: "pointer",
-              fontSize: "12px",
-              color: "#ffffff",
-              padding: "11px 16px",
-            }}
-          >
-            <Ellips /> {t("sidebar." + cur.translate)}
-          </li>
-        </ul>
-      ))}
+      {item.items?.map((cur) => {
+        if (hasAccess(cur.role)) {
+          return (
+            <ul>
+              <li
+                className={`sidebar-item-hovered ${
+                  pathname.includes(cur?.path || "")
+                    ? "sideBarHovered-active"
+                    : ""
+                }`}
+                onClick={() => cur?.path && navigate(cur?.path)}
+              >
+                <Ellips /> {t("sidebar." + cur.translate)}
+              </li>
+            </ul>
+          );
+        }
+      })}
     </HoveredItems>
   );
 };
@@ -268,6 +237,7 @@ const MultiLevelHover = ({ item }: { item: ISidebarRoute }) => {
 const MultiLevel = ({ item }: { item: ISidebarRoute }) => {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
+  const location = useLocation();
 
   const { value } = useAppSelector((state) => state.sideBarData);
   const hasAccess = useRoleManager();
@@ -276,9 +246,17 @@ const MultiLevel = ({ item }: { item: ISidebarRoute }) => {
     setOpen((prev) => !prev);
   };
 
+  const activeParent = item?.items?.find((val) =>
+    location.pathname.includes(val.path!)
+  );
+  const theme = useTheme();
+
   return (
     <>
-      <div className="sidebar-item-parent" onClick={handleClick}>
+      <div
+        className={`sidebar-item-parent ${!!activeParent && "active"}`}
+        onClick={handleClick}
+      >
         <div className="boxsOfChild">
           {value ? (
             <motion.div
@@ -286,23 +264,18 @@ const MultiLevel = ({ item }: { item: ISidebarRoute }) => {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.2 }}
             >
-              {/* <ListItemIcon>{item.icon}</ListItemIcon> */}
+              <ListItemIcon className="icon">{item.icon}</ListItemIcon>
             </motion.div>
           ) : (
-            <Tooltip
-              title={<MultiLevelHover item={item} />}
+            <Popover
               placement="right"
-              componentsProps={{
-                tooltip: {
-                  sx: {
-                    bgcolor: "#2A3042",
-                    fontSize: "16px",
-                    "& .MuiTooltip-arrow": {
-                      color: "#2A3042",
-                    },
-                  },
-                },
+              overlayInnerStyle={{
+                // @ts-ignore
+                backgroundColor: `${theme?.sidebar?.main}`,
+                // @ts-ignore
+                boxShadow: `${theme?.boxShadow?.main}`,
               }}
+              content={<MultiLevelHover item={item} />}
             >
               <motion.div
                 initial={{ opacity: 0 }}
@@ -311,7 +284,7 @@ const MultiLevel = ({ item }: { item: ISidebarRoute }) => {
               >
                 <ListItemIcon className="iconActive">{item.icon}</ListItemIcon>
               </motion.div>
-            </Tooltip>
+            </Popover>
           )}
           {value ? (
             <motion.div
@@ -338,15 +311,15 @@ const MultiLevel = ({ item }: { item: ISidebarRoute }) => {
           )}
         </div>
         {open ? (
-          <ExpandLessIcon className="upAndDownIcon" style={{color: "white"}} />
+          <ExpandLessIcon className="upAndDownIcon" />
         ) : (
-          <ExpandMoreIcon className="upAndDownIcon" style={{color: "white"}} />
+          <ExpandMoreIcon className="upAndDownIcon" />
         )}
       </div>
 
       {value && (
-        <Collapse in={open} timeout="auto" unmountOnExit>
-          <List sx={{paddingLeft: '20px'}} component="div" disablePadding>
+        <Collapse in={open} timeout={"auto"} unmountOnExit>
+          <List component="div" disablePadding sx={{ padding: "8px 0" }}>
             {item?.items?.map((child, key) => {
               if (hasAccess(child.role)) {
                 return <MenuItemCustom key={key} item={child} />;
