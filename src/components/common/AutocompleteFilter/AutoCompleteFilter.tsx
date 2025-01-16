@@ -70,7 +70,9 @@ function AutoCompleteFilter({
 
   const { mutate, data, isLoading, status } = useApiMutation(
     optionsUrl,
-    "post"
+    "post",
+    {},
+    true
   );
 
   // Trigger the mutation

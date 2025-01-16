@@ -58,7 +58,8 @@ const useApiMutation = <
 >(
   url: string,
   method: Method,
-  options: UseMutationOptions<AxiosResponse<Response>, Error, Variables> = {}
+  options: UseMutationOptions<AxiosResponse<Response>, Error, Variables> = {},
+  withoutNotification?: boolean
 ) => {
   const dis = useAppDispatch();
   const { t } = useTranslation();
@@ -76,7 +77,9 @@ const useApiMutation = <
         dis(setButtonDisable(true));
       },
       onSuccess(data) {
-        toast.success(t("general.success"));
+        if (!withoutNotification) {
+          toast.success(t("general.success"));
+        }
         dis(setOpenDrawer(false));
         dis(reRenderTable(true));
       },
