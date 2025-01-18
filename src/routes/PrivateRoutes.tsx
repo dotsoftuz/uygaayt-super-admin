@@ -3,6 +3,7 @@ import { Navigate, RouteObject } from "react-router-dom";
 import { IRoleData } from "store/reducers/LoginSlice";
 
 const BLACK_PAGE = lazy(() => import("pages/black_page"));
+const Dashboard = lazy(() => import("pages/dashboard"));
 const Order = lazy(() => import("pages/order"));
 const Customer = lazy(() => import("pages/customer"));
 const Product = lazy(() => import("pages/product"));
@@ -41,6 +42,11 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
     element: <BLACK_PAGE />,
     path: "home",
     role: "_id",
+  },
+  {
+    element: <Dashboard />,
+    path: "dashboard",
+    role: "_id", // must change
   },
   {
     element: <Order />,

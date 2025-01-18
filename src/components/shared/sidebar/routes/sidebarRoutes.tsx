@@ -1,9 +1,15 @@
-import { AboutIcon, AnaliticIcon, CategoryIcon, IntegrationIcon, ManageIcon, OrderIcon, ProductIcon, RatingIcon, SettingsIcon, TransactionIcon, UserIcon } from "assets/svgs";
+import { AboutIcon, AnaliticIcon, CategoryIcon, DashboardIconMain, IntegrationIcon, ManageIcon, OrderIcon, ProductIcon, RatingIcon, SettingsIcon, TransactionIcon, UserIcon } from "assets/svgs";
 import { ISidebarRoute } from "../sidebar.types";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 
 export const sidebarRoutes: ISidebarRoute[] = [
+  {
+    path: "/dashboard",
+    translate: "dashboard",
+    role: "_id", // must change
+    icon: <DashboardIconMain />,
+  },
   {
     path: "/order",
     translate: "order",

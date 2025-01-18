@@ -27,6 +27,7 @@
     "share": "Ulush"
   },
   "sidebar": {
+    "dashboard": "Dashboard",
     "store": "Do'konlar",
     "banner": "Bannerlar",
     "order": "Buyurtmalar",
