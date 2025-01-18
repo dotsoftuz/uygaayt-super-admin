@@ -82,6 +82,7 @@ export const Container = styled.div`
 
 export const PrivateContainer = styled.div`
   background: #ffffff;
+  
 `;
 
 export const BackGroundColorContainer = styled.div`

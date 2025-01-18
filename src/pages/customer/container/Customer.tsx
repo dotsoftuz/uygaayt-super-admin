@@ -9,7 +9,7 @@ const Client = () => {
 
 
   const renderHeader = (
-    <Grid className="lg:w-[80%] w-full flex justify-end items-center">
+    <Grid className="lg:w-[80%] w-full flex justify-end items-center pb-2">
       <Grid >
         <RangeDatePicker />
       </Grid>

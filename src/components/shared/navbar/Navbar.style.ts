@@ -13,14 +13,14 @@ export const NavbarContainer = styled.div`
     justify-content: space-between;
     padding-left: 24px;
     padding-right: 24px;
-    gap: 16px;
+    /* gap: 5px; */
     z-index: 80;
     background: #ffffff;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
     .profile {
-      display: flex;
+      /* display: flex;
       align-items: center;
-      justify-content: end;
+      justify-content: end; */
       .icon {
         display: flex;
         align-items: center;

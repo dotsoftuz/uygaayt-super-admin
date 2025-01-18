@@ -57,7 +57,7 @@ const Layout = () => {
             height={
               hasNavbar(location.pathname) ? "calc(100vh - 65px)" : "100vh"
             }
-            paddingX="20px"
+            paddingX="10px"
             paddingY="10px"
             sx={{
               overflowY: scrollPages(location.pathname) ? "scroll" : "auto",

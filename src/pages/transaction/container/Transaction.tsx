@@ -18,7 +18,7 @@ const Transaction = () => {
   } = useCommonContext();
 
   const renderHeader = (
-    <Grid container width={235} spacing={2}>
+    <Grid container width={235} spacing={2} className="pb-2">
       <Grid item sm={6}>
         <RangeDatePicker />
       </Grid>

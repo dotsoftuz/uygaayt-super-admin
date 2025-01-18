@@ -41,9 +41,11 @@ const RangeDatePicker = ({ filterable = true }: { filterable?: boolean }) => {
           value={date}
           // @ts-ignore
           onChange={(val) => onDateChange(val)}
-          disabledDate={(current) => {
-            return current && current > dayjs().endOf("day");
-          }}
+          disabledDate={(current) => current && current > dayjs().endOf("day")}
+          getPopupContainer={(trigger) =>
+            trigger.parentNode instanceof HTMLElement ? trigger.parentNode : document.body
+          }
+          
         />
       </ConfigProvider>
     </RangeDatePickerStyled>

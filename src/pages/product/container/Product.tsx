@@ -25,7 +25,7 @@ const Client = () => {
 
 
   const renderHeader = (
-    <Grid className="lg:w-[60%] w-full gap-y-2 sm:gap-y-0 grid sm:grid-cols-3 items-center gap-x-2">
+    <Grid className="lg:w-[60%] w-full gap-y-2 sm:gap-y-0 grid sm:grid-cols-4 items-center gap-x-2">
       <Grid item>
         <Checkbox
           control={formStore.control}
@@ -38,21 +38,28 @@ const Client = () => {
           style={{
             width: "100%",
             paddingBlock: "4px",
-            borderRadius: "10px"
+            borderRadius: "10px",
           }}
           size="small"
           labelId="stockState-label"
           id="stockState"
           value={formStore.watch("stockState") || ""}
           onChange={(e) => formStore.setValue("stockState", e.target.value)}
-          placeholder={'Omborni holati'}
+          displayEmpty
         >
           {formStore.watch("stockState") && (
             <MenuItem value="">Tozalash</MenuItem>
           )}
+          {!formStore.watch("stockState") && (
+            <MenuItem value="" hidden disabled>
+              Omborni holati
+            </MenuItem>
+          )}
           <MenuItem value="yellowLine">Sariq chiziq</MenuItem>
           <MenuItem value="redLine">Qizil chiziq</MenuItem>
+          
         </Select>
+
       </Grid>
       <Grid item>
         <AutoCompleteFilter

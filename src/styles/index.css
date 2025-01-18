@@ -29,11 +29,11 @@ html {
 }
 .toast {
   position: relative;
-  transform: translateX(-120px);
+  /* transform: translateX(-120px); */
   z-index: 999999;
 }
 .Toastify__toast {
-  width: 560px;
+  width: 100%;
   border-radius: 12px;
   background-color: #ffffff;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);

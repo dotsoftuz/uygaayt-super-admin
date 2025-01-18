@@ -345,7 +345,7 @@ const AddOrderForm = ({
               disabled={order?.state?.state === "completed" ? true : false}
             />
           </Grid>
-          <Grid item sm={12}>
+          <Grid item sm={12} className="w-full">
             <SelectForm
               control={formStore ? formStore?.control : control}
               name="paymentType"

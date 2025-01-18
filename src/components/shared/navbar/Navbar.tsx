@@ -95,7 +95,7 @@ const Navbar = ({ hasNavbar }: { hasNavbar: boolean }) => {
       dis(socketReRender(true));
       if (!!data.data.state?.isSoundable) makeNoice();
     }
-  
+
 
     socket.on("orderCreated", OrderCreate);
     socket.on("orderUpdated", OrderUpdate);
@@ -154,8 +154,8 @@ const Navbar = ({ hasNavbar }: { hasNavbar: boolean }) => {
         <BackButton />
 
         <div className="d-flex align-items-center justify-content-end gap-3">
-        
-          <Notification/>
+
+          <Notification />
           <LanguageBox ref={refLang}>
             <CommonButton
               title={
@@ -192,12 +192,12 @@ const Navbar = ({ hasNavbar }: { hasNavbar: boolean }) => {
               </MenuList>
             </Paper>
           </LanguageBox>
-          <div className="profile">
-            <h4 className="me-3">
+          <div className="profile md:flex items-center">
+            <h4 className="hidden md:block me-3">
               {get(loginData, "firstName", "")} {get(loginData, "lastName", "")}
             </h4>
             <span
-              className="icon"
+              // className="icon"
               aria-describedby={popoverId}
               onClick={(e: any) => {
                 e.stopPropagation();
