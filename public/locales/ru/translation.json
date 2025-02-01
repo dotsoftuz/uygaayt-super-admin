@@ -1,5 +1,9 @@
 {
   "general": {
+    "order": "Заказ",
+    "late": "поздно",
+    "online": "Онлайн",
+    "offline": "Оффлайн",
     "allow": "Позволять",
     "recommendation_img": "Рекомендуемый формат .png .jpg",
     "notifications": "Уведомления",

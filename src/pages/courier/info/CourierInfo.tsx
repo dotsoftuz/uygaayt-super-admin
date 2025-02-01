@@ -7,26 +7,26 @@ import { useTranslation } from "react-i18next";
 import { TabStyled } from "./info.style";
 import { CourierCard } from "./CouirierCard";
 import { CourierTabs } from "./TabPanel";
+import { useForm } from "react-hook-form";
 
 
 const CourierInfo = () => {
   const [active, setActive] = useState("orders");
   const { t } = useTranslation();
   const { id } = useParams();
+  const { control, watch, register, handleSubmit, setValue } = useForm();
+
 
   const { data: courierInfoData, status: courierInfoStatus } = useApi(`courier/get-by-id/${id}`, {}, {
     enabled: !!id,
-    suspense: false
+    suspense: false,
   })
 
   const { mutate, reset, data, isLoading } = useApiMutation(
     "order/paging",
     "post",
-    {
-      onSuccess(response) {
-       
-      },
-    }
+    {},
+    true
   );
 
   useEffect(() => {
@@ -34,6 +34,19 @@ const CourierInfo = () => {
       courierId: id
     });
   }, [mutate]);
+
+  // courier online or offline
+
+  const { mutate: offAndOn, data: offAndOnData } = useApiMutation(
+    "courier/set-online",
+    "post",
+  );
+
+  useEffect(() => {
+    if (courierInfoData?.data?.isOnline !== undefined) {
+      setValue("isOnline", courierInfoData.data.isOnline);
+    }
+  }, [courierInfoData, setValue]);
 
 
   return (
@@ -58,6 +71,11 @@ const CourierInfo = () => {
                   }}>
                     <CourierCard
                       courierInfoData={courierInfoData}
+                      offAndOn={offAndOn}
+                      offAndOnData={offAndOnData}
+                      watch={watch}
+                      register={register}
+                      setValue={setValue}
                     />
                   </Box>
                   <Box sx={{ flex: 1, minWidth: 0 }}>
@@ -65,7 +83,6 @@ const CourierInfo = () => {
                   </Box>
                 </Box>
               </Container>
-
             </Box >
           )
         }

@@ -11,6 +11,7 @@ import { RangeDatePicker } from 'components';
 import useAllQueryParams from 'hooks/useGetAllQueryParams/useAllQueryParams';
 import isBetween from "dayjs/plugin/isBetween";
 import { useNavigate } from 'react-router-dom';
+import { formatSeconds } from 'utils/formatSeconds';
 
 dayjs.extend(isBetween);
 
@@ -41,34 +42,36 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-const OrderItem = ({_id, id, amount, status, currency, date, status_color }: { _id: string, id: string; amount: string; status: string; currency: string, date: string, status_color: any }) => {
+const OrderItem = ({ _id, id, amount, status, currency, date, status_color, courierLateTime }: { _id: string, id: string; amount: string; status: string; currency: string, date: string, status_color: any, courierLateTime: any }) => {
   const navigate = useNavigate();
 
   return (
-    <Box sx={{
-      mb: 2,
-      p: 3,
-      backgroundColor: '#F7FAFC',
-      borderRadius: 2,
-      cursor: "pointer",
-      transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-      '&:hover': {
-        transform: 'translateY(-4px)',
-        boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
-      }
-    }}
-      onClick={() => navigate(`/order/${_id}`)} 
+    <Box
+      sx={{
+        mb: 2,
+        p: 3,
+        backgroundColor: '#F7FAFC',
+        borderRadius: 2,
+        cursor: "pointer",
+        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+        '&:hover': {
+          transform: 'translateY(-4px)',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+        },
+      }}
+      onClick={() => navigate(`/order/${_id}`)}
     >
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <BackpackIcon style={{ fontSize: 20, color: '#6B46C1' }} />
           <Typography variant="subtitle1" fontWeight="bold">
-            Order #{id}
+            {t('general.order')} #{id}
           </Typography>
         </Box>
         <span style={{ backgroundColor: status_color, color: 'white', padding: '8px', borderRadius: "10px", fontSize: "13px" }}>{status}</span>
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
         <Typography variant="body2" color="text.secondary">
           {date}
         </Typography>
@@ -76,7 +79,16 @@ const OrderItem = ({_id, id, amount, status, currency, date, status_color }: { _
           {amount} {currency}
         </Typography>
       </Box>
+
+      {courierLateTime ? (
+        <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 1, mt: 1 }}>
+          <span className='text-red-500'>
+            {formatSeconds(courierLateTime)} {t('general.late')}
+          </span>
+        </Box>
+      ) : null}
     </Box>
+
   )
 };
 
@@ -209,6 +221,7 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
               status_color={orders?.state?.color}
               currency={get(settingsData, "currency", "uzs")}
               date={orders?.createdAt ? dayjs(orders.createdAt).format("YYYY-MM-DD HH:mm:ss") : "N/A"}
+              courierLateTime={orders?.courierLateTime}
             />
           ))}
         </Box>

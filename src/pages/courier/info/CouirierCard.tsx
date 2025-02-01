@@ -1,14 +1,26 @@
-import React from 'react';
-import { Card, CardContent, Typography, Avatar, Box, Paper } from '@mui/material';
+import React, { useEffect } from 'react';
+import { Card, CardContent, Typography, Avatar, Box, Paper, Switch } from '@mui/material';
 import { Mail, Phone } from '@mui/icons-material';
 import { StarIcon } from 'assets/svgs';
+import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 
 interface CourierCardProps {
-    courierInfoData: any
+    courierInfoData: any;
+    offAndOn: any;
+    offAndOnData: any;
+    watch: any;
+    register: any;
+    setValue: any;
 }
 
 export const CourierCard: React.FC<CourierCardProps> = ({
-    courierInfoData, }) => {
+    courierInfoData,
+    offAndOn,
+    offAndOnData, watch, register, setValue }) => {
+
+    const { t } = useTranslation();
+    const { id } = useParams();
 
     return (
         <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
@@ -116,6 +128,41 @@ export const CourierCard: React.FC<CourierCardProps> = ({
                             </span>
                             <span style={{ fontSize: '0.9rem', color: 'goldenrod' }}> / 5</span>
                         </Typography>
+                    </Box>
+                    <Box sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: "space-between",
+                        gap: 2,
+                        p: 2,
+                        backgroundColor: '#F7FAFC',
+                        borderRadius: 2,
+                    }}>
+                        <Typography variant="body2" sx={{ fontWeight: 'bold', color: watch("isOnline") ? 'green' : 'red' }}>
+                            {watch("isOnline") ? t("general.online") : t("general.offline")}
+                        </Typography>
+
+                        <Switch
+                            checked={watch("isOnline")}
+                            id="isOnline"
+                            {...register("isOnline")}
+                            onChange={(e) => {
+                                const isChecked = e.target.checked;
+                                setValue("isOnline", isChecked);
+                                offAndOn({
+                                    _id: id,
+                                    isOnline: isChecked,
+                                });
+                            }}
+                            sx={{
+                                '& .MuiSwitch-thumb': {
+                                    backgroundColor: watch("isOnline") ? 'green' : 'red',  // Custom color for thumb
+                                },
+                                '& .MuiSwitch-track': {
+                                    backgroundColor: watch("isOnline") ? 'green' : 'red',  // Custom color for track
+                                },
+                            }}
+                        />
                     </Box>
                 </Box>
             </CardContent>

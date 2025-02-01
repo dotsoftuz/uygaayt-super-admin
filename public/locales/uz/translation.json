@@ -1,5 +1,9 @@
 {
   "general": {
+    "order": "Buyurtma",
+    "late": "kechikdi",
+    "online": "Onlayn",
+    "offline": "Oflayn",
     "allow": "Ruxsat berish",
     "recommendation_img": "Tavsiya etilgan format .png .jpg",
     "notifications": "Bildirishnomalar",
