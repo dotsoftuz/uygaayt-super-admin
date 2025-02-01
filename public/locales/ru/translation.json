@@ -1,5 +1,6 @@
 {
   "general": {
+    "allow": "Позволять",
     "recommendation_img": "Рекомендуемый формат .png .jpg",
     "notifications": "Уведомления",
     "no_more_notifications": "Больше никаких уведомлений",
@@ -200,6 +201,7 @@
     "amount": "Количество"
   },
   "settings": {
+    "switch_for_courier": "Позвольте курьеру сделать это самостоятельно онлайн или офлайн",
     "functionality": "Функциональность",
     "discounts": "Скидки",
     "premium_discounts": "Премиальные скидки",

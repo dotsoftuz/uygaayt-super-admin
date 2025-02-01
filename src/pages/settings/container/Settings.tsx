@@ -114,21 +114,21 @@ const Settings = () => {
                     />
                   </div>
                 </Grid>
-                {/* <Grid item md={12} xs={12}>
+                <Grid item md={12} xs={12}>
                   <div className="item">
-                    <span className="key">Multi do'konlardan buyurtma</span>
+                    <span className="key">{t('settings.switch_for_courier')}</span>
                     <Box display="flex" alignItems="center">
                       <Switch
-                        checked={watch("orderForMultipleStores")}
-                        id="orderForMultipleStores"
-                        {...register("orderForMultipleStores")}
+                        checked={watch("courierChangeOnline")}
+                        id="courierChangeOnline"
+                        {...register("courierChangeOnline")}
                       />
-                      <label className="mb-1" htmlFor="orderForMultipleStores">
-                        Ruxsat berish
+                      <label className="mb-1" htmlFor="courierChangeOnline">
+                        {t("general.allow")}
                       </label>
                     </Box>
                   </div>
-                </Grid> */}
+                </Grid>
                 <Grid item md={12} xs={12}>
                   <div className="item">
                     <span className="key">{t("settings.banner_time")}</span>

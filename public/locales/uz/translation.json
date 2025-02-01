@@ -1,5 +1,6 @@
 {
   "general": {
+    "allow": "Ruxsat berish",
     "recommendation_img": "Tavsiya etilgan format .png .jpg",
     "notifications": "Bildirishnomalar",
     "no_more_notifications": "Boshqa bildirishnomalar yo‘q",
@@ -107,7 +108,7 @@
     "late_order": "Kech qolgan buyurtmalar",
     "delivered_on_time": "Vaqtida yetkazilgan buyurtmalar",
     "sold": "Sotilgan",
-    "customer_bought_count" : "Sotib olgan mijozlar",
+    "customer_bought_count": "Sotib olgan mijozlar",
     "late_store": "Do'konga kechikish",
     "on_time_store": "Do'konga o'z vaqtida kelish",
     "parent_category": "Yuqori katgoriya",
@@ -130,8 +131,8 @@
     "integration": "Integratsiya",
     "stateMap": "Xolatlar integratsiyasi",
     "transaction": "Tranzaksiyalar",
-    "settings":"Sozlamalar",
-    "banner":"Banner",
+    "settings": "Sozlamalar",
+    "banner": "Banner",
     "rateComment": "Reyting",
     "measure": "Birliklar",
     "siteSettings": "Veb-sayt sozlamalari",
@@ -187,12 +188,12 @@
     "carNumber": "Avtomobil raqami",
     "carColor": "Avtomobil rangi"
   },
-  "tabs" : {
+  "tabs": {
     "orders": "Buyurtmalar",
     "basket": "Savat",
     "avto": "Avtomobil"
   },
-  "notification" : {
+  "notification": {
     "confirmation": "Tasdiqlash",
     "approved": "Tasdiqlangan"
   },
@@ -202,6 +203,7 @@
     "amount": "Miqdor"
   },
   "settings": {
+    "switch_for_courier": "Kuryer o'zi onlayn yoki oflayn qila olsin",
     "functionality": "Funksionallik",
     "discounts": "Chegirmalar",
     "premium_discounts": "Premium chegirmalar",
