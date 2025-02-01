@@ -11,7 +11,7 @@ import ProductForm from "../components/ProductForm";
 import { IIdImage } from "hooks/usePostImage";
 import WarningModal from "components/common/WarningModal/WarningModal";
 
-const Client = () => {
+const Product = () => {
   const columns = useProductColumns();
   const hasAccess = useRoleManager();
   const dis = useAppDispatch();
@@ -160,4 +160,4 @@ const Client = () => {
   );
 };
 
-export default Client;
+export default Product;

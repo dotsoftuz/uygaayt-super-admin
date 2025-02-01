@@ -1,3 +1,3 @@
-import Product from "./container/ProductAnalytics";
+import ProductAnalytics from "./container/ProductAnalytics";
 
-export default Product;
+export default ProductAnalytics;

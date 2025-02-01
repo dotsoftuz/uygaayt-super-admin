@@ -2,14 +2,12 @@ import { AutoCompleteFilter, ExportButton, RangeDatePicker, Table } from "compon
 import { useCustomerColumns } from "./customer_analytics.columns";
 import { useNavigate } from "react-router-dom";
 import { Grid } from "@mui/material";
-import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
 import { useTranslation } from "react-i18next";
 
 const Client = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const columns = useCustomerColumns();
-  const allParams = useAllQueryParams();
 
   const exportUrl = `/report/customer/export/`;
 
