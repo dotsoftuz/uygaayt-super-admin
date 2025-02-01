@@ -50,6 +50,8 @@ function AutoCompleteFilter({
   const [search, setSearch] = useState<string>();
   const { debouncedValue: debVal, isDebouncing } = useDebounce(search, 600);
   const [value, setValue] = useState<string | undefined | null>(null);
+  const currentLang = localStorage.getItem("i18nextLng") || "uz";
+
   useEffect(() => {
     setQueryParams({
       search,
@@ -85,10 +87,14 @@ function AutoCompleteFilter({
     });
   }, [mutate, search]);
 
-  const getLabel = (option: IOption) =>
-    option?.firstName
+  const getLabel = (option: IOption) => {
+    if (typeof option?.name === "object") {
+      return option?.[nameProp]?.[currentLang]; 
+    }
+    return option?.firstName
       ? `${option?.firstName} ${option?.lastName}`
       : (option?.[nameProp] as string);
+  };
   // @ts-ignore
   const OPTIONS = ((get(data, dataProp) as IOption[]) || options).map(
     (option) => ({

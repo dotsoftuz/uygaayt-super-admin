@@ -36,6 +36,7 @@ export const useCategoryCol = ({
   const { t } = useTranslation();
   const hasAccess = useRoleManager();
   const navigate = useNavigate();
+  const currentLang = localStorage.getItem("i18nextLng") || "uz";
 
   return [
     {
@@ -57,8 +58,9 @@ export const useCategoryCol = ({
         <p style={{cursor: "pointer"}}
           className="text-blue-600 hover:text-blue-800 font-medium"
           onClick={() => navigate(`/category_child?parentId=${record._id}`, { state: { categoryId: record._id } })}
-        >
-          {text}
+        > 
+        {/* @ts-ignore */}
+          {text?.[currentLang]}
         </p>
       ),
     },

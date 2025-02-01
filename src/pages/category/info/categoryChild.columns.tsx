@@ -34,6 +34,7 @@ export const useCategoryCol = ({
   const dis = useAppDispatch();
   const { t } = useTranslation();
   const hasAccess = useRoleManager();
+  const currentLang = localStorage.getItem("i18nextLng") || "uz";
 
   return [
     {
@@ -50,6 +51,11 @@ export const useCategoryCol = ({
     {
       title: t("common.categoryName"),
       dataIndex: "name",
+      key: "name",
+      render: (text: string, record: any) => (
+          // @ts-ignore
+          text?.[currentLang]
+      ),
     },
     {
       title: t("common.product") + " soni",

@@ -63,7 +63,13 @@ const CategoryForm: React.FC<IBranchForm> = ({
       <form id="category" onSubmit={handleSubmit(sumbit)}>
         <Grid container spacing={2}>
           <Grid item md={12}>
-            <TextInput name="name" control={control} label={t("common.name")} />
+            <TextInput name="name.uz" control={control} label={t("common.name") + ' (Uz)'} />
+          </Grid>
+          <Grid item md={12}>
+            <TextInput name="name.ru" control={control} label={t("common.name") + ' (Ru)'} />
+          </Grid>
+          <Grid item md={12}>
+            <TextInput name="name.en" control={control} label={t("common.name") + ' (En)'} />
           </Grid>
           <Grid item md={12}>
             <label className="py-2" htmlFor="">{t('general.recommendation_img')}</label><br /><br />

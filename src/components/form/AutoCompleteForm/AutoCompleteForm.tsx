@@ -54,6 +54,8 @@ function AutoCompleteForm<FormNames extends Record<string, any>>({
   const [queryParams, setQueryParams] = useState<{ search?: string }>();
   const [search, setSearch] = useState<string>();
   const { debouncedValue: debVal, isDebouncing } = useDebounce(search, 600);
+  const currentLang = localStorage.getItem("i18nextLng") || "uz";
+
 
   useEffect(() => {
     setQueryParams({
@@ -76,29 +78,33 @@ function AutoCompleteForm<FormNames extends Record<string, any>>({
   //   }
   // );
   const { mutate, data, isLoading, status } = useApiMutation(
-    optionsUrl, 
-    "post", 
+    optionsUrl,
+    "post",
     {
       onSuccess(data) {
-        getDataLength?.(get(data, dataProp)?.length); 
+        getDataLength?.(get(data, dataProp)?.length);
       },
       onError(error) {
         console.error("Error in POST request:", error);
       }
     }
   );
-  
+
   useEffect(() => {
     mutate({
       ...queryParams,
       ...exQueryParams,
     });
   }, [mutate, search]);
-  
-  const getLabel = (option: IOption) =>
-    option?.firstName
+
+  const getLabel = (option: IOption) => {
+    if (typeof option?.name === "object") {
+      return option?.[nameProp]?.[currentLang];
+    }
+    return option?.firstName
       ? `${option?.firstName} ${option?.lastName}`
       : (option?.[nameProp] as string);
+  };
 
   // @ts-ignore
   const OPTIONS_PREV = (

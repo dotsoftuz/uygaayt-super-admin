@@ -6,6 +6,7 @@ import { numberFormat } from "utils/numberFormat";
 
 export const useProductColumns = (): GridColumns => {
   const { t } = useTranslation();
+  const currentLang = localStorage.getItem("i18nextLng") || "uz";
 
   return [
     {
@@ -49,13 +50,13 @@ export const useProductColumns = (): GridColumns => {
     {
       field: t("common.parent_category"),
       renderCell({ row }) {
-        return get(row, "category.parent.name", "") || get(row, "category.name", "");
+        return get(row, "category.parent.name", "")?.[currentLang] || get(row, "category.name", "")?.[currentLang];
       },
     },
     {
       field: t("common.child_category"),
       renderCell({ row }) {
-        return  get(row, "category.parent.name", "") && get(row, "category.name", "");
+        return  get(row, "category.parent.name", "")?.[currentLang] && get(row, "category.name", "")?.[currentLang];
       },
     },
   ];

@@ -68,21 +68,21 @@ const BannerForm: FC<IEmployeesForm> = ({
             <TextInput
               control={control}
               name="title.uz"
-              label={t('common.title') + '(Uz)'}
+              label={t('common.title') + ' (Uz)'}
             />
           </Grid>
           <Grid item md={12}>
             <TextInput
               control={control}
               name="title.ru"
-              label={t('common.title') + '(Ru)'}
+              label={t('common.title') + ' (Ru)'}
             />
           </Grid>
           <Grid item md={12}>
             <TextInput
               control={control}
               name="title.en"
-              label={t('common.title') + '(En)'}
+              label={t('common.title') + ' (En)'}
             />
           </Grid>
           <Grid item md={12}>
