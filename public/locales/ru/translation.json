@@ -1,5 +1,10 @@
 {
   "general": {
+    "km_calculate_price": "Цена за километр",
+    "by_distance": "По расстоянию",
+    "static": "Неизменный",
+    "static_price": "Фиксированная цена",
+    "order_calculate": "Расчет заказа",
     "order": "Заказ",
     "late": "поздно",
     "online": "Онлайн",

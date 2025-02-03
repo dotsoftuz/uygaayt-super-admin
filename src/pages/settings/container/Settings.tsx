@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import MinimumOrder from "../components/MinimumOrder";
 import StateMap from "../components/StateMap";
 import { useRoleManager } from "services/useRoleManager";
-import { MainButton, TextInput } from "components";
+import { AutoCompleteForm, MainButton, TextInput } from "components";
 import { useTranslation } from "react-i18next";
 import { PHONE_COUNTRY_DATA } from "./Settings.constants";
 import { useForm } from "react-hook-form";
@@ -53,6 +53,8 @@ const Settings = () => {
   const submit = handleSubmit((data: any) => {
     mutate({
       ...data,
+      orderCalculateMethod: data.orderCalculateMethod,
+      orderPrice: data.orderPrice,
       phonePrefix,
     });
   });
@@ -211,6 +213,47 @@ const Settings = () => {
                     />
                   </div>
                 </Grid>
+
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">
+                      {t('general.order_calculate')}
+                    </span>
+                    <AutoCompleteForm
+                      control={control}
+                      name={"orderCalculateMethod"}
+                      options={[
+                        {
+                          _id: "by_distance",
+                          name: t('general.by_distance')
+                        },
+                        {
+                          _id: "static",
+                          name:t('general.static')
+                        },
+
+                      ]}
+                      rules={{ required: false }}
+                    // onChange={handleChange}
+                    />
+                  </div>
+                </Grid>
+
+                {
+                  watch("orderCalculateMethod") &&
+                  <Grid item md={12} xs={12}>
+                    <div className="item">
+                      <span className="key">
+                        {watch("orderCalculateMethod") === "by_distance" ? t('general.km_calculate_price') : t('general.static_price')}
+                      </span>
+                      <TextInput
+                        control={control}
+                        name="orderPrice"
+                        type="number"
+                      />
+                    </div>
+                  </Grid>
+                }
 
                 <Grid item md={12} xs={12}>
                   <div className="item">

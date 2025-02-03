@@ -1,5 +1,10 @@
 {
   "general": {
+    "km_calculate_price": "Kilometr bo'yicha narx",
+    "by_distance": "Masofa Bo'yicha",
+    "static": "O'zgarmas",
+    "static_price": "O'zgarmas narx",
+    "order_calculate": "Buyurtmani hisoblash",
     "order": "Buyurtma",
     "late": "kechikdi",
     "online": "Onlayn",
