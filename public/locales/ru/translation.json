@@ -1,5 +1,8 @@
 {
   "general": {
+    "quantity": "Количество",
+    "composition": "Состав",
+    "compounds": "Товар с ингредиентами",
     "km_calculate_price": "Цена за километр",
     "by_distance": "По расстоянию",
     "static": "Неизменный",

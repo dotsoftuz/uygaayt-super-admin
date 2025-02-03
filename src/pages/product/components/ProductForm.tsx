@@ -21,6 +21,7 @@ import { realNumberPattern } from "utils/pattern";
 import currencyFormatter from "utils/currencyFormatter";
 import CommonButton from "components/common/commonButton/Button";
 import { Delete } from "@mui/icons-material";
+import { isNull } from "node:util";
 
 interface IProductForm {
   formStore: any;
@@ -44,11 +45,34 @@ const ProductForm = ({
     productProps;
   const { t } = useTranslation();
   // const { control, handleSubmit, reset, setValue, register, watch, formState: { errors } } = formStore;
-  const { handleSubmit, register, watch, control, setValue, reset, formState: { errors }, } = useForm({
-    // defaultValues: {
-    //   ingredient: [{ number: 0, amount: 0, type: "amount" }],
-    // },
+  const { handleSubmit, register, watch, control, setValue, reset, formState: { errors } } = useForm({
+    defaultValues: {
+      name: "",
+      price: null,
+      inStock: null,
+      redLine: null,
+      yellowLine: null,
+      categoryId: "",
+      isActive: false,
+      imageIds: [""],
+      mainImageId: "",
+      expiryDate: "",
+      image: "",
+      _id: "",
+      discountEnabled: false,
+      description: "<p></p>",
+      discountType: undefined,
+      discountValue: undefined,
+      discountStartAt: "",
+      discountEndAt: undefined,
+      isMyExpire: "",
+      subChildCategory: "",
+      parentCategoryId: "",
+      isActiveQuery: false,
+      compounds: [{ name: null, value: null }],
+    },
   });
+
   const [subCategory, setSubCategory] = useState<any>(null);
   const [subChildCategory, setSubChildCategory] = useState<any>(null);
 
@@ -95,6 +119,7 @@ const ProductForm = ({
       _id: editingProductId,
       discountEnabled: data.discountEnabled,
       description: data.description,
+      compounds: data.compounds,
     };
 
     // discountEnabled = true bo'lganda discount ma'lumotlarini qo'shish
@@ -155,6 +180,7 @@ const ProductForm = ({
 
   useEffect(() => {
     if (getByIdStatus === "success") {
+      // @ts-ignore
       reset({
         ...getByIdData.data,
         // categoryId: subChildCategory === undefined ? getByIdData.data.parentCategoryId : getByIdData.data.categoryId,
@@ -163,7 +189,7 @@ const ProductForm = ({
         isActiveQuery: formStore.watch("isActiveQuery"),
         description: getByIdData.data.description,
       });
-
+      // @ts-ignore
       setValue("isMyExpire", !!watch("expiryDate"));
 
       setProductImages(getByIdData.data?.images || []);
@@ -191,7 +217,7 @@ const ProductForm = ({
     append,
     remove,
   } = useFieldArray({
-    name: "ingredient",
+    name: "compounds",
     control,
   });
 
@@ -394,6 +420,7 @@ const ProductForm = ({
                     readOnly
                     maxDate={
                       watch("discountEndAt")
+                        // @ts-ignore
                         ? new Date(watch("discountEndAt"))
                         : undefined
                     }
@@ -421,74 +448,34 @@ const ProductForm = ({
               alignItems="center"
               justifyContent="space-between"
             >
-              <label htmlFor="ingredient">Tarkibli tovar</label>
+              <label htmlFor="compounds">{t('general.compounds')}</label>
               <Switch
-                checked={!!watch("ingredient")}
-                id="ingredient"
-                {...register("ingredient")}
+                checked={!!watch("compounds")}
+                id="compounds"
+                {...register("compounds")}
               />
             </Box>
-            {watch("ingredient") && (
+            {watch("compounds") && (
               fields.map((field: any, index: any) => (
-                <Grid container key={field.id} className="flex items-end justify-between">
+                <Grid container key={field.id} className="flex items-end justify-between mt-2">
                   <Grid item md={5}>
                     <TextInput
                       control={control}
-                      name={`ingredient.${index}.number`}
-                      type="number"
+                      name={`compounds.${index}.name`}
+                      type="text"
                       rules={{ required: false }}
-                      label={t("Tarkibi")}
+                      label={t('general.composition')}
                     />
                   </Grid>
                   <Grid item md={5}>
                     <Input
-                      label={t(`Miqdori`)}
+                      label={t('general.quantity')}
                       params={{
                         ...register(
-                          `ingredient.${index}.amount`,
-                          watch(`ingredient.${index}.type`)
-                            ? {
-                              required: {
-                                value: true,
-                                message: t("error_messages.percent_field_required"),
-                              },
-                              pattern: {
-                                value: realNumberPattern,
-                                message: t("error_messages.place_enter_a_number"),
-                              },
-                              max:
-                                watch(`ingredient.${index}.type`) === "percent"
-                                  ? {
-                                    value: 100,
-                                    message: t(
-                                      "error_messages.no_more_then_100_can_be_entered"
-                                    ),
-                                  }
-                                  : undefined,
-                              onChange: (e: any) =>
-                                setValue(
-                                  `ingredient.${index}.amount`,
-                                  watch(`ingredient.${index}.type`)
-                                    ? e?.target?.value
-                                    : currencyFormatter(e?.target?.value)
-                                ),
-                            }
-                            : {
-                              required: {
-                                value: true,
-                                message: t("error_messages.percent_field_required"),
-                              },
-                              onChange: (e: any) =>
-                                setValue(
-                                  `ingredient.${index}.amount`,
-                                  watch(`ingredient.${index}.type`)
-                                    ? e?.target?.value
-                                    : currencyFormatter(e?.target?.value)
-                                ),
-                            }
+                          `compounds.${index}.value`,
                         ),
                       }}
-                    // error={errors.ingredient?.[index]?.amount}
+                      error={errors?.compounds?.[index]?.value}
                     />
                   </Grid>
                   <Grid item md={1}>
@@ -508,7 +495,7 @@ const ProductForm = ({
               ))
             )}
           </Grid>
-          {watch("ingredient") && (
+          {watch("compounds") && (
             <Grid item xs={3} md={2} paddingBlock={2} className="flex flex-col ">
               <CommonButton
                 startIcon={<PlusIcon />}
@@ -516,9 +503,8 @@ const ProductForm = ({
                 // title={`${t("general.add")}`}
                 onClick={() => {
                   const newValue = {
-                    number: 0,
-                    amount: 0,
-                    type: "amount",
+                    name: null,
+                    value: null,
                   };
                   append(newValue);
                 }}
@@ -527,23 +513,23 @@ const ProductForm = ({
           )}
 
           {/* Qoshimcha xusiyat tovar */}
-          {watch("ingredient") && (
-            <Grid item md={12}>
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-              >
-                <label htmlFor="add_feature">Qoshimcha xusiyat tovar</label>
-                <Switch
-                  checked={!!watch("add_feature")}
-                  id="add_feature"
-                  {...register("add_feature")}
-                />
-              </Box>
-            </Grid>
-          )}
-
+          <Grid item md={12}>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <label htmlFor="add_feature">Qoshimcha xusiyat tovar</label>
+              <Switch
+                // @ts-ignore
+                checked={!!watch("add_feature")}
+                id="add_feature"
+                // @ts-ignore
+                {...register("add_feature")}
+              />
+            </Box>
+          </Grid>
+          {/* @ts-ignore */}
           {watch("add_feature") &&
             <Grid item md={12}>
               <SelectForm

@@ -1,5 +1,8 @@
 {
   "general": {
+    "quantity": "Miqdori",
+    "composition": "Tarkibi",
+    "compounds": "Tarkibli tovar",
     "km_calculate_price": "Kilometr bo'yicha narx",
     "by_distance": "Masofa Bo'yicha",
     "static": "O'zgarmas",
