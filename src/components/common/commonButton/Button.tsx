@@ -21,7 +21,7 @@ const CommonButton: React.FC<ICommonButton> = ({
     <>
       {!iconButton ? (
         <ButtonStyled {...props} startIcon={startIcon} endIcon={endIcon}>
-          {title || "Qo'shish"}
+          {title || ""}
         </ButtonStyled>
       ) : (
         <IconButtonStyled {...props}>{icon}</IconButtonStyled>

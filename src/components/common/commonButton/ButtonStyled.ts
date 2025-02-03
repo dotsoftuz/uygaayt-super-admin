@@ -13,6 +13,7 @@ export const ButtonStyled = styled(Button)`
   background-color: #f3f3f8 !important;
   line-height: 16px !important;
   width: 100%;
+  text-align: center !important;
   &:hover {
     color: #000 !important;
   }
@@ -21,6 +22,7 @@ export const ButtonStyled = styled(Button)`
     path {
       stroke: #000 !important;
     }
+    margin: auto !important;
   }
 
   &.designed {

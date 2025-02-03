@@ -231,7 +231,6 @@ const Settings = () => {
                           _id: "static",
                           name:t('general.static')
                         },
-
                       ]}
                       rules={{ required: false }}
                     // onChange={handleChange}

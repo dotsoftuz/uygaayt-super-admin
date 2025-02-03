@@ -4,6 +4,7 @@ import {
   AutoCompleteForm,
   DatePickerForm,
   ImageInput,
+  Input,
   SelectForm,
   TextInput,
 } from "components";
@@ -12,10 +13,14 @@ import { useTranslation } from "react-i18next";
 import { ProductFormStyled } from "./ProductForm.styled";
 import TextEditor from "components/form/TextEditor/TextEditor";
 import { IIdImage } from "hooks/usePostImage";
-import { DeleteIcon } from "assets/svgs";
+import { DeleteIcon, PlusIcon } from "assets/svgs";
 import { DISCOUNT_TYPES } from "types/enums";
 import { IProduct } from "types/common.types";
-import { Controller } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { realNumberPattern } from "utils/pattern";
+import currencyFormatter from "utils/currencyFormatter";
+import CommonButton from "components/common/commonButton/Button";
+import { Delete } from "@mui/icons-material";
 
 interface IProductForm {
   formStore: any;
@@ -38,7 +43,12 @@ const ProductForm = ({
   const { productImages, setProductImages, mainImageId, setMainImageId } =
     productProps;
   const { t } = useTranslation();
-  const { control, handleSubmit, reset, setValue, register, watch } = formStore;
+  // const { control, handleSubmit, reset, setValue, register, watch, formState: { errors } } = formStore;
+  const { handleSubmit, register, watch, control, setValue, reset, formState: { errors }, } = useForm({
+    // defaultValues: {
+    //   ingredient: [{ number: 0, amount: 0, type: "amount" }],
+    // },
+  });
   const [subCategory, setSubCategory] = useState<any>(null);
   const [subChildCategory, setSubChildCategory] = useState<any>(null);
 
@@ -123,7 +133,7 @@ const ProductForm = ({
     if (!watch("discountEnabled")) {
       setValue("discountType", undefined);
       setValue("discountValue", undefined);
-      setValue("discountStartAt", undefined);
+      setValue("discountStartAt", "");
       setValue("discountEndAt", undefined);
     }
   }, [watch("discountEnabled")]);
@@ -175,6 +185,15 @@ const ProductForm = ({
       setMainImageId(productImages[0]._id);
     }
   }, [productImages]);
+
+  const {
+    fields,
+    append,
+    remove,
+  } = useFieldArray({
+    name: "ingredient",
+    control,
+  });
 
 
   return (
@@ -285,7 +304,7 @@ const ProductForm = ({
               <label htmlFor="isActive">{t("common.isActive")}</label>
               <Switch
                 checked={!!watch("isActive")}
-                name="isActive"
+                // name="isActive"
                 id="isActive"
                 {...register("isActive")}
               />
@@ -297,7 +316,7 @@ const ProductForm = ({
               alignItems="center"
               justifyContent="space-between"
             >
-              <label htmlFor="isActive">Muddatli mahsulot</label>
+              <label htmlFor="isMyExpire">Muddatli mahsulot</label>
               <Switch
                 checked={!!watch("isMyExpire")}
                 id="isMyExpire"
@@ -320,6 +339,8 @@ const ProductForm = ({
               </Grid>
             )}
           </Grid>
+
+          {/* Chegirma */}
           <Grid item md={12}>
             <Box
               display="flex"
@@ -392,6 +413,149 @@ const ProductForm = ({
               </Grid>
             )}
           </Grid>
+
+          {/* Tarkibli tovar */}
+          <Grid item md={12}>
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <label htmlFor="ingredient">Tarkibli tovar</label>
+              <Switch
+                checked={!!watch("ingredient")}
+                id="ingredient"
+                {...register("ingredient")}
+              />
+            </Box>
+            {watch("ingredient") && (
+              fields.map((field: any, index: any) => (
+                <Grid container key={field.id} className="flex items-end justify-between">
+                  <Grid item md={5}>
+                    <TextInput
+                      control={control}
+                      name={`ingredient.${index}.number`}
+                      type="number"
+                      rules={{ required: false }}
+                      label={t("Tarkibi")}
+                    />
+                  </Grid>
+                  <Grid item md={5}>
+                    <Input
+                      label={t(`Miqdori`)}
+                      params={{
+                        ...register(
+                          `ingredient.${index}.amount`,
+                          watch(`ingredient.${index}.type`)
+                            ? {
+                              required: {
+                                value: true,
+                                message: t("error_messages.percent_field_required"),
+                              },
+                              pattern: {
+                                value: realNumberPattern,
+                                message: t("error_messages.place_enter_a_number"),
+                              },
+                              max:
+                                watch(`ingredient.${index}.type`) === "percent"
+                                  ? {
+                                    value: 100,
+                                    message: t(
+                                      "error_messages.no_more_then_100_can_be_entered"
+                                    ),
+                                  }
+                                  : undefined,
+                              onChange: (e: any) =>
+                                setValue(
+                                  `ingredient.${index}.amount`,
+                                  watch(`ingredient.${index}.type`)
+                                    ? e?.target?.value
+                                    : currencyFormatter(e?.target?.value)
+                                ),
+                            }
+                            : {
+                              required: {
+                                value: true,
+                                message: t("error_messages.percent_field_required"),
+                              },
+                              onChange: (e: any) =>
+                                setValue(
+                                  `ingredient.${index}.amount`,
+                                  watch(`ingredient.${index}.type`)
+                                    ? e?.target?.value
+                                    : currencyFormatter(e?.target?.value)
+                                ),
+                            }
+                        ),
+                      }}
+                    // error={errors.ingredient?.[index]?.amount}
+                    />
+                  </Grid>
+                  <Grid item md={1}>
+                    <Delete
+                      sx={{
+                        cursor: "pointer",
+                        color: "#D54239",
+                        fontSize: "1.5rem",
+                      }}
+                      className="mb-2.5"
+                      onClick={() => {
+                        remove(index);
+                      }}
+                    />
+                  </Grid>
+                </Grid>
+              ))
+            )}
+          </Grid>
+          {watch("ingredient") && (
+            <Grid item xs={3} md={2} paddingBlock={2} className="flex flex-col ">
+              <CommonButton
+                startIcon={<PlusIcon />}
+                type="button"
+                // title={`${t("general.add")}`}
+                onClick={() => {
+                  const newValue = {
+                    number: 0,
+                    amount: 0,
+                    type: "amount",
+                  };
+                  append(newValue);
+                }}
+              />
+            </Grid>
+          )}
+
+          {/* Qoshimcha xusiyat tovar */}
+          {watch("ingredient") && (
+            <Grid item md={12}>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <label htmlFor="add_feature">Qoshimcha xusiyat tovar</label>
+                <Switch
+                  checked={!!watch("add_feature")}
+                  id="add_feature"
+                  {...register("add_feature")}
+                />
+              </Box>
+            </Grid>
+          )}
+
+          {watch("add_feature") &&
+            <Grid item md={12}>
+              <SelectForm
+                control={control}
+                name="discountType"
+                options={DISCOUNT_TYPES}
+                rules={{ required: { value: false, message: "Majburiy" } }}
+              />
+            </Grid>
+          }
+
+          {/* Images */}
           <Grid item md={12}>
             <label className="py-2" htmlFor="">{t('general.recommendation_img')}</label><br /><br />
             <div className="product-images">
