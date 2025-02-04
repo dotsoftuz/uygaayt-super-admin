@@ -50,6 +50,10 @@ html {
   font-weight: 500;
 }
 
+.ymaps-2-1-79-b-cluster-tabs__menu-item{
+  background-color: #E2E2E2 !important;
+}
+
 .MuiAutocomplete-popper * {
   z-index: 9999;
 }

@@ -1,5 +1,7 @@
 {
   "general": {
+    "courier": "Kuryer",
+    "map": "Xarita",
     "quantity": "Miqdori",
     "composition": "Tarkibi",
     "compounds": "Tarkibli tovar",

@@ -1,5 +1,7 @@
 {
   "general": {
+    "courier": "Курьер",
+    "map": "Карта",
     "quantity": "Количество",
     "composition": "Состав",
     "compounds": "Товар с ингредиентами",
