@@ -62,7 +62,8 @@
     "customer_analytics": "Аналитика клиентов",
     "courier_analytics": "Курьерская аналитика",
     "product_analytics": "Аналитика продукта",
-    "abc_analytics": "ABC аналитика"
+    "abc_analytics": "ABC аналитика",
+    "promo_code": "Промо-код"
   },
   "common": {
     "fullName": "Ф.И.О.",
@@ -234,5 +235,17 @@
   "transaction": {
     "total_balance": "Общий баланс",
     "total_filled_amount": "Общая сумма заполнена"
+  },
+  "promo_code": {
+    "new_promo_code": "Новый промокод",
+    "edit_promo_code": "Изменить промокод",
+    "creat_promo_code": "Создать промокод",
+    "name": "Название промо-кода",
+    "usage": "Использовал",
+    "value": "Количество",
+    "start_date": "Дата начала",
+    "end_date": "Дата окончания",
+    "status": "Статус",
+    "not_active":"Не активен" 
   }
 }

@@ -62,7 +62,8 @@
     "customer_analytics": "Mijozlar analitikasi",
     "courier_analytics": "Kuryerlar analitikasi",
     "product_analytics": "Mahsulotlar analitikasi",
-    "abc_analytics": "ABC analitikasi"
+    "abc_analytics": "ABC analitikasi",
+    "promo_code": "Promo-kod"
   },
   "common": {
     "fullName": "F.I.O",
@@ -236,5 +237,17 @@
   "transaction": {
     "total_balance": "Umumiy balans",
     "total_filled_amount": "Umumiy to'ldirilgan miqdor"
+  },
+  "promo_code": {
+    "new_promo_code": "Yangi promokod",
+    "edit_promo_code": "Promokodni tahrirlash",
+    "creat_promo_code": "Promokod yaratish",
+    "name": "Promokod nomi",
+    "usage": "Ishlatildi",
+    "value": "Miqdori",
+    "start_date": "Boshlanish sanasi",
+    "end_date": "Tugash sanasi",
+    "status": "Holati",
+    "not_active":"Faol emas" 
   }
 }
