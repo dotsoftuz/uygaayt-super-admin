@@ -113,26 +113,26 @@ const Courier = () => {
   return (
     <div className="bg-white h-full">
       <Grid className="w-full flex gap-x-3 items-center p-2">
-          <Button
-            variant={tab === "table" ? "contained" : "outlined"}
-            sx={{
-              height: 36,
-              textTransform: "none",
-            }}
-            onClick={() => handleChange("table")}
-          >
-            {t("general.courier")}
-          </Button>
-          <Button
-            variant={tab === "map" ? "contained" : "outlined"}
-            sx={{
-              height: 36,
-              textTransform: "none",
-            }}
-            onClick={() => handleChange("map")}
-          >
-            {t("general.map")}
-          </Button>
+        <Button
+          variant={tab === "table" ? "contained" : "outlined"}
+          sx={{
+            height: 36,
+            textTransform: "none",
+          }}
+          onClick={() => handleChange("table")}
+        >
+          {t("general.courier")}
+        </Button>
+        <Button
+          variant={tab === "map" ? "contained" : "outlined"}
+          sx={{
+            height: 36,
+            textTransform: "none",
+          }}
+          onClick={() => handleChange("map")}
+        >
+          {t("general.map")}
+        </Button>
       </Grid>
       {tab === "table" ?
         <Table
@@ -171,10 +171,12 @@ const Courier = () => {
               >
                 {data?.data?.map((location: any, index: number) => (
                   <Placemark
-                    key={location?.addressLocationCoordination.coordinates[1] + location?.addressLocationCoordination.coordinates[0] + "_key"}
-                    geometry={[location?.addressLocationCoordination.coordinates[1], location?.addressLocationCoordination.coordinates[0]]}
+                    key={location?.addressLocationCoordination?.coordinates[1] + location?.addressLocationCoordination?.coordinates[0] + "_key"}
+                    geometry={[location?.addressLocationCoordination?.coordinates[1], location?.addressLocationCoordination?.coordinates[0]]}
                     properties={getPointData(location)}
-                  // onClick={() => console.log("click")}
+                    options={{
+                      preset: location.hasOrder !== true ? "islands#greenDotIcon" : "islands#redDotIcon", 
+                    }}
                   />
                 ))}
               </Clusterer>
