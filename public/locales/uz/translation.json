@@ -65,7 +65,8 @@
     "courier_analytics": "Kuryerlar analitikasi",
     "product_analytics": "Mahsulotlar analitikasi",
     "abc_analytics": "ABC analitikasi",
-    "promo_code": "Promo-kod"
+    "promo_code": "Promo-kod",
+    "attribute": "Atribut"
   },
   "common": {
     "fullName": "F.I.O",
@@ -251,5 +252,9 @@
     "end_date": "Tugash sanasi",
     "status": "Holati",
     "not_active":"Faol emas" 
+  },
+  "attribute": {
+    "add": "Atribut qo'shish"
   }
+
 }

@@ -89,6 +89,12 @@ export const sidebarRoutes: ISidebarRoute[] = [
     icon: <DashboardIcon style={{color: "#3E5089"}} />,
   },
   {
+    path: "/attribute",
+    role: "_id", // must change
+    translate: "attribute",
+    icon: <NewspaperIcon style={{color: "#3E5089"}} />,
+  },
+  {
     path: "/rating",
     translate: "rating", 
     role: "rateComment", 

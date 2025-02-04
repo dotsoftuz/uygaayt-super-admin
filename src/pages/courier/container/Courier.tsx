@@ -175,7 +175,7 @@ const Courier = () => {
                     geometry={[location?.addressLocationCoordination?.coordinates[1], location?.addressLocationCoordination?.coordinates[0]]}
                     properties={getPointData(location)}
                     options={{
-                      preset: location.hasOrder !== true ? "islands#greenDotIcon" : "islands#redDotIcon", 
+                      preset: location?.hasOrder !== true ? "islands#greenDotIcon" : "islands#redDotIcon", 
                     }}
                   />
                 ))}

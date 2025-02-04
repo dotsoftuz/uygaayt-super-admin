@@ -21,6 +21,7 @@ const Measure = lazy(() => import("pages/measure"));
 const Courier = lazy(() => import("pages/courier"));
 const Rating = lazy(() => import("pages/rating"));
 const PromoCode = lazy(() => import("pages/promo_code"));
+const Attribute = lazy(() => import("pages/attribute"));
 
 const CourierAnalytics = lazy(() => import("pages/courier_analytics"));
 const CustomerAnalytics = lazy(() => import("pages/customer_analytics"));
@@ -94,10 +95,15 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
     path: "banner",
     role: "banner",
   },
-    {
+  {
     element: <News />,
     path: "news",
     role: "news", 
+  },
+  {
+    element: <Attribute />,
+    path: "attribute",
+    role: "_id", // must change 
   },
   {
     element: <Measure />,

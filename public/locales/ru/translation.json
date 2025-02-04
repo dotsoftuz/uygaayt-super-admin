@@ -65,7 +65,8 @@
     "courier_analytics": "Курьерская аналитика",
     "product_analytics": "Аналитика продукта",
     "abc_analytics": "ABC аналитика",
-    "promo_code": "Промо-код"
+    "promo_code": "Промо-код",
+    "attribute": "Атрибут"
   },
   "common": {
     "fullName": "Ф.И.О.",
@@ -249,5 +250,8 @@
     "end_date": "Дата окончания",
     "status": "Статус",
     "not_active":"Не активен" 
+  },
+  "attribute": {
+    "add": "Добавить атрибут"
   }
 }
