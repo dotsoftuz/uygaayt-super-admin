@@ -68,6 +68,8 @@ export interface IProduct {
   description: string;
   mainImageId: string;
   imageIds: string[];
+  attributes: any[]
+  attributeDetails: any[]
   category: {
     _id: string;
     name: string;

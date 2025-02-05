@@ -17,11 +17,9 @@ import { DeleteIcon, PlusIcon } from "assets/svgs";
 import { DISCOUNT_TYPES } from "types/enums";
 import { IProduct } from "types/common.types";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { realNumberPattern } from "utils/pattern";
-import currencyFormatter from "utils/currencyFormatter";
 import CommonButton from "components/common/commonButton/Button";
 import { Delete } from "@mui/icons-material";
-import { isNull } from "node:util";
+import AttributeForm from "./Fields";
 
 interface IProductForm {
   formStore: any;
@@ -44,34 +42,9 @@ const ProductForm = ({
   const { productImages, setProductImages, mainImageId, setMainImageId } =
     productProps;
   const { t } = useTranslation();
-  // const { control, handleSubmit, reset, setValue, register, watch, formState: { errors } } = formStore;
-  const { handleSubmit, register, watch, control, setValue, reset, formState: { errors } } = useForm({
-    defaultValues: {
-      name: "",
-      price: null,
-      inStock: null,
-      redLine: null,
-      yellowLine: null,
-      categoryId: "",
-      isActive: false,
-      imageIds: [""],
-      mainImageId: "",
-      expiryDate: "",
-      image: "",
-      _id: "",
-      discountEnabled: false,
-      description: "<p></p>",
-      discountType: undefined,
-      discountValue: undefined,
-      discountStartAt: "",
-      discountEndAt: undefined,
-      isMyExpire: "",
-      subChildCategory: "",
-      parentCategoryId: "",
-      isActiveQuery: false,
-      compounds: [{ name: null, value: null }],
-    },
-  });
+  const { control, handleSubmit, reset, setValue, register, watch, formState: { errors } } = formStore;
+  const currentLang = localStorage.getItem("i18nextLng") || "uz";
+
 
   const [subCategory, setSubCategory] = useState<any>(null);
   const [subChildCategory, setSubChildCategory] = useState<any>(null);
@@ -94,6 +67,7 @@ const ProductForm = ({
   );
 
   const submit = (data: any) => {
+    console.log(data);
     const requestData: any = {
       // ...data,
       name: data.name,
@@ -120,6 +94,16 @@ const ProductForm = ({
       discountEnabled: data.discountEnabled,
       description: data.description,
       compounds: data.compounds,
+      attributes: Object.entries(data.attributes)?.map(([key, item]) => ({
+        attributeId: key,
+        items: Array.isArray(item)
+          ? item.map((itm: any) => ({
+            attributeItem: itm.attributeItem,
+            amount: +itm.amount
+          }))
+          : []
+      }))
+
     };
 
     // discountEnabled = true bo'lganda discount ma'lumotlarini qo'shish
@@ -180,16 +164,23 @@ const ProductForm = ({
 
   useEffect(() => {
     if (getByIdStatus === "success") {
-      // @ts-ignore
       reset({
         ...getByIdData.data,
+        attributes: getByIdData.data.attributes?.reduce((acc, attr) => {
+          return {
+            ...acc,
+            [attr.attribute._id]: attr.items
+          }
+        }, {}),
         // categoryId: subChildCategory === undefined ? getByIdData.data.parentCategoryId : getByIdData.data.categoryId,
         parentCategoryId: getByIdData.data.parentCategoryId || getByIdData.data.categoryId || "",
         categoryId: getByIdData.data.categoryId || "",
         isActiveQuery: formStore.watch("isActiveQuery"),
         description: getByIdData.data.description,
+        attributeId: getByIdData.data.attributeDetails.map((item: any) => (
+          item._id
+        )),
       });
-      // @ts-ignore
       setValue("isMyExpire", !!watch("expiryDate"));
 
       setProductImages(getByIdData.data?.images || []);
@@ -221,6 +212,21 @@ const ProductForm = ({
     control,
   });
 
+  const selectedAttributes = watch("attributeId");
+
+  const { mutate: attributesChoose, data: attributesData, status: attributesStatus } = useApiMutation<any>(
+    "attribute/choose",
+    "post"
+  );
+
+  useEffect(() => {
+    attributesChoose({})
+  }, [])
+
+
+  const filteredAttributes = attributesData?.data?.data?.filter((item: any) =>
+    selectedAttributes?.some((selected: any) => selected === item._id)
+  );
 
   return (
     <ProductFormStyled className="custom-drawer">
@@ -346,7 +352,7 @@ const ProductForm = ({
               <Switch
                 checked={!!watch("isMyExpire")}
                 id="isMyExpire"
-                {...register("isMyExpire")}
+                // {...register("isMyExpire")}
               />
             </Box>
             {watch("isMyExpire") && (
@@ -475,7 +481,7 @@ const ProductForm = ({
                           `compounds.${index}.value`,
                         ),
                       }}
-                      error={errors?.compounds?.[index]?.value}
+                    // error={errors?.compounds?.[index]?.value}
                     />
                   </Grid>
                   <Grid item md={1}>
@@ -519,26 +525,46 @@ const ProductForm = ({
               alignItems="center"
               justifyContent="space-between"
             >
-              <label htmlFor="add_feature">Qoshimcha xusiyat tovar</label>
+              <label htmlFor="attributes">Qoshimcha xusiyat tovar</label>
               <Switch
-                // @ts-ignore
-                checked={!!watch("add_feature")}
-                id="add_feature"
-                // @ts-ignore
-                {...register("add_feature")}
+                checked={!!watch("attributes")}
+                id="attributes"
+                {...register("attributes")}
               />
             </Box>
           </Grid>
-          {/* @ts-ignore */}
-          {watch("add_feature") &&
-            <Grid item md={12}>
-              <SelectForm
-                control={control}
-                name="discountType"
-                options={DISCOUNT_TYPES}
-                rules={{ required: { value: false, message: "Majburiy" } }}
-              />
-            </Grid>
+          <Grid item md={12}>
+            <AutoCompleteForm
+              control={control}
+              name="attributeId"
+              optionsUrl="attribute/choose"
+              dataProp="data.data"
+              rules={{ required: false }}
+              multiple
+            />
+          </Grid>
+          {
+            selectedAttributes?.map((attributeId: any) => (
+              <Grid key={attributeId} item md={12}>
+                <p className="text-[#3E5189] font-bold text-xl">
+                  {
+                    filteredAttributes
+                      ?.filter((item: any) => item?._id === attributeId)
+                      ?.map((item: any) => (
+                        <div key={item?._id}>
+                          {item.name?.[currentLang]}:
+                        </div>
+                      ))
+                  }
+                </p>
+                <AttributeForm
+                  attributeId={attributeId}
+                  getByIdData={getByIdData}
+                  control={control}
+                  register={register}
+                />
+              </Grid>
+            ))
           }
 
           {/* Images */}

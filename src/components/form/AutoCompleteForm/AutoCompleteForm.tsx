@@ -18,7 +18,7 @@ export interface IAutocompleteForm<FormNames extends Record<string, any>> {
   returnOnlyId?: boolean;
   label?: any;
   rules?: TRules<FormNames>;
-  placeholder?: string | number;
+  placeholder?: any;
   disabled?: boolean;
   nameProp?: string;
   exQueryParams?: object;
@@ -35,7 +35,7 @@ function AutoCompleteForm<FormNames extends Record<string, any>>({
   control,
   name,
   options = [],
-  optionsUrl = "",
+  optionsUrl = "", // 😐
   returnOnlyId = true,
   label = "",
   rules = { required: { value: true, message: "Majburiy" } },
@@ -43,7 +43,7 @@ function AutoCompleteForm<FormNames extends Record<string, any>>({
   placeholder,
   nameProp = "name",
   exQueryParams = {},
-  dataProp = "data" as const,
+  dataProp = "data" as const, //😐
   mapData,
   onChange,
   onInputChange,
@@ -55,7 +55,6 @@ function AutoCompleteForm<FormNames extends Record<string, any>>({
   const [search, setSearch] = useState<string>();
   const { debouncedValue: debVal, isDebouncing } = useDebounce(search, 600);
   const currentLang = localStorage.getItem("i18nextLng") || "uz";
-
 
   useEffect(() => {
     setQueryParams({
@@ -77,7 +76,7 @@ function AutoCompleteForm<FormNames extends Record<string, any>>({
   //     },
   //   }
   // );
-  const { mutate, data, isLoading, status } = useApiMutation(
+  const { mutate, data:OptionsData, isLoading, status } = useApiMutation(
     optionsUrl,
     "post",
     {
@@ -97,23 +96,21 @@ function AutoCompleteForm<FormNames extends Record<string, any>>({
     });
   }, [mutate, search]);
 
-  const getLabel = (option: IOption) => {
-    if (typeof option?.name === "object") {
-      return option?.[nameProp]?.[currentLang];
-    }
-    return option?.firstName
+
+  const getLabel = (option: IOption) =>
+    option?.firstName
       ? `${option?.firstName} ${option?.lastName}`
       : (option?.[nameProp] as string);
-  };
 
   // @ts-ignore
   const OPTIONS_PREV = (
-    (get(data, dataProp) as IOption[]) ||
+    (get(OptionsData, dataProp) as IOption[]) ||
     options ||
     []
   )?.map((option) => ({
     ...option,
-    name: getLabel(option),
+    // @ts-ignore
+    name: getLabel(option)?.[currentLang],
   }));
 
   const OPTIONS = useMemo(() => {
@@ -131,16 +128,30 @@ function AutoCompleteForm<FormNames extends Record<string, any>>({
       rules={rules}
       render={({ field, fieldState }) => {
         return (
-          <AutoCompleteStyled>
-            {label && <label htmlFor={name}>{label}</label>}
+          <AutoCompleteStyled multiple={multiple}>
+            {label && (
+              <label htmlFor={name}>
+                {label}
+                <span>
+                  {label && rules?.required ? (
+                    <span className="text-error mt-1">*</span>
+                  ) : null}
+                </span>
+              </label>
+            )}
             <Autocomplete
               options={mapData ? mapData(OPTIONS) : OPTIONS}
               getOptionLabel={(option) => option?.name || ""}
               multiple={multiple}
               {...field}
-              onChange={(e, data) => {
-                // @ts-ignore
-                field.onChange(returnOnlyId ? data?._id! : data);
+              onChange={(e, data: any) => {
+                field.onChange(
+                  returnOnlyId
+                    ? multiple
+                      ? data?.map((e: any) => e._id)
+                      : data?._id!
+                    : data
+                );
                 onChange?.(data);
               }}
               loading={isLoading || isDebouncing}
@@ -149,27 +160,25 @@ function AutoCompleteForm<FormNames extends Record<string, any>>({
                 "& fieldset": { border: "none" },
               }}
               loadingText="izlamoqda..."
-              noOptionsText={!isDebouncing && "malumot topilmadi"}
+              noOptionsText={!isDebouncing && "ma'lumot topilmadi"}
               value={
                 returnOnlyId
-                  ? getValueFromOptions(OPTIONS, field.value)
+                  ? multiple
+                    ? getValueFromOptions(OPTIONS, field.value, true)
+                    : getValueFromOptions(OPTIONS, field.value)
                   : field.value
               }
               renderInput={(params) => (
                 <>
                   <TextField
                     {...params}
-                    // inputProps={{
-                    //   ...params.inputProps,
-                    //   onClick: (e) => {
-                    //     // @ts-ignore
-                    //     params?.inputProps?.onClick?.(e);
-                    //     // @ts-ignore
-                    //     setSearch(e?.target?.value);
-                    //   },
-                    // }}
                     onChange={(e) => {
-                      !field.value && setSearch(e?.target?.value || "");
+                      console.log(e.target.value);
+                      if (!multiple) {
+                        !field.value && setSearch(e?.target?.value || "");
+                      } else {
+                        // setSearch(e?.target?.value || "");
+                      }
                       onInputChange?.(e?.target?.value || "");
                     }}
                     onBlur={() => !field.value && setSearch(undefined)}
@@ -177,7 +186,6 @@ function AutoCompleteForm<FormNames extends Record<string, any>>({
                     variant="outlined"
                     error={!!fieldState.error}
                     fullWidth
-                    // @ts-ignore
                     placeholder={placeholder}
                   />
                   {fieldState?.error && (

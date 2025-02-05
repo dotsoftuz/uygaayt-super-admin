@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const AutoCompleteStyled = styled.div`
+export const AutoCompleteStyled = styled.div<any>`
   //! @dangerous qolgan autocomplete lar ham stili shunda
   label {
     display: block;
@@ -20,10 +20,11 @@ export const AutoCompleteStyled = styled.div`
   .MuiInputBase-root {
     border-radius: 10px;
     padding: 0 60px 0 4px !important;
-    height: 45px !important;
     background-color: #fff;
     display: flex;
     justify-content: center;
+    height: ${({ multiple }) => (multiple ? "auto" : "45px !important")};
+    min-height: 45px;
     align-items: center;
     border: none !important;
     .MuiOutlinedInput-input {
@@ -36,7 +37,9 @@ export const AutoCompleteStyled = styled.div`
   }
   position: relative;
   .MuiOutlinedInput-root {
-    /* border: 1px solid #d9d9d9 !important; */
     transition: all 0.3s ease;
+    .MuiChip-root {
+      width: ${({ multiple }) => (multiple ? "150px" : "")};
+    }
   }
 `;
