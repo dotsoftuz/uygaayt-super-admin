@@ -31,7 +31,7 @@ const PromoCode = () => {
   return (
     <>
       <Table
-        dataUrl="banner/paging"
+        dataUrl="promocode/paging"
         columns={columns}
         searchable
         onAddButton={hasAccess("bannerCreate")
@@ -44,7 +44,7 @@ const PromoCode = () => {
         onDeleteColumn={hasAccess("bannerDelete") ? (row) => setBannerId(row._id) : undefined}
         exQueryParams={{}}
       />
-      <WarningModal open={bannerId} setOpen={setBannerId} url="banner/delete" />
+      <WarningModal open={bannerId} setOpen={setBannerId} url="promocode/delete" />
       <FormDrawer
         FORM_ID="promo-code"
         isEditing={!!editingBannerId}

@@ -246,14 +246,26 @@
     "edit_promo_code": "Изменить промокод",
     "creat_promo_code": "Создать промокод",
     "name": "Название промо-кода",
-    "usage": "Использовал",
+    "code": "Промо-код",
+    "usage": "Сколько раз использовалось",
     "value": "Количество",
     "start_date": "Дата начала",
     "end_date": "Дата окончания",
     "status": "Статус",
-    "not_active":"Не активен" 
+    "not_active":"Не активен",
+    "min_order_price": "Минимальная сумма заказа"
   },
   "attribute": {
     "add": "Добавить атрибут"
+  },
+  "dashboard": {
+    "total_orders": "Все заказы",
+    "completed_orders": "Выполненные заказы",
+    "cancelled_orders": "Отмененные заказы",
+    "total_income": "Общий доход",
+    "registered_customer": "Зарегистрированные пользователи",
+    "active_customer": "Активные пользователи",
+    "top_users": "Лучшие пользователи",
+    "top_courier": "Лучшие курьеры"
   }
 }

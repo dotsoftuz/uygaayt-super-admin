@@ -1,5 +1,5 @@
 import { FC, useEffect } from "react";
-import { Grid } from "@mui/material";
+import { Grid, TextField } from "@mui/material";
 import { AutoCompleteForm, DatePickerForm, ImageInput, TextInput } from "components";
 import { Controller, UseFormReturn } from "react-hook-form";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
@@ -21,12 +21,12 @@ const PromoCodeForm: FC<IEmployeesForm> = ({
   const { control, handleSubmit, reset, watch, setValue } = formStore;
 
   const { mutate, status } = useApiMutation(
-    editingBannerId ? `/banner/update` : "/banner/create",
+    editingBannerId ? `/promocode/update` : "/promocode/create",
     editingBannerId ? "put" : "post"
   );
 
   const { data: getByIdData, status: getByIdStatus } = useApi(
-    `banner/get-by-id/${editingBannerId}`,
+    `promocode/get-by-id/${editingBannerId}`,
     {},
     {
       enabled: !!editingBannerId,
@@ -44,18 +44,21 @@ const PromoCodeForm: FC<IEmployeesForm> = ({
     mutate({
       _id: editingBannerId,
       ...data,
-      imageId: data.imageId?._id,
-      productId: data.productId,
+      maxUsageForUser: +data.maxUsageForUser,
     });
   };
 
   useEffect(() => {
     if (getByIdStatus === "success") {
       reset({
-        title: getByIdData.data.title,
-        imageId: getByIdData.data.image,
-        productId: getByIdData.data.productId,
-        description: getByIdData.data.description,
+        name: getByIdData.data.name,
+        code: getByIdData.data.code,
+        amount: getByIdData.data.amount,
+        minOrderPrice: getByIdData.data.minOrderPrice,
+        fromDate: getByIdData.data.fromDate,
+        toDate: getByIdData.data.toDate,
+        maxUsage: getByIdData.data.maxUsage,
+        maxUsageForUser: getByIdData.data.maxUsageForUser,
       });
     }
   }, [getByIdStatus, getByIdData]);
@@ -74,7 +77,14 @@ const PromoCodeForm: FC<IEmployeesForm> = ({
           </Grid>
           <Grid item md={12}>
             <TextInput
-              name="usage"
+              control={control}
+              name="code"
+              label={t("promo_code.code")}
+            />
+          </Grid>
+          <Grid item md={12}>
+            <TextInput
+              name="maxUsage"
               control={control}
               label={t("promo_code.usage")}
               type="number"
@@ -89,9 +99,34 @@ const PromoCodeForm: FC<IEmployeesForm> = ({
             />
           </Grid>
           <Grid item md={12}>
+            <TextInput
+              name="minOrderPrice"
+              control={control}
+              label={t("promo_code.min_order_price")}
+              type="number"
+            />
+          </Grid>
+          <Grid item md={12}>
+            <label className="text-[15px]" htmlFor="">{t("promo_code.max_usage_for_user")}</label>
+            <Controller
+              name="maxUsageForUser"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mt-1"
+                  type="number"
+                  fullWidth
+                  variant="outlined"
+                  defaultValue={1}
+                />
+              )}
+            />
+          </Grid>
+          <Grid item md={12}>
             <DatePickerForm
               control={control}
-              name="dateFrom"
+              name="fromDate"
               disableTime={true}
               // rules={{ required: { value: false, message: "Majburiy" } }}
               label={t("promo_code.start_date")}
@@ -108,7 +143,7 @@ const PromoCodeForm: FC<IEmployeesForm> = ({
           <Grid item md={12}>
             <DatePickerForm
               control={control}
-              name="dateTo"
+              name="toDate"
               // rules={{ required: { value: false, message: "Majburiy" } }}
               disableTime={true}
               label={t("promo_code.end_date")}

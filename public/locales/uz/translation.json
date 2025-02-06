@@ -248,15 +248,28 @@
     "edit_promo_code": "Promokodni tahrirlash",
     "creat_promo_code": "Promokod yaratish",
     "name": "Promokod nomi",
-    "usage": "Ishlatildi",
+    "code": "Promokod",
+    "usage": "Qancha ishlatilishi",
     "value": "Miqdori",
     "start_date": "Boshlanish sanasi",
     "end_date": "Tugash sanasi",
     "status": "Holati",
-    "not_active":"Faol emas" 
+    "not_active":"Faol emas",
+    "min_order_price": "Minimal buyurtma summasi",
+    "max_usage_for_user": "Foydalanuvchi uchun maksimal foydalanish"
   },
   "attribute": {
     "add": "Atribut qo'shish"
+  },
+  "dashboard": {
+    "total_orders": "Umumiy buyurtmalar",
+    "completed_orders": "Bajarilgan buyurtmalar",
+    "cancelled_orders": "Bekor qilingan buyurtmalar",
+    "total_income": "Umumiy kirimlar",
+    "registered_customer": "Ro'yxatdan o'tgan foydalanuvchilar",
+    "active_customer": "Aktiv foydalanuvchilar",
+    "top_users": "Top Foydalanuvchilar",
+    "top_courier": "Top Kuryerlar"
   }
 
 }
