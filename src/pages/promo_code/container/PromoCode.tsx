@@ -22,9 +22,14 @@ const PromoCode = () => {
   const resetForm = () => {
     setEditingBannerId(undefined);
     formStore.reset({
-      title: "",
-      imageId: "",
-      description: "",
+      name: "",
+      code: "",
+      amount: "",
+      minOrderPrice: "",
+      fromDate: null,
+      toDate: null,
+      maxUsage: "",
+      maxUsageForUser: 1,
     });
   };
 

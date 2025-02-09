@@ -15,6 +15,7 @@ const CourierInfo = () => {
   const { t } = useTranslation();
   const { id } = useParams();
   const { control, watch, register, handleSubmit, setValue } = useForm();
+  const allParams = useAllQueryParams();
 
 
   const { data: courierInfoData, status: courierInfoStatus } = useApi(`courier/get-by-id/${id}`, {}, {
@@ -22,7 +23,7 @@ const CourierInfo = () => {
     suspense: false,
   })
 
-  const { mutate, reset, data, isLoading } = useApiMutation(
+  const { mutate, data } = useApiMutation(
     "order/paging",
     "post",
     {},
@@ -31,9 +32,11 @@ const CourierInfo = () => {
 
   useEffect(() => {
     mutate({
-      courierId: id
+      courierId: id,
+      dateFrom: allParams.dateFrom,
+      dateTo: allParams.dateTo
     });
-  }, [mutate]);
+  }, [allParams.dateFrom, allParams.dateTo]);
 
   // courier online or offline
 

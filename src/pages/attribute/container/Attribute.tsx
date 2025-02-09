@@ -21,7 +21,7 @@ const Attribute = () => {
   const resetForm = () => {
     setEditingAttributeId(undefined);
     formStore.reset({
-      name: "",
+      name: { uz: "", ru: "", en: "" },
     });
   };
 
@@ -31,7 +31,9 @@ const Attribute = () => {
         dataUrl="attribute/paging"
         columns={columns}
         searchable
-        onAddButton={() => dis(setOpenDrawer(true))}
+        onAddButton={() => {
+          dis(setOpenDrawer(true));
+        }}
         onEditColumn={(row) => {
           setEditingAttributeId(row._id);
           dis(setOpenDrawer(true));

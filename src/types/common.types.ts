@@ -70,6 +70,7 @@ export interface IProduct {
   imageIds: string[];
   attributes: any[]
   attributeDetails: any[]
+  variants?:any[];
   category: {
     _id: string;
     name: string;

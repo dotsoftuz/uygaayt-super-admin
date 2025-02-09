@@ -12,6 +12,7 @@ const CustomerInfo = () => {
   const [active, setActive] = useState("orders");
   const { t } = useTranslation();
   const { id } = useParams();
+  const allParams = useAllQueryParams();
 
   const { data: customerInfoData, status: customerInfoStatus } = useApi(`customer/get-by-id/${id}`, {}, {
     enabled: !!id,
@@ -19,8 +20,17 @@ const CustomerInfo = () => {
   })
 
 
-  const { mutate, reset, data, isLoading } = useApiMutation(
+  const { mutate, data } = useApiMutation(
     "order/paging",
+    "post",
+    {
+      onSuccess(response) {
+      },
+    }
+  );
+
+  const { mutate:customerReport, data:customerReportData } = useApiMutation(
+    "order/customer/report",
     "post",
     {
       onSuccess(response) {
@@ -30,10 +40,23 @@ const CustomerInfo = () => {
 
   useEffect(() => {
     mutate({
-      customerId: id
+      customerId: id,
+      dateFrom: allParams.dateFrom,
+      dateTo: allParams.dateTo
     });
-  }, [mutate]);
+  }, [allParams.dateFrom, allParams.dateTo]);
 
+  useEffect(() => {
+    customerReport({
+      customerId: id,
+      dateFrom: allParams.dateFrom,
+      dateTo: allParams.dateTo
+    });
+  }, [allParams.dateFrom, allParams.dateTo]);
+
+
+
+  console.log(customerReportData)
 
   return (
     <>
@@ -59,7 +82,7 @@ const CustomerInfo = () => {
                   />
                 </Box>
                 <Box sx={{ flex: 1, minWidth: 0 }}>
-                  <CustomerTabs historyOrders={data?.data} />
+                  <CustomerTabs historyOrders={data?.data} customerReportData={customerReportData} />
                 </Box>
               </Box>
             </Container>

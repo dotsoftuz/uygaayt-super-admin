@@ -138,6 +138,7 @@ const AddOrderForm = ({
   //   }
   // );
 
+  console.log(basketItems)
 
   const submit = (data: any) => {
     const addressLocation = watch("addressLocation");
@@ -166,6 +167,10 @@ const AddOrderForm = ({
       items: basketItems.map((e) => ({
         productId: e._id,
         amount: e.amount,
+        attributes: e?.variants?.map((item) => ({
+          attributeId: item.attributeId,
+          attributeItem: item.attributeItem
+        }))
       })),
       addressLocation: {
         latitude: coordinate?.latitude,
@@ -202,7 +207,7 @@ const AddOrderForm = ({
   );
 
   const { mutate: deliveryMutate, data: deliveryData, status: deliveryStatus, isLoading: deliveryLoading } = useApiMutation<any>(
-    "delivery",
+    "order/calculate",
     "post",
     {
       onSuccess(data) {
@@ -225,6 +230,10 @@ const AddOrderForm = ({
       items: basketItems.map((e) => ({
         productId: e._id,
         amount: e.amount,
+        attributes: e?.variants?.map((item) => ({
+          attributeId: item.attributeId,
+          attributeItem: item.attributeItem
+        }))
       })),
       phoneNumber: phoneNumber
     });

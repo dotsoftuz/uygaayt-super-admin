@@ -1,14 +1,12 @@
-import { Box, Grid, Switch, Typography } from "@mui/material";
+import { Box, FormControl, Grid, MenuItem, Select, Switch, Typography } from "@mui/material";
 import { HeaderOfSettings, SettingsStyled, SettingTitle, StyledMenuItem, StyledPhoneCountrySelect } from "./Settings.styled";
 import { SETTINGS_TABS } from "types/enums";
 import { useEffect, useState } from "react";
-import MinimumOrder from "../components/MinimumOrder";
-import StateMap from "../components/StateMap";
 import { useRoleManager } from "services/useRoleManager";
-import { AutoCompleteForm, MainButton, TextInput } from "components";
+import { MainButton, TextInput } from "components";
 import { useTranslation } from "react-i18next";
 import { PHONE_COUNTRY_DATA } from "./Settings.constants";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import { toast } from "react-toastify";
 import { useSearchParams } from "react-router-dom";
@@ -35,6 +33,14 @@ const Settings = () => {
       },
     }
   );
+
+  useEffect(() => {
+    if (data?.data?.orderCalculateMethod) {
+      setValue("orderCalculateMethod", data.data.orderCalculateMethod);
+    }
+  }, [data, setValue]);
+
+  console.log(data?.data?.orderCalculateMethod)
 
   const { mutate } = useApiMutation("settings-general", "put", {
     onSuccess() {
@@ -219,22 +225,30 @@ const Settings = () => {
                     <span className="key">
                       {t('general.order_calculate')}
                     </span>
-                    <AutoCompleteForm
-                      control={control}
-                      name={"orderCalculateMethod"}
-                      options={[
-                        {
-                          _id: "by_distance",
-                          name: t('general.by_distance')
-                        },
-                        {
-                          _id: "static",
-                          name:t('general.static')
-                        },
-                      ]}
-                      rules={{ required: false }}
-                    // onChange={handleChange}
-                    />
+                    <FormControl fullWidth>
+                      <Controller
+                        name="orderCalculateMethod"
+                        control={control}
+                        render={({ field }) => (
+                          <Select
+                            {...field}
+                            value={field.value || ""}
+                            sx={{borderRadius: "12px"}}
+                            size="medium"
+                            onChange={(e) => {
+                              field.onChange(e.target.value);
+                              console.log("Tanlangan qiymat:", e.target.value);
+                            }}
+                          >
+                            <MenuItem value="by_distance">{t('general.by_distance')}</MenuItem>
+                            <MenuItem value="static">{t('general.static')}</MenuItem>
+                          </Select>
+                        )}
+                      />
+                    </FormControl>
+
+
+
                   </div>
                 </Grid>
 
@@ -253,6 +267,19 @@ const Settings = () => {
                     </div>
                   </Grid>
                 }
+
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">
+                      {t('general.savings_percentage')}
+                    </span>
+                    <TextInput
+                      control={control}
+                      name="customerSavedPercent"
+                      type="number"
+                    />
+                  </div>
+                </Grid>
 
                 <Grid item md={12} xs={12}>
                   <div className="item">

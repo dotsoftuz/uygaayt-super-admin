@@ -1,5 +1,8 @@
 {
   "general": {
+    "add_basket": "Добавить в корзину",
+    "again_choose": "Попробуйте еще раз.",
+    "savings_percentage": "Процент экономии",
     "feature": "Особенность",
     "Price_added": "Цена будет добавлена",
     "courier": "Курьер",
@@ -207,7 +210,8 @@
   "tabs" : {
     "orders": "Заказы",
     "basket": "Корзина",
-    "avto": "Машина"
+    "avto": "Машина",
+    "order_history": "История заказов"
   },
   "notification" : {
     "confirmation": "Подтверждение",
@@ -267,5 +271,11 @@
     "active_customer": "Активные пользователи",
     "top_users": "Лучшие пользователи",
     "top_courier": "Лучшие курьеры"
+  },
+  "customer_info": {
+    "total_purchases": "Количество покупок",
+    "total_amount": "Общая сумма платежа",
+    "savings_money": "Экономия",
+    "years": "Ежегодный"
   }
 }

@@ -1,5 +1,8 @@
 {
   "general": {
+    "add_basket": "Savatga qo'shish",
+    "again_choose": "Yana tanglang",
+    "savings_percentage": "Tejab qolingan foiz",
     "feature": "Xususiyat",
     "Price_added": "Qo'shiladigan narx",
     "courier": "Kuryer",
@@ -209,7 +212,8 @@
   "tabs": {
     "orders": "Buyurtmalar",
     "basket": "Savat",
-    "avto": "Avtomobil"
+    "avto": "Avtomobil",
+    "order_history": "Buyurtmalar tarixi"
   },
   "notification": {
     "confirmation": "Tasdiqlash",
@@ -270,6 +274,12 @@
     "active_customer": "Aktiv foydalanuvchilar",
     "top_users": "Top Foydalanuvchilar",
     "top_courier": "Top Kuryerlar"
+  },
+  "customer_info": {
+    "total_purchases": "Xaridlar soni",
+    "total_amount": "Jami to‘lov miqdori",
+    "savings_money": "Tejab qolingan mablag‘",
+    "years": "Yillik"
   }
 
 }

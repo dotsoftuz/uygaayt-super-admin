@@ -1,17 +1,16 @@
 import { FC, useEffect } from "react";
-import { Box, Grid, Typography } from "@mui/material";
-import { AutoCompleteForm, ImageInput, TextInput } from "components";
+import { Grid, Typography } from "@mui/material";
+import { TextInput } from "components";
 import { Controller, UseFormReturn } from "react-hook-form";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import { useTranslation } from "react-i18next";
-import TextEditor from "components/form/TextEditor/TextEditor";
-import { debounce } from "lodash";
 
 interface IEmployeesForm {
   formStore: UseFormReturn<any>;
-  editingAttributeId: string;
+  editingAttributeId: string | undefined;
   resetForm: () => void;
 }
+
 const AttributeForm: FC<IEmployeesForm> = ({
   formStore,
   editingAttributeId,
@@ -36,7 +35,7 @@ const AttributeForm: FC<IEmployeesForm> = ({
 
   useEffect(() => {
     if (status === "success") {
-      resetForm();
+      resetForm(); // Reset form after successful submission
     }
   }, [status]);
 
@@ -55,7 +54,14 @@ const AttributeForm: FC<IEmployeesForm> = ({
     }
   }, [getByIdStatus, getByIdData]);
 
-
+  useEffect(() => {
+    // Reset the form if editingAttributeId changes to undefined (for create mode)
+    if (!editingAttributeId) {
+      reset({
+        name: "",
+      });
+    }
+  }, [editingAttributeId, reset]);
 
   return (
     <div className="custom-drawer">

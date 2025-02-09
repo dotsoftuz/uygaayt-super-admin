@@ -116,12 +116,6 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
   } = useCommonContext();
 
 
-  const filteredOrders = historyOrders?.data?.filter((order: any) => {
-    if (!dateFrom || !dateTo) return true;
-    const orderDate = dayjs(order.completedAt);
-    return orderDate.isBetween(dateFrom, dateTo, "day", "[]");
-  });
-
 
   return (
     <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
@@ -211,7 +205,7 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
             overflowY: "auto",
           }}
         >
-          {filteredOrders?.map((orders: any) => (
+          {historyOrders?.data?.map((orders: any) => (
             <OrderItem
               key={orders?.number}
               id={orders?.number}

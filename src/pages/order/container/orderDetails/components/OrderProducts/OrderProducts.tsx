@@ -99,7 +99,20 @@ const OrderProducts = ({ formStore, state, order }: any) => {
                 )}
               </span>
               <div className="info">
-                <span className="name">{item.product.name}</span>
+                <div className="flex">
+                  <span className="name">{item.product.name}</span>
+                  {item?.attributes?.length > 0 && (
+                    <div className="variant-info flex">
+                      {item?.attributes?.map((variant: any, index: any) => (
+                        <div key={index} className="variant-item flex">
+                          <span className="name ml-1">
+                            {variant.attributeItem}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <div className="amount-price">
                   {item.amount} x {numberFormat(item.price)}{" "}
                   {get(settingsData, "currency", "uzs")}

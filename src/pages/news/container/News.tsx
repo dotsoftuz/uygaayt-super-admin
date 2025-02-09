@@ -21,7 +21,7 @@ const News = () => {
   const resetForm = () => {
     setEditingNewsId(undefined);
     formStore.reset({
-      title: "",
+      title: { uz: "", ru: "", en: "" },
       imageId: "",
       description: "",
     });

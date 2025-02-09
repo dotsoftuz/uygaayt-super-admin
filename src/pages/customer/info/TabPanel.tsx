@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tabs, Tab, Box, Typography, Paper, Chip, LinearProgress } from '@mui/material';
+import { Tabs, Tab, Box, Typography, Paper, Chip, LinearProgress, Button } from '@mui/material';
 import { Money, ShoppingBag } from '@mui/icons-material';
 import HistoryIcon from '@mui/icons-material/History';
 import BackpackIcon from '@mui/icons-material/Backpack';
@@ -10,7 +10,8 @@ import dayjs, { Dayjs } from 'dayjs';
 import { RangeDatePicker } from 'components';
 import useAllQueryParams from 'hooks/useGetAllQueryParams/useAllQueryParams';
 import isBetween from "dayjs/plugin/isBetween";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { numberFormat } from 'utils/numberFormat';
 
 dayjs.extend(isBetween);
 
@@ -21,12 +22,12 @@ interface TabPanelProps {
 }
 
 interface CustomerTabsProps {
-  historyOrders: any
+  historyOrders: any;
+  customerReportData: any;
 }
 
 function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
-
 
 
   return (
@@ -48,6 +49,7 @@ function TabPanel(props: TabPanelProps) {
 
 const OrderItem = ({ _id, id, amount, status, currency, date, status_color }: { _id: string, id: string; amount: string; status: string; currency: string, date: string, status_color: any }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <Box sx={{
@@ -68,7 +70,7 @@ const OrderItem = ({ _id, id, amount, status, currency, date, status_color }: { 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
           <BackpackIcon style={{ fontSize: 20, color: '#6B46C1' }} />
           <Typography variant="subtitle1" fontWeight="bold">
-            Order #{id}
+            {t('general.order')} #{id}
           </Typography>
         </Box>
         <span style={{ backgroundColor: status_color, color: 'white', padding: '8px', borderRadius: "10px", fontSize: "13px" }}>{status}</span>
@@ -78,21 +80,18 @@ const OrderItem = ({ _id, id, amount, status, currency, date, status_color }: { 
           {date}
         </Typography>
         <Typography variant="subtitle1" fontWeight="bold" color="#6B46C1">
-          {amount} {currency}
+          {numberFormat(amount)} {currency}
         </Typography>
       </Box>
     </Box>
   )
 };
 
-export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders }) => {
+export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders, customerReportData }) => {
   const [value, setValue] = React.useState(0);
   const { t } = useTranslation();
-
+  const [searchParams, setSearchParams] = useSearchParams();
   const allParams = useAllQueryParams();
-
-  const dateFrom = allParams?.dateFrom ? dayjs(allParams.dateFrom) : null;
-  const dateTo = allParams?.dateTo ? dayjs(allParams.dateTo) : null;
 
 
   const {
@@ -104,12 +103,16 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders }) => 
     setValue(newValue);
   };
 
-  const filteredOrders = historyOrders?.data?.filter((order: any) => {
-    if (!dateFrom || !dateTo) return true;
-    const orderDate = dayjs(order.completedAt);
-    return orderDate.isBetween(dateFrom, dateTo, "day", "[]");
-  });
+  const handleSetYearFilter = () => {
+    const from = dayjs().startOf("year");
+    const to = dayjs();
 
+    setSearchParams({
+      ...Object.fromEntries(searchParams.entries()), // Mavjud parametrlardan nusxa olish
+      dateFrom: from.toISOString(),
+      dateTo: to.toISOString(),
+    });
+  };
 
   return (
     <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
@@ -139,24 +142,24 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders }) => 
             iconPosition="start"
             label={t('tabs.orders')}
           />
-          {/* <Tab 
-            icon={<HistoryIcon style={{ fontSize: 20 }} />} 
-            iconPosition="start" 
-            label="History" 
-          /> */}
+          <Tab
+            icon={<HistoryIcon style={{ fontSize: 20 }} />}
+            iconPosition="start"
+            label={t('tabs.order_history')}
+          />
         </Tabs>
       </Box>
+      <Box sx={{ p: 2, backgroundColor: 'white' }}>
+        <RangeDatePicker />
+      </Box>
       <TabPanel value={value} index={0}>
-        <Box sx={{ pb: 2 }}>
-          <RangeDatePicker />
-        </Box>
         <Box
           sx={{
             maxHeight: "500px",
             overflowY: "auto",
           }}
         >
-          {filteredOrders?.map((orders: any) => (
+          {historyOrders?.data?.map((orders: any) => (
             <OrderItem
               key={orders?.number}
               id={orders?.number}
@@ -171,54 +174,47 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders }) => 
         </Box>
       </TabPanel>
 
-      {/* <TabPanel value={value} index={1}>
-        <Box sx={{ p: 3 }}>
+      <TabPanel value={value} index={1}>
+        <Box sx={{ p: 1 }}>
+          <Box sx={{ mb: 1 }}>
+            <Button variant="contained" color="primary" onClick={handleSetYearFilter}>
+              {t("customer_info.years")}
+            </Button>
+          </Box>
           <Box sx={{ mb: 4 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
               <Money style={{ fontSize: 24, color: '#6B46C1' }} />
-              <Typography variant="h6">Total Spent</Typography>
+              <Typography variant="h6">{t('customer_info.total_purchases')}</Typography>
             </Box>
             <Typography variant="h4" color="#6B46C1" fontWeight="bold" mb={1}>
-              $1,250.00
+              {customerReportData?.data?.total_amount}
             </Typography>
-            <LinearProgress 
-              variant="determinate" 
-              value={70} 
-              sx={{ 
-                height: 8, 
-                borderRadius: 4,
-                backgroundColor: '#E9D8FD',
-                '& .MuiLinearProgress-bar': {
-                  backgroundColor: '#6B46C1'
-                }
-              }} 
-            />
           </Box>
-          
-          <Box sx={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(2, 1fr)', 
-            gap: 3 
+
+          <Box sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, 1fr)',
+            gap: 3
           }}>
             <Paper sx={{ p: 3, backgroundColor: '#F7FAFC' }}>
               <Typography variant="subtitle2" color="text.secondary" mb={1}>
-                Member Since
+                {t('customer_info.total_amount')}
               </Typography>
               <Typography variant="h6">
-                January 15, 2024
+                {numberFormat(customerReportData?.data?.total_price) + " " + get(settingsData, "currency", "uzs")}
               </Typography>
             </Paper>
             <Paper sx={{ p: 3, backgroundColor: '#F7FAFC' }}>
               <Typography variant="subtitle2" color="text.secondary" mb={1}>
-                Total Orders
+                {t('customer_info.savings_money')}
               </Typography>
               <Typography variant="h6">
-                15 orders
+                {numberFormat(customerReportData?.data?.saved_amount) + " " + get(settingsData, "currency", "uzs")}
               </Typography>
             </Paper>
           </Box>
         </Box>
-      </TabPanel> */}
+      </TabPanel>
     </Paper>
   );
 };

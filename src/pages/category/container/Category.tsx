@@ -23,7 +23,7 @@ const Category = () => {
   const resetForm = () => {
     setEditingCategoryId(undefined);
     formStore.reset({
-      name: "",
+      name: { uz: "", ru: "", en: "" },
       imageId: "",
     });
   };
