@@ -76,7 +76,7 @@ function AutoCompleteForm<FormNames extends Record<string, any>>({
   //     },
   //   }
   // );
-  const { mutate, data:OptionsData, isLoading, status } = useApiMutation(
+  const { mutate, data: OptionsData, isLoading, status } = useApiMutation(
     optionsUrl,
     "post",
     {
@@ -97,20 +97,22 @@ function AutoCompleteForm<FormNames extends Record<string, any>>({
   }, [mutate, search]);
 
 
-  const getLabel = (option: IOption) =>
-    option?.firstName
-      ? `${option?.firstName} ${option?.lastName}`
-      : (option?.[nameProp] as string);
+  const getLabel = (option: IOption) => {
+    if (option?.firstName) {
+      return `${option.firstName} ${option.lastName}`;
+    }
 
-  // @ts-ignore
+    const label = option?.[nameProp];
+    return typeof label === "object" && label !== null ? label[currentLang] : label;
+  };
+
   const OPTIONS_PREV = (
     (get(OptionsData, dataProp) as IOption[]) ||
     options ||
     []
   )?.map((option) => ({
     ...option,
-    // @ts-ignore
-    name: getLabel(option)?.[currentLang],
+    name: getLabel(option) || "",
   }));
 
   const OPTIONS = useMemo(() => {

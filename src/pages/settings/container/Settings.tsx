@@ -233,7 +233,7 @@ const Settings = () => {
                           <Select
                             {...field}
                             value={field.value || ""}
-                            sx={{borderRadius: "12px"}}
+                            sx={{ borderRadius: "12px" }}
                             size="medium"
                             onChange={(e) => {
                               field.onChange(e.target.value);
@@ -263,7 +263,14 @@ const Settings = () => {
                         control={control}
                         name="orderPrice"
                         type="number"
+                        rules={{
+                          min: { value: 0, message: "Narx manfiy bo'lishi mumkin emas" },
+                        }}
+                        inputProps={{
+                          min: 0,
+                        }}
                       />
+
                     </div>
                   </Grid>
                 }

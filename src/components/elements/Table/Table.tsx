@@ -119,7 +119,7 @@ const Table = <TData extends { _id: string }>({
           });
         }
       },
-    }
+    },
   );
 
   useEffect(() => {

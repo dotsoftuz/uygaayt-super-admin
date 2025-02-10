@@ -42,6 +42,12 @@ export const useBannerColumns = (): GridColumns => {
       },
     },
     {
+      field: t("promo_code.used_count"),
+      renderCell({ row }) {
+        return get(row, "usedCount", "-");
+      }
+    },
+    {
       field: t("promo_code.start_date"),
       renderCell({ row }) {
         return dayjs(get(row, "fromDate", "-")).format('DD.MM.YYYY HH:mm')

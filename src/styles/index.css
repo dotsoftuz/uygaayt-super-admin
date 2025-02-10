@@ -51,7 +51,8 @@ html {
 }
 
 .ymaps-2-1-79-b-cluster-tabs__menu-item{
-  background-color: #E2E2E2 !important;
+  /* background-color: red !important; */
+  color: black !important;
 }
 
 .MuiAutocomplete-popper * {

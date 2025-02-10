@@ -81,6 +81,7 @@ export interface IProduct {
   bitoId: string | null;
   discountStartAt: any;
   discountEndAt: any;
+  compounds: any[],
   images?: {
     _id: string;
     url: string;

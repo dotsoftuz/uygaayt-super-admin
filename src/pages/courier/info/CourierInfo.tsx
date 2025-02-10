@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from "@mui/material"
+import { Box, Container, Grid, Typography } from "@mui/material"
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
 import { useParams } from "react-router-dom";
@@ -31,12 +31,17 @@ const CourierInfo = () => {
   );
 
   useEffect(() => {
+    // Parametrlarni saqlashda `isCourierLeft` ning turini yaxshilab tekshiramiz.
+    const isCourierLeft = allParams.isCourierLeft === 'true'; // string bo'lsa, true'ga o'zgartiramiz
+
     mutate({
       courierId: id,
       dateFrom: allParams.dateFrom,
-      dateTo: allParams.dateTo
+      dateTo: allParams.dateTo,
+      isCourierLeft: isCourierLeft,
     });
-  }, [allParams.dateFrom, allParams.dateTo]);
+  }, [allParams.dateFrom, allParams.dateTo, allParams.isCourierLeft]);
+
 
   // courier online or offline
 
@@ -54,44 +59,21 @@ const CourierInfo = () => {
 
   return (
     <>
-      <>
-        {
-          id && (
-            <Box sx={{
-              // minHeight: '100vh',
-              py: 1,
-              px: 1
-            }}>
-              <Container maxWidth="xl" sx={{ py: 1 }}>
-                <Box sx={{
-                  display: 'flex',
-                  gap: 2,
-                  flexDirection: { xs: 'column', md: 'row' }
-                }}>
-                  <Box sx={{
-                    flex: { xs: '1', md: '0 0 500px' },
-                    minWidth: 0
-                  }}>
-                    <CourierCard
-                      courierInfoData={courierInfoData}
-                      offAndOn={offAndOn}
-                      offAndOnData={offAndOnData}
-                      watch={watch}
-                      register={register}
-                      setValue={setValue}
-                    />
-                  </Box>
-                  <Box sx={{ flex: 1, minWidth: 0 }}>
-                    <CourierTabs historyOrders={data?.data} courierInfoData={courierInfoData} />
-                  </Box>
-                </Box>
-              </Container>
-            </Box >
-          )
-        }
-      </>
-
-
+      {
+        id && (
+          <Grid className="grid md:grid-cols-2 gap-4 p-2">
+            <CourierCard
+              courierInfoData={courierInfoData}
+              offAndOn={offAndOn}
+              offAndOnData={offAndOnData}
+              watch={watch}
+              register={register}
+              setValue={setValue}
+            />
+            <CourierTabs historyOrders={data?.data} courierInfoData={courierInfoData} />
+          </Grid>
+        )
+      }
     </>
   )
 }

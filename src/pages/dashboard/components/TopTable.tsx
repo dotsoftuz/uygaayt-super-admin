@@ -11,16 +11,16 @@ const TopTable: React.FC<any> = ({ data, setSortField, sortField, setSortOrder, 
 
     const handleSortUser = (field: SortField) => {
         if (sortField === field) {
-            setSortOrder(sortOrder === 1 ? -1 : 1);
+            setSortOrder(sortOrder === "1" ? "-1" : "1");
         } else {
             setSortField(field);
-            setSortOrder(-1);
+            setSortOrder("-1");
         }
     };
 
     const SortIconUser = ({ field }: { field: SortField }) => {
         if (sortField !== field) return <SwapVert className="w-4 h-4" />;
-        return sortOrder === 1 ? (
+        return sortOrder === "1" ? (
             <ArrowUpward className="w-4 h-4" />
         ) : (
             <ArrowDownward className="w-4 h-4" />
@@ -39,7 +39,7 @@ const TopTable: React.FC<any> = ({ data, setSortField, sortField, setSortOrder, 
                                         {t("common.firstName")}
                                     </th>
                                     {
-                                        data?.[0].customer ?
+                                        data?.[0]?.customer ?
                                             <th
                                                 className="px-6 py-4 text-left text-sm font-semibold text-gray-900 cursor-pointer hover:bg-gray-100"
                                                 onClick={() => handleSortUser('total_price')}

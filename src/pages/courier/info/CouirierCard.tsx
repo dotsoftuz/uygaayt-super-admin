@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Card, CardContent, Typography, Avatar, Box, Paper, Switch } from '@mui/material';
+import { Card, CardContent, Typography, Avatar, Box, Paper, Switch, Grid } from '@mui/material';
 import { Mail, Phone } from '@mui/icons-material';
 import { StarIcon } from 'assets/svgs';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +23,7 @@ export const CourierCard: React.FC<CourierCardProps> = ({
     const { id } = useParams();
 
     return (
-        <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
+        <Grid>
             <Box sx={{
                 background: 'linear-gradient(135deg, #3E5089 0%, #4834A8 100%)',
                 pt: 6,
@@ -31,7 +31,9 @@ export const CourierCard: React.FC<CourierCardProps> = ({
                 px: 4,
                 textAlign: 'center',
                 color: 'white',
-                position: 'relative'
+                position: 'relative',
+                borderTopLeftRadius: "15px",
+                borderTopRightRadius: "15px"
             }}>
                 <Avatar
                     src={
@@ -57,7 +59,6 @@ export const CourierCard: React.FC<CourierCardProps> = ({
             </Box>
             <CardContent sx={{
                 backgroundColor: 'white',
-                borderRadius: '20px 20px 0 0',
                 px: 4,
                 py: 3
             }}>
@@ -166,6 +167,6 @@ export const CourierCard: React.FC<CourierCardProps> = ({
                     </Box>
                 </Box>
             </CardContent>
-        </Paper>
+        </Grid>
     );
 };

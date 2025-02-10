@@ -5,7 +5,7 @@ import { useAppDispatch } from "store/storeHooks";
 import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
 import { useTranslation } from "react-i18next";
 import { Grid, InputLabel, MenuItem, Select } from "@mui/material";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import ProductForm from "../components/ProductForm";
 import { IIdImage } from "hooks/usePostImage";
@@ -22,6 +22,11 @@ const Product = () => {
   const [productImages, setProductImages] = useState<IIdImage[]>([]);
   const [mainImageId, setMainImageId] = useState<any>();
   const [subCategory, setSubCategory] = useState<any>();
+
+  const queryParams = useMemo(() => ({
+    isActive: formStore.watch("isActiveQuery") || undefined,
+    stockState: formStore.watch("stockState") || undefined,
+  }), [formStore.watch("isActiveQuery"), formStore.watch("stockState")]);
 
 
   const renderHeader = (
@@ -57,7 +62,7 @@ const Product = () => {
           )}
           <MenuItem value="yellowLine">Sariq chiziq</MenuItem>
           <MenuItem value="redLine">Qizil chiziq</MenuItem>
-          
+
         </Select>
 
       </Grid>
@@ -108,6 +113,8 @@ const Product = () => {
       measureId: "",
       categoryId: "",
       description: "",
+      attributes: [],
+      compounds: []
     });
   };
 
@@ -132,10 +139,7 @@ const Product = () => {
             ? (row) => setProductId(row._id)
             : undefined
         }
-        exQueryParams={{
-          isActive: formStore.watch("isActiveQuery") || undefined,
-          stockState: formStore.watch("stockState") || undefined,
-        }}
+        exQueryParams={queryParams}
       />
       <WarningModal open={productId} setOpen={setProductId} url="product/delete" />
       <FormDrawer

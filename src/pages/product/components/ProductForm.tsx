@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
 import { Box, Grid, Switch } from "@mui/material";
 import {
   AutoCompleteForm,
@@ -93,8 +93,8 @@ const ProductForm = ({
       _id: editingProductId,
       discountEnabled: data.discountEnabled,
       description: data.description,
-      compounds: data.compounds,
-      attributes: Object.entries(data.attributes)?.map(([key, item]) => ({
+      compounds: data.compounds || [],
+      attributes: Object.entries(data.attributes || {})?.map(([key, item]) => ({
         attributeId: key,
         items: Array.isArray(item)
           ? item.map((itm: any) => ({
@@ -103,6 +103,7 @@ const ProductForm = ({
           }))
           : []
       }))
+
 
     };
 
@@ -228,6 +229,32 @@ const ProductForm = ({
     selectedAttributes?.some((selected: any) => selected === item._id)
   );
 
+  const isActive = watch("isActive");
+  const hasCompounds = watch("compounds");
+  const hasAttributes = watch("attributes");
+
+
+  const handleSwitchChange = useCallback((name: string, value: boolean) => {
+    if (name === "compounds") {
+      if (!value) {
+        setValue("compounds", []);
+      } else {
+        setValue("compounds", []);
+      }
+    } else if (name === "attributes") {
+      if (!value) {
+        setValue("attributes", {});
+        setValue("attributeId", []);
+      } else {
+        setValue("attributes", {});
+        setValue("attributeId", []);
+      }
+    }
+    setValue(name, value);
+  }, [setValue]);
+
+
+
   return (
     <ProductFormStyled className="custom-drawer">
       <form id="product" onSubmit={handleSubmit(submit)}>
@@ -335,10 +362,9 @@ const ProductForm = ({
             >
               <label htmlFor="isActive">{t("common.isActive")}</label>
               <Switch
-                checked={!!watch("isActive")}
-                // name="isActive"
+                checked={!!isActive}
+                onChange={(e) => handleSwitchChange("isActive", e.target.checked)}
                 id="isActive"
-                {...register("isActive")}
               />
             </Box>
           </Grid>
@@ -352,7 +378,7 @@ const ProductForm = ({
               <Switch
                 checked={!!watch("isMyExpire")}
                 id="isMyExpire"
-                // {...register("isMyExpire")}
+                {...register("isMyExpire")}
               />
             </Box>
             {watch("isMyExpire") && (
@@ -456,12 +482,12 @@ const ProductForm = ({
             >
               <label htmlFor="compounds">{t('general.compounds')}</label>
               <Switch
-                checked={!!watch("compounds")}
+                checked={!!hasCompounds}
+                onChange={(e) => handleSwitchChange("compounds", e.target.checked)}
                 id="compounds"
-                {...register("compounds")}
               />
             </Box>
-            {watch("compounds") && (
+            {hasCompounds && (
               fields.map((field: any, index: any) => (
                 <Grid container key={field.id} className="flex items-end justify-between mt-2">
                   <Grid item md={5}>
@@ -501,7 +527,7 @@ const ProductForm = ({
               ))
             )}
           </Grid>
-          {watch("compounds") && (
+          {hasCompounds && (
             <Grid item xs={3} md={2} paddingBlock={2} className="flex flex-col ">
               <CommonButton
                 startIcon={<PlusIcon />}
@@ -525,25 +551,32 @@ const ProductForm = ({
               alignItems="center"
               justifyContent="space-between"
             >
-              <label htmlFor="attributes">Qoshimcha xusiyat tovar</label>
+              <label htmlFor="attributes">{t('general.attributes')}</label>
               <Switch
-                checked={!!watch("attributes")}
+                checked={!!hasAttributes}
+                onChange={(e) => handleSwitchChange("attributes", e.target.checked)}
                 id="attributes"
-                {...register("attributes")}
               />
+
             </Box>
           </Grid>
-          <Grid item md={12}>
-            <AutoCompleteForm
-              control={control}
-              name="attributeId"
-              optionsUrl="attribute/choose"
-              dataProp="data.data"
-              rules={{ required: false }}
-              multiple
-            />
-          </Grid>
           {
+            hasAttributes &&
+            <Grid item md={12}>
+              <AutoCompleteForm
+                control={control}
+                name="attributeId"
+                optionsUrl="attribute/choose"
+                dataProp="data.data"
+                rules={{ required: false }}
+                multiple
+              />
+            </Grid>
+
+          }
+
+
+          {hasAttributes &&
             selectedAttributes?.map((attributeId: any) => (
               <Grid key={attributeId} item md={12}>
                 <p className="text-[#3E5189] font-bold text-xl">

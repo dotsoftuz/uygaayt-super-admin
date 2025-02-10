@@ -1,5 +1,5 @@
-import React from 'react';
-import { Tabs, Tab, Box, Typography, Paper, Chip, LinearProgress } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Tabs, Tab, Box, Typography, Paper, Chip, LinearProgress, Button, Grid } from '@mui/material';
 import { DeliveryDining, Money, ShoppingBag } from '@mui/icons-material';
 import HistoryIcon from '@mui/icons-material/History';
 import BackpackIcon from '@mui/icons-material/Backpack';
@@ -10,8 +10,9 @@ import dayjs, { Dayjs } from 'dayjs';
 import { RangeDatePicker } from 'components';
 import useAllQueryParams from 'hooks/useGetAllQueryParams/useAllQueryParams';
 import isBetween from "dayjs/plugin/isBetween";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { formatSeconds } from 'utils/formatSeconds';
+import { numberFormat } from 'utils/numberFormat';
 
 dayjs.extend(isBetween);
 
@@ -76,7 +77,7 @@ const OrderItem = ({ _id, id, amount, status, currency, date, status_color, cour
           {date}
         </Typography>
         <Typography variant="subtitle1" fontWeight="bold" color="#6B46C1">
-          {amount} {currency}
+          {numberFormat(amount)} {currency}
         </Typography>
       </Box>
 
@@ -101,11 +102,11 @@ interface CourierTabProps {
 export const CourierTabs: React.FC<CourierTabProps> = ({
   courierInfoData, historyOrders }) => {
   const [value, setValue] = React.useState(1);
+  const [isCourierLeft, setIsCourierLeft] = useState<boolean>(false);
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const allParams = useAllQueryParams();
-
-  const dateFrom = allParams?.dateFrom ? dayjs(allParams.dateFrom) : null;
-  const dateTo = allParams?.dateTo ? dayjs(allParams.dateTo) : null;
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -115,7 +116,20 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
     state: { data: settingsData },
   } = useCommonContext();
 
+  const handleClick = () => {
+    setIsCourierLeft((prev) => !prev);
+  };
 
+  useEffect(() => {
+    lateFilter(isCourierLeft);
+  }, [isCourierLeft]);
+
+  const lateFilter = (value: any) => {
+    setSearchParams({
+      ...allParams,
+      isCourierLeft: value,
+    });
+  };
 
   return (
     <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
@@ -196,9 +210,12 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
 
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Box sx={{ pb: 2 }}>
+        <Grid className='grid lg:grid-cols-2 gap-2 pb-3'>
           <RangeDatePicker />
-        </Box>
+          <Button className='bg-blue-400 w-full' variant='outlined' onClick={handleClick}>
+            {isCourierLeft ? t('driver.all_orders') : t('driver.late_orders')}
+          </Button>
+        </Grid>
         <Box
           sx={{
             maxHeight: "500px",

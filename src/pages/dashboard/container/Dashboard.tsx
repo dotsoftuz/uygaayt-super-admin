@@ -10,7 +10,7 @@ import useCommonContext from 'context/useCommon';
 import { get } from 'lodash';
 
 type SortField = 'total_price' | 'total_order';
-type SortOrder = 1 | -1;
+type SortOrder = "1" | "-1";
 
 
 const Dashboard = () => {
@@ -18,10 +18,10 @@ const Dashboard = () => {
     const allParams = useAllQueryParams();
     const currentLang = localStorage.getItem("i18nextLng") || "uz";
     const [sortFieldUser, setSortFieldUser] = useState<SortField>('total_price');
-    const [sortOrderUser, setSortOrderUser] = useState<SortOrder>(1);
+    const [sortOrderUser, setSortOrderUser] = useState<SortOrder>("1");
 
     const [sortFieldCourier, setSortFieldCourier] = useState<SortField>('total_order');
-    const [sortOrderCourier, setSortOrderCourier] = useState<SortOrder>(1);
+    const [sortOrderCourier, setSortOrderCourier] = useState<SortOrder>("1");
 
       const {
         state: { data: settingsData },

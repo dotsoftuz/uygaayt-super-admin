@@ -163,8 +163,8 @@ const Courier = () => {
               <Clusterer
                 options={{
                   // preset: "islands#invertedVioletClusterIcons",
-                  groupByCoordinates: false,
-                  clusterDisableClickZoom: true,
+                  groupByCoordinates: true,
+                  clusterDisableClickZoom: false,
                   clusterHideIconOnBalloonOpen: false,
                   geoObjectHideIconOnBalloonOpen: false,
                 }}

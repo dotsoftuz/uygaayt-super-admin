@@ -1,5 +1,6 @@
 {
   "general": {
+    "attributes": "Варианты продукта",
     "add_basket": "Добавить в корзину",
     "again_choose": "Попробуйте еще раз.",
     "savings_percentage": "Процент экономии",
@@ -257,7 +258,8 @@
     "end_date": "Дата окончания",
     "status": "Статус",
     "not_active":"Не активен",
-    "min_order_price": "Минимальная сумма заказа"
+    "min_order_price": "Минимальная сумма заказа",
+    "used_count": "Использовал"
   },
   "attribute": {
     "add": "Добавить атрибут"

@@ -1,5 +1,6 @@
 {
   "general": {
+    "attributes": "Mahsulot variantlari",
     "add_basket": "Savatga qo'shish",
     "again_choose": "Yana tanglang",
     "savings_percentage": "Tejab qolingan foiz",
@@ -222,7 +223,9 @@
   "driver": {
     "title": "Haydovchiga bonus",
     "percent": "Foiz",
-    "amount": "Miqdor"
+    "amount": "Miqdor",
+    "late_orders": "Kech qolgan buyrurtmalar",
+    "all_orders": "Barcha buyurtmalar"
   },
   "settings": {
     "switch_for_courier": "Kuryer o'zi onlayn yoki oflayn qila olsin",
@@ -260,7 +263,8 @@
     "status": "Holati",
     "not_active":"Faol emas",
     "min_order_price": "Minimal buyurtma summasi",
-    "max_usage_for_user": "Foydalanuvchi uchun maksimal foydalanish"
+    "max_usage_for_user": "Foydalanuvchi uchun maksimal foydalanish",
+    "used_count": "Ishlatildi"
   },
   "attribute": {
     "add": "Atribut qo'shish"
