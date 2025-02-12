@@ -113,8 +113,8 @@ const Product = () => {
       measureId: "",
       categoryId: "",
       description: "",
-      attributes: [],
-      compounds: []
+      attributes: null,
+      compounds: null
     });
   };
 

@@ -45,6 +45,7 @@ const AttributeForm = ({ attributeId, control, register, getByIdData }: { attrib
                         <Input
                             label={t('general.Price_added')}
                             params={{
+                                type: 'number',
                                 ...register(`attributes.${attributeId}.${index}.amount`),
                             }}
                         />

@@ -31,14 +31,13 @@ const CourierInfo = () => {
   );
 
   useEffect(() => {
-    // Parametrlarni saqlashda `isCourierLeft` ning turini yaxshilab tekshiramiz.
-    const isCourierLeft = allParams.isCourierLeft === 'true'; // string bo'lsa, true'ga o'zgartiramiz
+    const isCourierLeft = allParams.isCourierLeft === 'true'; 
 
     mutate({
       courierId: id,
       dateFrom: allParams.dateFrom,
       dateTo: allParams.dateTo,
-      isCourierLeft: isCourierLeft,
+      isCourierLate: isCourierLeft,
     });
   }, [allParams.dateFrom, allParams.dateTo, allParams.isCourierLeft]);
 

@@ -44,6 +44,8 @@ const ProductForm = ({
   const { t } = useTranslation();
   const { control, handleSubmit, reset, setValue, register, watch, formState: { errors } } = formStore;
   const currentLang = localStorage.getItem("i18nextLng") || "uz";
+  const [hasAttributesEnabled, setHasAttributesEnabled] = useState(false);
+  const [hasCompoundsEnabled, setHasCompoundsEnabled] = useState(false);
 
 
   const [subCategory, setSubCategory] = useState<any>(null);
@@ -68,6 +70,12 @@ const ProductForm = ({
 
   const submit = (data: any) => {
     console.log(data);
+    const cleanedAttributes = Object.entries(data.attributes || {})
+      .filter(([key]) => data.attributeId?.includes(key))
+      .reduce((acc, [key, value]) => ({
+        ...acc,
+        [key]: value
+      }), {});
     const requestData: any = {
       // ...data,
       name: data.name,
@@ -94,17 +102,15 @@ const ProductForm = ({
       discountEnabled: data.discountEnabled,
       description: data.description,
       compounds: data.compounds || [],
-      attributes: Object.entries(data.attributes || {})?.map(([key, item]) => ({
+      attributes: hasAttributesEnabled ? Object.entries(cleanedAttributes).map(([key, item]: [string, any]) => ({
         attributeId: key,
         items: Array.isArray(item)
           ? item.map((itm: any) => ({
-            attributeItem: itm.attributeItem,
-            amount: +itm.amount
+            attributeItem: itm?.attributeItem || null,
+            amount: Number(itm?.amount) || 0,
           }))
           : []
-      }))
-
-
+      })) : []
     };
 
     // discountEnabled = true bo'lganda discount ma'lumotlarini qo'shish
@@ -149,16 +155,33 @@ const ProductForm = ({
   }, [watch("discountEnabled")]);
 
 
+  useEffect(() => {
+    const selectedAttributeIds = watch("attributeId") || [];
+    const currentAttributes = watch("attributes") || {};
+
+    // Remove attributes that are no longer selected
+    const cleanedAttributes = Object.entries(currentAttributes)
+      .filter(([key]) => selectedAttributeIds.includes(key))
+      .reduce((acc, [key, value]) => ({
+        ...acc,
+        [key]: value
+      }), {});
+
+    setValue("attributes", cleanedAttributes);
+  }, [watch("attributeId")]);
 
   useEffect(() => {
     if (status === "success") {
       resetForm();
     }
   }, [status]);
+
   useEffect(() => {
     if (getByIdData?.data) {
       setSubCategory(getByIdData.data.parentCategoryId || null);
       setSubChildCategory(getByIdData.data.categoryId || null);
+      setHasAttributesEnabled(!!getByIdData.data.attributes?.length);
+      setHasCompoundsEnabled(!!getByIdData.data.compounds?.length);
     }
   }, [getByIdData]);
 
@@ -172,16 +195,23 @@ const ProductForm = ({
             ...acc,
             [attr.attribute._id]: attr.items
           }
-        }, {}),
+        }, {}) || [],
         // categoryId: subChildCategory === undefined ? getByIdData.data.parentCategoryId : getByIdData.data.categoryId,
         parentCategoryId: getByIdData.data.parentCategoryId || getByIdData.data.categoryId || "",
         categoryId: getByIdData.data.categoryId || "",
         isActiveQuery: formStore.watch("isActiveQuery"),
         description: getByIdData.data.description,
+        compounds: getByIdData.data.compounds,
         attributeId: getByIdData.data.attributeDetails.map((item: any) => (
           item._id
-        )),
+        )) || [],
       });
+
+      // if (!getByIdData.data.attributes?.length) {
+      //   setValue("attributes", {});
+      //   setValue("attributeId", []);
+      // }
+
       setValue("isMyExpire", !!watch("expiryDate"));
 
       setProductImages(getByIdData.data?.images || []);
@@ -213,7 +243,8 @@ const ProductForm = ({
     control,
   });
 
-  const selectedAttributes = watch("attributeId");
+  const selectedAttributes = watch("attributeId") || [];
+
 
   const { mutate: attributesChoose, data: attributesData, status: attributesStatus } = useApiMutation<any>(
     "attribute/choose",
@@ -231,28 +262,26 @@ const ProductForm = ({
 
   const isActive = watch("isActive");
   const hasCompounds = watch("compounds");
-  const hasAttributes = watch("attributes");
 
 
   const handleSwitchChange = useCallback((name: string, value: boolean) => {
     if (name === "compounds") {
+      setHasCompoundsEnabled(value);
       if (!value) {
         setValue("compounds", []);
       } else {
         setValue("compounds", []);
       }
     } else if (name === "attributes") {
+      setHasAttributesEnabled(value);
       if (!value) {
-        setValue("attributes", {});
-        setValue("attributeId", []);
-      } else {
         setValue("attributes", {});
         setValue("attributeId", []);
       }
     }
+
     setValue(name, value);
   }, [setValue]);
-
 
 
   return (
@@ -482,12 +511,12 @@ const ProductForm = ({
             >
               <label htmlFor="compounds">{t('general.compounds')}</label>
               <Switch
-                checked={!!hasCompounds}
+                checked={hasCompoundsEnabled}
                 onChange={(e) => handleSwitchChange("compounds", e.target.checked)}
                 id="compounds"
               />
             </Box>
-            {hasCompounds && (
+            {hasCompoundsEnabled && (
               fields.map((field: any, index: any) => (
                 <Grid container key={field.id} className="flex items-end justify-between mt-2">
                   <Grid item md={5}>
@@ -503,6 +532,7 @@ const ProductForm = ({
                     <Input
                       label={t('general.quantity')}
                       params={{
+                        type: 'number',
                         ...register(
                           `compounds.${index}.value`,
                         ),
@@ -527,7 +557,7 @@ const ProductForm = ({
               ))
             )}
           </Grid>
-          {hasCompounds && (
+          {hasCompoundsEnabled && (
             <Grid item xs={3} md={2} paddingBlock={2} className="flex flex-col ">
               <CommonButton
                 startIcon={<PlusIcon />}
@@ -553,15 +583,14 @@ const ProductForm = ({
             >
               <label htmlFor="attributes">{t('general.attributes')}</label>
               <Switch
-                checked={!!hasAttributes}
+                checked={hasAttributesEnabled}
                 onChange={(e) => handleSwitchChange("attributes", e.target.checked)}
                 id="attributes"
               />
-
             </Box>
           </Grid>
           {
-            hasAttributes &&
+            hasAttributesEnabled &&
             <Grid item md={12}>
               <AutoCompleteForm
                 control={control}
@@ -572,11 +601,10 @@ const ProductForm = ({
                 multiple
               />
             </Grid>
-
           }
 
 
-          {hasAttributes &&
+          {hasAttributesEnabled &&
             selectedAttributes?.map((attributeId: any) => (
               <Grid key={attributeId} item md={12}>
                 <p className="text-[#3E5189] font-bold text-xl">
