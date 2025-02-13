@@ -8,6 +8,8 @@ import { numberFormat } from 'utils/numberFormat';
 import TopTable from '../components/TopTable';
 import useCommonContext from 'context/useCommon';
 import { get } from 'lodash';
+import MainCharts from '../components/mainCharts/MainCharts';
+import { StyledCard, TypographyTitle } from '../style/StatisticsCard.style';
 
 type SortField = 'total_price' | 'total_order';
 type SortOrder = "1" | "-1";
@@ -23,9 +25,9 @@ const Dashboard = () => {
     const [sortFieldCourier, setSortFieldCourier] = useState<SortField>('total_order');
     const [sortOrderCourier, setSortOrderCourier] = useState<SortOrder>("1");
 
-      const {
+    const {
         state: { data: settingsData },
-      } = useCommonContext();
+    } = useCommonContext();
 
     const { mutate: attributesChooseMutate, data: attributesData } = useApiMutation<any>(
         "report/order",
@@ -101,84 +103,83 @@ const Dashboard = () => {
                 </Grid>
             </Grid>
             <Grid className='grid mt-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-2'>
-                <div
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.boxShadow = "0 6px 4px rgba(0, 0, 0, 0.15)";
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.boxShadow = "0 0px 0px rgba(0, 0, 0, 0.1)";
-                    }}
-                    className='bg-white p-3 rounded-lg transition-shadow duration-200 ease-in-out'>
-                    {/* <h4>{get(data, "data.totalClasses")}</h4> */}
-                    <h4 className="font-bold text-xl">{attributesData?.data?.total_amount}</h4>
-                    <Typography color={"#999999"} fontSize={"14px"}>
+                <StyledCard>
+                    <TypographyTitle>
                         {t("dashboard.total_orders")}
-                    </Typography>
-                </div>
+                    </TypographyTitle>
+                    <Typography
+                        style={{
+                            fontSize: "24px",
+                            fontWeight: 600,
+                            textAlign: "center",
+                            color: '#FF6701'
+                        }}
+                    >{attributesData?.data?.total_amount}</Typography>
+                </StyledCard>
                 {attributesData?.data?.states.map((item: any) => (
-                    <div
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.boxShadow = "0 6px 4px rgba(0, 0, 0, 0.15)";
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.boxShadow = "0 0px 0px rgba(0, 0, 0, 0.1)";
-                        }}
-                        className='bg-white p-3 rounded-lg transition-shadow duration-200 ease-in-out'>
-                        {/* <h4>{get(data, "data.totalClasses")}</h4> */}
-                        <h4 className="font-bold text-xl">{item.total_amount}</h4>
-                        <Typography color={"#999999"} fontSize={"14px"}>
+                    <StyledCard>
+                        <TypographyTitle>
                             {item.state?.state === "completed" ? t('dashboard.completed_orders') : t('dashboard.cancelled_orders')}
-                        </Typography>
-                    </div>
+                        </TypographyTitle>
+                        <Typography
+                            style={{
+                                fontSize: "24px",
+                                fontWeight: 600,
+                                textAlign: "center",
+                                color: '#FF6701'
+                            }}>{item.total_amount}</Typography>
+                    </StyledCard>
                 ))}
 
-                <div
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.boxShadow = "0 6px 4px rgba(0, 0, 0, 0.15)";
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.boxShadow = "0 0px 0px rgba(0, 0, 0, 0.1)";
-                    }}
-                    className='bg-white p-3 rounded-lg transition-shadow duration-200 ease-in-out'>
-                    {/* <h4>{get(data, "data.totalClasses")}</h4> */}
-                    <h4 className="font-bold text-xl">{numberFormat(totalIncomeData?.data?.income)} {get(settingsData, "currency", "uzs")}</h4>
-                    <Typography color={"#999999"} fontSize={"14px"}>
+                <StyledCard>
+                    <TypographyTitle>
                         {t("dashboard.total_income")}
+                    </TypographyTitle>
+                    <Typography
+                        style={{
+                            fontSize: "18px",
+                            fontWeight: 600,
+                            textAlign: "center",
+                            color: '#FF6701'
+                        }}>
+                        {numberFormat(totalIncomeData?.data?.income)} {get(settingsData, "currency", "uzs")}
                     </Typography>
-                </div>
+                </StyledCard>
 
-                <div
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.boxShadow = "0 6px 4px rgba(0, 0, 0, 0.15)";
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.boxShadow = "0 0px 0px rgba(0, 0, 0, 0.1)";
-                    }}
-                    className='bg-white p-3 rounded-lg transition-shadow duration-200 ease-in-out'>
-                    {/* <h4>{get(data, "data.totalClasses")}</h4> */}
-                    <h4 className="font-bold text-xl">{customerData?.data?.registered}</h4>
-                    <Typography color={"#999999"} fontSize={"14px"}>
+                <StyledCard
+                >
+                    <TypographyTitle>
                         {t("dashboard.registered_customer")}
-                    </Typography>
-                </div>
+                    </TypographyTitle>
+                    <Typography
+                        style={{
+                            fontSize: "24px",
+                            fontWeight: 600,
+                            textAlign: "center",
+                            color: '#FF6701'
+                        }}>{customerData?.data?.registered}</Typography>
+                </StyledCard>
 
-                <div
-                    onMouseEnter={(e) => {
-                        e.currentTarget.style.boxShadow = "0 6px 4px rgba(0, 0, 0, 0.15)";
-                    }}
-                    onMouseLeave={(e) => {
-                        e.currentTarget.style.boxShadow = "0 0px 0px rgba(0, 0, 0, 0.1)";
-                    }}
-                    className='bg-white p-3 rounded-lg transition-shadow duration-200 ease-in-out'>
-                    {/* <h4>{get(data, "data.totalClasses")}</h4> */}
-                    <h4 className="font-bold text-xl">{customerData?.data?.active}</h4>
-                    <Typography color={"#999999"} fontSize={"14px"}>
+                <StyledCard
+                >
+                    <TypographyTitle>
                         {t("dashboard.active_customer")}
-                    </Typography>
-                </div>
-
+                    </TypographyTitle>
+                    <Typography
+                        style={{
+                            fontSize: "24px",
+                            fontWeight: 600,
+                            textAlign: "center",
+                            color: '#FF6701'
+                        }}>{customerData?.data?.active}</Typography>
+                </StyledCard>
             </Grid>
-            <Grid className='grid mt-5 md:grid-cols-2 gap-4'>
+
+            <Grid className='p-2 bg-white mt-2 rounded-lg'>
+                <MainCharts data={attributesData?.data?.states} all_orders={attributesData?.data?.total_amount} />
+            </Grid>
+
+            <Grid className='grid mt-2 md:grid-cols-2 gap-4'>
                 <div className='bg-white rounded-lg'>
                     <p className='font-semibold text-lg p-3'>{t('dashboard.top_users')}</p>
                     <TopTable data={topCustomerData?.data} setSortField={setSortFieldUser} sortField={sortFieldUser} setSortOrder={setSortOrderUser} sortOrder={sortOrderUser} />

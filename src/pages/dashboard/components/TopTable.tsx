@@ -28,7 +28,7 @@ const TopTable: React.FC<any> = ({ data, setSortField, sortField, setSortOrder, 
     };
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="h-[400px] overflow-y-auto bg-gray-100">
             <div className="max-w-7xl mx-auto">
                 <div className="bg-white rounded-b-lg shadow-md overflow-hidden">
                     <div className="overflow-x-auto">
