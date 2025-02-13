@@ -14,7 +14,7 @@ export const SidebarContainer = styled.div<IValueProps>`
     padding-left: ${(props) => (props.value ? "27px" : "21px")};
     transition: all 0.3s ease;
     height: ${(props) => (props.value ? "auto" : "50px")};
-    color: #2B6CB0;
+    color: #FFB200;
     font-size: 14px;
     font-weight: 400;
 
@@ -34,8 +34,8 @@ export const SidebarContainer = styled.div<IValueProps>`
     }
     &:hover {
       cursor: pointer !important;
-      background-color: #2B6CB0;
-      color: #2B6CB0 !important;
+      background-color: #FFB200;
+      color: #FFB200 !important;
     }
   }
   .sidebar-item-parent {
@@ -44,7 +44,7 @@ export const SidebarContainer = styled.div<IValueProps>`
     justify-content: space-between;
     gap: 10px;
     padding: 10px;
-    color: #2B6CB0;
+    color: #FFB200;
     padding-left: ${(props) => (props.value ? "27px" : "21px")};
     font-size: 14px;
     font-weight: 400;
@@ -53,7 +53,7 @@ export const SidebarContainer = styled.div<IValueProps>`
     height: ${(props) => (props.value ? "auto" : "50px")};
 
     &.active {
-      background-color: #2B6CB0;
+      background-color: #FFB200;
     }
 
     .boxsOfChild {
@@ -86,20 +86,20 @@ export const SidebarContainer = styled.div<IValueProps>`
       margin-right: 10px;
       path {
         stroke: none;
-        fill: #2B6CB0;
+        fill: #FFB200;
       }
     }
 
     &:hover {
       cursor: pointer !important;
-      background-color: #2B6CB0;
-      color: #3E5089;
+      background-color: #FFB200;
+      color: #EB5B00;
     }
   }
 
   .sideBar-active {
     cursor: pointer !important;
-    background-color: #2B6CB0;
+    background-color: #FFB200;
 
     span {
       color: #fff !important;
@@ -131,7 +131,7 @@ export const SidebarContainer = styled.div<IValueProps>`
     white-space: nowrap;
   }
   .sidebar-content {
-    background-color: #3E5089;
+    background-color: #EB5B00;
     width: 100%;
     left: 0;
     top: 0;
@@ -143,7 +143,7 @@ export const SidebarContainer = styled.div<IValueProps>`
 
   .sidebar-top {
     height: 72px;
-    background-color: #3E5089;
+    background-color: #EB5B00;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -184,7 +184,7 @@ export const SidebarContainer = styled.div<IValueProps>`
   }
   .sidebar-top-item {
     width: ${(props) => (props.value ? "auto" : "100%")};
-    background-color: #2B6CB0;
+    background-color: #FFB200;
     border-radius: 10px;
     padding: 6px;
     display: flex;
@@ -197,7 +197,7 @@ export const SidebarContainer = styled.div<IValueProps>`
     transition: 0.3s ease;
 
     &:hover {
-      background-color: #2B6CB0;
+      background-color: #FFB200;
     }
 
     .school_head {
@@ -219,7 +219,7 @@ export const SidebarContainer = styled.div<IValueProps>`
       svg {
         transform: scale(1.2);
         path {
-          fill: #2B6CB0;
+          fill: #FFB200;
         }
       }
     }
@@ -240,17 +240,17 @@ export const SidebarContainer = styled.div<IValueProps>`
 
     /* Track */
     ::-webkit-scrollbar-track {
-      background-color: #3E5089;
+      background-color: #EB5B00;
     }
 
     /* Handle */
     ::-webkit-scrollbar-thumb {
-      background-color: #3E5089;
+      background-color: #EB5B00;
     }
 
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
-      background-color: #3E5089;
+      background-color: #EB5B00;
     }
   }
 
@@ -260,7 +260,7 @@ export const SidebarContainer = styled.div<IValueProps>`
       font-size: 11px;
       font-weight: 600;
       text-transform: uppercase;
-      color: #2B6CB0;
+      color: #FFB200;
     }
   }
 
@@ -270,7 +270,7 @@ export const SidebarContainer = styled.div<IValueProps>`
     left: 0;
     width: 100%;
     height: 48px;
-    border-top: 1px solid #3E5089;
+    border-top: 1px solid #EB5B00;
     background-color: black;
     display: flex;
     justify-content: right;
@@ -286,22 +286,22 @@ export const SidebarContainer = styled.div<IValueProps>`
   .sidebar_footer {
     display: flex;
     flex-direction: column;
-    border-top: 1px solid #3E5089;
+    border-top: 1px solid #EB5B00;
 
     .sidebar_foot_item {
       position: relative;
       width: 100%;
       height: 52px;
-      color: #3E5089;
+      color: #EB5B00;
 
       &:hover {
-        background-color: #3E5089;
+        background-color: #EB5B00;
       }
       .icon_foot {
         height: 52px !important;
         font-size: 16px;
         padding: 0 27px;
-        color: #3E5089;
+        color: #EB5B00;
         display: flex;
         align-items: center;
         gap: 18px;
@@ -323,11 +323,11 @@ export const HoveredItems = styled.div`
   .hovered_title {
     font-weight: 600;
     font-size: 13px;
-    color: #3E5089;
+    color: #EB5B00;
 
     svg {
       path {
-        stroke: #3E5089 !important;
+        stroke: #EB5B00 !important;
       }
     }
   }
@@ -340,16 +340,16 @@ export const HoveredItems = styled.div`
     transition: all 0.3s ease;
     font-size: 0.9rem;
     font-weight: 500;
-    color: #3E5089 !important;
+    color: #EB5B00 !important;
     padding: 10px;
     margin-bottom: 2px;
-    /* background: #3E5089; */
+    /* background: #EB5B00; */
 
     cursor: pointer;
 
     svg {
       circle {
-        fill: #3E5089 !important;
+        fill: #EB5B00 !important;
       }
       &:hover {
         fill: #fff !important;
@@ -357,13 +357,13 @@ export const HoveredItems = styled.div`
     }
 
     &.sideBarHovered-active {
-      background: #3E5089;
+      background: #EB5B00;
       border-radius: 5px;
       color: #fff !important;
     }
     &:hover {
       border-radius: 5px;
-      background: #3E5089;
+      background: #EB5B00;
       color: #fff !important;
 
     }
@@ -377,7 +377,7 @@ export const HoveredItems = styled.div`
     font-weight: 600;
     gap: 10px;
     height: 34px;
-    border-bottom: 1px solid #3E5089;
+    border-bottom: 1px solid #EB5B00;
 
     span {
       margin-top: 2px;
@@ -407,7 +407,7 @@ export const SettingDrawerStyle = styled.div`
       h2 {
         font-size: 33px;
         font-weight: 700;
-        color: #3E5089;
+        color: #EB5B00;
       }
     }
 
@@ -427,17 +427,17 @@ export const SettingDrawerStyle = styled.div`
           height: 40px;
 
           path {
-            fill: #2B6CB0;
+            fill: #FFB200;
           }
         }
 
         p {
           font-size: 16px;
-          color: #3E5089;
+          color: #EB5B00;
           cursor: pointer;
 
           span {
-            color: #3E5089;
+            color: #EB5B00;
             font-size: 14px;
           }
 
@@ -510,7 +510,7 @@ export const SettingDrawerStyle = styled.div`
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
-        color: #3E5089;
+        color: #EB5B00;
       }
     }
   }
@@ -540,11 +540,11 @@ export const LanguageBox = styled.div`
     outline: none;
     border-radius: 12px;
     color: white;
-    background-color: #2B6CB0;
+    background-color: #FFB200;
     font-size: 14px;
     transition: all 0.3s ease;
     cursor: pointer;
-    border: 1px solid #2B6CB0;
+    border: 1px solid #FFB200;
 
     &:hover {
       border: 1px solid red;
@@ -560,7 +560,7 @@ export const LanguageBox = styled.div`
 export const NotificationButton = styled(IconButton)`
   svg {
     path {
-      fill: #2B6CB0;
+      fill: #FFB200;
     }
   }
 `;
@@ -584,11 +584,11 @@ export const NotificationContent = styled("div")`
     width: 7px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: #3E5089;
+    background-color: #EB5B00;
     border-radius: 12px;
   }
   &::-webkit-scrollbar-track {
-    background-color: #3E5089;
+    background-color: #EB5B00;
     border-radius: 12px;
   }
 
@@ -604,7 +604,7 @@ export const NotificationContent = styled("div")`
 
     h2 {
       font-size: 16px;
-      color: #3E5089;
+      color: #EB5B00;
     }
   }
 
@@ -617,7 +617,7 @@ export const NotificationContent = styled("div")`
       display: flex;
       gap: 6px;
       flex-direction: column;
-      background-color: #2B6CB0;
+      background-color: #FFB200;
       padding: 12px;
       border-radius: 10px;
       background-color: ${({ theme }) => theme.background.body};
@@ -631,7 +631,7 @@ export const NotificationContent = styled("div")`
           display: flex;
           gap: 7px;
           font-size: 14px;
-          color: #3E5089;
+          color: #EB5B00;
         }
         span {
           display: flex;
@@ -642,7 +642,7 @@ export const NotificationContent = styled("div")`
       }
 
       .message {
-        color: #3E5089;
+        color: #EB5B00;
       }
 
       .foot {
@@ -653,7 +653,7 @@ export const NotificationContent = styled("div")`
         .readable_box {
           width: 10px;
           height: 10px;
-          background-color: #3E5089;
+          background-color: #EB5B00;
           border-radius: 10px;
           display: inline-block;
         }

@@ -21,7 +21,7 @@ export const SettingsStyled = styled.div`
         top: 0;
         bottom: 0;
         width: 6px;
-        background-color: #3e5189;
+        background-color: #EB5B00;
       }
     }
   }

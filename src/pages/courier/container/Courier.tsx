@@ -10,7 +10,7 @@ import { IIdImage } from "hooks/usePostImage";
 import CourierFrom from "../components/CourierForm";
 import WarningModal from "components/common/WarningModalPost/WarningModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Button, Grid } from "@mui/material";
+import { Button, Checkbox, Grid, Input, TextField } from "@mui/material";
 import CommonButton from "components/common/commonButton/Button";
 import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
 import { Clusterer, Map, Placemark, YMaps } from "react-yandex-maps";
@@ -30,6 +30,8 @@ const Courier = () => {
   const [mainImageId, setMainImageId] = useState<any>();
   const navigate = useNavigate();
   const [tab, setTab] = useState(allParams.type || "table");
+  const [showDriverName, setShowDriverName] = useState<boolean>(true);
+  const [radius, setRadius] = useState<any>(200000)
 
   const resetForm = () => {
     setEditingCourierId(undefined);
@@ -80,11 +82,10 @@ const Courier = () => {
   useEffect(() => {
     if (tab === "map") {
       mutate({
-        radius: 100000000
+        radius: +radius
       });
     }
-  }, [tab]);
-
+  }, [tab, radius]);
 
 
   useEffect(() => {
@@ -118,6 +119,13 @@ const Courier = () => {
           sx={{
             height: 36,
             textTransform: "none",
+            backgroundColor: tab === "table" ? "#EB5B00" : "transparent",
+            borderColor: "#EB5B00",
+            color: tab === "table" ? "#fff" : "#EB5B00",
+            '&:hover': {
+              backgroundColor: tab === "table" ? "#EB5B00" : "rgba(235, 91, 0, 0.1)",
+              borderColor: "#EB5B00",
+            },
           }}
           onClick={() => handleChange("table")}
         >
@@ -128,12 +136,50 @@ const Courier = () => {
           sx={{
             height: 36,
             textTransform: "none",
+            backgroundColor: tab === "map" ? "#EB5B00" : "transparent",
+            borderColor: "#EB5B00",
+            color: tab === "map" ? "#fff" : "#EB5B00",
+            '&:hover': {
+              backgroundColor: tab === "map" ? "#EB5B00" : "rgba(235, 91, 0, 0.1)",
+              borderColor: "#EB5B00",
+            },
           }}
           onClick={() => handleChange("map")}
         >
           {t("general.map")}
         </Button>
       </Grid>
+      {
+        tab === "map" ?
+          <Grid className="flex items-center justify-between px-2">
+            <div>
+              <Checkbox
+                id="showDriverName"
+                checked={showDriverName}
+                onChange={(event: any) => {
+                  setShowDriverName(event.target.checked as boolean);
+                }}
+              />
+              <label htmlFor="showDriverName" className="hover">
+                {t('general.show_name')} 
+              </label>
+            </div>
+            <div>
+              <TextField
+                value={radius / 1000}
+                onChange={(e) => {
+                  const kmValue = parseFloat(e.target.value) || 0; 
+                  setRadius(kmValue * 1000);
+                }}
+                size="small"
+                placeholder={String(t('general.radius'))}
+                label={t('general.radius')}
+                type="number"
+              />
+            </div>
+          </Grid>
+          : null
+      }
       {tab === "table" ?
         <Table
           dataUrl="courier/paging"
@@ -156,30 +202,29 @@ const Courier = () => {
               height="100%"
               state={{
                 center: storeCoordinates,
-                zoom: 11,
+                zoom: 12,
                 behaviors: ["default", "scrollZoom"],
               }}
             >
-              <Clusterer
-                options={{
-                  // preset: "islands#invertedVioletClusterIcons",
-                  groupByCoordinates: true,
-                  clusterDisableClickZoom: false,
-                  clusterHideIconOnBalloonOpen: false,
-                  geoObjectHideIconOnBalloonOpen: false,
-                }}
-              >
-                {data?.data?.map((location: any, index: number) => (
-                  <Placemark
-                    key={location?.addressLocationCoordination?.coordinates[1] + location?.addressLocationCoordination?.coordinates[0] + "_key"}
-                    geometry={[location?.addressLocationCoordination?.coordinates[1], location?.addressLocationCoordination?.coordinates[0]]}
-                    properties={getPointData(location)}
-                    options={{
-                      preset: location?.hasOrder !== true ? "islands#greenDotIcon" : "islands#redDotIcon", 
-                    }}
-                  />
-                ))}
-              </Clusterer>
+              {data?.data?.map((location: any, index: number) => (
+                <Placemark
+                  key={location?.addressLocationCoordination?.coordinates[1] + location?.addressLocationCoordination?.coordinates[0] + "_key"}
+                  geometry={[location?.addressLocationCoordination?.coordinates[1], location?.addressLocationCoordination?.coordinates[0]]}
+                  properties={{
+                    iconContent: index + 1,
+                    iconCaption: showDriverName
+                      ? `${location?.firstName || ""} ${location?.lastName || ""
+                      }`
+                      : undefined,
+                    balloonContentHeader: `${location?.firstName} ${location?.lastName}`,
+                  }}
+                  options={{
+                    preset: location?.hasOrder !== true
+                      ? "islands#greenAutoCircleIcon"
+                      : "islands#redHomeIcon"
+                  }}
+                />
+              ))}
             </Map>
           </YMaps>
         </div>

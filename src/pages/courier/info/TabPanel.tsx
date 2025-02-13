@@ -76,7 +76,7 @@ const OrderItem = ({ _id, id, amount, status, currency, date, status_color, cour
         <Typography variant="body2" color="text.secondary">
           {date}
         </Typography>
-        <Typography variant="subtitle1" fontWeight="bold" color="#6B46C1">
+        <Typography variant="subtitle1" fontWeight="bold" color="#EB5B00">
           {numberFormat(amount)} {currency}
         </Typography>
       </Box>
@@ -147,10 +147,10 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
               fontSize: '1rem'
             },
             '& .Mui-selected': {
-              color: '#6B46C1 !important'
+              color: '#EB5B00 !important'
             },
             '& .MuiTabs-indicator': {
-              backgroundColor: '#6B46C1'
+              backgroundColor: '#EB5B00'
             }
           }}
         >
@@ -212,7 +212,7 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
       <TabPanel value={value} index={1}>
         <Grid className='grid lg:grid-cols-2 gap-2 pb-3'>
           <RangeDatePicker />
-          <Button className='bg-blue-400 w-full' variant='outlined' onClick={handleClick}>
+          <Button className='bg-[#EB5B00] w-full' variant='outlined' onClick={handleClick}>
             {isCourierLeft ? t('driver.all_orders') : t('driver.late_orders')}
           </Button>
         </Grid>

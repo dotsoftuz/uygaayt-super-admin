@@ -100,7 +100,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
           borderRadius: '50%',
           width: 40,
           height: 40,
-          bgcolor: notification?.isRead ? 'action.selected' : 'primary.main',
+          bgcolor: notification?.isRead ? 'action.selected' : '#EB5B00',
           color: notification?.isRead ? 'text.secondary' : 'white',
         }}
       >

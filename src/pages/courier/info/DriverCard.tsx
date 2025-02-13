@@ -20,7 +20,7 @@ const DriverCard = ({ courierInfoData}: any) => {
                             <Typography variant="h4" sx={{
                                 fontWeight: 700,
                                 textTransform: 'capitalize',
-                                color: '#1a237e'
+                                color: '#EB5B00'
                             }}>
                                 {courierInfoData?.fullName}
                             </Typography>

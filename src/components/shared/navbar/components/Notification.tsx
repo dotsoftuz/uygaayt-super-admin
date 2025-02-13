@@ -41,7 +41,7 @@ const Notification = () => {
         onClick={handleClick}
         aria-label="notifications"
       >
-        <Badge badgeContent={unreadCount} color="primary">
+        <Badge badgeContent={unreadCount} color="warning">
           <NotificationsIcon />
         </Badge>
       </IconButton>

@@ -18,7 +18,7 @@ export const StyledSwitch = styled("div")({
     width: "43px",
     height: "50.6px",
     // opacity: "0.7", // @here is opacity
-    background: "#3E5189",
+    background: "#EB5B00",
     top: -0.2,
     left: "0",
     right: "auto",

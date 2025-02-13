@@ -10,7 +10,7 @@ export const DefaultPageStyled = styled.div`
   flex-direction: column;
   justify-content: center;
   gap: 30px;
-  background-color: #3e5189;
+  background-color: #EB5B00;
   border-radius: 51% 49% 72% 28% / 52% 35% 65% 48%;
 
   h2 {

@@ -25,7 +25,7 @@ export const CourierCard: React.FC<CourierCardProps> = ({
     return (
         <Grid>
             <Box sx={{
-                background: 'linear-gradient(135deg, #3E5089 0%, #4834A8 100%)',
+                background: 'linear-gradient(135deg, #EB7B00 0%, #EB5B00 100%)',
                 pt: 6,
                 pb: 8,
                 px: 4,
@@ -96,7 +96,7 @@ export const CourierCard: React.FC<CourierCardProps> = ({
                             transform: 'translateX(8px)'
                         }
                     }}>
-                        <Phone style={{ fontSize: 20, color: '#6B46C1' }} />
+                        <Phone style={{ fontSize: 20, color: '#EB5B00' }} />
                         <Typography variant="body1" color="text.primary">
                             {courierInfoData?.data?.phoneNumber}
                         </Typography>

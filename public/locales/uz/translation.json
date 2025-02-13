@@ -1,5 +1,7 @@
 {
   "general": {
+    "radius": "Radiusi (km)",
+    "show_name":"Ism sarlavhasini ko'rsatish",
     "attributes": "Mahsulot variantlari",
     "add_basket": "Savatga qo'shish",
     "again_choose": "Yana tanglang",

@@ -7,7 +7,7 @@ export const BackStyled = styled.div`
     background-color: #f5f5f5;
     border-radius: 8px;
     .icon {
-      color: #0f6fdf;
+      color: #EB5B00;
       font-size: 28px;
     }
   }

@@ -18,8 +18,8 @@ export const RatingStyled = styled.div`
       width: 112px;
       cursor: pointer;
       &.active {
-        background: #3e5189;
-        border: 1px solid #3e5189;
+        background: #EB5B00;
+        border: 1px solid #EB5B00;
       }
       svg {
         margin: 0 1px;

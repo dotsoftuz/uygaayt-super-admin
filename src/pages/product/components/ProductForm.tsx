@@ -607,7 +607,7 @@ const ProductForm = ({
           {hasAttributesEnabled &&
             selectedAttributes?.map((attributeId: any) => (
               <Grid key={attributeId} item md={12}>
-                <p className="text-[#3E5189] font-bold text-xl">
+                <p className="text-[#EB5B00] font-bold text-xl">
                   {
                     filteredAttributes
                       ?.filter((item: any) => item?._id === attributeId)

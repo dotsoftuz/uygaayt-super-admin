@@ -7,7 +7,7 @@ export const SwitchViewStyled = styled.div<any>`
     z-index: 2;
     transition: all 0.3s ease;
     &.active {
-      background-color: #3e5189 !important;
+      background-color: #EB5B00 !important;
     }
   }
 `;

@@ -13,6 +13,6 @@ export const StyledButton = styled(Button)<IMainBtnStyled>((props) => ({
   borderRadius: "10px !important",
   padding: "5px 20px !important",
   backgroundColor:
-    !props?.color && props.variant === "contained" ? "#3E5189 !important" : "",
+    !props?.color && props.variant === "contained" ? "#EB5B00 !important" : "",
   whiteSpace: "nowrap",
 }));

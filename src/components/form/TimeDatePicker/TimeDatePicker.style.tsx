@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 
 export const DateTimePickerStyled = styled.div`
   svg {
-    fill: #3e5189 !important;
+    fill: #EB5B00 !important;
   }
   position: relative;
   .MuiFormControl-root {

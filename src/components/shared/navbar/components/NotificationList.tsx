@@ -36,7 +36,7 @@ export const NotificationList: React.FC<NotificationListProps> = ({
           <Typography
             variant="caption"
             sx={{
-              bgcolor: 'primary.main',
+              bgcolor: '#EB5B00',
               color: 'white',
               px: 1,
               py: 0.5,

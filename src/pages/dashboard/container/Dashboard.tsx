@@ -97,7 +97,7 @@ const Dashboard = () => {
 
     return (
         <>
-            <Grid className='bg-white p-2 flex'>
+            <Grid className='bg-white p-2 flex rounded-lg'>
                 <Grid className=''>
                     <RangeDatePicker />
                 </Grid>

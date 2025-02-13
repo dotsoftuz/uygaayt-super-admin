@@ -74,25 +74,25 @@ export const sidebarRoutes: ISidebarRoute[] = [
     path: "/banner",
     role: "banner", 
     translate: "banner",
-    icon: <DashboardIcon style={{color: "#3E5089"}} />,
+    icon: <DashboardIcon style={{color: "#EB5B00"}} />,
   },
   {
     path: "/news",
     role: "news", 
     translate: "news",
-    icon: <NewspaperIcon style={{color: "#3E5089"}} />,
+    icon: <NewspaperIcon style={{color: "#EB5B00"}} />,
   },
   {
     path: "/promo_code",
     role: "_id", // must change
     translate: "promo_code",
-    icon: <DashboardIcon style={{color: "#3E5089"}} />,
+    icon: <DashboardIcon style={{color: "#EB5B00"}} />,
   },
   {
     path: "/attribute",
     role: "_id", // must change
     translate: "attribute",
-    icon: <NewspaperIcon style={{color: "#3E5089"}} />,
+    icon: <NewspaperIcon style={{color: "#EB5B00"}} />,
   },
   {
     path: "/rating",
