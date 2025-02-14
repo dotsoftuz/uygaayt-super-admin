@@ -532,7 +532,6 @@ const ProductForm = ({
                     <Input
                       label={t('general.quantity')}
                       params={{
-                        type: 'number',
                         ...register(
                           `compounds.${index}.value`,
                         ),
