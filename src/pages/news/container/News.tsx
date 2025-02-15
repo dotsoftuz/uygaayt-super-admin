@@ -1,5 +1,5 @@
 import { FormDrawer, Table } from "components";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useBannerColumns } from "./news.columns";
 import { useAppDispatch } from "../../../store/storeHooks";
 import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
@@ -27,6 +27,7 @@ const News = () => {
     });
   };
 
+  const queryParams = useMemo(() => ({}), []);
 
   return (
     <>
@@ -40,7 +41,7 @@ const News = () => {
           dis(setOpenDrawer(true));
         }}
         onDeleteColumn={(row) => setNewsId(row._id)}
-        exQueryParams={{}}
+        exQueryParams={queryParams}
       />
       <WarningModal open={newsId} setOpen={setNewsId} url="news/delete" />
       <FormDrawer

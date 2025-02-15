@@ -113,6 +113,12 @@ export const sidebarRoutes: ISidebarRoute[] = [
     icon: <IntegrationIcon />,
   },
   {
+    path: "/payment-method",
+    role: "_id", // must change
+    translate: "payment_method",
+    icon: <NewspaperIcon style={{color: "#EB5B00"}} />,
+  },
+  {
     icon: <AnaliticIcon/>,
     translate: "analytics",
     role: "report",

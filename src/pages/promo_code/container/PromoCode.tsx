@@ -1,5 +1,5 @@
 import { FormDrawer, Table } from "components";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useBannerColumns } from "./promo-code.columns";
 import { useAppDispatch } from "../../../store/storeHooks";
 import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
@@ -33,6 +33,8 @@ const PromoCode = () => {
     });
   };
 
+  const queryParams = useMemo(() => ({}), []);
+
   return (
     <>
       <Table
@@ -47,7 +49,7 @@ const PromoCode = () => {
           dis(setOpenDrawer(true));
         } : undefined}
         onDeleteColumn={hasAccess("bannerDelete") ? (row) => setBannerId(row._id) : undefined}
-        exQueryParams={{}}
+        exQueryParams={queryParams}
       />
       <WarningModal open={bannerId} setOpen={setBannerId} url="promocode/delete" />
       <FormDrawer

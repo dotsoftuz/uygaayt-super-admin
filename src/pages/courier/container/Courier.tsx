@@ -1,5 +1,5 @@
 import { ExportButton, FormDrawer, MainButton, Table } from "components";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useCourierColumns } from "./courier.columns";
 import { useAppDispatch } from "../../../store/storeHooks";
 import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
@@ -111,6 +111,8 @@ const Courier = () => {
     };
   };
 
+  const queryParams = useMemo(() => ({}), []);
+
   return (
     <div className="bg-white h-full">
       <Grid className="w-full flex gap-x-3 items-center p-2">
@@ -161,14 +163,14 @@ const Courier = () => {
                 }}
               />
               <label htmlFor="showDriverName" className="hover">
-                {t('general.show_name')} 
+                {t('general.show_name')}
               </label>
             </div>
             <div>
               <TextField
                 value={radius / 1000}
                 onChange={(e) => {
-                  const kmValue = parseFloat(e.target.value) || 0; 
+                  const kmValue = parseFloat(e.target.value) || 0;
                   setRadius(kmValue * 1000);
                 }}
                 size="small"
@@ -192,7 +194,7 @@ const Courier = () => {
           } : undefined}
           onDeleteColumn={hasAccess('courierDelete') ? (row) => setCourierId(row._id) : undefined}
           onRowClick={(row) => navigate(`/courier/${row._id}`)}
-          exQueryParams={{}}
+          exQueryParams={queryParams}
         /> :
 
         <div style={{ height: "calc(100% - 140px)" }}>

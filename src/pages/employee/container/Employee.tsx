@@ -1,5 +1,5 @@
 import { FormDrawer, Table } from "components";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useEmployeeColumns } from "./employee.columns";
 import { useAppDispatch } from "../../../store/storeHooks";
 import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
@@ -29,6 +29,8 @@ const Employee = () => {
     });
   };
 
+  const queryParams = useMemo(() => ({}), []);
+
   return (
     <>
       <Table
@@ -41,7 +43,7 @@ const Employee = () => {
           dis(setOpenDrawer(true));
         } : undefined}
         onDeleteColumn={hasAccess('employeeDelete') ? (row) => setEmployeeId(row._id) : undefined}
-        exQueryParams={{}}
+        exQueryParams={queryParams}
       />
       <WarningModal open={employeeId} setOpen={setEmployeeId} url="employee/delete" />
       <FormDrawer

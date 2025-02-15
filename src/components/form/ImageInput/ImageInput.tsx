@@ -88,13 +88,14 @@ function ImageInput<FormNames extends Record<string, any>>({
                   <div className="pre-loader">
                     <CircularProgress color="primary" size={30} />
                   </div>
-                ) : field?.value && !multiple ? (
-                  <Image src={field?.value?.url} />
+                ) : field?.value ? (
+                  <Image src={typeof field.value === "string" ? field.value : field.value.url || ""} />
                 ) : (
                   <div className="image-top">
                     <DefaultImage />
                   </div>
                 )}
+
               </div>
             </label>
             {fieldState.error && !imageFile && (

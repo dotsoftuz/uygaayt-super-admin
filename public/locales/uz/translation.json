@@ -1,5 +1,6 @@
 {
   "general": {
+    "payment_method": "To'lov turi",
     "radius": "Radiusi (km)",
     "show_name":"Ism sarlavhasini ko'rsatish",
     "attributes": "Mahsulot variantlari",
@@ -74,7 +75,8 @@
     "product_analytics": "Mahsulotlar analitikasi",
     "abc_analytics": "ABC analitikasi",
     "promo_code": "Promo-kod",
-    "attribute": "Atribut"
+    "attribute": "Atribut",
+    "payment_method": "To'lov turi"
   },
   "common": {
     "fullName": "F.I.O",

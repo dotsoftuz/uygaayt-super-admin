@@ -1,5 +1,5 @@
 import { FormDrawer, Table } from "components";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAppDispatch } from "store/storeHooks";
 import RoleForm from "../components/RoleForm";
@@ -34,6 +34,8 @@ const Roles = () => {
     });
   };
 
+  const queryParams = useMemo(() => ({}), []);
+
   return (
     <div>
       <Table
@@ -46,7 +48,7 @@ const Roles = () => {
         } : undefined}
         onDeleteColumn={hasAccess('roleDelete') ? (row) => setRoleId(row._id) : undefined}
         searchable
-        exQueryParams={{}}
+        exQueryParams={queryParams}
       />
       <WarningModal open={roleId} setOpen={setRoleId} url="role/delete" />
       <FormDrawer

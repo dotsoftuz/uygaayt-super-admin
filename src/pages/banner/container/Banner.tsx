@@ -1,5 +1,5 @@
 import { FormDrawer, Table } from "components";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useBannerColumns } from "./banner.columns";
 import { useAppDispatch } from "../../../store/storeHooks";
 import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
@@ -28,6 +28,8 @@ const Banner = () => {
     });
   };
 
+  const queryParams = useMemo(() => ({}), []);
+
   return (
     <>
       <Table
@@ -42,7 +44,7 @@ const Banner = () => {
           dis(setOpenDrawer(true));
         } : undefined}
         onDeleteColumn={hasAccess("bannerDelete") ? (row) => setBannerId(row._id) : undefined}
-        exQueryParams={{}}
+        exQueryParams={queryParams}
       />
       <WarningModal open={bannerId} setOpen={setBannerId} url="banner/delete" />
       <FormDrawer

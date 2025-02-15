@@ -1,5 +1,6 @@
 {
   "general": {
+    "payment_method": "Тип оплаты",
     "radius": "Радиус (км)",
     "show_name":"Показать имя заголовок",
     "attributes": "Варианты продукта",
@@ -74,7 +75,8 @@
     "product_analytics": "Аналитика продукта",
     "abc_analytics": "ABC аналитика",
     "promo_code": "Промо-код",
-    "attribute": "Атрибут"
+    "attribute": "Атрибут",
+    "payment_method": "Тип оплаты"
   },
   "common": {
     "fullName": "Ф.И.О.",

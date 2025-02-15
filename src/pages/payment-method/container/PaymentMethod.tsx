@@ -1,63 +1,65 @@
 import { FormDrawer, Table } from "components";
 import { useMemo, useState } from "react";
-import { useAttributeColumns } from "./attribute.columns";
+import { usePaymentMethodColumns } from "./payment-method.columns";
 import { useAppDispatch } from "../../../store/storeHooks";
 import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
 import { useForm } from "react-hook-form";
-import AttributeForm from "../components/AttributeForm";
 import { useTranslation } from "react-i18next";
 import { useRoleManager } from "services/useRoleManager";
 import WarningModal from "components/common/WarningModal/WarningModal";
+import PaymentMethodForm from "../components/PaymentMethodForm";
 
-const Attribute = () => {
-  const [editingAttributeId, setEditingAttributeId] = useState<any>();
-  const [attributeId, setAttributeId] = useState<any>();
-  const columns = useAttributeColumns();
+const PaymentMethod = () => {
+  const [editingPaymentMethodId, setEditingPaymentMethodId] = useState<any>();
+  const [paymentMethodId, setPaymentMethodId] = useState<any>();
+  const columns = usePaymentMethodColumns();
   const hasAccess = useRoleManager();
   const { t } = useTranslation();
   const dis = useAppDispatch();
   const formStore = useForm<any>();
 
   const resetForm = () => {
-    setEditingAttributeId(undefined);
+    setEditingPaymentMethodId(undefined);
     formStore.reset({
-      name: { uz: "", ru: "", en: "" },
+      name: "",
     });
   };
 
-  const queryParams = useMemo(() => ({}), []);
+  const queryParams = useMemo(() => ({
+
+  }), []);
 
   return (
     <>
       <Table
-        dataUrl="attribute/paging"
+        dataUrl="payment-method/paging"
         columns={columns}
         searchable
         onAddButton={() => {
           dis(setOpenDrawer(true));
         }}
         onEditColumn={(row) => {
-          setEditingAttributeId(row._id);
+          setEditingPaymentMethodId(row._id);
           dis(setOpenDrawer(true));
         }}
-        onDeleteColumn={(row) => setAttributeId(row._id)}
+        onDeleteColumn={(row) => setPaymentMethodId(row._id)}
         exQueryParams={queryParams}
       />
-      <WarningModal open={attributeId} setOpen={setAttributeId} url="attribute/delete" />
+      <WarningModal open={paymentMethodId} setOpen={setPaymentMethodId} url="payment-method/delete" />
       <FormDrawer
-        FORM_ID="attribute"
-        isEditing={!!editingAttributeId}
-        customTitle={t("attribute.add")}
+        FORM_ID="payment-method"
+        isEditing={!!editingPaymentMethodId}
+        customTitle={t("general.payment_method")}
         onClose={resetForm}
       >
-        <AttributeForm
+        <PaymentMethodForm
           formStore={formStore}
           resetForm={resetForm}
-          editingAttributeId={editingAttributeId}
+          editingPaymentMethodId={editingPaymentMethodId}
         />
       </FormDrawer>
     </>
   );
 };
 
-export default Attribute;
+export default PaymentMethod;

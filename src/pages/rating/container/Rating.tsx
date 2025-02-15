@@ -1,5 +1,5 @@
 import { FormDrawer, Table } from "components";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRatingColumns } from "./rating.columns";
 import { useAppDispatch } from "../../../store/storeHooks";
 import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
@@ -52,15 +52,17 @@ const Rating = () => {
 
   const hasAccess = useRoleManager();
 
+  const queryParams = useMemo(() => ({
+    rate
+  }), [rate]);
+
   return (
     <RatingStyled>
       <Table
         dataUrl="rate-comment/paging"
         columns={columns}
         headerChildren={renderHeader}
-        exQueryParams={{
-          rate,
-        }}
+        exQueryParams={queryParams}
         onAddButton={
           hasAccess("rateCommentCreate")
             ? () => dis(setOpenDrawer(true))
@@ -69,9 +71,9 @@ const Rating = () => {
         onEditColumn={
           hasAccess("rateCommentUpdate")
             ? (row) => {
-                setEditingRatingId(row._id);
-                dis(setOpenDrawer(true));
-              }
+              setEditingRatingId(row._id);
+              dis(setOpenDrawer(true));
+            }
             : undefined
         }
         onDeleteColumn={
