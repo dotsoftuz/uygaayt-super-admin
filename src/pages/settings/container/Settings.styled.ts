@@ -57,7 +57,7 @@ export const HeaderOfSettings = styled.div`
   align-items: center;
   position: sticky;
   top: 0;
-  z-index: 99;
+  z-index: 70;
   height: 80px;
   background-color: #fff;
 `;

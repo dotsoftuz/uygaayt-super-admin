@@ -12,6 +12,7 @@ import useAllQueryParams from 'hooks/useGetAllQueryParams/useAllQueryParams';
 import isBetween from "dayjs/plugin/isBetween";
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { numberFormat } from 'utils/numberFormat';
+import { formatSeconds } from 'utils/formatSeconds';
 
 dayjs.extend(isBetween);
 
@@ -210,6 +211,14 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders, custo
               </Typography>
               <Typography variant="h6">
                 {numberFormat(customerReportData?.data?.saved_amount) + " " + get(settingsData, "currency", "uzs")}
+              </Typography>
+            </Paper>
+            <Paper sx={{ p: 3, backgroundColor: '#F7FAFC' }}>
+              <Typography variant="subtitle2" color="text.secondary" mb={1}>
+                {t('customer_info.savings_time')}
+              </Typography>
+              <Typography variant="h6">
+                {formatSeconds(customerReportData?.data?.saved_time)}
               </Typography>
             </Paper>
           </Box>

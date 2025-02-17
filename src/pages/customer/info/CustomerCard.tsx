@@ -14,7 +14,7 @@ export const CustomerCard: React.FC<CustomerCardProps> = ({
     return (
         <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
             <Box sx={{
-                background: 'linear-gradient(135deg, #3E5089 0%, #4834A8 100%)',
+                 background: 'linear-gradient(135deg, #EB7B00 0%, #EB5B00 100%)',
                 pt: 6,
                 pb: 8,
                 px: 4,

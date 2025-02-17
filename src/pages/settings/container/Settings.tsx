@@ -3,7 +3,7 @@ import { HeaderOfSettings, SettingsStyled, SettingTitle, StyledMenuItem, StyledP
 import { SETTINGS_TABS } from "types/enums";
 import { useEffect, useState } from "react";
 import { useRoleManager } from "services/useRoleManager";
-import { MainButton, TextInput } from "components";
+import { Input, MainButton, TextInput } from "components";
 import { useTranslation } from "react-i18next";
 import { PHONE_COUNTRY_DATA } from "./Settings.constants";
 import { Controller, useForm } from "react-hook-form";
@@ -14,6 +14,10 @@ import MainAddress from "../components/MainAddress";
 import WebsiteConditions from "../components/WebsiteConditions";
 import DiscountOrder from "../components/DiscountOrder";
 import PremiumDiscountOrder from "../components/PremiumDiscountOrder";
+import { realNumberPattern } from "utils/pattern";
+import currencyFormatter from "utils/currencyFormatter";
+import { StyledPercent, StyledSwitch } from "../style/discount.style";
+import { Percent } from "@mui/icons-material";
 
 const Settings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -99,7 +103,7 @@ const Settings = () => {
 
           </div>
         </Grid>
-        <Grid item className="md:w-2/3 p-2" >
+        <Grid className="md:w-2/3 p-2" >
           {activeTab === "functionality" && (
             <div className="settings">
               <HeaderOfSettings>
@@ -285,6 +289,46 @@ const Settings = () => {
                       name="customerSavedPercent"
                       type="number"
                     />
+                  </div>
+                </Grid>
+
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">
+                      {(watch(`savedTimeCalculateMethod`) === "percent" ? t('general.savings_time_percent') : t('general.savings_time_amount'))}
+                    </span>
+                    <div className="flex items-end justify-between">
+                      <TextInput
+                        control={control}
+                        name={`customerSavedTime`}
+                        type="number"
+                        rules={{ required: false }}
+                      />
+
+                      <Grid
+                        className="flex">
+                        <StyledSwitch
+                          className={
+                            watch(`savedTimeCalculateMethod`) === "percent" ? "show" : ""
+                          }
+                          onClick={() =>
+                            setValue(
+                              `savedTimeCalculateMethod`,
+                              watch(`savedTimeCalculateMethod`) === "percent"
+                                ? "amount"
+                                : "percent"
+                            )
+                          }
+                        >
+                          <StyledPercent>
+                            <Percent />
+                          </StyledPercent>
+                          <StyledPercent style={{ fontWeight: 500 }}>
+                            {data?.data?.currency}
+                          </StyledPercent>
+                        </StyledSwitch>
+                      </Grid>
+                    </div>
                   </div>
                 </Grid>
 

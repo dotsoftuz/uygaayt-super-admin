@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from "@mui/material"
+import { Box, Container, Grid, Typography } from "@mui/material"
 import { CustomerCard } from './CustomerCard';
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
@@ -29,7 +29,7 @@ const CustomerInfo = () => {
     }
   );
 
-  const { mutate:customerReport, data:customerReportData } = useApiMutation(
+  const { mutate: customerReport, data: customerReportData } = useApiMutation(
     "order/customer/report",
     "post",
     {
@@ -54,45 +54,22 @@ const CustomerInfo = () => {
     });
   }, [allParams.dateFrom, allParams.dateTo]);
 
-
-
-  console.log(customerReportData)
-
   return (
     <>
       {
         id && (
-          <Box sx={{
-            // minHeight: '100vh',
-            py: 2,
-            px: 2
-          }}>
-            <Container maxWidth="lg" sx={{ py: 2 }}>
-              <Box sx={{
-                display: 'flex',
-                gap: 2,
-                flexDirection: { xs: 'column', md: 'row' }
-              }}>
-                <Box sx={{
-                  flex: { xs: '1', md: '0 0 500px' },
-                  minWidth: 0
-                }}>
-                  <CustomerCard
-                    customerInfoData={customerInfoData}
-                  />
-                </Box>
-                <Box sx={{ flex: 1, minWidth: 0 }}>
-                  <CustomerTabs historyOrders={data?.data} customerReportData={customerReportData} />
-                </Box>
-              </Box>
-            </Container>
-          </Box >
+          <Grid className="grid md:grid-cols-2 gap-4 p-2">
+            <CustomerCard
+              customerInfoData={customerInfoData}
+            />
+            <CustomerTabs historyOrders={data?.data} customerReportData={customerReportData} />
+          </Grid>
         )
       }
-
-
     </>
   )
+
+
 }
 
 export default CustomerInfo

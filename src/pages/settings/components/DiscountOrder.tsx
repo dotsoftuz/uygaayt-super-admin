@@ -228,7 +228,7 @@ const DiscountOrder = ({ data }: any) => {
           </Grid>
 
         ))}
-        <Grid item xs={12} md={6}  paddingBlock={2}>
+        <Grid item xs={12} md={2}  paddingBlock={2}>
           <CommonButton
             startIcon={<PlusIcon />}
             type="button"

@@ -1,5 +1,6 @@
 {
   "general": {
+    "savings_time": "Экономия времени",
     "payment_method": "Тип оплаты",
     "radius": "Радиус (км)",
     "show_name":"Показать имя заголовок",
@@ -282,6 +283,7 @@
     "total_purchases": "Количество покупок",
     "total_amount": "Общая сумма платежа",
     "savings_money": "Экономия",
+    "savings_time": "Экономия времени",
     "years": "Ежегодный"
   }
 }
