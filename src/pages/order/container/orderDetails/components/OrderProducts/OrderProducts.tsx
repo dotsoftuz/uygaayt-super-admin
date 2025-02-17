@@ -46,8 +46,6 @@ const OrderProducts = ({ formStore, state, order }: any) => {
             ? 4
             : 0;
 
-  console.log(products)
-
   return (
     <OrderProductsStyled>
       <div className="steps" style={{ border: "none" }}>
@@ -153,6 +151,16 @@ const OrderProducts = ({ formStore, state, order }: any) => {
               {get(settingsData, "currency", "uzs")}
             </b>
           </li>
+          {
+            get(order, "promocode.amount", "") &&
+            <li>
+              <span>Promokod:</span>
+              <b>
+                -{numberFormat(get(order, "promocode.amount", 0))}{" "}
+                {get(settingsData, "currency", "uzs")}
+              </b>
+            </li>
+          }
           <li>
             <span className="main">Umumiy:</span>{" "}
             <b>

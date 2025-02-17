@@ -1,7 +1,7 @@
-import { ExportButton, FormDrawer, MainButton, Table } from "components";
+import { FormDrawer, Table } from "components";
 import { useEffect, useMemo, useState } from "react";
 import { useCourierColumns } from "./courier.columns";
-import { useAppDispatch } from "../../../store/storeHooks";
+import { useAppDispatch, useAppSelector } from "../../../store/storeHooks";
 import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -10,11 +10,12 @@ import { IIdImage } from "hooks/usePostImage";
 import CourierFrom from "../components/CourierForm";
 import WarningModal from "components/common/WarningModalPost/WarningModal";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Button, Checkbox, Grid, Input, TextField } from "@mui/material";
-import CommonButton from "components/common/commonButton/Button";
+import { Button, Checkbox, Grid, TextField } from "@mui/material";
 import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
-import { Clusterer, Map, Placemark, YMaps } from "react-yandex-maps";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
+import CourierMap from "../components/CourierMap";
+import { socket } from "socket";
+import { socketReRender } from "store/reducers/SocketSlice";
 
 const Courier = () => {
   const allParams = useAllQueryParams();
@@ -32,6 +33,8 @@ const Courier = () => {
   const [tab, setTab] = useState(allParams.type || "table");
   const [showDriverName, setShowDriverName] = useState<boolean>(true);
   const [radius, setRadius] = useState<any>(200000)
+  const socketRender = useAppSelector((store) => store.SocketState.render);
+  
 
   const resetForm = () => {
     setEditingCourierId(undefined);
@@ -64,7 +67,7 @@ const Courier = () => {
   }, [allParams, setParams]);
 
 
-  const { mutate, data, status } = useApiMutation(
+  const { mutate, data, reset, status } = useApiMutation(
     `courier/map`,
     "post",
     {},
@@ -100,18 +103,26 @@ const Courier = () => {
     storeAddress?.data?.addressLocation?.longitude,
   ];
 
-  const getPointData = (location: any) => {
-    return {
-      balloonContentBody:
-        " <strong>" +
-        location?.firstName +
-        " " +
-        location?.lastName +
-        "</strong>",
-    };
-  };
-
   const queryParams = useMemo(() => ({}), []);
+
+  useEffect(() => {
+    if (socketRender) {
+      reset()
+      dis(socketReRender(false));
+    }
+  }, [socketRender]);
+
+  useEffect(() => {
+    const handleUpdateCourier = (data: { data: any }) => {
+      console.log(data);
+    };
+
+    socket.on('courierLocation', handleUpdateCourier);
+
+    return () => {
+      socket.off('courierLocation', handleUpdateCourier);
+    };
+  }, []);
 
   return (
     <div className="bg-white h-full">
@@ -196,40 +207,7 @@ const Courier = () => {
           onRowClick={(row) => navigate(`/courier/${row._id}`)}
           exQueryParams={queryParams}
         /> :
-
-        <div style={{ height: "calc(100% - 140px)" }}>
-          <YMaps query={{ load: "package.full" }}>
-            <Map
-              width="100%"
-              height="100%"
-              state={{
-                center: storeCoordinates,
-                zoom: 12,
-                behaviors: ["default", "scrollZoom"],
-              }}
-            >
-              {data?.data?.map((location: any, index: number) => (
-                <Placemark
-                  key={location?.addressLocationCoordination?.coordinates[1] + location?.addressLocationCoordination?.coordinates[0] + "_key"}
-                  geometry={[location?.addressLocationCoordination?.coordinates[1], location?.addressLocationCoordination?.coordinates[0]]}
-                  properties={{
-                    iconContent: index + 1,
-                    iconCaption: showDriverName
-                      ? `${location?.firstName || ""} ${location?.lastName || ""
-                      }`
-                      : undefined,
-                    balloonContentHeader: `${location?.firstName} ${location?.lastName}`,
-                  }}
-                  options={{
-                    preset: location?.hasOrder !== true
-                      ? "islands#greenAutoCircleIcon"
-                      : "islands#redHomeIcon"
-                  }}
-                />
-              ))}
-            </Map>
-          </YMaps>
-        </div>
+        <CourierMap data={data} storeCoordinates={storeCoordinates} showDriverName={showDriverName} />
       }
 
       <WarningModal open={courierId} setOpen={setCourierId} url="courier/delete" />
