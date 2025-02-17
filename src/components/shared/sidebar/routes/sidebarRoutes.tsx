@@ -1,7 +1,9 @@
-import { AboutIcon, AnaliticIcon, CategoryIcon, DashboardIconMain, IntegrationIcon, ManageIcon, OrderIcon, ProductIcon, RatingIcon, SettingsIcon, TransactionIcon, UserIcon } from "assets/svgs";
+import { AboutIcon, AnaliticIcon, CategoryIcon, DashboardIconMain, IntegrationIcon, ManageIcon, OrderIcon, PaymentType, ProductIcon, RatingIcon, SettingsIcon, TransactionIcon, UserIcon } from "assets/svgs";
 import { ISidebarRoute } from "../sidebar.types";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
+import ArticleIcon from '@mui/icons-material/Article';
 
 export const sidebarRoutes: ISidebarRoute[] = [
   {
@@ -74,7 +76,7 @@ export const sidebarRoutes: ISidebarRoute[] = [
     path: "/banner",
     role: "banner", 
     translate: "banner",
-    icon: <DashboardIcon style={{color: "#EB5B00"}} />,
+    icon: <ViewCarouselIcon className="text-[#fff]" />,
   },
   {
     path: "/news",
@@ -92,7 +94,7 @@ export const sidebarRoutes: ISidebarRoute[] = [
     path: "/attribute",
     role: "_id", // must change
     translate: "attribute",
-    icon: <NewspaperIcon style={{color: "#EB5B00"}} />,
+    icon: <ArticleIcon style={{color: "#EB5B00"}} />,
   },
   {
     path: "/rating",
@@ -116,7 +118,7 @@ export const sidebarRoutes: ISidebarRoute[] = [
     path: "/payment-method",
     role: "_id", // must change
     translate: "payment_method",
-    icon: <NewspaperIcon style={{color: "#EB5B00"}} />,
+    icon: <PaymentType />,
   },
   {
     icon: <AnaliticIcon/>,

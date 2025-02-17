@@ -14,7 +14,7 @@ export const SidebarContainer = styled.div<IValueProps>`
     padding-left: ${(props) => (props.value ? "27px" : "21px")};
     transition: all 0.3s ease;
     height: ${(props) => (props.value ? "auto" : "50px")};
-    color: #FFB200;
+    color: #FFF3E0;
     font-size: 14px;
     font-weight: 400;
 
@@ -29,13 +29,13 @@ export const SidebarContainer = styled.div<IValueProps>`
     svg {
       transition: all 0.3s ease;
       path {
-        stroke: white;
+        stroke: #EB5A02;
       }
     }
     &:hover {
       cursor: pointer !important;
-      background-color: #FFB200;
-      color: #FFB200 !important;
+      background-color: #FFF3E0;
+      color: #FFF3E0 !important;
     }
   }
   .sidebar-item-parent {
@@ -44,7 +44,7 @@ export const SidebarContainer = styled.div<IValueProps>`
     justify-content: space-between;
     gap: 10px;
     padding: 10px;
-    color: #FFB200;
+    color: #FFF3E0;
     padding-left: ${(props) => (props.value ? "27px" : "21px")};
     font-size: 14px;
     font-weight: 400;
@@ -53,7 +53,7 @@ export const SidebarContainer = styled.div<IValueProps>`
     height: ${(props) => (props.value ? "auto" : "50px")};
 
     &.active {
-      background-color: #FFB200;
+      background-color: #FFF3E0;
     }
 
     .boxsOfChild {
@@ -79,35 +79,35 @@ export const SidebarContainer = styled.div<IValueProps>`
     svg {
       transition: all 0.3s ease;
       path {
-        stroke: white;
+        stroke: #EB5A02;
       }
     }
     .upAndDownIcon {
       margin-right: 10px;
       path {
         stroke: none;
-        fill: #FFB200;
+        fill: #EB5A02;
       }
     }
 
     &:hover {
       cursor: pointer !important;
-      background-color: #FFB200;
-      color: #EB5B00;
+      background-color: #FFF3E0;
+      color: #EB5A02;
     }
   }
 
   .sideBar-active {
     cursor: pointer !important;
-    background-color: #FFB200;
+    background-color: #FFF3E0;
 
     span {
-      color: #fff !important;
+      color: #EB5A02 !important;
     }
 
     svg {
       path {
-        stroke: white;
+        stroke: #EB5A02;
       }
     }
   }
@@ -131,7 +131,7 @@ export const SidebarContainer = styled.div<IValueProps>`
     white-space: nowrap;
   }
   .sidebar-content {
-    background-color: #EB5B00;
+    background-color: #fff;
     width: 100%;
     left: 0;
     top: 0;
@@ -143,7 +143,7 @@ export const SidebarContainer = styled.div<IValueProps>`
 
   .sidebar-top {
     height: 72px;
-    background-color: #EB5B00;
+    background-color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -184,7 +184,7 @@ export const SidebarContainer = styled.div<IValueProps>`
   }
   .sidebar-top-item {
     width: ${(props) => (props.value ? "auto" : "100%")};
-    background-color: #FFB200;
+    background-color: #FFF3E0;
     border-radius: 10px;
     padding: 6px;
     display: flex;
@@ -197,7 +197,7 @@ export const SidebarContainer = styled.div<IValueProps>`
     transition: 0.3s ease;
 
     &:hover {
-      background-color: #FFB200;
+      background-color: #FFF3E0;
     }
 
     .school_head {
@@ -206,7 +206,7 @@ export const SidebarContainer = styled.div<IValueProps>`
       text-align: center;
       p {
         font-size: 22px;
-        color: white;
+        color: #EB5A02;
         text-align: center;
       }
     }
@@ -219,7 +219,7 @@ export const SidebarContainer = styled.div<IValueProps>`
       svg {
         transform: scale(1.2);
         path {
-          fill: #FFB200;
+          fill: #FFF3E0;
         }
       }
     }
@@ -240,17 +240,17 @@ export const SidebarContainer = styled.div<IValueProps>`
 
     /* Track */
     ::-webkit-scrollbar-track {
-      background-color: #EB5B00;
+      background-color: #fff;
     }
 
     /* Handle */
     ::-webkit-scrollbar-thumb {
-      background-color: #EB5B00;
+      background-color: #fff;
     }
 
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
-      background-color: #EB5B00;
+      background-color: #fff;
     }
   }
 
@@ -260,7 +260,7 @@ export const SidebarContainer = styled.div<IValueProps>`
       font-size: 11px;
       font-weight: 600;
       text-transform: uppercase;
-      color: #FFB200;
+      color: #FFF3E0;
     }
   }
 
@@ -270,7 +270,7 @@ export const SidebarContainer = styled.div<IValueProps>`
     left: 0;
     width: 100%;
     height: 48px;
-    border-top: 1px solid #EB5B00;
+    border-top: 1px solid #fff;
     background-color: black;
     display: flex;
     justify-content: right;
@@ -278,7 +278,7 @@ export const SidebarContainer = styled.div<IValueProps>`
     padding: 1rem;
   }
   .MuiTypography-root {
-    color: white;
+    color: #000;
     font-size: 16px;
     font-weight: 500;
   }
@@ -286,22 +286,22 @@ export const SidebarContainer = styled.div<IValueProps>`
   .sidebar_footer {
     display: flex;
     flex-direction: column;
-    border-top: 1px solid #EB5B00;
+    border-top: 1px solid #fff;
 
     .sidebar_foot_item {
       position: relative;
       width: 100%;
       height: 52px;
-      color: #EB5B00;
+      color: #EB5A02;
 
       &:hover {
-        background-color: #EB5B00;
+        background-color: #EB5A02;
       }
       .icon_foot {
         height: 52px !important;
         font-size: 16px;
         padding: 0 27px;
-        color: #EB5B00;
+        color: #EB5A02;
         display: flex;
         align-items: center;
         gap: 18px;
@@ -323,11 +323,11 @@ export const HoveredItems = styled.div`
   .hovered_title {
     font-weight: 600;
     font-size: 13px;
-    color: #EB5B00;
+    color: #EB5A02;
 
     svg {
       path {
-        stroke: #EB5B00 !important;
+        stroke: #EB5A02 !important;
       }
     }
   }
@@ -340,31 +340,31 @@ export const HoveredItems = styled.div`
     transition: all 0.3s ease;
     font-size: 0.9rem;
     font-weight: 500;
-    color: #EB5B00 !important;
+    color: #EB5A02 !important;
     padding: 10px;
     margin-bottom: 2px;
-    /* background: #EB5B00; */
+    /* background: #fff; */
 
     cursor: pointer;
 
     svg {
       circle {
-        fill: #EB5B00 !important;
+        fill: #EB5A02 !important;
       }
       &:hover {
-        fill: #fff !important;
+        fill: #EB5A02 !important;
     }
     }
 
     &.sideBarHovered-active {
-      background: #EB5B00;
+      background: #FFF3E0;
       border-radius: 5px;
-      color: #fff !important;
+      color: #EB5A02 !important;
     }
     &:hover {
       border-radius: 5px;
-      background: #EB5B00;
-      color: #fff !important;
+      background: #FFF3E0;
+      color: #EB5A02 !important;
 
     }
   }
@@ -377,7 +377,7 @@ export const HoveredItems = styled.div`
     font-weight: 600;
     gap: 10px;
     height: 34px;
-    border-bottom: 1px solid #EB5B00;
+    border-bottom: 1px solid #fff;
 
     span {
       margin-top: 2px;
@@ -407,7 +407,7 @@ export const SettingDrawerStyle = styled.div`
       h2 {
         font-size: 33px;
         font-weight: 700;
-        color: #EB5B00;
+        color: #fff;
       }
     }
 
@@ -427,17 +427,17 @@ export const SettingDrawerStyle = styled.div`
           height: 40px;
 
           path {
-            fill: #FFB200;
+            fill: #FFF3E0;
           }
         }
 
         p {
           font-size: 16px;
-          color: #EB5B00;
+          color: #fff;
           cursor: pointer;
 
           span {
-            color: #EB5B00;
+            color: #fff;
             font-size: 14px;
           }
 
@@ -510,7 +510,7 @@ export const SettingDrawerStyle = styled.div`
         font-size: 16px;
         font-weight: 600;
         cursor: pointer;
-        color: #EB5B00;
+        color: #fff;
       }
     }
   }
@@ -540,11 +540,11 @@ export const LanguageBox = styled.div`
     outline: none;
     border-radius: 12px;
     color: white;
-    background-color: #FFB200;
+    background-color: #FFF3E0;
     font-size: 14px;
     transition: all 0.3s ease;
     cursor: pointer;
-    border: 1px solid #FFB200;
+    border: 1px solid #FFF3E0;
 
     &:hover {
       border: 1px solid red;
@@ -560,7 +560,7 @@ export const LanguageBox = styled.div`
 export const NotificationButton = styled(IconButton)`
   svg {
     path {
-      fill: #FFB200;
+      fill: #FFF3E0;
     }
   }
 `;
@@ -584,11 +584,11 @@ export const NotificationContent = styled("div")`
     width: 7px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: #EB5B00;
+    background-color: #fff;
     border-radius: 12px;
   }
   &::-webkit-scrollbar-track {
-    background-color: #EB5B00;
+    background-color: #fff;
     border-radius: 12px;
   }
 
@@ -604,7 +604,7 @@ export const NotificationContent = styled("div")`
 
     h2 {
       font-size: 16px;
-      color: #EB5B00;
+      color: #fff;
     }
   }
 
@@ -617,7 +617,7 @@ export const NotificationContent = styled("div")`
       display: flex;
       gap: 6px;
       flex-direction: column;
-      background-color: #FFB200;
+      background-color: #FFF3E0;
       padding: 12px;
       border-radius: 10px;
       background-color: ${({ theme }) => theme.background.body};
@@ -631,7 +631,7 @@ export const NotificationContent = styled("div")`
           display: flex;
           gap: 7px;
           font-size: 14px;
-          color: #EB5B00;
+          color: #fff;
         }
         span {
           display: flex;
@@ -642,7 +642,7 @@ export const NotificationContent = styled("div")`
       }
 
       .message {
-        color: #EB5B00;
+        color: #fff;
       }
 
       .foot {
@@ -653,7 +653,7 @@ export const NotificationContent = styled("div")`
         .readable_box {
           width: 10px;
           height: 10px;
-          background-color: #EB5B00;
+          background-color: #fff;
           border-radius: 10px;
           display: inline-block;
         }
