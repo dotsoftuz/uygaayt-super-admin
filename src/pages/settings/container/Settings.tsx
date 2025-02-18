@@ -18,6 +18,7 @@ import { realNumberPattern } from "utils/pattern";
 import currencyFormatter from "utils/currencyFormatter";
 import { StyledPercent, StyledSwitch } from "../style/discount.style";
 import { Percent } from "@mui/icons-material";
+import { miniSize } from '../../../styles/global.style';
 
 const Settings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -300,9 +301,17 @@ const Settings = () => {
                     <div className="flex items-end justify-between">
                       <TextInput
                         control={control}
-                        name={`customerSavedTime`}
+                        name="customerSavedTime"
                         type="number"
-                        rules={{ required: false }}
+                        rules={{
+                          required: false,
+                          validate: (value) => {
+                            if (watch("savedTimeCalculateMethod") === "percent") {
+                              return value <= 100 || "Qiymat 100% dan katta";
+                            }
+                            return true;
+                          },
+                        }}
                       />
 
                       <Grid
@@ -323,8 +332,8 @@ const Settings = () => {
                           <StyledPercent>
                             <Percent />
                           </StyledPercent>
-                          <StyledPercent style={{ fontWeight: 500 }}>
-                            {data?.data?.currency}
+                          <StyledPercent>
+                            <span style={{ fontSize: "11px" }}>Miqdor</span>
                           </StyledPercent>
                         </StyledSwitch>
                       </Grid>

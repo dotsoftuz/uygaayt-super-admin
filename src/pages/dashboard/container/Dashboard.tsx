@@ -10,6 +10,7 @@ import useCommonContext from 'context/useCommon';
 import { get } from 'lodash';
 import MainCharts from '../components/mainCharts/MainCharts';
 import { StyledCard, TypographyTitle } from '../style/StatisticsCard.style';
+import { formatMinutes } from '../../../utils/formatMinutes';
 
 type SortField = 'total_price' | 'total_order';
 type SortOrder = "1" | "-1";
@@ -95,6 +96,25 @@ const Dashboard = () => {
         });
     }, [sortFieldCourier, sortOrderCourier]);
 
+
+    const { mutate: customerReport, data: customerReportData } = useApiMutation(
+        "report/customer/saved",
+        "post",
+        {
+          onSuccess(response) {
+          },
+        }
+      );
+    
+      useEffect(() => {
+        customerReport({
+          dateFrom: allParams.dateFrom,
+          dateTo: allParams.dateTo
+        });
+      }, [allParams.dateFrom, allParams.dateTo]);
+
+      console.log(customerReportData)
+
     return (
         <>
             <Grid className='bg-white p-2 flex rounded-lg'>
@@ -172,6 +192,48 @@ const Dashboard = () => {
                             textAlign: "center",
                             color: '#FF6701'
                         }}>{customerData?.data?.active}</Typography>
+                </StyledCard>
+
+                <StyledCard>
+                    <TypographyTitle>
+                        {t("dashboard.sold_product")}
+                    </TypographyTitle>
+                    <Typography
+                        style={{
+                            fontSize: "24px",
+                            fontWeight: 600,
+                            textAlign: "center",
+                            color: '#FF6701'
+                        }}
+                    >{attributesData?.data?.productCount}</Typography>
+                </StyledCard>
+
+                <StyledCard>
+                    <TypographyTitle>
+                        {t("dashboard.customers_saved_time")}
+                    </TypographyTitle>
+                    <Typography
+                        style={{
+                            fontSize: "20px",
+                            fontWeight: 600,
+                            textAlign: "center",
+                            color: '#FF6701'
+                        }}
+                    >{formatMinutes(customerReportData?.data?.saved_time)}</Typography>
+                </StyledCard>
+
+                <StyledCard>
+                    <TypographyTitle>
+                        {t("dashboard.customers_saved_amount")}
+                    </TypographyTitle>
+                    <Typography
+                        style={{
+                            fontSize: "18px",
+                            fontWeight: 600,
+                            textAlign: "center",
+                            color: '#FF6701'
+                        }}
+                    >{numberFormat(customerReportData?.data?.saved_amount)} {get(settingsData, "currency", "uzs")}</Typography>
                 </StyledCard>
             </Grid>
 

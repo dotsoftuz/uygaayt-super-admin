@@ -43,7 +43,7 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-const OrderItem = ({ _id, id, amount, status, currency, date, status_color, courierLateTime }: { _id: string, id: string; amount: string; status: string; currency: string, date: string, status_color: any, courierLateTime: any }) => {
+const OrderItem = ({ _id, id, amount, status, currency, date, status_color, courierLateTime, courierLateTimeToStore, courierInStoreAt }: { _id: string, id: string; amount: string; status: string; currency: string, date: string, status_color: any, courierLateTime: any, courierLateTimeToStore: any, courierInStoreAt: any }) => {
   const navigate = useNavigate();
 
   return (
@@ -72,22 +72,41 @@ const OrderItem = ({ _id, id, amount, status, currency, date, status_color, cour
         <span style={{ backgroundColor: status_color, color: 'white', padding: '8px', borderRadius: "10px", fontSize: "13px" }}>{status}</span>
       </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+        <span>Buyurtma yaratilgan vaqti:</span>
         <Typography variant="body2" color="text.secondary">
           {date}
         </Typography>
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span>Buyurtma narxi:</span>
         <Typography variant="subtitle1" fontWeight="bold" color="#EB5B00">
           {numberFormat(amount)} {currency}
         </Typography>
       </Box>
 
       {courierLateTime ? (
-        <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', gap: 1, mt: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>Kechikdi buyurtmaga:</span>
           <span className='text-red-500'>
             {formatSeconds(courierLateTime)} {t('general.late')}
           </span>
         </Box>
       ) : null}
+      {courierLateTimeToStore ? (
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span>Kechikdi do'konga:</span>
+          <span className='text-red-500'>
+            {formatSeconds(courierLateTimeToStore)} {t('general.late')}
+          </span>
+        </Box>
+      ) : null}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span>Do'konga yetib kelgan vaqti:</span>
+        <Typography variant="body2" color="text.secondary">
+          {courierInStoreAt}
+        </Typography>
+      </Box>
     </Box>
 
   )
@@ -103,6 +122,7 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
   courierInfoData, historyOrders }) => {
   const [value, setValue] = React.useState(1);
   const [isCourierLeft, setIsCourierLeft] = useState<boolean>(false);
+  const [isCourierLateToStore, setIsCourierLateToStore] = useState<boolean>(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -119,15 +139,28 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
   const handleClick = () => {
     setIsCourierLeft((prev) => !prev);
   };
+  const handleClick2 = () => {
+    setIsCourierLateToStore((prev) => !prev);
+  };
 
   useEffect(() => {
     lateFilter(isCourierLeft);
   }, [isCourierLeft]);
 
+  useEffect(() => {
+    lateToStoreFilter(isCourierLateToStore);
+  }, [isCourierLateToStore]);
+
   const lateFilter = (value: any) => {
     setSearchParams({
       ...allParams,
       isCourierLeft: value,
+    });
+  };
+  const lateToStoreFilter = (value: any) => {
+    setSearchParams({
+      ...allParams,
+      isCourierLateToStore: value,
     });
   };
 
@@ -210,10 +243,13 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
 
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Grid className='grid lg:grid-cols-2 gap-2 pb-3'>
+        <Grid className='flex items-center gap-2 pb-3'>
           <RangeDatePicker />
           <Button className='bg-[#EB5B00] w-full' variant='outlined' onClick={handleClick}>
             {isCourierLeft ? t('driver.all_orders') : t('driver.late_orders')}
+          </Button>
+          <Button className='bg-[#EB5B00] w-full' variant='outlined' onClick={handleClick2}>
+            {isCourierLateToStore ? t('driver.all_orders') : t('driver.late_store')}
           </Button>
         </Grid>
         <Box
@@ -233,6 +269,8 @@ export const CourierTabs: React.FC<CourierTabProps> = ({
               currency={get(settingsData, "currency", "uzs")}
               date={orders?.createdAt ? dayjs(orders.createdAt).format("YYYY-MM-DD HH:mm:ss") : "N/A"}
               courierLateTime={orders?.courierLateTime}
+              courierLateTimeToStore={orders?.courierLateTimeToStore}
+              courierInStoreAt={orders?.courierInStoreAt ? dayjs(orders.courierInStoreAt).format("YYYY-MM-DD HH:mm:ss") : "N/A"}
             />
           ))}
         </Box>

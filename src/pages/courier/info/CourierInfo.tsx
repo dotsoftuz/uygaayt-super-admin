@@ -32,14 +32,16 @@ const CourierInfo = () => {
 
   useEffect(() => {
     const isCourierLeft = allParams.isCourierLeft === 'true'; 
+    const isCourierLateToStore = allParams.isCourierLateToStore === 'true'; 
 
     mutate({
       courierId: id,
       dateFrom: allParams.dateFrom,
       dateTo: allParams.dateTo,
       isCourierLate: isCourierLeft,
+      isCourierLateToStore: isCourierLateToStore,
     });
-  }, [allParams.dateFrom, allParams.dateTo, allParams.isCourierLeft]);
+  }, [allParams.dateFrom, allParams.dateTo, allParams.isCourierLeft, allParams.isCourierLateToStore]);
 
 
   // courier online or offline

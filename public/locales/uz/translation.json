@@ -232,7 +232,8 @@
     "percent": "Foiz",
     "amount": "Miqdor",
     "late_orders": "Kech qolgan buyrurtmalar",
-    "all_orders": "Barcha buyurtmalar"
+    "all_orders": "Barcha buyurtmalar",
+    "late_store": "Do'konga kechikishlar"
   },
   "settings": {
     "switch_for_courier": "Kuryer o'zi onlayn yoki oflayn qila olsin",
@@ -284,7 +285,10 @@
     "registered_customer": "Ro'yxatdan o'tgan foydalanuvchilar",
     "active_customer": "Aktiv foydalanuvchilar",
     "top_users": "Top Foydalanuvchilar",
-    "top_courier": "Top Kuryerlar"
+    "top_courier": "Top Kuryerlar",
+    "sold_product": "Sotilgan mahsulotlar soni",
+    "customers_saved_time": "Mijozlarni tejab qolgan vaqti",
+    "customers_saved_amount": "Mijozlarni tejab qolgan mablag'i"
   },
   "customer_info": {
     "total_purchases": "Xaridlar soni",

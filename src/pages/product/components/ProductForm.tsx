@@ -290,9 +290,23 @@ const ProductForm = ({
         <Grid container spacing={2}>
           <Grid item md={12}>
             <TextInput
-              name="name"
               control={control}
-              label={t("common.productName")}
+              name="name.uz"
+              label={t('common.productName') + ' (Uz)'}
+            />
+          </Grid>
+          <Grid item md={12}>
+            <TextInput
+              control={control}
+              name="name.ru"
+              label={t('common.productName') + ' (Ru)'}
+            />
+          </Grid>
+          <Grid item md={12}>
+            <TextInput
+              control={control}
+              name="name.en"
+              label={t('common.productName') + ' (En)'}
             />
           </Grid>
           <Grid item md={12}>

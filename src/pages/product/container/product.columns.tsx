@@ -12,7 +12,7 @@ export const useProductColumns = (): GridColumns => {
     {
       field: t("common.productName"),
       renderCell({ row }) {
-        const title = row?.name;
+        const title = row?.name?.[currentLang];
         const truncatedTitle = title?.length > 30 ? `${title.substring(0, 30)}...` : title;
     
         return (

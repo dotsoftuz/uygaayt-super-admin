@@ -97,7 +97,7 @@ const Product = () => {
     setProductImages([]);
     setMainImageId(null);
     formStore.reset({
-      name: "",
+      name: {uz: "", ru: "", en: ""},
       price: "",
       salePrice: "",
       inStock: "",

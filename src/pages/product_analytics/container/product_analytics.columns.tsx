@@ -6,12 +6,14 @@ import { numberFormat } from "utils/numberFormat";
 
 export const useProductColumns = (): GridColumns => {
   const { t } = useTranslation();
+  const currentLang = localStorage.getItem("i18nextLng") || "uz";
+
 
   return [
     {
       field: t("common.productName"),
       renderCell({ row }) {
-        const title = row?.product?.name;
+        const title = row?.product?.name?.[currentLang];
         const truncatedTitle = title?.length > 30 ? `${title.substring(0, 30)}...` : title;
     
         return (

@@ -98,7 +98,7 @@ const OrderProducts = ({ formStore, state, order }: any) => {
               </span>
               <div className="info">
                 <div className="flex">
-                  <span className="name">{item.product.name}</span>
+                  <span className="name">{item?.product?.name}</span>
                   {item?.attributes?.length > 0 && (
                     <div className="variant-info flex">
                       {item?.attributes?.map((variant: any, index: any) => (
@@ -160,6 +160,16 @@ const OrderProducts = ({ formStore, state, order }: any) => {
                 {get(settingsData, "currency", "uzs")}
               </b>
             </li>
+          }
+           {
+            get(order, "discount") !== 0 ?
+            <li>
+              <span>{t('common.discount')}:</span>
+              <b>
+                -{numberFormat(get(order, "discount", ""))}{" "}
+                {get(settingsData, "currency", "uzs")}
+              </b>
+            </li> : ""
           }
           <li>
             <span className="main">Umumiy:</span>{" "}

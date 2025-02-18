@@ -226,7 +226,10 @@
   "driver": {
     "title": "Бонус водителю",
     "percent": "Процент",
-    "amount": "Количество"
+    "amount": "Количество",
+    "late_orders": "Поздние заказы",
+    "all_orders": "Все заказы",
+    "late_store": "Задержки в магазине"
   },
   "settings": {
     "switch_for_courier": "Позвольте курьеру сделать это самостоятельно онлайн или офлайн",
@@ -277,7 +280,10 @@
     "registered_customer": "Зарегистрированные пользователи",
     "active_customer": "Активные пользователи",
     "top_users": "Лучшие пользователи",
-    "top_courier": "Лучшие курьеры"
+    "top_courier": "Лучшие курьеры",
+    "sold_product": "Количество проданных товаров",
+    "customers_saved_time": "Экономия времени для клиентов",
+    "customers_saved_amount": "Экономия для клиентов"
   },
   "customer_info": {
     "total_purchases": "Количество покупок",
