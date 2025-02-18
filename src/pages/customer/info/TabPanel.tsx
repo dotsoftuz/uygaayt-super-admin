@@ -13,6 +13,8 @@ import isBetween from "dayjs/plugin/isBetween";
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { numberFormat } from 'utils/numberFormat';
 import { formatSeconds } from 'utils/formatSeconds';
+import { formatMinutes } from 'utils/formatMinutes';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
 
 dayjs.extend(isBetween);
 
@@ -141,12 +143,12 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders, custo
           <Tab
             icon={<ShoppingBag style={{ fontSize: 20 }} />}
             iconPosition="start"
-            label={t('tabs.orders')}
+            label={t('tabs.order_history')}
           />
           <Tab
-            icon={<HistoryIcon style={{ fontSize: 20 }} />}
+            icon={<AnalyticsIcon style={{ fontSize: 20 }} />}
             iconPosition="start"
-            label={t('tabs.order_history')}
+            label={t('tabs.customer_statistics')}
           />
         </Tabs>
       </Box>
@@ -218,7 +220,7 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders, custo
                 {t('customer_info.savings_time')}
               </Typography>
               <Typography variant="h6">
-                {formatSeconds(customerReportData?.data?.saved_time)}
+                {formatMinutes(customerReportData?.data?.saved_time)}
               </Typography>
             </Paper>
           </Box>

@@ -220,7 +220,8 @@
     "orders": "Buyurtmalar",
     "basket": "Savat",
     "avto": "Avtomobil",
-    "order_history": "Buyurtmalar tarixi"
+    "order_history": "Buyurtmalar tarixi",
+    "customer_statistics": "Mijoz statistikasi"
   },
   "notification": {
     "confirmation": "Tasdiqlash",
