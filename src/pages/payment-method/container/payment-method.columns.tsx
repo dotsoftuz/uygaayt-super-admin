@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 
 export const usePaymentMethodColumns = (): GridColumns => {
   const { t } = useTranslation();
-  const currentLang = localStorage.getItem("i18nextLng") || "uz"; 
 
   return [
     {

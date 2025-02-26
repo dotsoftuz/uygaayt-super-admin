@@ -29,7 +29,6 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
   const allParams = useAllQueryParams();
   const { control, watch } = useForm();
   const [search, setSearch] = useState<any>(allParams.search || "");
-  const currentLang = localStorage.getItem("i18nextLng") || "uz";
 
   const { debouncedValue: debValue } = useDebounce(search, 500);
   const { t } = useTranslation();
@@ -260,7 +259,7 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
                       textAlign: "center",
                     }}
                   >
-                    {product.name?.[currentLang]}
+                    {product.name}
                   </div>
                   <div
                     style={{
@@ -348,7 +347,7 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
                 borderBottom: "1px solid #eee",
                 paddingBottom: "5px",
               }}>
-                {attribute?.attribute?.name?.[currentLang] || ""}
+                {attribute?.attribute?.name || ""}
               </h3>
 
               <div style={{
@@ -436,7 +435,7 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
           {basketItems?.map((item: any) => (
             <div className="basket-item" key={item._id}>
               <div className="flex gap-2">
-                <span className="">{item.name?.[currentLang]}</span>
+                <span className="">{item.name}</span>
                 {item?.variants?.length > 0 && (
                   <div className="variant-info flex">
                     {item?.variants?.map((variant: any, index: any) => (

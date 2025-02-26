@@ -6,13 +6,12 @@ import { numberFormat } from "utils/numberFormat";
 
 export const useProductColumns = (): GridColumns => {
   const { t } = useTranslation();
-  const currentLang = localStorage.getItem("i18nextLng") || "uz";
 
   return [
     {
       field: t("common.productName"),
       renderCell({ row }) {
-        const title = row?.name?.[currentLang];
+        const title = row?.name;
         const truncatedTitle = title?.length > 30 ? `${title.substring(0, 30)}...` : title;
     
         return (
@@ -50,13 +49,13 @@ export const useProductColumns = (): GridColumns => {
     {
       field: t("common.parent_category"),
       renderCell({ row }) {
-        return get(row, "category.parent.name", "")?.[currentLang] || get(row, "category.name", "")?.[currentLang];
+        return get(row, "category.parent.name", "") || get(row, "category.name", "");
       },
     },
     {
       field: t("common.child_category"),
       renderCell({ row }) {
-        return  get(row, "category.parent.name", "")?.[currentLang] && get(row, "category.name", "")?.[currentLang];
+        return  get(row, "category.parent.name", "") && get(row, "category.name", "");
       },
     },
   ];
