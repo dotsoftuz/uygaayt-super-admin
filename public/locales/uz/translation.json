@@ -1,5 +1,7 @@
 {
   "general": {
+    "all_discounts_summ": "Umumiy chegirmalar",
+    "all_promocode_summ": "Umumiy Promokodlar",
     "savings_time_percent": "Tejab qolingan vaqt fozi",
     "savings_time_amount": "Tejab qolingan vaqt miqdori",
     "payment_method": "To'lov turi",
@@ -252,7 +254,9 @@
     "number": "Soni",
     "map_address": "Xarita manzili",
     "premium_days": "Premium muddati",
-    "premium_price": "Premium narxi"
+    "premium_price": "Premium narxi",
+    "delivery_change_price": "Yetkazib berish narxni o'zgartirish",
+    "delivery_change_limit": "Yetkazib berish limitini o'zgartirish"
   },
   "transaction": {
     "total_balance": "Umumiy balans",

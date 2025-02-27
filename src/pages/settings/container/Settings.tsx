@@ -343,6 +343,32 @@ const Settings = () => {
 
                 <Grid item md={12} xs={12}>
                   <div className="item">
+                    <span className="key">
+                      {t('settings.delivery_change_limit')}
+                    </span>
+                    <TextInput
+                      control={control}
+                      name="deliveryChangeLimit"
+                      type="number"
+                    />
+                  </div>
+                </Grid>
+
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">
+                      {t('settings.delivery_change_price')}
+                    </span>
+                    <TextInput
+                      control={control}
+                      name="deliveryChangePrice"
+                      type="number"
+                    />
+                  </div>
+                </Grid>
+
+                <Grid item md={12} xs={12}>
+                  <div className="item">
                     <Box>
                       <Typography fontSize={"13px"} color="#000">
                         {t("common.phone_prefix_comment")}

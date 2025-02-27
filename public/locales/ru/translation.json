@@ -1,5 +1,7 @@
 {
   "general": {
+    "all_discounts_summ": "Общая вычетов",
+    "all_promocode_summ": "Общая промокодов",
     "savings_time": "Экономия времени",
     "payment_method": "Тип оплаты",
     "radius": "Радиус (км)",
@@ -247,8 +249,10 @@
     "initial_discount": "Первоначальные скидки",
     "number": "Число",
     "map_address": "Адрес карты",
-    "premium_days": "Premium muddati",
-    "premium_price": "Premium narxi"
+    "premium_days": "Премиум период",
+    "premium_price": "Премиальная цена",
+    "delivery_change_price": "Изменить цену доставки",
+    "delivery_change_limit": "Изменить лимит доставки"
   },
   "transaction": {
     "total_balance": "Общий баланс",

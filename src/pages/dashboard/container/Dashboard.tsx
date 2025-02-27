@@ -113,8 +113,6 @@ const Dashboard = () => {
         });
       }, [allParams.dateFrom, allParams.dateTo]);
 
-      console.log(customerReportData)
-
     return (
         <>
             <Grid className='bg-white p-2 flex rounded-lg'>
@@ -234,6 +232,34 @@ const Dashboard = () => {
                             color: '#FF6701'
                         }}
                     >{numberFormat(customerReportData?.data?.saved_amount)} {get(settingsData, "currency", "uzs")}</Typography>
+                </StyledCard>
+                <StyledCard>
+                    <TypographyTitle>
+                        {t("general.all_discounts_summ")}
+                    </TypographyTitle>
+                    <Typography
+                        style={{
+                            fontSize: "18px",
+                            fontWeight: 600,
+                            textAlign: "center",
+                            color: '#FF6701'
+                        }}>
+                        {numberFormat(attributesData?.data?.total_discount)} {get(settingsData, "currency", "uzs")}
+                    </Typography>
+                </StyledCard>
+                <StyledCard>
+                    <TypographyTitle>
+                        {t("general.all_promocode_summ")}
+                    </TypographyTitle>
+                    <Typography
+                        style={{
+                            fontSize: "18px",
+                            fontWeight: 600,
+                            textAlign: "center",
+                            color: '#FF6701'
+                        }}>
+                        {numberFormat(attributesData?.data?.total_promocode)} {get(settingsData, "currency", "uzs")}
+                    </Typography>
                 </StyledCard>
             </Grid>
 
