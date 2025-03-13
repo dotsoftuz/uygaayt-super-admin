@@ -35,6 +35,7 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const defaultLimit = 10;
   const reRender = useAppSelector((store) => store.tableState.render);
+  const currentLang = localStorage.getItem("i18nextLng") || "uz";
 
   const [queryParams, setQueryParams] = useState<any>(
     {
@@ -347,7 +348,7 @@ const Basket = ({ basketItems, setBasketItems }: IBasketProps) => {
                 borderBottom: "1px solid #eee",
                 paddingBottom: "5px",
               }}>
-                {attribute?.attribute?.name || ""}
+                {attribute?.attribute?.name?.[currentLang] || ""}
               </h3>
 
               <div style={{

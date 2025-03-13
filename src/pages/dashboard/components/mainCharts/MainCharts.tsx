@@ -15,7 +15,7 @@ const PolarAreaChart = ({data, all_orders}:any) => {
     datasets: [
       {
         label: "Buyurtmalar",
-        data: [data?.[0].total_amount, data?.[1].total_amount, all_orders],
+        data: [data?.[0]?.total_amount, data?.[1]?.total_amount, all_orders],
         backgroundColor: [
           "rgba(0, 128, 0, 0.6)",
           "rgba(255, 0, 0, 0.6)",

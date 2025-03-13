@@ -38,6 +38,9 @@ const TopTable: React.FC<any> = ({ data, setSortField, sortField, setSortOrder, 
                                     <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">
                                         {t("common.firstName")}
                                     </th>
+                                    <th>
+                                        {t('common.phoneNumber')}
+                                    </th>
                                     {
                                         data?.[0]?.customer ?
                                             <th
@@ -77,6 +80,10 @@ const TopTable: React.FC<any> = ({ data, setSortField, sortField, setSortOrder, 
                                     >
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                             {user?.customer ? user?.customer?.fullName || user.customer?.firstName : user?.courier?.fullName || user.courier?.firstName}
+                                        </td>
+                                        <td>
+                                            {user?.customer ? user?.customer?.phoneNumber : user?.courier?.phoneNumber}
+
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                             {user?.total_price}
