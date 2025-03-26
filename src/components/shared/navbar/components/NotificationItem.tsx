@@ -56,7 +56,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
     "get",
     {
       onSuccess() {
-        // onRead(notification._id);
+        onRead(notification._id);
         refreshNotifications()
         toast.success("Tasdiqlandi!");
       },
@@ -65,7 +65,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
 
   const handleAcceptClick = (event: React.MouseEvent) => {
     event.stopPropagation();
-    // onRead(notification._id);
+    onRead(notification._id);
     acceptCourier({});
   };
 
@@ -109,7 +109,7 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
       <Box sx={{ flex: 1 }}>
         <Typography variant="body1" sx={{ fontWeight: 500 }}>
           {notification?.shortText?.[currentLang]}
-        </Typography>
+        </Typography> 
 
         {notification?.type === "courier_arrived" && (
           <Box my={1}>
