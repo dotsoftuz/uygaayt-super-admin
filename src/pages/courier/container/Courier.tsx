@@ -34,6 +34,7 @@ const Courier = () => {
   const [showDriverName, setShowDriverName] = useState<boolean>(true);
   const [radius, setRadius] = useState<any>(200000)
   const socketRender = useAppSelector((store) => store.SocketState.render);
+  const [couriers, setCouriers] = useState<any[]>([]);
   
 
   const resetForm = () => {
@@ -113,16 +114,42 @@ const Courier = () => {
   }, [socketRender]);
 
   useEffect(() => {
-    const handleUpdateCourier = (data: { data: any }) => {
-      console.log(data);
+    const handleUpdateCourier = (socketData: { data: any }) => {
+      setCouriers((prevCouriers) => {
+        const updatedCouriers = prevCouriers.map((courier) =>
+          courier._id === socketData.data.courierId
+            ? { ...courier, location: socketData.data.location }
+            : courier
+        );
+  
+        return updatedCouriers;
+      });
     };
-
-    socket.on('courierLocation', handleUpdateCourier);
-
+  
+    socket.on("courierLocation", handleUpdateCourier);
+  
     return () => {
-      socket.off('courierLocation', handleUpdateCourier);
+      socket.off("courierLocation", handleUpdateCourier);
     };
   }, []);
+  
+  
+  useEffect(() => {
+    if (data?.data) {
+      setCouriers((prevCouriers) => {
+        const courierMap = new Map(prevCouriers.map((c) => [c.courierId, c]));
+  
+        data.data.forEach((courier: any) => {
+          courierMap.set(courier._id, courier);
+        });
+  
+        return Array.from(courierMap.values());
+      });
+  
+      reset();
+    }
+  }, [data]);
+  
 
   return (
     <div className="bg-white h-full">
@@ -207,7 +234,7 @@ const Courier = () => {
           onRowClick={(row) => navigate(`/courier/${row._id}`)}
           exQueryParams={queryParams}
         /> :
-        <CourierMap data={data} storeCoordinates={storeCoordinates} showDriverName={showDriverName} />
+        <CourierMap couriers={couriers} storeCoordinates={storeCoordinates} showDriverName={showDriverName} />
       }
 
       <WarningModal open={courierId} setOpen={setCourierId} url="courier/delete" />
