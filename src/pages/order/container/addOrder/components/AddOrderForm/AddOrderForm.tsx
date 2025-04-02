@@ -359,6 +359,7 @@ const AddOrderForm = ({
               control={formStore ? formStore?.control : control}
               name="paymentType"
               options={PAYMENT_TYPES}
+              defaultValue="cash"
               label={t("common.paymentType")}
               disabled={order?.state?.state === "completed" ? true : false}
               onChange={DeliveryOnChange}
