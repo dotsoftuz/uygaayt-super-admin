@@ -1,11 +1,13 @@
 import { DefaultPage } from "assets/svgs";
 import { DefaultPageStyled } from "./DefaultPage.style";
 
+import Logo from "assets/images/uygaayt.jpg"
+
 const BLACK_PAGE = () => {
   return (
     <DefaultPageStyled>
-      <h2>STORE MARKET</h2>
-      <DefaultPage />
+      <img src={Logo} alt="" />
+      <p>Pulingizni va vaqtingizni tejang!</p>
     </DefaultPageStyled>
   );
 };
