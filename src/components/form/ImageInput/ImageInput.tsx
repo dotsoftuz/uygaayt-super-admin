@@ -40,7 +40,7 @@ function ImageInput<FormNames extends Record<string, any>>({
   className,
   getImage,
   multiple,
-  accept = "image/*",
+  accept = "image/*, image/webp",
 }: IImageProps<FormNames>) {
   const isOpen = useAppSelector((store) => store.formDrawerState.isOpen);
   useEffect(() => {
