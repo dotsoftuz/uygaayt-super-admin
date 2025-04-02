@@ -35,6 +35,7 @@ import CommonLoader from "./common/loader/CommonLoader";
 import DatePickerTime from "./form/TimeDatePicker/TimeDatePicker";
 import DragTable from "./elements/DragTable/DragTable";
 import ExportButton from "./common/exportButton/ExportButton";
+import CommonModal from './common/commonModal';
 
 export {
   Modal,
@@ -73,5 +74,6 @@ export {
   DatePickerTime,
   DragTable,
   Input,
-  ExportButton
+  ExportButton,
+  CommonModal
 };

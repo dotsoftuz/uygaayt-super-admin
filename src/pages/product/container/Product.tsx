@@ -8,8 +8,9 @@ import { Grid, InputLabel, MenuItem, Select } from "@mui/material";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import ProductForm from "../components/ProductForm";
-import { IIdImage } from "hooks/usePostImage";
+import { IIdImage } from "hooks/usePostFile";
 import WarningModal from "components/common/WarningModal/WarningModal";
+import ImportModal from "../components/ImportModal";
 
 const Product = () => {
   const columns = useProductColumns();
@@ -30,7 +31,7 @@ const Product = () => {
 
 
   const renderHeader = (
-    <Grid className="lg:w-[60%] w-full gap-y-2 sm:gap-y-0 grid sm:grid-cols-4 items-center gap-x-2">
+    <Grid className="lg:w-[60%] w-full gap-y-2 sm:gap-y-0 grid sm:grid-cols-5 items-center gap-x-2">
       <Grid item>
         <Checkbox
           control={formStore.control}
@@ -89,6 +90,9 @@ const Product = () => {
           />
         }
       </Grid>
+      <Grid item>
+        <ImportModal />
+      </Grid>
     </Grid>
   );
 
@@ -97,7 +101,7 @@ const Product = () => {
     setProductImages([]);
     setMainImageId(null);
     formStore.reset({
-      name: {uz: "", ru: "", en: ""},
+      name: { uz: "", ru: "", en: "" },
       price: "",
       salePrice: "",
       inStock: "",

@@ -59,3 +59,51 @@ export const ProductFormStyled = styled.div`
     }
   }
 `;
+
+export const ImportStudentStyle = styled.div`
+  h2 {
+    color: black;
+  }
+  h4 {
+    color: black;
+  }
+  .import-student-box {
+    width: 100%;
+
+    label {
+      width: max-content;
+      min-height: max-content !important;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      margin: 0 auto;
+      padding: 12px;
+      color: black;
+
+      .upload-input {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        opacity: 0 !important;
+        z-index: -1 !important;
+      }
+
+      &:hover {
+        background-color: gray;
+      }
+    }
+  }
+  .errors-upload {
+    margin-bottom: 12px;
+    .content {
+      width: 100%;
+      padding: 10px;
+      background-color: gray;
+      border-radius: 6px;
+      max-height: 400px;
+      overflow: auto;
+    }
+  }
+`;

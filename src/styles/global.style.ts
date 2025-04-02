@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Box } from "@mui/material";
 import { createGlobalStyle } from "styled-components";
 
 export const SIDEBAR_OPEN = "280px";
@@ -83,6 +84,25 @@ export const Container = styled.div`
 export const PrivateContainer = styled.div`
   background: #ffffff;
   
+`;
+
+export const CloseBtn = styled(Box)`
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  margin-left: -10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+
+  svg {
+    path {
+      fill: ${({ theme }) => theme.primary.dark};
+    }
+  }
 `;
 
 export const BackGroundColorContainer = styled.div`

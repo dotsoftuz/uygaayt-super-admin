@@ -152,7 +152,7 @@ const Settings = () => {
                     />
                   </div>
                 </Grid>
-                {/* <Grid item md={12} xs={12}>
+                <Grid item md={12} xs={12}>
                   <div className="item">
                     <span className="key">
                       {t("settings.store_radius")}
@@ -164,7 +164,7 @@ const Settings = () => {
                       rules={{ required: false }}
                     />
                   </div>
-                </Grid> */}
+                </Grid>
 
                 <Grid item md={12} xs={12}>
                   <div className="item">

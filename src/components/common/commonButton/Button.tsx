@@ -1,5 +1,5 @@
 import { ButtonStyled, IconButtonStyled } from "./ButtonStyled";
-import { ButtonProps } from "@mui/material";
+import { ButtonProps, CircularProgress } from "@mui/material";
 
 interface ICommonButton extends ButtonProps {
   title?: string;
@@ -7,6 +7,7 @@ interface ICommonButton extends ButtonProps {
   startIcon?: React.ReactNode;
   icon?: React.ReactNode;
   iconButton?: boolean;
+  status?: string;
 }
 
 const CommonButton: React.FC<ICommonButton> = ({
@@ -14,6 +15,7 @@ const CommonButton: React.FC<ICommonButton> = ({
   startIcon,
   icon,
   title,
+  status,
   iconButton = false,
   ...props
 }) => {
@@ -21,7 +23,10 @@ const CommonButton: React.FC<ICommonButton> = ({
     <>
       {!iconButton ? (
         <ButtonStyled {...props} startIcon={startIcon} endIcon={endIcon}>
-          {title || ""}
+           {status === "loading" && (
+            <CircularProgress size={20} sx={{ marginRight: "12px" }} />
+          )}
+          {title && <span>{title}</span>}
         </ButtonStyled>
       ) : (
         <IconButtonStyled {...props}>{icon}</IconButtonStyled>

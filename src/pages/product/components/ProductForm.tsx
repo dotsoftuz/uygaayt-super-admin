@@ -12,7 +12,7 @@ import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import { useTranslation } from "react-i18next";
 import { ProductFormStyled } from "./ProductForm.styled";
 import TextEditor from "components/form/TextEditor/TextEditor";
-import { IIdImage } from "hooks/usePostImage";
+import { IIdImage } from "hooks/usePostFile";
 import { DeleteIcon, PlusIcon } from "assets/svgs";
 import { DISCOUNT_TYPES } from "types/enums";
 import { IProduct } from "types/common.types";

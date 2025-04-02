@@ -1,5 +1,10 @@
 {
   "general": {
+    "import_student": "Shablon faylni <0>yuklab oling</0> va elementlarni ma'lumotlari bilan to'ldiring.",
+    "import": "Import",
+    "uploaded_file": "Faylingiz yuklandi! Saqlash tugmasini bosing",
+    "upload_file": "Faylingizni yuklang",
+    "back": "Orqaga",
     "all_discounts_summ": "Umumiy chegirmalar",
     "all_promocode_summ": "Umumiy Promokodlar",
     "savings_time_percent": "Tejab qolingan vaqt fozi",
@@ -246,7 +251,7 @@
     "website_conditions": "Veb-sayt shartlari",
     "minimum_order_amount": "Minimal buyurtma summasi",
     "banner_time": "Banner aylanish vaqti (sekund)",
-    "store_radius": "Do'konlar ko'rinish radiusi (km)",
+    "store_radius": "Do'kon radiusi (km)",
     "currency": "Valyuta",
     "order_delivery_time": "Buyurtmani yetkazib berish vaqti (sekund)",
     "couirer_return_time": "Kuryer skladga qaytish vaqti (sekund)",
