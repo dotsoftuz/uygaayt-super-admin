@@ -242,6 +242,7 @@
     "switch_for_courier": "Позвольте курьеру сделать это самостоятельно онлайн или офлайн",
     "functionality": "Функциональность",
     "discounts": "Скидки",
+    "bonus": "Бонус",
     "premium_discounts": "Премиальные скидки",
     "main_address": "Радиус базового адреса",
     "website_conditions": "Условия использования веб-сайта",
@@ -252,12 +253,14 @@
     "order_delivery_time": "Время доставки заказа (секунды)",
     "couirer_return_time": "Время возврата курьера на склад (секунды)",
     "initial_discount": "Первоначальные скидки",
+    "initial_bonus": "Бонусные предложения",
     "number": "Число",
     "map_address": "Адрес карты",
     "premium_days": "Премиум период",
     "premium_price": "Премиальная цена",
     "delivery_change_price": "Изменить цену доставки",
-    "delivery_change_limit": "Изменить лимит доставки"
+    "delivery_change_limit": "Изменить лимит доставки",
+    "invitePromocode": "Получите бонус в размере определенной суммы или процента за приглашение друга по промокоду"
   },
   "transaction": {
     "total_balance": "Общий баланс",

@@ -246,6 +246,7 @@
     "switch_for_courier": "Kuryer o'zi onlayn yoki oflayn qila olsin",
     "functionality": "Funksionallik",
     "discounts": "Chegirmalar",
+    "bonus": "Bonus",
     "premium_discounts": "Premium chegirmalar",
     "main_address": "Asosiy manzil radiusi",
     "website_conditions": "Veb-sayt shartlari",
@@ -256,12 +257,14 @@
     "order_delivery_time": "Buyurtmani yetkazib berish vaqti (sekund)",
     "couirer_return_time": "Kuryer skladga qaytish vaqti (sekund)",
     "initial_discount": "Dastlabki chegirmalar",
+    "initial_bonus": "Dastlabki bonuslar",
     "number": "Soni",
     "map_address": "Xarita manzili",
     "premium_days": "Premium muddati",
     "premium_price": "Premium narxi",
     "delivery_change_price": "Yetkazib berish narxni o'zgartirish",
-    "delivery_change_limit": "Yetkazib berish limitini o'zgartirish"
+    "delivery_change_limit": "Yetkazib berish limitini o'zgartirish",
+    "invitePromocode": "Promokoddan foydalanib do'stini taklif qilgani uchun belgilangan miqdor yoki foiz da bonusga ega bo'lish"
   },
   "transaction": {
     "total_balance": "Umumiy balans",

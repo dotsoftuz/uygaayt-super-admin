@@ -12,13 +12,14 @@ import { toast } from "react-toastify";
 import { useSearchParams } from "react-router-dom";
 import MainAddress from "../components/MainAddress";
 import WebsiteConditions from "../components/WebsiteConditions";
-import DiscountOrder from "../components/DiscountOrder";
 import PremiumDiscountOrder from "../components/PremiumDiscountOrder";
 import { realNumberPattern } from "utils/pattern";
 import currencyFormatter from "utils/currencyFormatter";
 import { StyledPercent, StyledSwitch } from "../style/discount.style";
 import { Percent } from "@mui/icons-material";
 import { miniSize } from '../../../styles/global.style';
+import BonusOrder from "../components/BonusOrder";
+import DiscountOrder from "../components/DiscountOrder";
 
 const Settings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -344,6 +345,54 @@ const Settings = () => {
                 <Grid item md={12} xs={12}>
                   <div className="item">
                     <span className="key">
+                      {t('settings.invitePromocode')}
+                    </span>
+                    <div className="flex items-end justify-between">
+                      <TextInput
+                        control={control}
+                        name="invitePromocodeAmount"
+                        type="number"
+                        rules={{
+                          required: false,
+                          validate: (value) => {
+                            if (watch("invitePromocodeType") === "percent") {
+                              return value <= 100 || "Qiymat 100% dan katta";
+                            }
+                            return true;
+                          },
+                        }}
+                      />
+
+                      <Grid
+                        className="flex">
+                        <StyledSwitch
+                          className={
+                            watch(`invitePromocodeType`) === "percent" ? "show" : ""
+                          }
+                          onClick={() =>
+                            setValue(
+                              `invitePromocodeType`,
+                              watch(`invitePromocodeType`) === "percent"
+                                ? "amount"
+                                : "percent"
+                            )
+                          }
+                        >
+                          <StyledPercent>
+                            <Percent />
+                          </StyledPercent>
+                          <StyledPercent>
+                            <span style={{ fontSize: "11px" }}>Miqdor</span>
+                          </StyledPercent>
+                        </StyledSwitch>
+                      </Grid>
+                    </div>
+                  </div>
+                </Grid>
+
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">
                       {t('settings.delivery_change_limit')}
                     </span>
                     <TextInput
@@ -412,6 +461,11 @@ const Settings = () => {
           {activeTab === "discountOrder" && (
             <div className="settings">
               <DiscountOrder data={data} />
+            </div>
+          )}
+           {activeTab === "bonusOrder" && (
+            <div className="settings">
+              <BonusOrder data={data} />
             </div>
           )}
           {activeTab === "premiumDiscountOrder" && (
