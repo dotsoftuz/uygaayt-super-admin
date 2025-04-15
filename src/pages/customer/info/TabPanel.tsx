@@ -7,14 +7,15 @@ import { useTranslation } from 'react-i18next';
 import { get } from 'lodash';
 import useCommonContext from 'context/useCommon';
 import dayjs, { Dayjs } from 'dayjs';
-import { RangeDatePicker } from 'components';
+import { RangeDatePicker, Table } from 'components';
 import useAllQueryParams from 'hooks/useGetAllQueryParams/useAllQueryParams';
 import isBetween from "dayjs/plugin/isBetween";
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { numberFormat } from 'utils/numberFormat';
 import { formatSeconds } from 'utils/formatSeconds';
 import { formatMinutes } from 'utils/formatMinutes';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
+import { useTransactionColumns } from 'pages/transaction/container/transaction.columns';
 
 dayjs.extend(isBetween);
 
@@ -95,6 +96,8 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders, custo
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const allParams = useAllQueryParams();
+  const { id } = useParams();
+  const columns = useTransactionColumns();
 
 
   const {
@@ -111,7 +114,7 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders, custo
     const to = dayjs();
 
     setSearchParams({
-      ...Object.fromEntries(searchParams.entries()), // Mavjud parametrlardan nusxa olish
+      ...Object.fromEntries(searchParams.entries()),
       dateFrom: from.toISOString(),
       dateTo: to.toISOString(),
     });
@@ -127,10 +130,18 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders, custo
         <Tabs
           value={value}
           onChange={handleChange}
-          sx={{
+          variant="scrollable"
+          scrollButtons="auto"
+          sx={(theme) => ({
+            overflow: "auto",
             '& .MuiTab-root': {
               minHeight: 64,
-              fontSize: '1rem'
+              fontSize: '1rem',
+              [theme.breakpoints.down('sm')]: {
+                fontSize: '0.8rem',
+                minHeight: 48,
+                padding: '6px 8px'
+              }
             },
             '& .Mui-selected': {
               color: '#6B46C1 !important'
@@ -138,19 +149,46 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders, custo
             '& .MuiTabs-indicator': {
               backgroundColor: '#6B46C1'
             }
-          }}
+          })}
         >
           <Tab
-            icon={<ShoppingBag style={{ fontSize: 20 }} />}
+            icon={
+              <ShoppingBag
+                style={{
+                  fontSize: 20,
+                  marginRight: 4
+                }}
+              />
+            }
             iconPosition="start"
             label={t('tabs.order_history')}
           />
           <Tab
-            icon={<AnalyticsIcon style={{ fontSize: 20 }} />}
+            icon={
+              <AnalyticsIcon
+                style={{
+                  fontSize: 20,
+                  marginRight: 4
+                }}
+              />
+            }
             iconPosition="start"
             label={t('tabs.customer_statistics')}
           />
+          <Tab
+            icon={
+              <AnalyticsIcon
+                style={{
+                  fontSize: 20,
+                  marginRight: 4
+                }}
+              />
+            }
+            iconPosition="start"
+            label={t('tabs.transaction_history')}
+          />
         </Tabs>
+
       </Box>
       <Box sx={{ p: 2, backgroundColor: 'white' }}>
         <RangeDatePicker />
@@ -225,6 +263,16 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders, custo
             </Paper>
           </Box>
         </Box>
+      </TabPanel>
+
+      <TabPanel value={value} index={2}>
+        <Table
+          columns={columns}
+          dataUrl="balance/paging"
+          exQueryParams={{
+            customerId: id
+          }}
+        />
       </TabPanel>
     </Paper>
   );

@@ -218,7 +218,9 @@
     "carBrand": "Марка автомобиля",
     "carModel": "Модель автомобиля",
     "carNumber": "Номер автомобиля",
-    "carColor": "Цвет автомобиля"
+    "carColor": "Цвет автомобиля",
+    "customer_statistics": "Статистика клиентов",
+    "transaction_history": "История транзакций"
   },
   "tabs" : {
     "orders": "Заказы",

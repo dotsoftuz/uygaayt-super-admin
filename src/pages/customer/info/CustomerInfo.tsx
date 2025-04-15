@@ -54,11 +54,12 @@ const CustomerInfo = () => {
     });
   }, [allParams.dateFrom, allParams.dateTo]);
 
+
   return (
     <>
       {
         id && (
-          <Grid className="grid md:grid-cols-2 gap-4 p-2">
+          <Grid className="grid lg:flex gap-4 p-2">
             <CustomerCard
               customerInfoData={customerInfoData}
             />

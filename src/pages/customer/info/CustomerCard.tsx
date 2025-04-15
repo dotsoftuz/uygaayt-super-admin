@@ -43,6 +43,9 @@ export const CustomerCard: React.FC<CustomerCardProps> = ({
                 <Typography variant="h4" sx={{ mt: 2, fontWeight: 'bold' }}>
                     {customerInfoData?.data?.firstName}
                 </Typography>
+                <Typography variant="h6" sx={{ mt: 2 }}>
+                    {customerInfoData?.data?.balance}
+                </Typography>
             </Box>
             <CardContent sx={{
                 backgroundColor: 'white',
@@ -101,7 +104,7 @@ export const CustomerCard: React.FC<CustomerCardProps> = ({
                             transform: 'translateX(8px)'
                         }
                     }}>
-                        <Typography variant="body1" color="text.primary">
+                        <Typography variant="body1" className={`${customerInfoData?.data?.isPremium ? "text-green-500": "text-red-500"}`} >
                             {customerInfoData?.data?.isPremium
                                 ? "Ushbu mijoz Premium obunasini sotib olgan."
                                 : "Ushbu mijoz hali Premium obunasini sotib olmagan."}

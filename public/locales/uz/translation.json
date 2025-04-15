@@ -228,7 +228,8 @@
     "basket": "Savat",
     "avto": "Avtomobil",
     "order_history": "Buyurtmalar tarixi",
-    "customer_statistics": "Mijoz statistikasi"
+    "customer_statistics": "Mijoz statistikasi",
+    "transaction_history": "Tranzaksiya tarixi"
   },
   "notification": {
     "confirmation": "Tasdiqlash",
