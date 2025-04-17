@@ -15,7 +15,7 @@ import { numberFormat } from 'utils/numberFormat';
 import { formatSeconds } from 'utils/formatSeconds';
 import { formatMinutes } from 'utils/formatMinutes';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
-import { useTransactionColumns } from 'pages/transaction/container/transaction.columns';
+import { useTransactionColumns } from './transaction.columns';
 
 dayjs.extend(isBetween);
 
@@ -121,7 +121,7 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders, custo
   };
 
   return (
-    <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
+    <Paper elevation={3} sx={{ width: "75%", borderRadius: 4, overflow: 'hidden' }}>
       <Box sx={{
         borderBottom: 1,
         borderColor: 'divider',

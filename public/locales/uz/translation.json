@@ -1,5 +1,6 @@
 {
   "general": {
+    "balance": "Balans",
     "import_student": "Shablon faylni <0>yuklab oling</0> va elementlarni ma'lumotlari bilan to'ldiring.",
     "import": "Import",
     "uploaded_file": "Faylingiz yuklandi! Saqlash tugmasini bosing",
@@ -309,6 +310,11 @@
     "savings_money": "Tejab qolingan mablag‘",
     "savings_time": "Tejab qolingan vaqt",
     "years": "Yillik"
+  },
+  "type": {
+    "order": "Buyurtma",
+    "user_bonus": "Foydalanuvchi bonusi",
+    "withdraw_balance": "Balansdan yechib olish",
+    "buy_premium": "Premium xarid"
   }
-
 }

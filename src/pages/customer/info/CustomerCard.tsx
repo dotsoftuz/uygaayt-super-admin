@@ -2,6 +2,10 @@ import React from 'react';
 import { Card, CardContent, Typography, Avatar, Box, Paper } from '@mui/material';
 import { Mail, Phone } from '@mui/icons-material';
 import CustomerInfo from './CustomerInfo';
+import { useTranslation } from 'react-i18next';
+import { numberFormat } from 'utils/numberFormat';
+import useCommonContext from 'context/useCommon';
+import { get } from 'lodash';
 
 interface CustomerCardProps {
     customerInfoData: any
@@ -10,11 +14,17 @@ interface CustomerCardProps {
 export const CustomerCard: React.FC<CustomerCardProps> = ({
     customerInfoData, }) => {
 
+    const {
+        state: { data: settingsData },
+    } = useCommonContext();
+
+    const { t } = useTranslation();
+
 
     return (
         <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
             <Box sx={{
-                 background: 'linear-gradient(135deg, #EB7B00 0%, #EB5B00 100%)',
+                background: 'linear-gradient(135deg, #EB7B00 0%, #EB5B00 100%)',
                 pt: 6,
                 pb: 8,
                 px: 4,
@@ -44,7 +54,7 @@ export const CustomerCard: React.FC<CustomerCardProps> = ({
                     {customerInfoData?.data?.firstName}
                 </Typography>
                 <Typography variant="h6" sx={{ mt: 2 }}>
-                    {customerInfoData?.data?.balance}
+                    <span className='font-bold'>{t('general.balance')}</span>: {numberFormat(customerInfoData?.data?.balance) || 0} {get(settingsData, "currency", "uzs")}
                 </Typography>
             </Box>
             <CardContent sx={{
@@ -104,7 +114,7 @@ export const CustomerCard: React.FC<CustomerCardProps> = ({
                             transform: 'translateX(8px)'
                         }
                     }}>
-                        <Typography variant="body1" className={`${customerInfoData?.data?.isPremium ? "text-green-500": "text-red-500"}`} >
+                        <Typography variant="body1" className={`${customerInfoData?.data?.isPremium ? "text-green-500" : "text-red-500"}`} >
                             {customerInfoData?.data?.isPremium
                                 ? "Ushbu mijoz Premium obunasini sotib olgan."
                                 : "Ushbu mijoz hali Premium obunasini sotib olmagan."}
