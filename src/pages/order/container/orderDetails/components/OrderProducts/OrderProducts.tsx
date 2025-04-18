@@ -152,16 +152,16 @@ const OrderProducts = ({ formStore, state, order }: any) => {
             </b>
           </li>
           {
-            get(order, "promocode.amount", "") &&
+            
             <li>
-              <span>Promokod:</span>
+              <span>Foydalanilgan balans:</span>
               <b>
-                -{numberFormat(get(order, "promocode.amount", 0))}{" "}
+                -{numberFormat(get(order, "usedBalance", 0))}{" "}
                 {get(settingsData, "currency", "uzs")}
               </b>
             </li>
           }
-           {
+          {
             get(order, "discount") !== 0 ?
             <li>
               <span>{t('common.discount')}:</span>
@@ -170,6 +170,16 @@ const OrderProducts = ({ formStore, state, order }: any) => {
                 {get(settingsData, "currency", "uzs")}
               </b>
             </li> : ""
+          }
+          {
+            get(order, "promocode.amount", "") &&
+            <li>
+              <span>Promokod:</span>
+              <b>
+                -{numberFormat(get(order, "promocode.amount", 0))}{" "}
+                {get(settingsData, "currency", "uzs")}
+              </b>
+            </li>
           }
           <li>
             <span className="main">Umumiy:</span>{" "}
