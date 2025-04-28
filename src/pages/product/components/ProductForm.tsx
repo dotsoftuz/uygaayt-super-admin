@@ -19,6 +19,7 @@ import { IProduct } from "types/common.types";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import CommonButton from "components/common/commonButton/Button";
 import { Delete } from "@mui/icons-material";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import AttributeForm from "./Fields";
 
 interface IProductForm {
@@ -651,7 +652,10 @@ const ProductForm = ({
                 name="image"
                 rules={{ required: false }}
                 multiple
-                getImage={(img) => setProductImages((prev) => [...prev, img])}
+                getImage={(img) => {
+                  setProductImages((prev) => [...prev, img]);
+                  setValue("image", null);
+                }}
                 accept=".png, .jpg, .jpeg"
               />
               {productImages?.map((image) => (
@@ -660,16 +664,59 @@ const ProductForm = ({
                     src={process.env.REACT_APP_BASE_URL + image.url}
                     alt="product"
                   />
-                  <div className="on-hover">
+                  <div className="on-hover flex gap-2">
                     <span
                       className="delete"
                       onClick={() =>
-                        setProductImages((prev) =>
-                          prev.filter((prevImg) => prevImg._id !== image._id)
-                        )
+                      setProductImages((prev) =>
+                        prev.filter((prevImg) => prevImg._id !== image._id)
+                      )
                       }
                     >
                       <DeleteIcon />
+                    </span>
+                    <span
+                      className="preview"
+                      onClick={() => {
+                      const modal = document.createElement('div');
+                      modal.style.position = 'fixed';
+                      modal.style.top = '0';
+                      modal.style.left = '0';
+                      modal.style.width = '100%';
+                      modal.style.height = '100%';
+                      modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+                      modal.style.display = 'flex';
+                      modal.style.justifyContent = 'center';
+                      modal.style.alignItems = 'center';
+                      modal.style.zIndex = '2000';
+
+                      const img = document.createElement('img');
+                      img.src = process.env.REACT_APP_BASE_URL + image.url;
+                      img.alt = 'preview';
+                      img.style.maxWidth = '90%';
+                      img.style.maxHeight = '90%';
+                      img.style.border = '2px solid white';
+                      img.style.borderRadius = '8px';
+
+                      const closeButton = document.createElement('span');
+                      closeButton.innerText = '×';
+                      closeButton.style.position = 'absolute';
+                      closeButton.style.top = '20px';
+                      closeButton.style.right = '20px';
+                      closeButton.style.fontSize = '2rem';
+                      closeButton.style.color = 'white';
+                      closeButton.style.cursor = 'pointer';
+
+                      closeButton.onclick = () => {
+                        document.body.removeChild(modal);
+                      };
+
+                      modal.appendChild(img);
+                      modal.appendChild(closeButton);
+                      document.body.appendChild(modal);
+                      }}
+                    >
+                      <VisibilityIcon className="text-white text-lg" />
                     </span>
                     <span
                       className={`main-image ${image._id === mainImageId && "active"
