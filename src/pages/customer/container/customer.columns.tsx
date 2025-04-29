@@ -11,7 +11,9 @@ export const useCustomerColumns = (): GridColumns => {
     {
       field: t("common.fullName"),
       renderCell({ row }) {
-        return get(row, "fullName", "");
+        const firstName = get(row, "firstName", "").trim();
+        const fullName = get(row, "fullName", "").trim();
+        return firstName ? firstName : fullName;
       },
     },
     {
