@@ -79,7 +79,7 @@ const TopTable: React.FC<any> = ({ data, setSortField, sortField, setSortOrder, 
                                         className="hover:bg-gray-50 transition-colors"
                                     >
                                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            {user?.customer ? user?.customer?.fullName || user.customer?.firstName : user?.courier?.fullName || user.courier?.firstName}
+                                            {user?.customer ? user?.customer?.firstName || user.customer?.lastName : user?.courier?.firstName || user.courier?.lastName}
                                         </td>
                                         <td>
                                             {user?.customer ? user?.customer?.phoneNumber : user?.courier?.phoneNumber}
