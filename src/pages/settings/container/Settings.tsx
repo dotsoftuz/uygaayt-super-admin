@@ -68,6 +68,7 @@ const Settings = () => {
       orderCalculateMethod: data.orderCalculateMethod,
       orderPrice: data.orderPrice,
       phonePrefix,
+      deliveryChangePrice: data.deliveryChangePrice || 0,
     });
   });
 
@@ -412,6 +413,7 @@ const Settings = () => {
                       control={control}
                       name="deliveryChangePrice"
                       type="number"
+                      rules={{required: false,}}
                     />
                   </div>
                 </Grid>
