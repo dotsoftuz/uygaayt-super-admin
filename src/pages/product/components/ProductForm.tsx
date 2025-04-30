@@ -52,6 +52,9 @@ const ProductForm = ({
   const [subCategory, setSubCategory] = useState<any>(null);
   const [subChildCategory, setSubChildCategory] = useState<any>(null);
 
+  const [selectedParentCategory, setSelectedParentCategory] = useState<any>(null);
+  const [selectedChildCategory, setSelectedChildCategory] = useState<any>(null);
+
   const discountEndMinDate = new Date(watch("discountStartAt"));
   discountEndMinDate.setDate(discountEndMinDate.getDate() + 1);
 
@@ -186,9 +189,32 @@ const ProductForm = ({
     }
   }, [getByIdData]);
 
+  // 2. Parent category change handler
+  const handleParentCategoryChange = (item: any) => {
+    setSelectedParentCategory(item);
+    setSelectedChildCategory(null); // Reset child category
+    setValue("categoryId", ""); // Clear form value
+    setValue("parentCategoryId", item?._id || ""); // Update form value
+  };
+
+  // 3. Child category change handler
+  const handleChildCategoryChange = (item: any) => {
+    setSelectedChildCategory(item);
+    setValue("categoryId", item?._id || ""); // Update form value
+  };
+
 
   useEffect(() => {
     if (getByIdStatus === "success") {
+      const productData = getByIdData.data;
+
+      // Set initial category states
+      if (productData.parentCategoryId) {
+        setSelectedParentCategory({ _id: productData.parentCategoryId });
+      }
+      if (productData.categoryId) {
+        setSelectedChildCategory({ _id: productData.categoryId });
+      }
       reset({
         ...getByIdData.data,
         attributes: getByIdData.data.attributes?.reduce((acc, attr) => {
@@ -198,8 +224,8 @@ const ProductForm = ({
           }
         }, {}) || [],
         // categoryId: subChildCategory === undefined ? getByIdData.data.parentCategoryId : getByIdData.data.categoryId,
-        parentCategoryId: getByIdData.data.parentCategoryId || getByIdData.data.categoryId || "",
-        categoryId: getByIdData.data.categoryId || "",
+        parentCategoryId: productData.parentCategoryId || productData.categoryId || "",
+        categoryId: productData.categoryId || "",
         isActiveQuery: formStore.watch("isActiveQuery"),
         description: getByIdData.data.description,
         compounds: getByIdData.data.compounds,
@@ -361,25 +387,23 @@ const ProductForm = ({
               optionsUrl="category/paging"
               dataProp="data.data"
               label="Kategoriya"
-              onChange={(item: any) => {
-                setSubCategory(item || null);
-                setValue("categoryId", "");
-              }}
+              onChange={handleParentCategoryChange}
             />
-            {(subCategory || getByIdData?.data?.parentCategoryId) ? (
+            {selectedParentCategory && (
               <AutoCompleteForm
                 control={control}
                 name="categoryId"
                 optionsUrl="category/paging"
                 dataProp="data.data"
-                label="Ichki Kategriya"
+                label="Ichki kategoriya"
                 rules={{ required: false }}
-                onChange={(item: any) => setSubChildCategory?.(item || null)}
+                onChange={handleChildCategoryChange}
                 exQueryParams={{
-                  parentId: subCategory?._id || getByIdData?.data?.parentCategoryId || "",
+                  parentId: selectedParentCategory?._id,
                 }}
+                key={`child-cat-${selectedParentCategory?._id}`} // Force re-render when parent changes
               />
-            ) : null}
+            )}
 
 
           </Grid>
@@ -668,9 +692,9 @@ const ProductForm = ({
                     <span
                       className="delete"
                       onClick={() =>
-                      setProductImages((prev) =>
-                        prev.filter((prevImg) => prevImg._id !== image._id)
-                      )
+                        setProductImages((prev) =>
+                          prev.filter((prevImg) => prevImg._id !== image._id)
+                        )
                       }
                     >
                       <DeleteIcon />
@@ -678,42 +702,42 @@ const ProductForm = ({
                     <span
                       className="preview"
                       onClick={() => {
-                      const modal = document.createElement('div');
-                      modal.style.position = 'fixed';
-                      modal.style.top = '0';
-                      modal.style.left = '0';
-                      modal.style.width = '100%';
-                      modal.style.height = '100%';
-                      modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-                      modal.style.display = 'flex';
-                      modal.style.justifyContent = 'center';
-                      modal.style.alignItems = 'center';
-                      modal.style.zIndex = '2000';
+                        const modal = document.createElement('div');
+                        modal.style.position = 'fixed';
+                        modal.style.top = '0';
+                        modal.style.left = '0';
+                        modal.style.width = '100%';
+                        modal.style.height = '100%';
+                        modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+                        modal.style.display = 'flex';
+                        modal.style.justifyContent = 'center';
+                        modal.style.alignItems = 'center';
+                        modal.style.zIndex = '2000';
 
-                      const img = document.createElement('img');
-                      img.src = process.env.REACT_APP_BASE_URL + image.url;
-                      img.alt = 'preview';
-                      img.style.maxWidth = '90%';
-                      img.style.maxHeight = '90%';
-                      img.style.border = '2px solid white';
-                      img.style.borderRadius = '8px';
+                        const img = document.createElement('img');
+                        img.src = process.env.REACT_APP_BASE_URL + image.url;
+                        img.alt = 'preview';
+                        img.style.maxWidth = '90%';
+                        img.style.maxHeight = '90%';
+                        img.style.border = '2px solid white';
+                        img.style.borderRadius = '8px';
 
-                      const closeButton = document.createElement('span');
-                      closeButton.innerText = '×';
-                      closeButton.style.position = 'absolute';
-                      closeButton.style.top = '20px';
-                      closeButton.style.right = '20px';
-                      closeButton.style.fontSize = '2rem';
-                      closeButton.style.color = 'white';
-                      closeButton.style.cursor = 'pointer';
+                        const closeButton = document.createElement('span');
+                        closeButton.innerText = '×';
+                        closeButton.style.position = 'absolute';
+                        closeButton.style.top = '20px';
+                        closeButton.style.right = '20px';
+                        closeButton.style.fontSize = '2rem';
+                        closeButton.style.color = 'white';
+                        closeButton.style.cursor = 'pointer';
 
-                      closeButton.onclick = () => {
-                        document.body.removeChild(modal);
-                      };
+                        closeButton.onclick = () => {
+                          document.body.removeChild(modal);
+                        };
 
-                      modal.appendChild(img);
-                      modal.appendChild(closeButton);
-                      document.body.appendChild(modal);
+                        modal.appendChild(img);
+                        modal.appendChild(closeButton);
+                        document.body.appendChild(modal);
                       }}
                     >
                       <VisibilityIcon className="text-white text-lg" />
