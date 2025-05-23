@@ -7,6 +7,7 @@ import React from "react";
 interface IExportButton {
   url: string;
   fileName?: string;
+  extraParams?: Record<string, any>;
 }
 
 export const downlaodFileByName = async ({
@@ -38,12 +39,12 @@ export const downlaodFileByName = async ({
 };
 
 const getFileNameFromPath = (path?: any) => {
-  if (!path) return null; 
+  if (!path) return null;
   const match = path.match(/uploads\/(.*?)\.xlsx/);
   return match ? match[1] : null;
 };
 
-const ExportButton = ({ url, fileName }: IExportButton) => {
+const ExportButton = ({ url, fileName, extraParams}: IExportButton) => {
   const allParams = useAllQueryParams();
 
   const { mutate, status } = useApiMutation(url, "post", {
@@ -59,17 +60,30 @@ const ExportButton = ({ url, fileName }: IExportButton) => {
 
   const generateRequestBody = () => {
     const { dateFrom, dateTo, customer_id, categoryId, page, limit, sortOrder, sortBy } = allParams || {};
-    return {
-      page: page || 1,
-      limit: limit || 20,
-      dateFrom: dateFrom || null,
-      dateTo: dateTo || null,
-      customer_id: customer_id || null,
-      categoryId: categoryId || null,
-      sortBy: sortBy || null,
-      sortOrder: sortOrder|| null
+
+    const baseParams: Record<string, any> = {
+      page,
+      limit,
+      dateFrom,
+      dateTo,
+      customer_id,
+      categoryId,
+      sortBy,
+      sortOrder,
+      ...extraParams, // extraParams ni qo‘shish
     };
+
+    const cleanedBody: Record<string, any> = {};
+    Object.entries(baseParams).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== "") {
+        cleanedBody[key] = value;
+      }
+    });
+
+    return cleanedBody;
   };
+
+
 
   return (
     <CommonButton

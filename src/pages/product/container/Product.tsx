@@ -95,7 +95,7 @@ const Product = () => {
         <ImportModal />
       </Grid>
       <Grid item>
-        <ExportButton url={exportUrl} />
+        <ExportButton url={exportUrl} extraParams={queryParams} />
       </Grid>
     </Grid>
   );
