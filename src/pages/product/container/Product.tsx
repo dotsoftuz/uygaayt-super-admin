@@ -29,9 +29,10 @@ const Product = () => {
     stockState: formStore.watch("stockState") || undefined,
   }), [formStore.watch("isActiveQuery"), formStore.watch("stockState")]);
 
+  const exportUrl: string = "/product/export";
 
   const renderHeader = (
-    <Grid className="lg:w-[60%] w-full gap-y-2 sm:gap-y-0 grid sm:grid-cols-5 items-center gap-x-2">
+    <Grid className="lg:w-[60%] w-full gap-y-2 sm:gap-y-0 grid sm:grid-cols-6 items-center gap-x-2">
       <Grid item>
         <Checkbox
           control={formStore.control}
@@ -92,6 +93,9 @@ const Product = () => {
       </Grid>
       <Grid item>
         <ImportModal />
+      </Grid>
+      <Grid item>
+        <ExportButton url={exportUrl} />
       </Grid>
     </Grid>
   );
