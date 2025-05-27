@@ -69,7 +69,6 @@ const About = () => {
   }, [addressByPointName, addressLocation])
 
 
-
   useEffect(() => {
     if (status === "success") {
       const about = data?.data;
@@ -79,7 +78,9 @@ const About = () => {
           about.workTime?.length === 11 ? about.workTime?.slice(0, 5) : "",
         endTime: about.workTime?.length === 11 ? about.workTime?.slice(-5) : "",
         addressLocation: about.addressLocation,
-        deliveryPrice: about.deliveryPrice
+        deliveryPrice: about.deliveryPrice,
+        itemPrepTimeFrom: about.itemPrepTimeFrom,
+        itemPrepTimeTo: about.itemPrepTimeTo
       });
     }
   }, [status, data]);
@@ -94,7 +95,9 @@ const About = () => {
       phoneNumber: data.phoneNumber,
       addressName: data.addressName,
       addressLocation,
-      deliveryPrice: +data.deliveryPrice
+      deliveryPrice: +data.deliveryPrice,
+      itemPrepTimeFrom: data.itemPrepTimeFrom,
+      itemPrepTimeTo: data.itemPrepTimeTo
     };
     mutate(requestData);
   };
@@ -133,6 +136,22 @@ const About = () => {
                 name="endTime"
                 errors={formState.errors}
                 rules={{ required: true }}
+              />
+            </div>
+
+            <div className="mb-3 sm:flex md:gap-0 gap-y-2 justify-between items-end working-time">
+              <TextInput
+                control={control}
+                name="itemPrepTimeFrom"
+                type="number"
+                label={t("settings.delivery_time")!}
+              // rules={{ required: false }}
+              />
+              <TextInput
+                control={control}
+                name="itemPrepTimeTo"
+                type="number"
+              // rules={{ required: false }}
               />
             </div>
             <div className="mb-3">

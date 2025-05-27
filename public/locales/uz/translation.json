@@ -257,6 +257,7 @@
     "store_radius": "Do'kon radiusi (km)",
     "currency": "Valyuta",
     "order_delivery_time": "Buyurtmani yetkazib berish vaqti (sekund)",
+    "delivery_time": "Yetkazib berish vaqti (minut)",
     "couirer_return_time": "Kuryer skladga qaytish vaqti (sekund)",
     "initial_discount": "Dastlabki chegirmalar",
     "initial_bonus": "Dastlabki bonuslar",
