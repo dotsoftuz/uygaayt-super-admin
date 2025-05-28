@@ -21,6 +21,7 @@ import CommonButton from "components/common/commonButton/Button";
 import { Delete } from "@mui/icons-material";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import AttributeForm from "./Fields";
+import ImageInputPro from "components/form/ImageInputPro/ImageInputPro";
 
 interface IProductForm {
   formStore: any;
@@ -670,7 +671,7 @@ const ProductForm = ({
           <Grid item md={12}>
             <label className="py-2" htmlFor="">{t('general.recommendation_img')}</label><br /><br />
             <div className="product-images">
-              <ImageInput
+              <ImageInputPro
                 control={control}
                 setValue={setValue}
                 name="image"
