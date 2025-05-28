@@ -1,11 +1,11 @@
-import { Box, Card, Grid, Typography } from "@mui/material";
+import { Box, Card, Grid, TextField, Typography } from "@mui/material";
 import { CopyIcon } from "assets/svgs";
 import { CommonLoader, Image, Modal, SelectForm, TextInput } from "components";
 import CommonButton from "components/common/commonButton/Button";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import useCopyToClipboard from "hooks/useClipboard";
 import { useState } from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import {
@@ -67,6 +67,8 @@ const Integration = () => {
     mutate({ isInstalled: bool, _id: integrationId });
   };
 
+  console.log(data);
+
   return (
     <IntegrationStyled>
       <Box sx={{ flexGrow: 1, p: 2 }}>
@@ -77,7 +79,7 @@ const Integration = () => {
               xs={12}
               sm={6}
               md={4}
-              lg={2} 
+              lg={2}
               key={item._id}
             >
               <Card
@@ -199,10 +201,27 @@ const Integration = () => {
                               label={field.fieldName}
                             />
                           </div>
+                        ) : field.fieldType === "textarea" ? (
+                          <div className="mb-2" key={field.id}>
+                            <Controller
+                              control={control}
+                              name={`fields.${index}.fieldValue`}
+                              render={({ field: controllerField }) => (
+                                <TextField
+                                  {...controllerField}
+                                  label={field.fieldName}
+                                  multiline
+                                  rows={4}
+                                  fullWidth
+                                />
+                              )}
+                            />
+                          </div>
                         ) : (
                           ""
                         )
                       )}
+
                       <div className="d-flex justify-content-end gap-2 py-2">
                         <CommonButton
                           title="Orqaga"
