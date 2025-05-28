@@ -551,6 +551,7 @@ const AddOrderForm = ({
                 <YandexMapForOrder
                   getCoordinate={setCoordinate}
                   center={watch("addressLocation")}
+                  order={order}
                 />
                 {/* <YMaps >
                   <Map

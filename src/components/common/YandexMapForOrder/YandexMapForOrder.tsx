@@ -18,9 +18,10 @@ interface IYandexMap {
   getCoordinate: (coordinate: ILocation) => void;
   center?: ILocation;
   height?: string;
+  order?: any;
 }
 
-const YandexMap = ({ getCoordinate, center, height }: IYandexMap) => {
+const YandexMap = ({ getCoordinate, center, height, order }: IYandexMap) => {
   const [coordinate, setCoordinate] = useState<ILocation | undefined>(center);
   const mapRef = useRef<any>(null); // Xarita instansiyasiga murojaat qilish uchun ref
   const { reset } = useForm();
@@ -128,8 +129,12 @@ const YandexMap = ({ getCoordinate, center, height }: IYandexMap) => {
         height={height || "500px"}
         defaultState={{
           center: center?.latitude
-            ? [center?.latitude, center?.longitude]
-            : [storeCoordinates.latitude, storeCoordinates.longitude],
+            ? [center.latitude, center.longitude]
+            : order?.addressLocation?.latitude
+              ? [
+                order?.addressLocation?.latitude,
+                order?.addressLocation?.longitude,
+              ] : [storeCoordinates.latitude, storeCoordinates.longitude] ,
           zoom: 14,
           behaviors: ["default", "scrollZoom"],
         }}
@@ -151,9 +156,15 @@ const YandexMap = ({ getCoordinate, center, height }: IYandexMap) => {
           }
         }}
       >
-        {coordinate && (
-          <Placemark geometry={[coordinate.latitude, coordinate.longitude]} />
-        )}
+        {/* {coordinate && ( */}
+        <Placemark
+          geometry={
+            coordinate?.latitude != null && coordinate?.longitude != null
+              ? [coordinate.latitude, coordinate.longitude]
+              : [order?.addressLocation?.latitude, order?.addressLocation?.longitude]
+          }
+        />
+        {/* )} */}
         <FullscreenControl />
         <GeolocationControl
           options={{ float: "left" }}
