@@ -11,12 +11,14 @@ import { useOrderTableColumns } from "./orderTable.columns";
 import AutoCompleteFilter from "components/common/AutocompleteFilterGet/AutoCompleteFilter";
 import { RangeDatePicker, Table } from "components";
 import { socketReRender } from "store/reducers/SocketSlice";
+import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
 
 const OrderTable = () => {
   const [stateUpdateData, setStateUpdateData] = useState<any>();
   const dis = useAppDispatch();
   const hasAccess = useRoleManager();
   const socketRender = useAppSelector((store) => store.SocketState.render);
+  const allParams = useAllQueryParams();
 
   const { mutate, reset } = useApiMutation(
     `order/state/${stateUpdateData?.orderId}`,
@@ -73,6 +75,7 @@ const OrderTable = () => {
     </>
   );
 
+  console.log(allParams)
 
 
   return (
@@ -93,7 +96,7 @@ const OrderTable = () => {
         // }
         onRowClick={(row) => navigate(`/order/${row._id}`)}
         exQueryParams={{
-          stateId: undefined,
+          stateId: allParams?.stateId || undefined,
         }}
       />
     </>
