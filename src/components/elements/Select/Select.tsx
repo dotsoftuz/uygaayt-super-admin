@@ -50,6 +50,7 @@ const Select = ({
   iconValue,
 }: ISelection) => {
   const { t } = useTranslation();
+  const currentLang = localStorage.getItem("i18nextLng") || "uz";
   const {
     data: optionsUrlData,
     status,
@@ -81,19 +82,17 @@ const Select = ({
   const [searchParams, setSearchParams] = useSearchParams();
   const allParams = useAllQueryParams();
   const [value, setValue] = useState<string | IOption[]>(!multiple ? "" : []);
-  const SELECT_OPTIONS =
-  optionsUrlData?.data?.map((item) => {
-    const currentLang = localStorage.getItem("i18nextLng") || "uz"; 
-    return {
-      ...item,
-      name: item?.firstName
-        ? `${item?.firstName} ${item?.lastName}` 
-        : item?.name?.[currentLang] || "uz", 
-    };
-  }) || options;
+  const SELECT_OPTIONS = (optionsUrlData?.data || options)?.map((item) => ({
+    ...item,
+    name:
+      item?.firstName && item?.lastName
+        ? `${item.firstName} ${item.lastName}`
+        : typeof item.name === "object"
+          ? item.name[currentLang] || item.name.uz || ""
+          : item.name || "",
+  }));
 
 
-   
 
   return (
     <div>

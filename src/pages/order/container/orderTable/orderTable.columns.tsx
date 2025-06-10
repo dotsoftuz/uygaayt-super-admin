@@ -16,7 +16,7 @@ const StateSelectStyled = styled.div<{ stateColor: string; luma: any }>`
   & .MuiSelect-select.Mui-disabled {
     color: ${({ luma }) => (luma > 60 ? "#232323" : "#ffffff")} !important;
     -webkit-text-fill-color: ${({ luma }) =>
-      luma > 60 ? "#232323" : "#ffffff"} !important;
+    luma > 60 ? "#232323" : "#ffffff"} !important;
   }
 
   & svg {
@@ -26,7 +26,10 @@ const StateSelectStyled = styled.div<{ stateColor: string; luma: any }>`
   }
 `;
 
-export const useOrderTableColumns = (setStateUpdateData: any): GridColumns => {
+export const useOrderTableColumns = (
+  setStateUpdateData: any,
+  orderStates: any[]
+): GridColumns => {
   const { t } = useTranslation();
 
   return [
@@ -59,13 +62,13 @@ export const useOrderTableColumns = (setStateUpdateData: any): GridColumns => {
       renderCell({ row }) {
         const firstName = row?.customer?.firstName;
         const shortFirst = firstName?.length > 10 ? `${firstName.substring(0, 10)}...` : firstName;
-    
+
         const lastName = row?.customer?.lastName;
         const shortLast = lastName?.length > 10 ? `${lastName.substring(0, 10)}...` : lastName;
-    
+
         const fullName = `${shortFirst}${lastName ? ` ${shortLast}` : ""}`;
         const tooltipText = `${firstName}${lastName ? ` ${lastName}` : ""}`;
-    
+
         return (
           <Tooltip title={tooltipText} arrow>
             <span>{fullName}</span>
@@ -101,13 +104,12 @@ export const useOrderTableColumns = (setStateUpdateData: any): GridColumns => {
     {
       field: t("common.status"),
       renderCell({ row }) {
-        var c: any = row?.state?.color?.substring(1); // strip #
-        var rgb = parseInt(c, 16); // convert rrggbb to decimal
-        var r = (rgb >> 16) & 0xff; // extract red
-        var g = (rgb >> 8) & 0xff; // extract green
-        var b = (rgb >> 0) & 0xff; // extract blue
-
-        var luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
+        const c: any = row?.state?.color?.substring(1);
+        const rgb = parseInt(c, 16);
+        const r = (rgb >> 16) & 0xff;
+        const g = (rgb >> 8) & 0xff;
+        const b = rgb & 0xff;
+        const luma = 0.2126 * r + 0.7152 * g + 0.0722 * b;
 
         return (
           <StateSelectStyled
@@ -123,7 +125,7 @@ export const useOrderTableColumns = (setStateUpdateData: any): GridColumns => {
                 })
               }
               customValue={row.stateId}
-              optionsUrl="order-state/get-all"
+              options={orderStates} // API emas, options prop
               disabled={
                 row.state?.state === "completed" ||
                 row.state?.state === "cancelled"

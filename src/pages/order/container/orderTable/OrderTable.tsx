@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import { reRenderTable } from "components/elements/Table/reducer/table.slice";
-import { useApiMutation } from "hooks/useApi/useApiHooks";
+import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import SwitchView from "pages/order/components/SwitchView/SwitchView";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -19,6 +19,7 @@ const OrderTable = () => {
   const hasAccess = useRoleManager();
   const socketRender = useAppSelector((store) => store.SocketState.render);
   const allParams = useAllQueryParams();
+  const [orderStates, setOrderStates] = useState([]);
 
   const { mutate, reset } = useApiMutation(
     `order/state/${stateUpdateData?.orderId}`,
@@ -41,7 +42,8 @@ const OrderTable = () => {
     }
   }, [stateUpdateData]);
 
-  const columns = useOrderTableColumns(setStateUpdateData);
+  const columns = useOrderTableColumns(setStateUpdateData, orderStates);
+
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -75,8 +77,16 @@ const OrderTable = () => {
     </>
   );
 
-  console.log(allParams)
-
+  const { data: columnState, status: columnStateStatus, refetch } = useApi(
+    "order-state/get-all",
+    {},
+    {
+      onSuccess({ data }) {
+        console.log(data)
+        setOrderStates(data || []);
+      },
+    }
+  );
 
   return (
     <>
