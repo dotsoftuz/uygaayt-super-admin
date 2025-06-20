@@ -38,7 +38,7 @@ const OrderDetails = () => {
   const isCompleted = order?.state?.state === "completed";
   const isCancelled = order?.state?.state === "cancelled";
 
- 
+
 
   const { data: orderStates, refetch: refetchOrderState } = useApi(
     "order-state/get-all",
@@ -87,9 +87,13 @@ const OrderDetails = () => {
   const submit = handleSubmit((data: any) => {
     const requestData = {
       ...data,
-      items: data.items?.map((e: any) => ({
+      items: data?.items?.map((e: any) => ({
         productId: e.productId,
         amount: e.amount,
+        attributes: e?.attributes?.map((item: any) => ({
+          attributeId: item?.attributeId,
+          attributeItem: item?.attributeItem
+        }))
       })),
       _id: order?._id,
       cardId: order?._id
@@ -108,7 +112,7 @@ const OrderDetails = () => {
     }
   }, [socketRender]);
 
-  
+
 
   return (
     <OrderDetailsStyled>
@@ -174,7 +178,7 @@ const OrderDetails = () => {
             order={order}
           />
         </Grid>
-      
+
         <Grid item md={4}>
           <OrderInfo formStore={formStore} order={order} />
         </Grid>
