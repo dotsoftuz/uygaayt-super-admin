@@ -43,7 +43,7 @@ function MoneyInput<FormNames extends Record<string, any>>({
           <NumericFormat
             // {...field}
             // onChange={(e) => e.target.value}
-            value={field.value || ""}
+            value={field.value !== undefined && field.value !== null ? field.value : ""}
             onBlur={field.onBlur}
             placeholder={String(placeholder)}
             disabled={disabled}
@@ -60,7 +60,7 @@ function MoneyInput<FormNames extends Record<string, any>>({
             customInput={TextField}
             decimalScale={3}
             onValueChange={(val) => {
-              field.onChange(val.floatValue || "");
+              field.onChange(val.floatValue !== undefined ? val.floatValue : "");
               onCustomChange?.(val);
             }}
           />

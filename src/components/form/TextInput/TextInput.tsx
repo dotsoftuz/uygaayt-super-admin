@@ -13,25 +13,32 @@ const initialValidation = (
   type: React.InputHTMLAttributes<unknown>["type"],
   inputProps?: any,
 ) => ({
-  required: { value: true, message: "Majburiy" },
+  required:
+    type === "number"
+      ? {
+          value: true,
+          message: "Majburiy",
+          validate: (v: any) => v === 0 || v === "0" || (v !== undefined && v !== null && v !== "") || "Majburiy",
+        }
+      : { value: true, message: "Majburiy" },
   minLength:
     type === "password"
       ? {
-        value: 6,
-        message: "uzunligi 6 dan ko'p bo'lishi kerak!",
-      }
+          value: 6,
+          message: "uzunligi 6 dan ko'p bo'lishi kerak!",
+        }
       : undefined,
   max: inputProps?.max
     ? {
-      value: inputProps?.max,
-      message: `Maximum ${inputProps?.max}`,
-    }
+        value: inputProps?.max,
+        message: `Maximum ${inputProps?.max}`,
+      }
     : undefined,
   min: inputProps?.min
     ? {
-      value: inputProps?.min,
-      message: `Minimum ${inputProps?.min}`,
-    }
+        value: inputProps?.min,
+        message: `Minimum ${inputProps?.min}`,
+      }
     : undefined,
 });
 
