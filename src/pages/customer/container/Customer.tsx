@@ -7,11 +7,15 @@ const Client = () => {
   const navigate = useNavigate();
   const columns = useCustomerColumns();
 
+  const exportUrl: string = "/customer/export";
 
   const renderHeader = (
-    <Grid className="lg:w-[80%] w-full flex justify-end items-center pb-2">
+    <Grid className="lg:w-[80%] w-full flex justify-end gap-2 items-center pb-2">
       <Grid >
         <RangeDatePicker />
+      </Grid>
+      <Grid item>
+        <ExportButton url={exportUrl} />
       </Grid>
     </Grid>
   );
