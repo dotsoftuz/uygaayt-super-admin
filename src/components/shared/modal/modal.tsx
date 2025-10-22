@@ -1,11 +1,13 @@
-import { ModalUnstyledOwnProps } from "@mui/material/Modal";
+import { ModalProps } from "@mui/material/Modal";
 import React from "react";
 import { TSetState } from "types/form.types";
 import { ModalStyled } from "./modal.style";
 
-const Modal: React.FC<
-  ModalUnstyledOwnProps & { setOpen?: TSetState<boolean> }
-> = ({ children, setOpen, ...props }) => {
+const Modal: React.FC<ModalProps & { setOpen?: TSetState<boolean> }> = ({
+  children,
+  setOpen,
+  ...props
+}) => {
   return (
     <ModalStyled
       BackdropProps={{

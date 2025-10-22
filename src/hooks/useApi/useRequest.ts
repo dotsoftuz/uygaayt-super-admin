@@ -45,7 +45,7 @@ export const useRequest = <
     setStatus(REQUEST_STATUS.loading);
     try {
       const res = await axios.get(
-        "http://localhost:50000/api/Identification/DataFromService"
+        "http://localhost:3003/v1/Identification/DataFromService"
       );
       if (res.status === 401) {
         navigate("/login");

@@ -33,7 +33,8 @@ const useApi = <Data = any, Error = any>(
       } catch (error: AxiosResponse<Data>) {
         if (error?.statusCode === 401) {
           localStorage.clear();
-          if(window.location.pathname !== "/login") window.location.replace("/login");
+          if (window.location.pathname !== "/login")
+            window.location.replace("/login");
           return error;
         }
         if (options.toast) {
@@ -60,7 +61,9 @@ const useApiMutation = <
   method: Method,
   options: UseMutationOptions<AxiosResponse<Response>, Error, Variables> = {},
   withoutNotification?: boolean
-) => {
+): ReturnType<
+  typeof useMutation<AxiosResponse<Response>, Error, Variables>
+> => {
   const dis = useAppDispatch();
   const { t } = useTranslation();
 
