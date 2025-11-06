@@ -1,19 +1,7 @@
-import { Grid } from "@mui/material";
-import { useTranslation } from "react-i18next";
+import StoresRestaurantsContainer from "./container/StoresRestaurants";
 
 const StoresRestaurants = () => {
-  const { t } = useTranslation();
-
-  return (
-    <div style={{ padding: "20px" }}>
-      <Grid container>
-        <Grid item xs={12}>
-          <h1>{t("sidebar.stores_restaurants")}</h1>
-          <p>Do'konlar va Restoranlar sahifasi</p>
-        </Grid>
-      </Grid>
-    </div>
-  );
+  return <StoresRestaurantsContainer />;
 };
 
 export default StoresRestaurants;
