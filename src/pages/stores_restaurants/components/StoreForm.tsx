@@ -5,6 +5,7 @@ import {
   ImageInput,
   PhoneInput,
   TextInput,
+  SelectForm,
 } from "components";
 import { UseFormReturn } from "react-hook-form";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
@@ -16,6 +17,8 @@ import { ILocation } from "types/common.types";
 import useDebounce from "hooks/useDebounce";
 import { Checkbox } from "components";
 import { IIdImage } from "hooks/usePostImage";
+import { saveStoreToLocalStorage, getStoresFromLocalStorage, ILocalStore } from "../utils/localStorageUtils";
+import { toast } from "react-toastify";
 
 interface IStoreForm {
   formStore: UseFormReturn<any>;
@@ -93,13 +96,51 @@ const StoreForm: FC<IStoreForm> = ({
     `store/get-by-id/${editingStoreId}`,
     {},
     {
-      enabled: !!editingStoreId,
+      enabled: !!editingStoreId && !editingStoreId?.startsWith('store_'),
       suspense: false,
     }
   );
 
+  // localStorage'dan do'konni o'qish (agar localStorage'dan bo'lsa)
   useEffect(() => {
-    if (getByIdStatus === "success" && getByIdData?.data) {
+    if (editingStoreId?.startsWith('store_')) {
+      const stores = getStoresFromLocalStorage();
+      const store = stores.find((s) => s._id === editingStoreId);
+      if (store) {
+        reset({
+          name: store.name || "",
+          phoneNumber: store.phoneNumber || "",
+          addressName: store.addressName || "",
+          addressLocation: store.addressLocation || null,
+          categoryId: store.categoryId || "",
+          storeType: store.categoryId || store.category || "",
+          minimumOrderAmount: store.minimumOrderAmount || "",
+          commissionPercent: store.commissionPercent || "",
+          paymentMethods: store.paymentMethods || {
+            card: false,
+            cash: false,
+            bonus: false,
+          },
+          startTime: store.workTime?.length === 11 ? store.workTime?.slice(0, 5) : "",
+          endTime: store.workTime?.length === 11 ? store.workTime?.slice(-5) : "",
+          description: store.description || "",
+          logoId: store.logoId || null,
+          bannerId: store.bannerId || null,
+        });
+        setAddressLocation(store.addressLocation);
+        if (store.logoId) {
+          setLogoImage({ url: "", _id: store.logoId });
+        }
+        if (store.bannerId) {
+          setBannerImage({ url: "", _id: store.bannerId });
+        }
+      }
+    }
+  }, [editingStoreId]);
+
+  // API'dan do'konni o'qish (agar API'dan bo'lsa)
+  useEffect(() => {
+    if (getByIdStatus === "success" && getByIdData?.data && !editingStoreId?.startsWith('store_')) {
       const store = getByIdData.data;
       reset({
         name: store.name || "",
@@ -107,6 +148,7 @@ const StoreForm: FC<IStoreForm> = ({
         addressName: store.addressName || "",
         addressLocation: store.addressLocation || null,
         categoryId: store.categoryId || "",
+        storeType: store.storeType || store.categoryId || store.category || "",
         minimumOrderAmount: store.minimumOrderAmount || "",
         commissionPercent: store.commissionPercent || "",
         paymentMethods: store.paymentMethods || {
@@ -141,14 +183,16 @@ const StoreForm: FC<IStoreForm> = ({
   }, [status]);
 
   const submit = (data: any) => {
-    const requestData: any = {
+    const requestData: ILocalStore = {
+      _id: editingStoreId || `store_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       name: data.name,
       phoneNumber: data.phoneNumber,
-      addressName: data.addressName,
-      addressLocation: addressLocation,
-      categoryId: data.categoryId?._id || data.categoryId,
-      minimumOrderAmount: data.minimumOrderAmount ? +data.minimumOrderAmount : null,
-      commissionPercent: data.commissionPercent ? +data.commissionPercent : null,
+      addressName: data.addressName || "",
+      addressLocation: addressLocation || undefined,
+      categoryId: data.storeType || "",
+      category: data.storeType === "store" ? "Do'kon" : data.storeType === "restaurant" ? "Restoran" : "",
+      minimumOrderAmount: data.minimumOrderAmount ? +data.minimumOrderAmount : 0,
+      commissionPercent: data.commissionPercent ? +data.commissionPercent : 0,
       paymentMethods: {
         card: data.paymentMethods?.card || false,
         cash: data.paymentMethods?.cash || false,
@@ -156,14 +200,32 @@ const StoreForm: FC<IStoreForm> = ({
       },
       workTime: data.startTime && data.endTime
         ? `${data.startTime}-${data.endTime}`
-        : null,
+        : "",
       description: data.description || "",
-      logoId: logoImage?._id || null,
-      bannerId: bannerImage?._id || null,
-      _id: editingStoreId,
+      logoId: logoImage?._id,
+      bannerId: bannerImage?._id,
+      isActive: false, // Dastlab "Tekshiruvda" statusida
+      totalOrders: 0,
+      totalRevenue: 0,
+      createdAt: editingStoreId ? new Date().toISOString() : new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
 
-    mutate(requestData);
+    // Dastlab localStorage'ga saqlash
+    saveStoreToLocalStorage(requestData);
+    toast.success(editingStoreId ? "Do'kon yangilandi!" : "Do'kon qo'shildi!");
+    
+    // Keyinchalik API tayyor bo'lganda, bu yerda API'ga yuborish
+    // if (!editingStoreId?.startsWith('store_')) {
+    //   mutate(requestData);
+    // }
+    
+    // FormDrawer'ni yopish va ro'yxatni yangilash
+    setTimeout(() => {
+      resetForm();
+      // Sahifani yangilash (localStorage'dan yangi ma'lumotlarni o'qish uchun)
+      window.location.reload();
+    }, 1000);
   };
 
   return (
@@ -193,12 +255,14 @@ const StoreForm: FC<IStoreForm> = ({
 
         <Grid item xs={12} md={6}>
           <div className="mb-3">
-            <AutoCompleteForm
+            <SelectForm
               control={control}
-              name="categoryId"
-              optionsUrl="category/paging"
-              dataProp="data.data"
-              label="Kategoriya"
+              name="storeType"
+              label="Turi"
+              options={[
+                { _id: "store", name: "Do'kon" },
+                { _id: "restaurant", name: "Restoran" },
+              ]}
               rules={{ required: true }}
             />
           </div>

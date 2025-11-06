@@ -45,7 +45,14 @@ export const useStoresRestaurantsColumns = (
       flex: 1,
       minWidth: 150,
       renderCell({ row }) {
-        return get(row, "category", "") || get(row, "type", "") || "-";
+        const categoryId = get(row, "categoryId", "");
+        const category = get(row, "category", "");
+        if (categoryId === "store" || category === "Do'kon") {
+          return "Do'kon";
+        } else if (categoryId === "restaurant" || category === "Restoran") {
+          return "Restoran";
+        }
+        return category || categoryId || "-";
       },
     },
     {

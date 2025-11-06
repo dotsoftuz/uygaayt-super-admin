@@ -6,13 +6,14 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useRoleManager } from "services/useRoleManager";
 import { Grid, MenuItem, Select } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import WarningModal from "components/common/WarningModal/WarningModal";
 import { useNavigate } from "react-router-dom";
 import { useApiMutation } from "hooks/useApi/useApiHooks";
 import { toast } from "react-toastify";
 import StoreForm from "../components/StoreForm";
 import { IIdImage } from "hooks/usePostImage";
+import { getStoresFromLocalStorage, deleteStoreFromLocalStorage, activateStoreInLocalStorage, ILocalStore } from "../utils/localStorageUtils";
 
 const StoresRestaurants = () => {
     const hasAccess = useRoleManager();
@@ -24,6 +25,14 @@ const StoresRestaurants = () => {
     const [storeId, setStoreId] = useState("");
     const [logoImage, setLogoImage] = useState<IIdImage | null>(null);
     const [bannerImage, setBannerImage] = useState<IIdImage | null>(null);
+    const [localStores, setLocalStores] = useState<ILocalStore[]>([]);
+    const [reloadTrigger, setReloadTrigger] = useState(0);
+
+    // localStorage'dan do'konlarni o'qish
+    useEffect(() => {
+        const stores = getStoresFromLocalStorage();
+        setLocalStores(stores);
+    }, [reloadTrigger]);
 
     const { mutate: activateStore } = useApiMutation("store/activate", "put", {
         onSuccess() {
@@ -37,7 +46,27 @@ const StoresRestaurants = () => {
 
     const handleActivate = (row: any) => {
         if (window.confirm(`${row.name} do'konini aktivlashtirmoqchimisiz?`)) {
-            activateStore({ id: row._id });
+            // localStorage'dan aktivlashtirish
+            if (row._id?.startsWith('store_')) {
+                activateStoreInLocalStorage(row._id);
+                setReloadTrigger(prev => prev + 1);
+                toast.success("Do'kon aktivlashtirildi!");
+            } else {
+                // API orqali aktivlashtirish (keyinchalik)
+                activateStore({ id: row._id });
+            }
+        }
+    };
+
+    const handleDelete = (storeId: string) => {
+        if (storeId?.startsWith('store_')) {
+            // localStorage'dan o'chirish
+            deleteStoreFromLocalStorage(storeId);
+            setReloadTrigger(prev => prev + 1);
+            toast.success("Do'kon o'chirildi!");
+        } else {
+            // API orqali o'chirish (keyinchalik)
+            setStoreId(storeId);
         }
     };
 
@@ -49,7 +78,7 @@ const StoresRestaurants = () => {
                 dispatch(setOpenDrawer(true));
             }
             : undefined,
-        hasAccess("store") ? (row) => setStoreId(row._id) : undefined,
+        hasAccess("store") ? (row) => handleDelete(row._id) : undefined,
         handleActivate
     );
 
@@ -119,12 +148,14 @@ const StoresRestaurants = () => {
         setEditingStoreId(null);
         setLogoImage(null);
         setBannerImage(null);
+        setReloadTrigger(prev => prev + 1); // localStorage'dan yangi ma'lumotlarni o'qish
         formStore.reset({
             name: "",
             phoneNumber: "",
             addressName: "",
             addressLocation: null,
             categoryId: formStore.watch("categoryId") || "",
+            storeType: "",
             minimumOrderAmount: "",
             commissionPercent: "",
             paymentMethods: {
@@ -140,6 +171,17 @@ const StoresRestaurants = () => {
             isActiveQuery: formStore.watch("isActiveQuery"),
             orderSort: formStore.watch("orderSort"),
         });
+    };
+
+    // localStorage va API ma'lumotlarini birlashtirish
+    const mapData = (apiData: any[]) => {
+        // API dan kelgan ma'lumotlar
+        const apiStores = apiData || [];
+        // localStorage'dan kelgan ma'lumotlar
+        const localStoresData = localStores || [];
+
+        // Birlashtirish (localStorage ma'lumotlari birinchi bo'lib ko'rsatiladi)
+        return [...localStoresData, ...apiStores];
     };
 
     return (
@@ -163,12 +205,15 @@ const StoresRestaurants = () => {
                         : undefined
                 }
                 exQueryParams={queryParams}
+                mapData={mapData}
             />
-            <WarningModal
-                open={storeId}
-                setOpen={setStoreId}
-                url="store/delete"
-            />
+            {storeId && !storeId?.startsWith('store_') && (
+                <WarningModal
+                    open={storeId}
+                    setOpen={setStoreId}
+                    url="store/delete"
+                />
+            )}
             <FormDrawer
                 FORM_ID="store"
                 isEditing={!!editingStoreId}
