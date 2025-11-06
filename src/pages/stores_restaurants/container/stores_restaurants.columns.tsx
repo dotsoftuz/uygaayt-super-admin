@@ -47,12 +47,39 @@ export const useStoresRestaurantsColumns = (
       renderCell({ row }) {
         const categoryId = get(row, "categoryId", "");
         const category = get(row, "category", "");
+        let categoryName = "";
+        let color = "#6B7280"; // default gray
+        
         if (categoryId === "store" || category === "Do'kon") {
-          return "Do'kon";
+          categoryName = "Do'kon";
+          color = "#10B981"; // yashil
         } else if (categoryId === "restaurant" || category === "Restoran") {
-          return "Restoran";
+          categoryName = "Restoran";
+          color = "#EF4444"; // qizil
+        } else {
+          categoryName = category || categoryId || "-";
+          // Boshqa kategoriyalar uchun ranglar
+          if (categoryName.toLowerCase().includes("fastfood")) {
+            color = "#EF4444"; // qizil
+          } else if (categoryName.toLowerCase().includes("market") || categoryName.toLowerCase().includes("supermarket")) {
+            color = "#10B981"; // yashil
+          } else if (categoryName.toLowerCase().includes("drink") || categoryName.toLowerCase().includes("ichimlik")) {
+            color = "#3B82F6"; // ko'k
+          }
         }
-        return category || categoryId || "-";
+        
+        return (
+          <Chip
+            label={categoryName}
+            sx={{
+              backgroundColor: color,
+              color: "white",
+              fontWeight: 600,
+              fontSize: "0.75rem",
+            }}
+            size="small"
+          />
+        );
       },
     },
     {
@@ -61,10 +88,23 @@ export const useStoresRestaurantsColumns = (
       width: 120,
       renderCell({ row }) {
         const isActive = get(row, "isActive", false);
+        const isInReview = !isActive && get(row, "isInReview", false);
+        
+        let label = "🟥 Nofaol";
+        let color: "success" | "error" | "warning" = "error";
+        
+        if (isActive) {
+          label = "✅ Faol";
+          color = "success";
+        } else if (isInReview) {
+          label = "🟡 Tekshiruvda";
+          color = "warning";
+        }
+        
         return (
           <Chip
-            label={isActive ? "✅ Faol" : "🟥 Nofaol"}
-            color={isActive ? "success" : "error"}
+            label={label}
+            color={color}
             size="small"
             sx={{
               fontWeight: 600,

@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Tabs, Tab, Box, Typography, Paper, Button, Grid } from '@mui/material';
-import { Analytics, History, AttachMoney, Download } from '@mui/icons-material';
+import { Analytics, History, AttachMoney, Download, AccountBalance } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { numberFormat } from 'utils/numberFormat';
 import dayjs from 'dayjs';
 import { RangeDatePicker, Table } from 'components';
 import useAllQueryParams from 'hooks/useGetAllQueryParams/useAllQueryParams';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useApiMutation } from 'hooks/useApi/useApiHooks';
 import { ExportButton } from 'components';
+import Accounting from './Accounting';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -45,6 +46,7 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
   const [value, setValue] = useState(0);
   const { t } = useTranslation();
   const allParams = useAllQueryParams();
+  const navigate = useNavigate();
 
   const { mutate: getOrders, data: ordersData } = useApiMutation(
     "order/paging",
@@ -116,6 +118,7 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
         >
           <Tab icon={<History />} iconPosition="start" label="Buyurtmalar" />
           <Tab icon={<Analytics />} iconPosition="start" label="Statistika" />
+          <Tab icon={<AccountBalance />} iconPosition="start" label="Hisob-kitoblar" />
         </Tabs>
       </Box>
 
@@ -243,6 +246,10 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
             </Paper>
           </Grid>
         </Grid>
+      </TabPanel>
+
+      <TabPanel value={value} index={2}>
+        <Accounting storeId={storeId} store={store} />
       </TabPanel>
     </Paper>
   );

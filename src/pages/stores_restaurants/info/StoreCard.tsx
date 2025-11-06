@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, CardContent, Typography, Avatar, Box, Paper, Chip, Switch } from '@mui/material';
-import { Phone, LocationOn, Store, AttachMoney, Inventory } from '@mui/icons-material';
+import { Card, CardContent, Typography, Avatar, Box, Paper, Chip, Switch, Button } from '@mui/material';
+import { Phone, LocationOn, Store, AttachMoney, Inventory, ShoppingBag } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { numberFormat } from 'utils/numberFormat';
 import useCommonContext from 'context/useCommon';
@@ -8,6 +8,8 @@ import { get } from 'lodash';
 import { getStoresFromLocalStorage, activateStoreInLocalStorage, ILocalStore } from '../utils/localStorageUtils';
 import { toast } from 'react-toastify';
 import { useApiMutation, useApi } from 'hooks/useApi/useApiHooks';
+import { useNavigate } from 'react-router-dom';
+import { Tooltip } from '@mui/material';
 
 interface StoreCardProps {
   storeInfoData: any;
@@ -25,6 +27,7 @@ export const StoreCard: React.FC<StoreCardProps> = ({
   } = useCommonContext();
 
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const { mutate: activateStore } = useApiMutation("store/activate", "put", {
     onSuccess() {
@@ -88,10 +91,16 @@ export const StoreCard: React.FC<StoreCardProps> = ({
     ? `${process.env.REACT_APP_BASE_URL}/image/${store.logoId}`
     : undefined;
 
+  // Statusga qarab fon rangi
+  const getStatusColor = () => {
+    if (store.isActive) return 'linear-gradient(135deg, #EB7B00 0%, #EB5B00 100%)';
+    return 'linear-gradient(135deg, #FFA500 0%, #FF8C00 100%)'; // Tekshiruvda - sarg'ish
+  };
+
   return (
     <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
       <Box sx={{
-        background: 'linear-gradient(135deg, #EB7B00 0%, #EB5B00 100%)',
+        background: getStatusColor(),
         pt: 6,
         pb: 8,
         px: 4,
@@ -187,33 +196,66 @@ export const StoreCard: React.FC<StoreCardProps> = ({
           )}
 
           {store.commissionPercent !== undefined && store.commissionPercent > 0 && (
-            <Box sx={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 2,
-              p: 2,
-              backgroundColor: '#F7FAFC',
-              borderRadius: 2,
-            }}>
-              <AttachMoney style={{ fontSize: 20, color: '#EB5B00' }} />
-              <Typography variant="body1" color="text.primary">
-                Komissiya: {store.commissionPercent}%
-              </Typography>
-            </Box>
+            <Tooltip 
+              title={`Platforma ulushi: ${store.commissionPercent}% | Do'kon daromadi: 100% - ${store.commissionPercent}% = ${100 - store.commissionPercent}%`}
+              arrow
+            >
+              <Box sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+                p: 2,
+                backgroundColor: '#F7FAFC',
+                borderRadius: 2,
+                cursor: 'help',
+              }}>
+                <AttachMoney style={{ fontSize: 20, color: '#EB5B00' }} />
+                <Typography variant="body1" color="text.primary">
+                  Komissiya: {store.commissionPercent}%
+                </Typography>
+              </Box>
+            </Tooltip>
           )}
 
           <Box sx={{
             display: 'flex',
             alignItems: 'center',
+            justifyContent: 'space-between',
             gap: 2,
             p: 2,
             backgroundColor: '#F7FAFC',
             borderRadius: 2,
           }}>
-            <Inventory style={{ fontSize: 20, color: '#EB5B00' }} />
-            <Typography variant="body1" color="text.primary">
-              Tovarlar soni: {totalProducts}
-            </Typography>
+            <Box 
+              sx={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: 2,
+                cursor: 'pointer',
+                '&:hover': {
+                  opacity: 0.7,
+                },
+              }}
+              onClick={() => navigate(`/product?storeId=${storeId}`)}
+            >
+              <Inventory style={{ fontSize: 20, color: '#EB5B00' }} />
+              <Typography variant="body1" color="text.primary">
+                Tovarlar soni: {totalProducts}
+              </Typography>
+            </Box>
+            <Button
+              variant="contained"
+              startIcon={<ShoppingBag />}
+              onClick={() => navigate(`/product?storeId=${storeId}`)}
+              sx={{
+                backgroundColor: '#EB5B00',
+                '&:hover': {
+                  backgroundColor: '#EB7B00',
+                },
+              }}
+            >
+              Tovarlar
+            </Button>
           </Box>
 
           <Box sx={{
