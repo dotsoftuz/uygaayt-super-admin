@@ -106,10 +106,9 @@ function AutoCompleteForm<FormNames extends Record<string, any>>({
     return typeof label === "object" && label !== null ? label[currentLang] : label;
   };
 
+  const dataFromApi = get(OptionsData, dataProp);
   const OPTIONS_PREV = (
-    (get(OptionsData, dataProp) as IOption[]) ||
-    options ||
-    []
+    (Array.isArray(dataFromApi) ? dataFromApi : Array.isArray(options) ? options : [])
   )?.map((option) => ({
     ...option,
     name: getLabel(option) || "",

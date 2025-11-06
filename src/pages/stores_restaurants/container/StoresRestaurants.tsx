@@ -11,6 +11,8 @@ import WarningModal from "components/common/WarningModal/WarningModal";
 import { useNavigate } from "react-router-dom";
 import { useApiMutation } from "hooks/useApi/useApiHooks";
 import { toast } from "react-toastify";
+import StoreForm from "../components/StoreForm";
+import { IIdImage } from "hooks/usePostImage";
 
 const StoresRestaurants = () => {
     const hasAccess = useRoleManager();
@@ -20,6 +22,8 @@ const StoresRestaurants = () => {
     const navigate = useNavigate();
     const [editingStoreId, setEditingStoreId] = useState<any>();
     const [storeId, setStoreId] = useState("");
+    const [logoImage, setLogoImage] = useState<IIdImage | null>(null);
+    const [bannerImage, setBannerImage] = useState<IIdImage | null>(null);
 
     const { mutate: activateStore } = useApiMutation("store/activate", "put", {
         onSuccess() {
@@ -113,12 +117,27 @@ const StoresRestaurants = () => {
 
     const resetForm = () => {
         setEditingStoreId(null);
+        setLogoImage(null);
+        setBannerImage(null);
         formStore.reset({
             name: "",
-            category: "",
-            isActive: false,
+            phoneNumber: "",
+            addressName: "",
+            addressLocation: null,
+            categoryId: formStore.watch("categoryId") || "",
+            minimumOrderAmount: "",
+            commissionPercent: "",
+            paymentMethods: {
+                card: false,
+                cash: false,
+                bonus: false,
+            },
+            startTime: "",
+            endTime: "",
+            description: "",
+            logoId: null,
+            bannerId: null,
             isActiveQuery: formStore.watch("isActiveQuery"),
-            categoryId: formStore.watch("categoryId"),
             orderSort: formStore.watch("orderSort"),
         });
     };
@@ -153,12 +172,20 @@ const StoresRestaurants = () => {
             <FormDrawer
                 FORM_ID="store"
                 isEditing={!!editingStoreId}
-                customTitle="Do'kon qo'shish"
+                customTitle={editingStoreId ? "Do'konni tahrirlash" : "Do'kon qo'shish"}
                 onClose={resetForm}
             >
-                <div>
-                    <p>Do'kon formasi bu yerda bo'ladi</p>
-                </div>
+                <StoreForm
+                    formStore={formStore}
+                    editingStoreId={editingStoreId}
+                    resetForm={resetForm}
+                    storeProps={{
+                        logoImage,
+                        setLogoImage,
+                        bannerImage,
+                        setBannerImage,
+                    }}
+                />
             </FormDrawer>
         </>
     );
