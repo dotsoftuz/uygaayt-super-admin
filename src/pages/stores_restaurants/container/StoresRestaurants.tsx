@@ -71,7 +71,9 @@ const StoresRestaurants = () => {
     };
 
     const columns = useStoresRestaurantsColumns(
-        (row) => navigate(`/stores_restaurants/${row._id}`),
+        (row) => {
+            navigate(`/stores_restaurants/${row._id}`);
+        },
         hasAccess("storeUpdate")
             ? (row) => {
                 setEditingStoreId(row._id);
@@ -204,6 +206,9 @@ const StoresRestaurants = () => {
                         }
                         : undefined
                 }
+                onRowClick={(row) => {
+                    navigate(`/stores_restaurants/${row._id}`);
+                }}
                 exQueryParams={queryParams}
                 mapData={mapData}
             />

@@ -34,11 +34,6 @@ const AbcAnalytics = lazy(() => import("pages/abc_analytics"));
 const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   {
     element: <Navigate to="home" replace />,
-    path: "*",
-    role: "_id",
-  },
-  {
-    element: <Navigate to="home" replace />,
     path: "/",
     role: "_id",
   },
@@ -79,7 +74,7 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   },
   {
     element: <StoresRestaurants />,
-    path: "stores_restaurants",
+    path: "stores_restaurants/*",
     role: "_id",
   },
   {
