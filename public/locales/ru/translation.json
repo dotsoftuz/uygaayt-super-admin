@@ -85,7 +85,8 @@
     "abc_analytics": "ABC аналитика",
     "promo_code": "Промо-код",
     "attribute": "Атрибут",
-    "payment_method": "Тип оплаты"
+    "payment_method": "Тип оплаты",
+    "stores_restaurants": "Магазины& Рестораны"
   },
   "common": {
     "fullName": "Ф.И.О.",
