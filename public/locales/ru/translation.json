@@ -300,7 +300,8 @@
     "top_courier": "Лучшие курьеры",
     "sold_product": "Количество проданных товаров",
     "customers_saved_time": "Экономия времени для клиентов",
-    "customers_saved_amount": "Экономия для клиентов"
+    "customers_saved_amount": "Экономия для клиентов",
+    "orders_by_location": "Статистика заказов по районам"
   },
   "customer_info": {
     "total_purchases": "Количество покупок",

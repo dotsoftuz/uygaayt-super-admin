@@ -11,6 +11,7 @@ import { get } from 'lodash';
 import MainCharts from '../components/mainCharts/MainCharts';
 import { StyledCard, TypographyTitle } from '../style/StatisticsCard.style';
 import { formatMinutes } from '../../../utils/formatMinutes';
+import DashboardMap from 'components/common/DashboardMap/DashboardMap';
 
 type SortField = 'total_price' | 'total_order';
 type SortOrder = "1" | "-1";
@@ -265,6 +266,20 @@ const Dashboard = () => {
 
             <Grid className='p-2 bg-white mt-2 rounded-lg'>
                 <MainCharts data={attributesData?.data?.states} all_orders={attributesData?.data?.total_amount} />
+            </Grid>
+
+            <Grid className='bg-white mt-2 rounded-lg p-4'>
+                <Typography
+                    style={{
+                        fontSize: "20px",
+                        fontWeight: 600,
+                        marginBottom: "16px",
+                        color: '#FF6701'
+                    }}
+                >
+                    {t("dashboard.orders_by_location")}
+                </Typography>
+                <DashboardMap height="600px" useDemoData={true} />
             </Grid>
 
             <Grid className='grid mt-2 md:grid-cols-2 gap-4'>
