@@ -73,8 +73,12 @@ const useApiMutation = <
       return response;
     },
     {
-      onError(error) {
-        toast.error(error?.message || method + "ed, no response");
+      onError(error: any) {
+        const errorMessage =
+          error?.message ||
+          error?.data?.message ||
+          `${method} failed, no response`;
+        toast.error(errorMessage);
       },
       onMutate() {
         dis(setButtonDisable(true));

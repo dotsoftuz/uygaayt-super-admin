@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL || "http://localhost:3003/v1",
+  baseURL: process.env.REACT_APP_BASE_URL || "http://165.227.153.9/v1",
 });
 // Handle all configuration of request
 api.interceptors.request.use(
@@ -24,9 +24,20 @@ api.interceptors.response.use(
   (err) => {
     if (err?.message === "Network Error") {
       // setIsNetworkErr(true);
-      return Promise.reject(null);
+      return Promise.reject({
+        message:
+          "Network Error: Unable to connect to server. Please check your internet connection.",
+        statusCode: 0,
+        data: null,
+      });
     }
-    return Promise.reject(err.response?.data);
+    return Promise.reject(
+      err.response?.data || {
+        message: err?.message || "An error occurred",
+        statusCode: err?.response?.status || 500,
+        data: null,
+      }
+    );
   }
 );
 

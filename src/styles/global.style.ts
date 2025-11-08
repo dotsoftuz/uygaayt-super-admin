@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { Box } from "@mui/material";
 import { createGlobalStyle } from "styled-components";
+import React from "react";
 
 export const SIDEBAR_OPEN = "280px";
 export const SIDEBAR_CLOSE = "103px";
@@ -75,7 +76,7 @@ export const GlobalStyle = createGlobalStyle`
      }
     
    
-`;
+` as unknown as React.FC;
 
 export const Container = styled.div`
   /* padding-left: 250px !important; */
@@ -83,7 +84,6 @@ export const Container = styled.div`
 
 export const PrivateContainer = styled.div`
   background: #ffffff;
-  
 `;
 
 export const CloseBtn = styled(Box)`

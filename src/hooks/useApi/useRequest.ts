@@ -44,9 +44,27 @@ export const useRequest = <
   ) => {
     setStatus(REQUEST_STATUS.loading);
     try {
-      const res = await axios.get(
-        "http://localhost:3003/v1/Identification/DataFromService"
-      );
+      const baseURL =
+        process.env.REACT_APP_BASE_URL || "http://165.227.153.9/v1";
+      let res;
+
+      switch (method) {
+        case "get":
+          res = await axios.get(`${baseURL}/${url}`);
+          break;
+        case "post":
+          res = await axios.post(`${baseURL}/${url}`, data);
+          break;
+        case "put":
+          res = await axios.put(`${baseURL}/${url}`, data);
+          break;
+        case "delete":
+          res = await axios.delete(`${baseURL}/${url}`, { data });
+          break;
+        default:
+          throw new Error(`Unsupported method: ${method}`);
+      }
+
       if (res.status === 401) {
         navigate("/login");
       }

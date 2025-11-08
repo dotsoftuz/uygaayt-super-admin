@@ -89,8 +89,8 @@
   "scripts": {
     "start": "env-cmd -f env/.env.development react-scripts start",
     "start-prod": "env-cmd -f env/.env.prod react-scripts start",
-    "build-dev": "CI=false && env-cmd -f env/.env.development react-scripts build",
-    "build-prod": "CI=false && env-cmd -f env/.env.prod react-scripts build",
+    "build-dev": "cross-env CI=false && env-cmd -f env/.env.development react-scripts build",
+    "build-prod": "cross-env CI=false && env-cmd -f env/.env.prod react-scripts build",
     "dev": "yarn run build && yarn run deploy",
     "deploy": "scp -r build root@65.21.54.114:/var/www/uygaayt",
     "deploy-prod": "scp -r build root@65.108.218.206:/var/www/uygaayt",
@@ -117,6 +117,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.3.12",
+    "cross-env": "^10.1.0",
     "tailwindcss": "^3.4.17"
   }
 }
