@@ -86,7 +86,8 @@
     "abc_analytics": "ABC analitikasi",
     "promo_code": "Promo-kod",
     "attribute": "Atribut",
-    "payment_method": "To'lov turi"
+    "payment_method": "To'lov turi",
+    "stores_restaurants": "Do'konlar& Restoranlar"
   },
   "common": {
     "fullName": "F.I.O",

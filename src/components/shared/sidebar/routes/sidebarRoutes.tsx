@@ -4,6 +4,7 @@ import NewspaperIcon from "@mui/icons-material/Newspaper";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
 import ArticleIcon from '@mui/icons-material/Article';
+import StoreIcon from '@mui/icons-material/Store';
 
 export const sidebarRoutes: ISidebarRoute[] = [
   {
@@ -38,6 +39,12 @@ export const sidebarRoutes: ISidebarRoute[] = [
     translate: "category",
     icon: <CategoryIcon/>,
 
+  },
+  {
+    path: "/stores_restaurants",
+    role: "_id",
+    translate: "stores_restaurants",
+    icon: <StoreIcon style={{color: "#EB5B00"}} />,
   },
   {
     path: "/about",

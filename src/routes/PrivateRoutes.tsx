@@ -9,6 +9,7 @@ const Customer = lazy(() => import("pages/customer"));
 const Product = lazy(() => import("pages/product"));
 const Category = lazy(() => import("pages/category"));
 const CategoryChild = lazy(() => import("pages/category/info/CategoryChild"));
+const StoresRestaurants = lazy(() => import("pages/stores_restaurants"));
 const About = lazy(() => import("pages/about"));
 const Employee = lazy(() => import("pages/employee"));
 const Role = lazy(() => import("pages/role"));
@@ -31,11 +32,6 @@ const AbcAnalytics = lazy(() => import("pages/abc_analytics"));
 
 
 const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
-  {
-    element: <Navigate to="home" replace />,
-    path: "*",
-    role: "_id",
-  },
   {
     element: <Navigate to="home" replace />,
     path: "/",
@@ -75,6 +71,11 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
     element: <CategoryChild />,
     path: "category_child",
     role: "employee",
+  },
+  {
+    element: <StoresRestaurants />,
+    path: "stores_restaurants/*",
+    role: "_id",
   },
   {
     element: <About />,
