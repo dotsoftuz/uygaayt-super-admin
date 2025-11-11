@@ -31,7 +31,8 @@ export const useStoresRestaurantsColumns = (
       minWidth: 200,
       renderCell({ row }) {
         const name = get(row, "name", "");
-        const truncatedName = name?.length > 30 ? `${name.substring(0, 30)}...` : name;
+        const truncatedName =
+          name?.length > 30 ? `${name.substring(0, 30)}...` : name;
         return (
           <Tooltip title={name} arrow>
             <span>{truncatedName}</span>
@@ -49,7 +50,7 @@ export const useStoresRestaurantsColumns = (
         const category = get(row, "category", "");
         let categoryName = "";
         let color = "#6B7280"; // default gray
-        
+
         if (categoryId === "store" || category === "Do'kon") {
           categoryName = "Do'kon";
           color = "#10B981"; // yashil
@@ -61,13 +62,19 @@ export const useStoresRestaurantsColumns = (
           // Boshqa kategoriyalar uchun ranglar
           if (categoryName.toLowerCase().includes("fastfood")) {
             color = "#EF4444"; // qizil
-          } else if (categoryName.toLowerCase().includes("market") || categoryName.toLowerCase().includes("supermarket")) {
+          } else if (
+            categoryName.toLowerCase().includes("market") ||
+            categoryName.toLowerCase().includes("supermarket")
+          ) {
             color = "#10B981"; // yashil
-          } else if (categoryName.toLowerCase().includes("drink") || categoryName.toLowerCase().includes("ichimlik")) {
+          } else if (
+            categoryName.toLowerCase().includes("drink") ||
+            categoryName.toLowerCase().includes("ichimlik")
+          ) {
             color = "#3B82F6"; // ko'k
           }
         }
-        
+
         return (
           <Chip
             label={categoryName}
@@ -89,10 +96,10 @@ export const useStoresRestaurantsColumns = (
       renderCell({ row }) {
         const isActive = get(row, "isActive", false);
         const isInReview = !isActive && get(row, "isInReview", false);
-        
+
         let label = "🟥 Nofaol";
         let color: "success" | "error" | "warning" = "error";
-        
+
         if (isActive) {
           label = "✅ Faol";
           color = "success";
@@ -100,7 +107,7 @@ export const useStoresRestaurantsColumns = (
           label = "🟡 Tekshiruvda";
           color = "warning";
         }
-        
+
         return (
           <Chip
             label={label}
@@ -118,7 +125,9 @@ export const useStoresRestaurantsColumns = (
       headerName: "Buyurtmalar",
       width: 120,
       renderCell({ row }) {
-        return numberFormat(get(row, "totalOrders", 0) || get(row, "ordersCount", 0));
+        return numberFormat(
+          get(row, "totalOrders", 0) || get(row, "ordersCount", 0)
+        );
       },
     },
     {
@@ -126,7 +135,8 @@ export const useStoresRestaurantsColumns = (
       headerName: "Daromad (so'm)",
       width: 150,
       renderCell({ row }) {
-        const revenue = get(row, "totalRevenue", 0) || get(row, "revenue", 0) || 0;
+        const revenue =
+          get(row, "totalRevenue", 0) || get(row, "revenue", 0) || 0;
         return numberFormat(revenue);
       },
     },
@@ -186,11 +196,7 @@ const ActionMenu = ({
 
   return (
     <>
-      <IconButton
-        onClick={handleClick}
-        size="small"
-        sx={{ color: "#EB5B00" }}
-      >
+      <IconButton onClick={handleClick} size="small" sx={{ color: "#EB5B00" }}>
         <MoreVertIcon />
       </IconButton>
       <Menu
@@ -223,4 +229,3 @@ const ActionMenu = ({
     </>
   );
 };
-
