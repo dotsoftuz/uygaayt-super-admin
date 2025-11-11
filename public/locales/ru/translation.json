@@ -11,7 +11,7 @@
     "savings_time": "Экономия времени",
     "payment_method": "Тип оплаты",
     "radius": "Радиус (км)",
-    "show_name":"Показать имя заголовок",
+    "show_name": "Показать имя заголовок",
     "attributes": "Варианты продукта",
     "add_basket": "Добавить в корзину",
     "again_choose": "Попробуйте еще раз.",
@@ -86,7 +86,7 @@
     "promo_code": "Промо-код",
     "attribute": "Атрибут",
     "payment_method": "Тип оплаты",
-    "stores_restaurants": "Магазины& Рестораны"
+    "stores_restaurants": "Магазины и Рестораны"
   },
   "common": {
     "fullName": "Ф.И.О.",
@@ -144,7 +144,7 @@
     "late_order": "Поздние заказы",
     "delivered_on_time": "Заказы доставлены вовремя",
     "sold": "Распроданный",
-    "customer_bought_count" : "Купленные клиенты",
+    "customer_bought_count": "Купленные клиенты",
     "late_store": "Опоздание в магазин",
     "on_time_store": "Приходите в магазин вовремя",
     "parent_category": "Высшая категория",
@@ -167,7 +167,7 @@
     "stateMap": "Интеграция ситуаций",
     "transaction": "Транзакции",
     "settings": "Настройки",
-    "banner":"Баннеры",
+    "banner": "Баннеры",
     "rateComment": "Рейтинговый комментарий",
     "measure": "Единицы измерения",
     "siteSettings": "Настройки сайта",
@@ -224,13 +224,13 @@
     "customer_statistics": "Статистика клиентов",
     "transaction_history": "История транзакций"
   },
-  "tabs" : {
+  "tabs": {
     "orders": "Заказы",
     "basket": "Корзина",
     "avto": "Машина",
     "order_history": "История заказов"
   },
-  "notification" : {
+  "notification": {
     "confirmation": "Подтверждение",
     "approved": "Одобренный"
   },
@@ -282,7 +282,7 @@
     "start_date": "Дата начала",
     "end_date": "Дата окончания",
     "status": "Статус",
-    "not_active":"Не активен",
+    "not_active": "Не активен",
     "min_order_price": "Минимальная сумма заказа",
     "used_count": "Использовал"
   },

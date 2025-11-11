@@ -12,7 +12,7 @@
     "savings_time_amount": "Tejab qolingan vaqt miqdori",
     "payment_method": "To'lov turi",
     "radius": "Radiusi (km)",
-    "show_name":"Ism sarlavhasini ko'rsatish",
+    "show_name": "Ism sarlavhasini ko'rsatish",
     "attributes": "Mahsulot variantlari",
     "add_basket": "Savatga qo'shish",
     "again_choose": "Yana tanglang",
@@ -87,7 +87,7 @@
     "promo_code": "Promo-kod",
     "attribute": "Atribut",
     "payment_method": "To'lov turi",
-    "stores_restaurants": "Do'konlar& Restoranlar"
+    "stores_restaurants": "Do'konlar va Restoranlar"
   },
   "common": {
     "fullName": "F.I.O",
@@ -285,7 +285,7 @@
     "start_date": "Boshlanish sanasi",
     "end_date": "Tugash sanasi",
     "status": "Holati",
-    "not_active":"Faol emas",
+    "not_active": "Faol emas",
     "min_order_price": "Minimal buyurtma summasi",
     "max_usage_for_user": "Foydalanuvchi uchun maksimal foydalanish",
     "used_count": "Ishlatildi"

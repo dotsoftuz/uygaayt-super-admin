@@ -1,10 +1,24 @@
-import { AboutIcon, AnaliticIcon, CategoryIcon, DashboardIconMain, IntegrationIcon, ManageIcon, OrderIcon, PaymentType, ProductIcon, RatingIcon, SettingsIcon, TransactionIcon, UserIcon } from "assets/svgs";
+import {
+  AboutIcon,
+  AnaliticIcon,
+  CategoryIcon,
+  DashboardIconMain,
+  IntegrationIcon,
+  ManageIcon,
+  OrderIcon,
+  PaymentType,
+  ProductIcon,
+  RatingIcon,
+  SettingsIcon,
+  TransactionIcon,
+  UserIcon,
+} from "assets/svgs";
 import { ISidebarRoute } from "../sidebar.types";
 import NewspaperIcon from "@mui/icons-material/Newspaper";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import ViewCarouselIcon from '@mui/icons-material/ViewCarousel';
-import ArticleIcon from '@mui/icons-material/Article';
-import StoreIcon from '@mui/icons-material/Store';
+import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
+import ArticleIcon from "@mui/icons-material/Article";
+import StoreIcon from "@mui/icons-material/Store";
 
 export const sidebarRoutes: ISidebarRoute[] = [
   {
@@ -24,34 +38,30 @@ export const sidebarRoutes: ISidebarRoute[] = [
     translate: "customer",
     role: "customer",
     icon: <UserIcon />,
-
   },
   {
     path: "/product",
     role: "product",
     translate: "product",
     icon: <ProductIcon />,
-
   },
   {
     path: "/category",
     role: "category",
     translate: "category",
-    icon: <CategoryIcon/>,
-
+    icon: <CategoryIcon />,
   },
   {
     path: "/stores_restaurants",
     role: "_id",
     translate: "stores_restaurants",
-    icon: <StoreIcon style={{color: "#EB5B00"}} />,
+    icon: <StoreIcon style={{ color: "#EB5B00" }} />,
   },
   {
     path: "/about",
     role: "_id",
     translate: "about",
     icon: <AboutIcon />,
-
   },
   {
     translate: "control",
@@ -72,7 +82,12 @@ export const sidebarRoutes: ISidebarRoute[] = [
         role: "courier",
         translate: "courier",
       },
-    ]
+      {
+        path: "/stores_restaurants",
+        role: "store", // "store" role'ga o'zgartirish
+        translate: "stores_restaurants",
+      },
+    ],
   },
   // {
   //   path: "/measure",
@@ -81,39 +96,39 @@ export const sidebarRoutes: ISidebarRoute[] = [
   // },
   {
     path: "/banner",
-    role: "banner", 
+    role: "banner",
     translate: "banner",
     icon: <ViewCarouselIcon className="text-[#fff]" />,
   },
   {
     path: "/news",
-    role: "news", 
+    role: "news",
     translate: "news",
-    icon: <NewspaperIcon style={{color: "#EB5B00"}} />,
+    icon: <NewspaperIcon style={{ color: "#EB5B00" }} />,
   },
   {
     path: "/promo_code",
     role: "_id", // must change
     translate: "promo_code",
-    icon: <DashboardIcon style={{color: "#EB5B00"}} />,
+    icon: <DashboardIcon style={{ color: "#EB5B00" }} />,
   },
   {
     path: "/attribute",
     role: "_id", // must change
     translate: "attribute",
-    icon: <ArticleIcon style={{color: "#EB5B00"}} />,
+    icon: <ArticleIcon style={{ color: "#EB5B00" }} />,
   },
   {
     path: "/rating",
-    translate: "rating", 
-    role: "rateComment", 
+    translate: "rating",
+    role: "rateComment",
     icon: <RatingIcon />,
   },
   {
     path: "/transaction",
     translate: "transaction",
     role: "transaction",
-    icon: <TransactionIcon/>
+    icon: <TransactionIcon />,
   },
   {
     path: "/integration",
@@ -128,7 +143,7 @@ export const sidebarRoutes: ISidebarRoute[] = [
     icon: <PaymentType />,
   },
   {
-    icon: <AnaliticIcon/>,
+    icon: <AnaliticIcon />,
     translate: "analytics",
     role: "report",
     items: [
@@ -152,10 +167,10 @@ export const sidebarRoutes: ISidebarRoute[] = [
         role: "report",
         translate: "abc_analytics",
       },
-    ]
+    ],
   },
   {
-    icon: <SettingsIcon/>,
+    icon: <SettingsIcon />,
     path: "/settings",
     translate: "settings",
     role: "settings",
