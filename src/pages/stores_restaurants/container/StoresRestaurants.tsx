@@ -144,27 +144,40 @@ const StoresRestaurants = () => {
     setEditingStoreId(null);
     setLogoImage(null);
     setBannerImage(null);
-    // reloadTrigger ni olib tashlang
+
+    // Form qiymatlarini tozalash
     formStore.reset({
       name: "",
       phoneNumber: "",
+      email: "",
+      website: "",
       addressName: "",
       addressLocation: null,
-      categoryId: formStore.watch("categoryId") || "",
-      storeType: "",
-      minimumOrderAmount: "",
-      commissionPercent: "",
-      paymentMethods: {
-        card: false,
-        cash: false,
-        bonus: false,
-      },
+      type: "shop",
+      categoryIds: [],
+      orderMinimumPrice: "",
+      deliveryPrice: "",
+      itemPrepTimeFrom: "",
+      itemPrepTimeTo: "",
       startTime: "",
       endTime: "",
+      workDays: [],
       description: "",
-      logoId: null,
-      bannerId: null,
+      descriptionTranslate: {
+        uz: "",
+        ru: "",
+        en: "",
+      },
+      isActive: true,
+      isVerified: false,
+      isPremium: false,
+      averageRating: 0,
+      acceptCash: false,
+      acceptCard: false,
+      acceptOnlinePayment: false,
+      // Filter qiymatlarini saqlab qolish
       isActiveQuery: formStore.watch("isActiveQuery"),
+      categoryId: formStore.watch("categoryId"),
       orderSort: formStore.watch("orderSort"),
     });
   };

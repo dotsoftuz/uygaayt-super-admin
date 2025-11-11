@@ -62,9 +62,7 @@ const StoreForm: FC<IStoreForm> = ({
     editingStoreId ? "store/update" : "store/create",
     editingStoreId ? "put" : "post",
     {
-      onSuccess: () => {
-        resetForm();
-      },
+      // onSuccess callback'ni olib tashlang - useApiMutation'da allaqachon drawer yopiladi va table refresh qilinadi
     }
   );
 
@@ -157,6 +155,46 @@ const StoreForm: FC<IStoreForm> = ({
 
   useEffect(() => {
     if (status === "success") {
+      // Form qiymatlarini tozalash
+      reset({
+        name: "",
+        phoneNumber: "",
+        email: "",
+        website: "",
+        addressName: "",
+        addressLocation: null,
+        type: "shop",
+        categoryIds: [],
+        orderMinimumPrice: "",
+        deliveryPrice: "",
+        itemPrepTimeFrom: "",
+        itemPrepTimeTo: "",
+        workTime: "",
+        startTime: "",
+        endTime: "",
+        workDays: [],
+        description: "",
+        descriptionTranslate: {
+          uz: "",
+          ru: "",
+          en: "",
+        },
+        isActive: true,
+        isVerified: false,
+        isPremium: false,
+        averageRating: 0,
+        acceptCash: false,
+        acceptCard: false,
+        acceptOnlinePayment: false,
+      });
+
+      // State'larni tozalash
+      setAddressLocation(undefined);
+      setImageIds([]);
+      setLogoImage(null);
+      setBannerImage(null);
+
+      // Parent komponentga xabar berish
       resetForm();
     }
   }, [status]);
