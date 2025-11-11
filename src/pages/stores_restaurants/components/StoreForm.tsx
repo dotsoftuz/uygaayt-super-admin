@@ -117,6 +117,7 @@ const StoreForm: FC<IStoreForm> = ({
       reset({
         name: store.name || "",
         phoneNumber: store.phoneNumber || "",
+        password: "", // Password har doim bo'sh (xavfsizlik uchun)
         email: store.email || "",
         website: store.website || "",
         addressName: store.addressName || "",
@@ -159,6 +160,7 @@ const StoreForm: FC<IStoreForm> = ({
       reset({
         name: "",
         phoneNumber: "",
+        password: "", // Password qo'shish
         email: "",
         website: "",
         addressName: "",
@@ -203,6 +205,7 @@ const StoreForm: FC<IStoreForm> = ({
     const requestData = {
       name: data.name,
       phoneNumber: data.phoneNumber,
+      password: data.password || undefined, // Password qo'shish - bo'sh bo'lsa undefined
       email: data.email || undefined,
       website: data.website || undefined,
       addressName: data.addressName || "",
@@ -229,6 +232,11 @@ const StoreForm: FC<IStoreForm> = ({
       acceptCard: data.acceptCard || false,
       acceptOnlinePayment: data.acceptOnlinePayment || false,
     };
+
+    // Password bo'sh bo'lsa, uni requestData'dan olib tashlash
+    if (!requestData.password) {
+      delete requestData.password;
+    }
 
     mutate(requestData);
   };
@@ -264,6 +272,46 @@ const StoreForm: FC<IStoreForm> = ({
             rules={{ required: true }}
           />
         </Grid>
+
+        {/* Password input qo'shish - faqat yangi qo'shishda majburiy */}
+        {!editingStoreId && (
+          <Grid item xs={12} md={6}>
+            <TextInput
+              control={control}
+              name="password"
+              type="password"
+              label="Parol"
+              rules={{
+                required: !editingStoreId, // Yangi qo'shishda majburiy
+                minLength: {
+                  value: 4,
+                  message: "Parol kamida 4 ta belgi bo'lishi kerak",
+                },
+              }}
+              placeholder="Parol kiriting (min 4 belgi)"
+            />
+          </Grid>
+        )}
+
+        {/* Tahrirlashda password yangilash uchun (ixtiyoriy) */}
+        {editingStoreId && (
+          <Grid item xs={12} md={6}>
+            <TextInput
+              control={control}
+              name="password"
+              type="password"
+              label="Yangi parol (ixtiyoriy)"
+              rules={{
+                required: false,
+                minLength: {
+                  value: 4,
+                  message: "Parol kamida 4 ta belgi bo'lishi kerak",
+                },
+              }}
+              placeholder="Parolni yangilash uchun kiriting"
+            />
+          </Grid>
+        )}
 
         <Grid item xs={12} md={6}>
           <TextInput
