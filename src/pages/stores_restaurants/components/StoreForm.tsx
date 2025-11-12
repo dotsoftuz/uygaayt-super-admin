@@ -46,8 +46,24 @@ const StoreForm: FC<IStoreForm> = ({
   const [showOptions, setShowOptions] = useState(false);
   const [addressLocation, setAddressLocation] = useState<ILocation>();
   const [address, setAddress] = useState("");
-  const [imageIds, setImageIds] = useState<IIdImage[]>([]);
   const { debouncedValue } = useDebounce(address, 1000);
+
+  // Logo va Banner image'larni form field'lar bilan sinxronlashtirish
+  useEffect(() => {
+    if (logoImage) {
+      setValue("logoImage", logoImage);
+    } else {
+      setValue("logoImage", undefined);
+    }
+  }, [logoImage, setValue]);
+
+  useEffect(() => {
+    if (bannerImage) {
+      setValue("bannerImage", bannerImage);
+    } else {
+      setValue("bannerImage", undefined);
+    }
+  }, [bannerImage, setValue]);
 
   const {
     fields: workDaysFields,
@@ -148,11 +164,25 @@ const StoreForm: FC<IStoreForm> = ({
         acceptOnlinePayment: store.acceptOnlinePayment || false,
       });
       setAddressLocation(store.addressLocation);
-      setImageIds(
-        store.imageIds?.map((id: string) => ({ _id: id, url: "" })) || []
-      );
+      // Logo va Banner image'larni set qilish
+      if (store.logoId) {
+        const logoImg = { _id: store.logoId, url: `${process.env.REACT_APP_BASE_URL}/image/${store.logoId}` };
+        setLogoImage(logoImg);
+        setValue("logoImage", logoImg);
+      } else {
+        setLogoImage(null);
+        setValue("logoImage", undefined);
+      }
+      if (store.bannerId) {
+        const bannerImg = { _id: store.bannerId, url: `${process.env.REACT_APP_BASE_URL}/image/${store.bannerId}` };
+        setBannerImage(bannerImg);
+        setValue("bannerImage", bannerImg);
+      } else {
+        setBannerImage(null);
+        setValue("bannerImage", undefined);
+      }
     }
-  }, [getByIdStatus, getByIdData]);
+  }, [getByIdStatus, getByIdData, setLogoImage, setBannerImage, setValue]);
 
   useEffect(() => {
     if (status === "success") {
@@ -192,14 +222,17 @@ const StoreForm: FC<IStoreForm> = ({
 
       // State'larni tozalash
       setAddressLocation(undefined);
-      setImageIds([]);
       setLogoImage(null);
       setBannerImage(null);
+
+      // Form field'larni ham tozalash
+      setValue("logoImage", undefined);
+      setValue("bannerImage", undefined);
 
       // Parent komponentga xabar berish
       resetForm();
     }
-  }, [status]);
+  }, [status, setValue]);
 
   const submit = (data: any) => {
     const requestData = {
@@ -223,7 +256,8 @@ const StoreForm: FC<IStoreForm> = ({
       workDays: data.workDays || [],
       description: data.description || "",
       descriptionTranslate: data.descriptionTranslate || undefined,
-      imageIds: imageIds.map((img) => img._id).filter(Boolean),
+      logoId: logoImage?._id || undefined,
+      bannerId: bannerImage?._id || undefined,
       isActive: data.isActive !== undefined ? data.isActive : true,
       isVerified: data.isVerified || false,
       isPremium: data.isPremium || false,
@@ -306,6 +340,7 @@ const StoreForm: FC<IStoreForm> = ({
                 control={control}
                 name="name"
                 label="Do'kon/Restoran nomi"
+                placeholder="Masalan: Uygaayt Do'kon"
                 rules={{ required: true }}
               />
             </Grid>
@@ -365,6 +400,7 @@ const StoreForm: FC<IStoreForm> = ({
                 name="email"
                 type="email"
                 label="Email"
+                placeholder="Masalan: info@store.uz"
                 rules={{ required: false }}
               />
             </Grid>
@@ -375,6 +411,7 @@ const StoreForm: FC<IStoreForm> = ({
                 name="website"
                 type="url"
                 label="Veb-sayt URL"
+                placeholder="Masalan: https://www.store.uz"
                 rules={{ required: false }}
               />
             </Grid>
@@ -406,43 +443,59 @@ const StoreForm: FC<IStoreForm> = ({
 
             {/* Rasmlar */}
             <Grid item xs={12}>
-              <InputLabel sx={{ mb: 1, fontWeight: 600 }}>Qo'shimcha rasmlar</InputLabel>
+              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Rasmlar</InputLabel>
               <Grid container spacing={2}>
-                {imageIds.map((img, index) => (
-                  <Grid item xs={6} md={3} key={index}>
-                    <ImageInput
-                      control={control}
-                      setValue={setValue}
-                      name={`imageIds.${index}`}
-                      getImage={(image: IIdImage) => {
-                        const newImages = [...imageIds];
-                        newImages[index] = image;
-                        setImageIds(newImages);
-                      }}
-                    />
+                <Grid item xs={12} md={6}>
+                  <InputLabel sx={{ mb: 1, fontWeight: 500 }}>Logo rasm</InputLabel>
+                  <ImageInput
+                    control={control}
+                    setValue={setValue}
+                    name="logoImage"
+                    rules={{ required: false }}
+                    getImage={(image: IIdImage) => {
+                      setLogoImage(image);
+                    }}
+                  />
+                  {logoImage && (
                     <Button
                       size="small"
                       color="error"
                       fullWidth
                       sx={{ mt: 1 }}
                       onClick={() => {
-                        const newImages = imageIds.filter((_, i) => i !== index);
-                        setImageIds(newImages);
+                        setLogoImage(null);
+                        setValue("logoImage", undefined);
                       }}
                     >
                       <Delete /> O'chirish
                     </Button>
-                  </Grid>
-                ))}
-                <Grid item xs={6} md={3}>
-                  <Button
-                    variant="outlined"
-                    fullWidth
-                    sx={{ height: '100%', minHeight: 200 }}
-                    onClick={() => setImageIds([...imageIds, { _id: "", url: "" }])}
-                  >
-                    <Add /> Rasm qo'shish
-                  </Button>
+                  )}
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <InputLabel sx={{ mb: 1, fontWeight: 500 }}>Banner rasm</InputLabel>
+                  <ImageInput
+                    control={control}
+                    setValue={setValue}
+                    name="bannerImage"
+                    rules={{ required: false }}
+                    getImage={(image: IIdImage) => {
+                      setBannerImage(image);
+                    }}
+                  />
+                  {bannerImage && (
+                    <Button
+                      size="small"
+                      color="error"
+                      fullWidth
+                      sx={{ mt: 1 }}
+                      onClick={() => {
+                        setBannerImage(null);
+                        setValue("bannerImage", undefined);
+                      }}
+                    >
+                      <Delete /> O'chirish
+                    </Button>
+                  )}
                 </Grid>
               </Grid>
             </Grid>
@@ -453,12 +506,13 @@ const StoreForm: FC<IStoreForm> = ({
       {/* Tab Panel 1: Manzil */}
       {activeTab === 1 && (
         <Box sx={{ width: '100%', minWidth: 0 }}>
-          <Grid container spacing={2} alignItems="flex-start">
+          <Grid container spacing={2} alignItems="center">
             <Grid item xs={12}>
               <TextInput
                 control={control}
                 name="addressName"
                 label={t("common.address")}
+                placeholder="Masalan: Toshkent shahar, Chilonzor tumani, Bunyodkor ko'chasi"
                 rules={{ required: false }}
                 onCustomChange={(value) => setAddress(value)}
               />
@@ -479,7 +533,7 @@ const StoreForm: FC<IStoreForm> = ({
       {/* Tab Panel 2: Narxlar va vaqt */}
       {activeTab === 2 && (
         <Box sx={{ width: '100%', minWidth: 0 }}>
-          <Grid container spacing={2} alignItems="flex-start">
+          <Grid container spacing={2} alignItems="center">
             <Grid item xs={12}>
               <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Narxlar</InputLabel>
             </Grid>
@@ -489,6 +543,7 @@ const StoreForm: FC<IStoreForm> = ({
                 name="orderMinimumPrice"
                 type="number"
                 label="Minimal buyurtma narxi (so'm)"
+                placeholder="Masalan: 50000"
                 rules={{ required: false }}
               />
             </Grid>
@@ -499,6 +554,7 @@ const StoreForm: FC<IStoreForm> = ({
                 name="deliveryPrice"
                 type="number"
                 label="Yetkazib berish narxi (so'm)"
+                placeholder="Masalan: 15000"
                 rules={{ required: false }}
               />
             </Grid>
@@ -509,6 +565,7 @@ const StoreForm: FC<IStoreForm> = ({
                 name="averageRating"
                 type="number"
                 label="O'rtacha reyting (0-5)"
+                placeholder="Masalan: 4.5"
                 rules={{ required: false, min: 0, max: 5 }}
               />
             </Grid>
@@ -526,6 +583,7 @@ const StoreForm: FC<IStoreForm> = ({
                 name="itemPrepTimeFrom"
                 type="number"
                 label="Tayyorlash vaqti (minut) - dan"
+                placeholder="Masalan: 15"
                 rules={{ required: false }}
               />
             </Grid>
@@ -536,6 +594,7 @@ const StoreForm: FC<IStoreForm> = ({
                 name="itemPrepTimeTo"
                 type="number"
                 label="Tayyorlash vaqti (minut) - gacha"
+                placeholder="Masalan: 30"
                 rules={{ required: false }}
               />
             </Grid>
@@ -654,7 +713,7 @@ const StoreForm: FC<IStoreForm> = ({
       {/* Tab Panel 3: Tavsif */}
       {activeTab === 3 && (
         <Box sx={{ width: '100%', minWidth: 0 }}>
-          <Grid container spacing={2} alignItems="flex-start">
+          <Grid container spacing={2} alignItems="center">
             <Grid item xs={12}>
               <InputLabel sx={{ mb: 1, fontWeight: 600 }}>Asosiy tavsif</InputLabel>
               <TextEditor
@@ -698,7 +757,7 @@ const StoreForm: FC<IStoreForm> = ({
       {/* Tab Panel 4: Sozlamalar */}
       {activeTab === 4 && (
         <Box sx={{ width: '100%', minWidth: 0 }}>
-          <Grid container spacing={2} alignItems="flex-start">
+          <Grid container spacing={2} alignItems="center">
             <Grid item xs={12}>
               <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>To'lov usullari</InputLabel>
               <Grid container spacing={2}>
@@ -732,7 +791,7 @@ const StoreForm: FC<IStoreForm> = ({
                   <Checkbox
                     control={control}
                     name="isVerified"
-                    label="Tastiqlangan"
+                    label="Tasdiqlangan"
                   />
                 </Grid>
                 <Grid item>
