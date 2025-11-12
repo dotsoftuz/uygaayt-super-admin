@@ -149,6 +149,7 @@ const StoresRestaurants = () => {
     formStore.reset({
       name: "",
       phoneNumber: "",
+      password: "",
       email: "",
       website: "",
       addressName: "",

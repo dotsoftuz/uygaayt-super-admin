@@ -93,7 +93,10 @@ const FormDrawer: React.FC<IFormDrawer> = ({
             ? isOpen
               ? `calc(100vw - ${SIDEBAR_OPEN})`
               : `calc(100vw - ${SIDEBAR_CLOSE})`
-            : undefined,
+            : isOpen
+              ? `min(800px, calc(100vw - ${SIDEBAR_OPEN}))`
+              : `min(800px, calc(100vw - ${SIDEBAR_CLOSE}))`,
+          transition: 'width 0.3s ease-in-out',
         },
       }}
     >

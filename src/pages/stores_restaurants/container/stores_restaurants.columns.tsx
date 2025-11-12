@@ -2,7 +2,6 @@ import { GridColumns } from "@mui/x-data-grid";
 import { Tooltip } from "antd";
 import { get } from "lodash";
 import { useTranslation } from "react-i18next";
-import { numberFormat } from "utils/numberFormat";
 import { Chip, IconButton, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
@@ -19,7 +18,7 @@ export const useStoresRestaurantsColumns = (
     {
       field: "ID",
       headerName: "ID",
-      width: 100,
+      width: 80,
       renderCell({ row }) {
         return get(row, "_id", "").slice(-4) || get(row, "id", "");
       },
@@ -28,51 +27,38 @@ export const useStoresRestaurantsColumns = (
       field: t("common.name"),
       headerName: "Do'kon nomi",
       flex: 1,
-      minWidth: 200,
+      minWidth: 250,
       renderCell({ row }) {
         const name = get(row, "name", "");
         const truncatedName =
-          name?.length > 30 ? `${name.substring(0, 30)}...` : name;
+          name?.length > 40 ? `${name.substring(0, 40)}...` : name;
         return (
           <Tooltip title={name} arrow>
-            <span>{truncatedName}</span>
+            <span style={{ fontWeight: 500 }}>{truncatedName}</span>
           </Tooltip>
         );
       },
     },
     {
-      field: "category",
-      headerName: "Kategoriya",
-      flex: 1,
-      minWidth: 150,
+      field: "type",
+      headerName: "Turi",
+      width: 130,
       renderCell({ row }) {
+        const type = get(row, "type", "");
         const categoryId = get(row, "categoryId", "");
         const category = get(row, "category", "");
+        
         let categoryName = "";
-        let color = "#6B7280"; // default gray
+        let color = "#6B7280";
 
-        if (categoryId === "store" || category === "Do'kon") {
+        if (type === "shop" || categoryId === "store" || category === "Do'kon") {
           categoryName = "Do'kon";
-          color = "#10B981"; // yashil
-        } else if (categoryId === "restaurant" || category === "Restoran") {
+          color = "#10B981";
+        } else if (type === "restaurant" || categoryId === "restaurant" || category === "Restoran") {
           categoryName = "Restoran";
-          color = "#EF4444"; // qizil
+          color = "#EF4444";
         } else {
-          categoryName = category || categoryId || "-";
-          // Boshqa kategoriyalar uchun ranglar
-          if (categoryName.toLowerCase().includes("fastfood")) {
-            color = "#EF4444"; // qizil
-          } else if (
-            categoryName.toLowerCase().includes("market") ||
-            categoryName.toLowerCase().includes("supermarket")
-          ) {
-            color = "#10B981"; // yashil
-          } else if (
-            categoryName.toLowerCase().includes("drink") ||
-            categoryName.toLowerCase().includes("ichimlik")
-          ) {
-            color = "#3B82F6"; // ko'k
-          }
+          categoryName = type || category || "-";
         }
 
         return (
@@ -90,21 +76,34 @@ export const useStoresRestaurantsColumns = (
       },
     },
     {
+      field: "phoneNumber",
+      headerName: "Telefon",
+      width: 150,
+      renderCell({ row }) {
+        const phone = get(row, "phoneNumber", "-");
+        return (
+          <Tooltip title={phone} arrow>
+            <span>{phone}</span>
+          </Tooltip>
+        );
+      },
+    },
+    {
       field: "status",
       headerName: "Status",
-      width: 120,
+      width: 130,
       renderCell({ row }) {
         const isActive = get(row, "isActive", false);
         const isInReview = !isActive && get(row, "isInReview", false);
 
-        let label = "🟥 Nofaol";
+        let label = "Nofaol";
         let color: "success" | "error" | "warning" = "error";
 
         if (isActive) {
-          label = "✅ Faol";
+          label = "Faol";
           color = "success";
         } else if (isInReview) {
-          label = "🟡 Tekshiruvda";
+          label = "Tekshiruvda";
           color = "warning";
         }
 
@@ -121,29 +120,9 @@ export const useStoresRestaurantsColumns = (
       },
     },
     {
-      field: "orders",
-      headerName: "Buyurtmalar",
-      width: 120,
-      renderCell({ row }) {
-        return numberFormat(
-          get(row, "totalOrders", 0) || get(row, "ordersCount", 0)
-        );
-      },
-    },
-    {
-      field: "revenue",
-      headerName: "Daromad (so'm)",
-      width: 150,
-      renderCell({ row }) {
-        const revenue =
-          get(row, "totalRevenue", 0) || get(row, "revenue", 0) || 0;
-        return numberFormat(revenue);
-      },
-    },
-    {
       field: "actions",
       headerName: "Amal",
-      width: 120,
+      width: 100,
       align: "center",
       headerAlign: "center",
       sortable: false,

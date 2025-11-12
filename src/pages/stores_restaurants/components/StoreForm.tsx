@@ -1,5 +1,5 @@
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-import { Grid, InputLabel, Button } from "@mui/material";
+import { Grid, InputLabel, Button, Box, Tabs, Tab, Divider } from "@mui/material";
 import {
   AutoCompleteForm,
   ImageInput,
@@ -18,7 +18,7 @@ import useDebounce from "hooks/useDebounce";
 import { Checkbox } from "components";
 import { IIdImage } from "hooks/usePostImage";
 import { toast } from "react-toastify";
-import { Add, Delete } from "@mui/icons-material";
+import { Add, Delete, Store, LocationOn, AttachMoney, Settings, Description } from "@mui/icons-material";
 
 interface IStoreForm {
   formStore: UseFormReturn<any>;
@@ -251,392 +251,498 @@ const StoreForm: FC<IStoreForm> = ({
     { value: 6, label: "Shanba" },
   ];
 
+  const [activeTab, setActiveTab] = useState(0);
+
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setActiveTab(newValue);
+  };
+
   return (
     <form id="store" onSubmit={handleSubmit(submit)}>
-      <Grid container spacing={2}>
-        {/* Asosiy maydonlar */}
-        <Grid item xs={12} md={6}>
-          <TextInput
-            control={control}
-            name="name"
-            label="Do'kon/Restoran nomi"
-            rules={{ required: true }}
-          />
-        </Grid>
+      <Box
+        sx={{
+          borderBottom: 1,
+          borderColor: 'divider',
+          mb: 3,
+          width: '100%',
+          minWidth: 0,
+          overflow: 'hidden'
+        }}
+      >
+        <Tabs
+          value={activeTab}
+          onChange={handleTabChange}
+          variant="scrollable"
+          scrollButtons="auto"
+          sx={{
+            width: '100%',
+            minWidth: 0,
+            '& .MuiTab-root': {
+              minHeight: 48,
+              textTransform: 'none',
+              fontSize: '14px',
+              fontWeight: 500,
+            },
+            '& .MuiTabs-scroller': {
+              width: '100%',
+            }
+          }}
+        >
+          <Tab icon={<Store />} iconPosition="start" label="Asosiy ma'lumotlar" />
+          <Tab icon={<LocationOn />} iconPosition="start" label="Manzil" />
+          <Tab icon={<AttachMoney />} iconPosition="start" label="Narxlar va vaqt" />
+          <Tab icon={<Description />} iconPosition="start" label="Tavsif" />
+          <Tab icon={<Settings />} iconPosition="start" label="Sozlamalar" />
+        </Tabs>
+      </Box>
 
-        <Grid item xs={12} md={6}>
-          <PhoneInput
-            control={control}
-            name="phoneNumber"
-            label={t("common.phoneNumber")}
-            rules={{ required: true }}
-          />
-        </Grid>
+      {/* Tab Panel 0: Asosiy ma'lumotlar */}
+      {activeTab === 0 && (
+        <Box sx={{ width: '100%', minWidth: 0 }}>
+          <Grid container spacing={2} alignItems="center">
+            {/* Asosiy maydonlar */}
+            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+              <TextInput
+                control={control}
+                name="name"
+                label="Do'kon/Restoran nomi"
+                rules={{ required: true }}
+              />
+            </Grid>
 
-        {/* Password input qo'shish - faqat yangi qo'shishda majburiy */}
-        {!editingStoreId && (
-          <Grid item xs={12} md={6}>
-            <TextInput
-              control={control}
-              name="password"
-              type="password"
-              label="Parol"
-              rules={{
-                required: !editingStoreId, // Yangi qo'shishda majburiy
-                minLength: {
-                  value: 4,
-                  message: "Parol kamida 4 ta belgi bo'lishi kerak",
-                },
-              }}
-              placeholder="Parol kiriting (min 4 belgi)"
-            />
-          </Grid>
-        )}
+            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+              <PhoneInput
+                control={control}
+                name="phoneNumber"
+                label={t("common.phoneNumber")}
+                rules={{ required: true }}
+              />
+            </Grid>
 
-        {/* Tahrirlashda password yangilash uchun (ixtiyoriy) */}
-        {editingStoreId && (
-          <Grid item xs={12} md={6}>
-            <TextInput
-              control={control}
-              name="password"
-              type="password"
-              label="Yangi parol (ixtiyoriy)"
-              rules={{
-                required: false,
-                minLength: {
-                  value: 4,
-                  message: "Parol kamida 4 ta belgi bo'lishi kerak",
-                },
-              }}
-              placeholder="Parolni yangilash uchun kiriting"
-            />
-          </Grid>
-        )}
-
-        <Grid item xs={12} md={6}>
-          <TextInput
-            control={control}
-            name="email"
-            type="email"
-            label="Email"
-            rules={{ required: false }}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <TextInput
-            control={control}
-            name="website"
-            type="url"
-            label="Veb-sayt URL"
-            rules={{ required: false }}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <SelectForm
-            control={control}
-            name="type"
-            label="Turi"
-            options={[
-              { _id: "shop", name: "Do'kon" },
-              { _id: "restaurant", name: "Restoran" },
-            ]}
-            rules={{ required: true }}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <AutoCompleteForm
-            control={control}
-            name="categoryIds"
-            optionsUrl="category/paging"
-            label="Toifalar"
-            returnOnlyId={true}
-            rules={{ required: false }}
-            multiple={true}
-          />
-        </Grid>
-
-        {/* Manzil */}
-        <Grid item xs={12}>
-          <TextInput
-            control={control}
-            name="addressName"
-            label={t("common.address")}
-            rules={{ required: false }}
-            onCustomChange={(value) => setAddress(value)}
-          />
-          {/* Address options - existing code */}
-        </Grid>
-
-        <Grid item xs={12}>
-          <InputLabel>Xarita (Manzilni belgilash)</InputLabel>
-          <YandexMap
-            getCoordinate={setAddressLocation}
-            center={watch("addressLocation")}
-            height="300px"
-          />
-        </Grid>
-
-        {/* Rasmlar */}
-        <Grid item xs={12}>
-          <InputLabel>Qo'shimcha rasmlar</InputLabel>
-          <Grid container spacing={2}>
-            {imageIds.map((img, index) => (
-              <Grid item xs={6} md={3} key={index}>
-                <ImageInput
+            {/* Password input qo'shish - faqat yangi qo'shishda majburiy */}
+            {!editingStoreId && (
+              <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+                <TextInput
                   control={control}
-                  setValue={setValue}
-                  name={`imageIds.${index}`}
-                  getImage={(image: IIdImage) => {
-                    const newImages = [...imageIds];
-                    newImages[index] = image;
-                    setImageIds(newImages);
+                  name="password"
+                  type="password"
+                  label="Parol"
+                  rules={{
+                    required: !editingStoreId, // Yangi qo'shishda majburiy
+                    minLength: {
+                      value: 4,
+                      message: "Parol kamida 4 ta belgi bo'lishi kerak",
+                    },
                   }}
+                  placeholder="Parol kiriting (min 4 belgi)"
                 />
-                <Button
-                  size="small"
-                  color="error"
-                  onClick={() => {
-                    const newImages = imageIds.filter((_, i) => i !== index);
-                    setImageIds(newImages);
-                  }}
-                >
-                  <Delete /> O'chirish
-                </Button>
               </Grid>
-            ))}
-            <Grid item xs={6} md={3}>
+            )}
+
+            {/* Tahrirlashda password yangilash uchun (ixtiyoriy) */}
+            {editingStoreId && (
+              <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+                <TextInput
+                  control={control}
+                  name="password"
+                  type="password"
+                  label="Yangi parol (ixtiyoriy)"
+                  rules={{
+                    required: false,
+                    minLength: {
+                      value: 4,
+                      message: "Parol kamida 4 ta belgi bo'lishi kerak",
+                    },
+                  }}
+                  placeholder="Parolni yangilash uchun kiriting"
+                />
+              </Grid>
+            )}
+
+            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+              <TextInput
+                control={control}
+                name="email"
+                type="email"
+                label="Email"
+                rules={{ required: false }}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+              <TextInput
+                control={control}
+                name="website"
+                type="url"
+                label="Veb-sayt URL"
+                rules={{ required: false }}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+              <SelectForm
+                control={control}
+                name="type"
+                label="Turi"
+                options={[
+                  { _id: "shop", name: "Do'kon" },
+                  { _id: "restaurant", name: "Restoran" },
+                ]}
+                rules={{ required: true }}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+              <AutoCompleteForm
+                control={control}
+                name="categoryIds"
+                optionsUrl="category/paging"
+                label="Toifalar"
+                returnOnlyId={true}
+                rules={{ required: false }}
+                multiple={true}
+              />
+            </Grid>
+
+            {/* Rasmlar */}
+            <Grid item xs={12}>
+              <InputLabel sx={{ mb: 1, fontWeight: 600 }}>Qo'shimcha rasmlar</InputLabel>
+              <Grid container spacing={2}>
+                {imageIds.map((img, index) => (
+                  <Grid item xs={6} md={3} key={index}>
+                    <ImageInput
+                      control={control}
+                      setValue={setValue}
+                      name={`imageIds.${index}`}
+                      getImage={(image: IIdImage) => {
+                        const newImages = [...imageIds];
+                        newImages[index] = image;
+                        setImageIds(newImages);
+                      }}
+                    />
+                    <Button
+                      size="small"
+                      color="error"
+                      fullWidth
+                      sx={{ mt: 1 }}
+                      onClick={() => {
+                        const newImages = imageIds.filter((_, i) => i !== index);
+                        setImageIds(newImages);
+                      }}
+                    >
+                      <Delete /> O'chirish
+                    </Button>
+                  </Grid>
+                ))}
+                <Grid item xs={6} md={3}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    sx={{ height: '100%', minHeight: 200 }}
+                    onClick={() => setImageIds([...imageIds, { _id: "", url: "" }])}
+                  >
+                    <Add /> Rasm qo'shish
+                  </Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Box>
+      )}
+
+      {/* Tab Panel 1: Manzil */}
+      {activeTab === 1 && (
+        <Box sx={{ width: '100%', minWidth: 0 }}>
+          <Grid container spacing={2} alignItems="flex-start">
+            <Grid item xs={12}>
+              <TextInput
+                control={control}
+                name="addressName"
+                label={t("common.address")}
+                rules={{ required: false }}
+                onCustomChange={(value) => setAddress(value)}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <InputLabel sx={{ mb: 1, fontWeight: 600 }}>Xarita (Manzilni belgilash)</InputLabel>
+              <YandexMap
+                getCoordinate={setAddressLocation}
+                center={watch("addressLocation")}
+                height="400px"
+              />
+            </Grid>
+          </Grid>
+        </Box>
+      )}
+
+      {/* Tab Panel 2: Narxlar va vaqt */}
+      {activeTab === 2 && (
+        <Box sx={{ width: '100%', minWidth: 0 }}>
+          <Grid container spacing={2} alignItems="flex-start">
+            <Grid item xs={12}>
+              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Narxlar</InputLabel>
+            </Grid>
+            <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column' }}>
+              <TextInput
+                control={control}
+                name="orderMinimumPrice"
+                type="number"
+                label="Minimal buyurtma narxi (so'm)"
+                rules={{ required: false }}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column' }}>
+              <TextInput
+                control={control}
+                name="deliveryPrice"
+                type="number"
+                label="Yetkazib berish narxi (so'm)"
+                rules={{ required: false }}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column' }}>
+              <TextInput
+                control={control}
+                name="averageRating"
+                type="number"
+                label="O'rtacha reyting (0-5)"
+                rules={{ required: false, min: 0, max: 5 }}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Divider sx={{ my: 3 }} />
+            </Grid>
+
+            <Grid item xs={12}>
+              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Tayyorlash vaqti</InputLabel>
+            </Grid>
+            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+              <TextInput
+                control={control}
+                name="itemPrepTimeFrom"
+                type="number"
+                label="Tayyorlash vaqti (minut) - dan"
+                rules={{ required: false }}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+              <TextInput
+                control={control}
+                name="itemPrepTimeTo"
+                type="number"
+                label="Tayyorlash vaqti (minut) - gacha"
+                rules={{ required: false }}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Divider sx={{ my: 3 }} />
+            </Grid>
+
+            <Grid item xs={12}>
+              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Ish vaqti</InputLabel>
+            </Grid>
+            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+              <TimePicker
+                control={control}
+                name="startTime"
+                errors={formState.errors}
+                label="Ish vaqti (boshlanish)"
+                rules={{ required: false }}
+              />
+            </Grid>
+            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+              <TimePicker
+                control={control}
+                name="endTime"
+                errors={formState.errors}
+                label="Ish vaqti (tugash)"
+                rules={{ required: false }}
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Divider sx={{ my: 3 }} />
+            </Grid>
+
+            <Grid item xs={12}>
+              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Hafta kunlari</InputLabel>
+              {workDaysFields.map((field, index) => (
+                <Grid
+                  container
+                  spacing={2}
+                  key={field.id}
+                  sx={{ mt: 1 }}
+                >
+                  <Grid item xs={12} md={3}>
+                    <SelectForm
+                      control={control}
+                      name={`workDays.${index}.day`}
+                      label="Kun"
+                      options={weekDays.map((day) => ({
+                        _id: day.value.toString(),
+                        name: day.label,
+                      }))}
+                      rules={{ required: true }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={3}>
+                    <TimePicker
+                      control={control}
+                      name={`workDays.${index}.startTime`}
+                      label="Boshlanish"
+                      errors={formState.errors}
+                      rules={{ required: true }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={3}>
+                    <TimePicker
+                      control={control}
+                      name={`workDays.${index}.endTime`}
+                      label="Tugash"
+                      errors={formState.errors}
+                      rules={{ required: true }}
+                    />
+                  </Grid>
+                  <Grid item xs={12} md={2}>
+                    <Box sx={{ pt: 2 }}>
+                      <Checkbox
+                        control={control}
+                        name={`workDays.${index}.isWorking`}
+                        label="Ishlaydi"
+                      />
+                    </Box>
+                  </Grid>
+                  <Grid item xs={12} md={1}>
+                    <Box sx={{ pt: 1 }}>
+                      <Button
+                        color="error"
+                        onClick={() => removeWorkDay(index)}
+                        size="small"
+                      >
+                        <Delete />
+                      </Button>
+                    </Box>
+                  </Grid>
+                </Grid>
+              ))}
               <Button
                 variant="outlined"
-                onClick={() => setImageIds([...imageIds, { _id: "", url: "" }])}
+                startIcon={<Add />}
+                onClick={() =>
+                  appendWorkDay({
+                    day: 0,
+                    startTime: "09:00",
+                    endTime: "18:00",
+                    isWorking: true,
+                  })
+                }
+                sx={{ mt: 2 }}
               >
-                <Add /> Rasm qo'shish
+                Kun qo'shish
               </Button>
             </Grid>
           </Grid>
-        </Grid>
+        </Box>
+      )}
 
-        {/* Narxlar */}
-        <Grid item xs={12} md={4}>
-          <TextInput
-            control={control}
-            name="orderMinimumPrice"
-            type="number"
-            label="Minimal buyurtma narxi (so'm)"
-            rules={{ required: false }}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <TextInput
-            control={control}
-            name="deliveryPrice"
-            type="number"
-            label="Yetkazib berish narxi (so'm)"
-            rules={{ required: false }}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <TextInput
-            control={control}
-            name="averageRating"
-            type="number"
-            label="O'rtacha reyting (0-5)"
-            rules={{ required: false, min: 0, max: 5 }}
-          />
-        </Grid>
-
-        {/* Tayyorlash vaqti */}
-        <Grid item xs={12} md={6}>
-          <TextInput
-            control={control}
-            name="itemPrepTimeFrom"
-            type="number"
-            label="Tayyorlash vaqti (minut) - dan"
-            rules={{ required: false }}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <TextInput
-            control={control}
-            name="itemPrepTimeTo"
-            type="number"
-            label="Tayyorlash vaqti (minut) - gacha"
-            rules={{ required: false }}
-          />
-        </Grid>
-
-        {/* Ish vaqti */}
-        <Grid item xs={12} md={6}>
-          <div className="mb-3 sm:flex md:gap-0 gap-y-2 justify-between items-end">
-            <TimePicker
-              control={control}
-              name="startTime"
-              errors={formState.errors}
-              label="Ish vaqti (boshlanish)"
-              rules={{ required: false }}
-            />
-            <TimePicker
-              control={control}
-              name="endTime"
-              errors={formState.errors}
-              label="Ish vaqti (tugash)"
-              rules={{ required: false }}
-            />
-          </div>
-        </Grid>
-
-        {/* Hafta kunlari */}
-        <Grid item xs={12}>
-          <InputLabel>Hafta kunlari</InputLabel>
-          {workDaysFields.map((field, index) => (
-            <Grid
-              container
-              spacing={2}
-              key={field.id}
-              style={{ marginTop: "8px" }}
-            >
-              <Grid item xs={12} md={3}>
-                <SelectForm
-                  control={control}
-                  name={`workDays.${index}.day`}
-                  label="Kun"
-                  options={weekDays.map((day) => ({
-                    _id: day.value.toString(),
-                    name: day.label,
-                  }))}
-                  rules={{ required: true }}
-                />
-              </Grid>
-              <Grid item xs={12} md={3}>
-                <TimePicker
-                  control={control}
-                  name={`workDays.${index}.startTime`}
-                  label="Boshlanish"
-                  errors={formState.errors}
-                  rules={{ required: true }}
-                />
-              </Grid>
-              <Grid item xs={12} md={3}>
-                <TimePicker
-                  control={control}
-                  name={`workDays.${index}.endTime`}
-                  label="Tugash"
-                  errors={formState.errors}
-                  rules={{ required: true }}
-                />
-              </Grid>
-              <Grid item xs={12} md={2}>
-                <Checkbox
-                  control={control}
-                  name={`workDays.${index}.isWorking`}
-                  label="Ishlaydi"
-                />
-              </Grid>
-              <Grid item xs={12} md={1}>
-                <Button color="error" onClick={() => removeWorkDay(index)}>
-                  <Delete />
-                </Button>
-              </Grid>
+      {/* Tab Panel 3: Tavsif */}
+      {activeTab === 3 && (
+        <Box sx={{ width: '100%', minWidth: 0 }}>
+          <Grid container spacing={2} alignItems="flex-start">
+            <Grid item xs={12}>
+              <InputLabel sx={{ mb: 1, fontWeight: 600 }}>Asosiy tavsif</InputLabel>
+              <TextEditor
+                value={watch("description") || ""}
+                onChange={(value) => setValue("description", value)}
+              />
             </Grid>
-          ))}
-          <Button
-            variant="outlined"
-            onClick={() =>
-              appendWorkDay({
-                day: 0,
-                startTime: "09:00",
-                endTime: "18:00",
-                isWorking: true,
-              })
-            }
-            style={{ marginTop: "8px" }}
-          >
-            <Add /> Kun qo'shish
-          </Button>
-        </Grid>
 
-        {/* Tavsif */}
-        <Grid item xs={12}>
-          <InputLabel>{t("common.description")}</InputLabel>
-          <TextEditor
-            value={watch("description") || ""}
-            onChange={(value) => setValue("description", value)}
-          />
-        </Grid>
+            <Grid item xs={12}>
+              <Divider sx={{ my: 3 }} />
+            </Grid>
 
-        {/* Ko'p tilli tavsif */}
-        <Grid item xs={12}>
-          <InputLabel>Ko'p tilli tavsif</InputLabel>
-          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Ko'p tilli tavsif</InputLabel>
+            </Grid>
             <Grid item xs={12} md={4}>
+              <InputLabel sx={{ mb: 1 }}>O'zbekcha</InputLabel>
               <TextEditor
                 value={watch("descriptionTranslate.uz") || ""}
                 onChange={(value) => setValue("descriptionTranslate.uz", value)}
               />
-              <InputLabel style={{ marginTop: "4px" }}>O'zbekcha</InputLabel>
             </Grid>
             <Grid item xs={12} md={4}>
+              <InputLabel sx={{ mb: 1 }}>Ruscha</InputLabel>
               <TextEditor
                 value={watch("descriptionTranslate.ru") || ""}
                 onChange={(value) => setValue("descriptionTranslate.ru", value)}
               />
-              <InputLabel style={{ marginTop: "4px" }}>Ruscha</InputLabel>
             </Grid>
             <Grid item xs={12} md={4}>
+              <InputLabel sx={{ mb: 1 }}>Inglizcha</InputLabel>
               <TextEditor
                 value={watch("descriptionTranslate.en") || ""}
                 onChange={(value) => setValue("descriptionTranslate.en", value)}
               />
-              <InputLabel style={{ marginTop: "4px" }}>Inglizcha</InputLabel>
             </Grid>
           </Grid>
-        </Grid>
+        </Box>
+      )}
 
-        {/* To'lov usullari */}
-        <Grid item xs={12}>
-          <InputLabel>To'lov usullari</InputLabel>
-          <Grid container spacing={2} style={{ marginTop: "8px" }}>
-            <Grid item>
-              <Checkbox control={control} name="acceptCard" label="Karta" />
+      {/* Tab Panel 4: Sozlamalar */}
+      {activeTab === 4 && (
+        <Box sx={{ width: '100%', minWidth: 0 }}>
+          <Grid container spacing={2} alignItems="flex-start">
+            <Grid item xs={12}>
+              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>To'lov usullari</InputLabel>
+              <Grid container spacing={2}>
+                <Grid item>
+                  <Checkbox control={control} name="acceptCard" label="Karta" />
+                </Grid>
+                <Grid item>
+                  <Checkbox control={control} name="acceptCash" label="Naqd" />
+                </Grid>
+                <Grid item>
+                  <Checkbox
+                    control={control}
+                    name="acceptOnlinePayment"
+                    label="Onlayn to'lov"
+                  />
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Checkbox control={control} name="acceptCash" label="Naqd" />
-            </Grid>
-            <Grid item>
-              <Checkbox
-                control={control}
-                name="acceptOnlinePayment"
-                label="Onlayn to'lov"
-              />
-            </Grid>
-          </Grid>
-        </Grid>
 
-        {/* Statuslar */}
-        <Grid item xs={12}>
-          <InputLabel>Statuslar</InputLabel>
-          <Grid container spacing={2} style={{ marginTop: "8px" }}>
-            <Grid item>
-              <Checkbox control={control} name="isActive" label="Faol" />
+            <Grid item xs={12}>
+              <Divider sx={{ my: 3 }} />
             </Grid>
-            <Grid item>
-              <Checkbox
-                control={control}
-                name="isVerified"
-                label="Tastiqlangan"
-              />
-            </Grid>
-            <Grid item>
-              <Checkbox control={control} name="isPremium" label="Premium" />
+
+            <Grid item xs={12}>
+              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Statuslar</InputLabel>
+              <Grid container spacing={2}>
+                <Grid item>
+                  <Checkbox control={control} name="isActive" label="Faol" />
+                </Grid>
+                <Grid item>
+                  <Checkbox
+                    control={control}
+                    name="isVerified"
+                    label="Tastiqlangan"
+                  />
+                </Grid>
+                <Grid item>
+                  <Checkbox control={control} name="isPremium" label="Premium" />
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </Grid>
+        </Box>
+      )}
     </form>
   );
 };
