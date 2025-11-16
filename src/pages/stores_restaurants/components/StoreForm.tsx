@@ -506,7 +506,7 @@ const StoreForm: FC<IStoreForm> = ({
       {/* Tab Panel 1: Manzil */}
       {activeTab === 1 && (
         <Box sx={{ width: '100%', minWidth: 0 }}>
-          <Grid container spacing={2} alignItems="center">
+          <Grid container spacing={2} alignItems="centert">
             <Grid item xs={12}>
               <TextInput
                 control={control}
@@ -533,7 +533,7 @@ const StoreForm: FC<IStoreForm> = ({
       {/* Tab Panel 2: Narxlar va vaqt */}
       {activeTab === 2 && (
         <Box sx={{ width: '100%', minWidth: 0 }}>
-          <Grid container spacing={2} alignItems="center">
+          <Grid container spacing={2} alignItems="centert">
             <Grid item xs={12}>
               <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Narxlar</InputLabel>
             </Grid>
@@ -713,7 +713,7 @@ const StoreForm: FC<IStoreForm> = ({
       {/* Tab Panel 3: Tavsif */}
       {activeTab === 3 && (
         <Box sx={{ width: '100%', minWidth: 0 }}>
-          <Grid container spacing={2} alignItems="center">
+          <Grid container spacing={2} alignItems="centert">
             <Grid item xs={12}>
               <InputLabel sx={{ mb: 1, fontWeight: 600 }}>Asosiy tavsif</InputLabel>
               <TextEditor
@@ -757,7 +757,7 @@ const StoreForm: FC<IStoreForm> = ({
       {/* Tab Panel 4: Sozlamalar */}
       {activeTab === 4 && (
         <Box sx={{ width: '100%', minWidth: 0 }}>
-          <Grid container spacing={2} alignItems="center">
+          <Grid container spacing={2} alignItems="centert">
             <Grid item xs={12}>
               <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>To'lov usullari</InputLabel>
               <Grid container spacing={2}>
