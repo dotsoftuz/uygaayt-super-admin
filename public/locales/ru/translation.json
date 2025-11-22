@@ -265,7 +265,13 @@
     "premium_price": "Премиальная цена",
     "delivery_change_price": "Изменить цену доставки",
     "delivery_change_limit": "Изменить лимит доставки",
-    "invitePromocode": "Получите бонус в размере определенной суммы или процента за приглашение друга по промокоду"
+    "invitePromocode": "Получите бонус в размере определенной суммы или процента за приглашение друга по промокоду",
+    "cashback_settings": "Настройки кэшбэка",
+    "cashback_enabled": "Кэшбэк включен",
+    "cashback_percentage": "Процент кэшбэка (%)",
+    "cashback_percentage_hint": "Например: 5% = 5,000 сум кэшбэка за каждые 100,000 сум",
+    "cashback_min_order_amount": "Минимальная сумма заказа (для кэшбэка)",
+    "cashback_min_order_amount_hint": "Если сумма меньше, кэшбэк не предоставляется (0 = без ограничений)"
   },
   "transaction": {
     "total_balance": "Общий баланс",
@@ -311,9 +317,10 @@
     "years": "Ежегодный"
   },
   "type": {
-    "order": "BuyurtmaЗаказ",
+    "order": "Заказ",
     "user_bonus": "Бонус пользователя",
     "withdraw_balance": "Вывести с баланса",
-    "buy_premium": "Премиум покупка"
+    "buy_premium": "Премиум покупка",
+    "cashback": "Кэшбэк"
   }
 }

@@ -268,7 +268,13 @@
     "premium_price": "Premium narxi",
     "delivery_change_price": "Yetkazib berish narxni o'zgartirish",
     "delivery_change_limit": "Yetkazib berish limitini o'zgartirish",
-    "invitePromocode": "Promokoddan foydalanib do'stini taklif qilgani uchun belgilangan miqdor yoki foiz da bonusga ega bo'lish"
+    "invitePromocode": "Promokoddan foydalanib do'stini taklif qilgani uchun belgilangan miqdor yoki foiz da bonusga ega bo'lish",
+    "cashback_settings": "Cashback Sozlamalari",
+    "cashback_enabled": "Cashback yoqilgan",
+    "cashback_percentage": "Cashback foizi (%)",
+    "cashback_percentage_hint": "Masalan: 5% = har 100,000 so'm uchun 5,000 so'm cashback",
+    "cashback_min_order_amount": "Minimal buyurtma summasi (cashback uchun)",
+    "cashback_min_order_amount_hint": "Bu summadan kam bo'lsa cashback berilmaydi (0 = cheklov yo'q)"
   },
   "transaction": {
     "total_balance": "Umumiy balans",
@@ -318,6 +324,7 @@
     "order": "Buyurtma",
     "user_bonus": "Foydalanuvchi bonusi",
     "withdraw_balance": "Balansdan yechib olish",
-    "buy_premium": "Premium xarid"
+    "buy_premium": "Premium xarid",
+    "cashback": "Cashback"
   }
 }
