@@ -91,6 +91,9 @@ export interface IProduct {
     url: string;
     sizes: string[];
   };
+  locationBlock?: string;
+  locationShelf?: string;
+  locationRow?: string;
 }
 
 export interface ILocation {

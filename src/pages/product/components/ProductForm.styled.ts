@@ -1,6 +1,12 @@
 import styled from "styled-components";
 
 export const ProductFormStyled = styled.div`
+  width: 100%;
+  
+  form {
+    width: 100%;
+  }
+  
   .product-images {
     display: flex;
     flex-wrap: wrap;

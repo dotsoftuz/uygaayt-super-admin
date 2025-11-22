@@ -155,6 +155,7 @@ const Product = () => {
         isEditing={!!editingProductId}
         customTitle={t("general.addProduct")}
         onClose={resetForm}
+        isFullWidth={true}
       >
         <ProductForm
           formStore={formStore}
