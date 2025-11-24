@@ -279,7 +279,7 @@ const Dashboard = () => {
                 >
                     {t("dashboard.orders_by_location")}
                 </Typography>
-                <DashboardMap height="600px" useDemoData={true} />
+                <DashboardMap height="600px" useDemoData={false} />
             </Grid>
 
             <Grid className='grid mt-2 md:grid-cols-2 gap-4'>

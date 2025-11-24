@@ -200,12 +200,13 @@ const DashboardMap = ({ height = "600px", useDemoData = true }: DashboardMapProp
               order.addressLocation.latitude &&
               order.addressLocation.longitude
           );
+          
           setOrderLocations(ordersWithLocation);
           groupOrdersByArea(ordersWithLocation, currentZoom);
         }
       },
       onError(error) {
-        console.error("Error fetching orders:", error);
+        console.error("❌ Error fetching orders:", error);
       },
     }
   );
@@ -277,7 +278,7 @@ const DashboardMap = ({ height = "600px", useDemoData = true }: DashboardMapProp
       // Real data olish
       fetchOrders({
         page: 1,
-        limit: 1000, // Ko'proq zakazlarni olish uchun
+        limit: 200, // API limit: maksimal 200
         dateFrom: allParams.dateFrom,
         dateTo: allParams.dateTo,
       });
