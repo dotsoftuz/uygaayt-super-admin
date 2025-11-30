@@ -117,6 +117,28 @@ const OrderInfo = ({ formStore, order }: any) => {
           </div>
         </div>
       )}
+      {order?.store && (
+        <div className="card">
+          <h4 className="title">Do'kon</h4>
+          <div className="info">
+            <div>
+              <h4 className="name">
+                {get(order, "store.name", "")}
+              </h4>
+              {get(order, "store.phoneNumber", "") && (
+                <span className="phone">
+                  {get(order, "store.phoneNumber", "")}
+                </span>
+              )}
+              {get(order, "store.addressName", "") && (
+                <span className="phone">
+                  {get(order, "store.addressName", "")}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       {/* <div className="card">
         <h4 className="title">Moderator</h4>
         <div className="info">

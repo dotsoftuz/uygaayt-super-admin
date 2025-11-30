@@ -96,6 +96,14 @@ export const useOrderTableColumns = (
       flex: 0.6,
     },
     {
+      field: "store",
+      headerName: "Do'kon",
+      renderCell({ row }) {
+        return row?.store?.name || row?.storeId || "-";
+      },
+      flex: 0.8,
+    },
+    {
       field: t("common.time"),
       renderCell({ row }) {
         return dayjs(row.createdAt).format("DD.MM.YYYY HH:mm");
