@@ -1,6 +1,3 @@
-
-
-
 import Autocomplete from "@mui/lab/Autocomplete";
 import { TextField } from "@mui/material";
 import { AutoCompleteStyled } from "components/form/AutoCompleteForm/AutoCompleteForm.style";
@@ -44,12 +41,20 @@ function AutoCompleteFilter({
   dataProp = "data.data" as const, //😐
   mapData,
   onChange,
-  getOptionLabel
+  getOptionLabel,
 }: IAutocompleteFilter) {
   const [queryParams, setQueryParams] = useState<{ search?: string }>();
   const [search, setSearch] = useState<string>();
   const { debouncedValue: debVal, isDebouncing } = useDebounce(search, 600);
-  const [value, setValue] = useState<string | undefined | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const allParams = useAllQueryParams();
+
+  // YANGI: URL parametrlaridan value ni o'qish
+  const categoryIdFromUrl = allParams[filterName];
+  const [value, setValue] = useState<string | undefined | null>(
+    categoryIdFromUrl || null
+  );
+
   const currentLang = localStorage.getItem("i18nextLng") || "uz";
 
   useEffect(() => {
@@ -57,6 +62,17 @@ function AutoCompleteFilter({
       search,
     });
   }, [debVal]);
+
+  // YANGI: URL parametri o'zgarganda value ni yangilash
+  useEffect(() => {
+    const categoryIdFromUrl = allParams[filterName];
+    if (categoryIdFromUrl && categoryIdFromUrl !== value) {
+      setValue(categoryIdFromUrl);
+    } else if (!categoryIdFromUrl && value) {
+      setValue(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allParams[filterName], filterName]);
 
   // const { data: OptionsData, isFetching } = useApi<IOption[]>(
   //   optionsUrl,
@@ -89,7 +105,7 @@ function AutoCompleteFilter({
 
   const getLabel = (option: IOption) => {
     if (typeof option?.name === "object") {
-      return option?.[nameProp]?.[currentLang]; 
+      return option?.[nameProp]?.[currentLang];
     }
     return option?.firstName
       ? `${option?.firstName} ${option?.lastName}`
@@ -102,8 +118,6 @@ function AutoCompleteFilter({
       name: getLabel(option),
     })
   );
-  const [searchParams, setSearchParams] = useSearchParams();
-  const allParams = useAllQueryParams();
 
   const { t } = useTranslation();
 
@@ -122,7 +136,13 @@ function AutoCompleteFilter({
           // @ts-ignore
           onChange?.(data);
           // @ts-ignore
-          setValue(returnOnlyId ? data?._id! : data);
+          const newValue: string | undefined | null = returnOnlyId
+            ? (data?._id as string | undefined)
+            : data
+            ? (data as any)?._id
+            : null;
+          setValue(newValue);
+
           // @ts-ignore
           if (filterName) {
             if (data) {
@@ -130,11 +150,14 @@ function AutoCompleteFilter({
                 ...allParams,
                 // @ts-ignore
                 [filterName]: data?._id,
+                page: "1", // YANGI: Filter o'zgarganda sahifani 1-ga qaytarish
               });
             } else {
-              delete allParams[filterName];
+              const newParams = { ...allParams };
+              delete newParams[filterName];
               setSearchParams({
-                ...allParams,
+                ...newParams,
+                page: "1", // YANGI: Filter o'chirilganda sahifani 1-ga qaytarish
               });
             }
           }

@@ -47,7 +47,7 @@ const Table = <TData extends { _id: string }>({
   headerChildrenSecondRow,
   insteadOfTable,
   getUniqueId,
-  processingParams
+  processingParams,
 }: ITable<TData>) => {
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -66,32 +66,24 @@ const Table = <TData extends { _id: string }>({
     if (processingParams) {
       const params: Record<string, any> = {};
       const queryData = processingParams(allParams);
+
       Object.entries(queryData).forEach(([key, value]) => {
-        if (value) {
+        if (value !== undefined && value !== null) {
           params[key] = value;
         }
       });
 
       return params;
     }
-
     return undefined;
   }, [locationSearch]);
 
-  /** @todo work with query params */
-  // const [queryParams, setQueryParams] = useState<any>(
-  //   !isGetAll
-  //     ? {
-  //         page: searchParams.get("page") || 1,
-  //         limit: searchParams.get("limit") || 10,
-  //         search: searchParams.get("search") || "",
-  //       }
-  //     : undefined
-  // );
+  /** Update query params when search changes */
   useEffect(() => {
     if (!isGetAll) {
       setSearchParams({
         ...allParams,
+        ...exQueryParams, // FIX 1: external filters qo‘shildi
         search: search || "",
         page: search ? "1" : allParams.page || "1",
         limit: allParams.limit || "20",
@@ -99,47 +91,49 @@ const Table = <TData extends { _id: string }>({
     }
   }, [debValue]);
 
-  /** @todo to get data */
-  const { mutate, reset, data, isLoading } = useApiMutation(
-    dataUrl,
-    "post",
-    {
-      onSuccess(response) {
-        const tableData = isGetAll ? get(response, "data", []) : response?.data?.data;
-        onDataChange?.(tableData);
-        getAllData?.(response?.data);
-        if (response?.data?.total > 0 && response?.data?.data?.length === 0) {
-          setSearchParams({
-            ...(filterParams ? { ...filterParams } : { ...allParams }),
-            ...exQueryParams,
-            ...allParams,
-            search: debValue || "",
-            page: search ? "1" : allParams.page || "1",
-            limit: allParams.limit || defaultLimit + "",
-          });
-        }
-      },
-    },
-  );
+  /** Fetch data */
+  const { mutate, reset, data, isLoading } = useApiMutation(dataUrl, "post", {
+    onSuccess(response) {
+      const tableData = isGetAll
+        ? get(response, "data", [])
+        : response?.data?.data;
 
+      onDataChange?.(tableData);
+      getAllData?.(response?.data);
+
+      if (response?.data?.total > 0 && response?.data?.data?.length === 0) {
+        setSearchParams({
+          ...(filterParams ? { ...filterParams } : { ...allParams }),
+          ...exQueryParams, // FIX 2: filter params yo‘qolmasligi uchun
+          ...allParams,
+          search: debValue || "",
+          page: search ? "1" : allParams.page || "1",
+          limit: allParams.limit || defaultLimit + "",
+        });
+      }
+      console.log("response", response);
+    },
+  });
+  console.log("data", data);
+
+  /** Trigger data fetch */
   useEffect(() => {
     mutate({
       ...allParams,
-      ...exQueryParams,
+      ...exQueryParams, // FIX 3: backendga to‘g‘ri query boradi
     });
-  }, [debValue, reRender, exQueryParams, searchParams]);
+  }, [debValue, reRender, exQueryParams, locationSearch]);
 
-  /** @todo to delete */
+  /** Delete request */
   const { mutate: deleteMutate, isSuccess: isDeleteSuccess } = useApiMutation(
     deleteUrl || dataUrl,
     "delete"
   );
 
   const onDelete = () => {
-    deleteMutate({
-      ids: selectedRows,
-    });
+    deleteMutate({ ids: selectedRows });
   };
+
   useEffect(() => {
     if (isDeleteSuccess) {
       reset();
@@ -153,14 +147,16 @@ const Table = <TData extends { _id: string }>({
 
   useEffect(() => {
     if (socketRender) {
-      // reset();
       dis(socketReRender(false));
     }
   }, [socketRender]);
 
-  /** @constant memorize fetched data */
+  /** Prepare table data */
   const tableData: TData[] = React.useMemo(() => {
-    const dataKey: any[] = isGetAll ? get(data, "data.products", []) : data?.data?.data;
+    const dataKey: any[] = isGetAll
+      ? get(data, "data.products", [])
+      : data?.data?.data;
+
     if (isGetAll && searchable && search) {
       return dataKey?.filter(
         (item) =>
@@ -170,10 +166,12 @@ const Table = <TData extends { _id: string }>({
           item?.car?.name?.toLowerCase()?.includes(search)
       );
     }
+
     return dataKey?.map((item: Record<string, any>, i: number) => {
       const index = isGetAll
         ? 0
         : ((+allParams?.page || 1) - 1) * (+allParams?.limit || defaultLimit);
+
       return {
         ...item,
         _id: getUniqueId
@@ -215,6 +213,7 @@ const Table = <TData extends { _id: string }>({
           onDelete={onDelete}
           dataUrl={dataUrl}
         />
+
         {tableData?.length === 0 && !isLoading ? (
           <>
             <div className="grid-container no-data">
@@ -231,34 +230,25 @@ const Table = <TData extends { _id: string }>({
                 columns={tableColumns}
                 localeText={localization}
                 pageSize={Number(searchParams.get("limit"))}
-                // pageSize={+allParams?.limit || defaultLimit}
                 rowsPerPageOptions={[5, 10, 20]}
                 loading={isLoading}
                 hideFooterPagination
                 disableSelectionOnClick
                 sortingMode="server"
-                // sortModel={
-                //   allParams?.sortBy && !reset
-                //     ? [
-                //       {
-                //         sort: allParams?.sortOrder === "1" ? "asc" : "desc",
-                //         field: allParams?.sortBy,
-                //       },
-                //     ]
-                //     : []
-                // }
                 onSortModelChange={(model) => {
                   if (model.length) {
                     setSearchParams({
                       ...allParams,
+                      ...exQueryParams, // FIX 4
                       sortBy: `${model[0].field}`,
-                      sortOrder: `${model[0].sort === "asc" ? 1 : -1}`
+                      sortOrder: `${model[0].sort === "asc" ? 1 : -1}`,
                     });
                   } else {
                     delete allParams.sortBy;
                     delete allParams.sortOrder;
                     setSearchParams({
                       ...allParams,
+                      ...exQueryParams,
                     });
                   }
                 }}
@@ -268,6 +258,7 @@ const Table = <TData extends { _id: string }>({
                 onPageSizeChange={(newPageSize) => {
                   setSearchParams({
                     ...allParams,
+                    ...exQueryParams, // FIX 5
                     limit: String(newPageSize),
                   });
                 }}
@@ -277,7 +268,7 @@ const Table = <TData extends { _id: string }>({
                 rowCount={totalData}
                 getRowClassName={(params) => (!!onRowClick ? "row-hover" : "")}
                 checkboxSelection={selection}
-                onSelectionModelChange={(rows, data) => {
+                onSelectionModelChange={(rows) => {
                   setSelectedRows(rows);
                 }}
                 paginationMode="server"
@@ -288,6 +279,7 @@ const Table = <TData extends { _id: string }>({
             </div>
           )
         )}
+
         {!!allParams && hasPagination && !isGetAll && (
           <TablePagination
             totalData={totalData}

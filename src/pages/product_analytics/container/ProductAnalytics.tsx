@@ -1,13 +1,20 @@
-import { AutoCompleteFilter, ExportButton, RangeDatePicker, Table } from "components";
+import {
+  AutoCompleteFilter,
+  ExportButton,
+  RangeDatePicker,
+  Table,
+} from "components";
 import { useProductColumns } from "./product_analytics.columns";
 import { useTranslation } from "react-i18next";
 import { Grid } from "@mui/material";
 import { useState } from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
 import WarningModal from "components/common/WarningModal/WarningModal";
+import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
 
 interface FormValues {
   isActiveQuery?: boolean;
+  // categoryId ni bu yerda qo'shish shart emas, chunki u URL dan olinadi
 }
 
 const ProductAnalytics: React.FC = () => {
@@ -15,7 +22,7 @@ const ProductAnalytics: React.FC = () => {
   const { t } = useTranslation();
   const formStore: UseFormReturn<FormValues> = useForm<FormValues>();
   const [productId, setProductId] = useState<string>("");
-
+  const allParams = useAllQueryParams();
   const exportUrl: string = "/report/product/export";
 
   const renderHeader = (
@@ -43,10 +50,17 @@ const ProductAnalytics: React.FC = () => {
         dataUrl="report/product"
         headerChildren={renderHeader}
         exQueryParams={{
+          // isActiveQuery hech qachon set qilinmayapti, shuning uchun bu doim undefined
+          // Agar isActive filter kerak bo'lsa, uni formga qo'shish kerak
           isActive: formStore.watch("isActiveQuery") || undefined,
+          categoryId: allParams.categoryId || undefined, // ✅ Bu to'g'ri ishlaydi
         }}
       />
-      <WarningModal open={Boolean(productId)} setOpen={setProductId} url="product/delete" />
+      <WarningModal
+        open={Boolean(productId)}
+        setOpen={setProductId}
+        url="product/delete"
+      />
     </>
   );
 };

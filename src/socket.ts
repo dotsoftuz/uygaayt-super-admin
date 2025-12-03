@@ -5,8 +5,6 @@ const path = process.env.REACT_APP_SOCKET_PATH;
 
 const storeId = localStorage.getItem("storeId");
 const tokenData = localStorage.getItem("token");
-console.log(tokenData);
-
 
 export const socket = io(url!, {
   autoConnect: true,
