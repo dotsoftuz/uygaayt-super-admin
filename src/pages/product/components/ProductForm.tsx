@@ -115,7 +115,10 @@ const ProductForm = ({
             amount: Number(itm?.amount) || 0,
           }))
           : []
-      })) : []
+      })) : [],
+      locationBlock: data.locationBlock || undefined,
+      locationShelf: data.locationShelf || undefined,
+      locationRow: data.locationRow || undefined,
     };
 
     // discountEnabled = true bo'lganda discount ma'lumotlarini qo'shish
@@ -233,6 +236,9 @@ const ProductForm = ({
         attributeId: getByIdData.data.attributeDetails.map((item: any) => (
           item._id
         )) || [],
+        locationBlock: getByIdData.data.locationBlock || undefined,
+        locationShelf: getByIdData.data.locationShelf || undefined,
+        locationRow: getByIdData.data.locationRow || undefined,
       });
 
       // if (!getByIdData.data.attributes?.length) {
@@ -321,6 +327,7 @@ const ProductForm = ({
               control={control}
               name="name.uz"
               label={t('common.productName') + ' (Uz)'}
+              placeholder="Masalan: Olma"
             />
           </Grid>
           <Grid item md={12}>
@@ -328,6 +335,7 @@ const ProductForm = ({
               control={control}
               name="name.ru"
               label={t('common.productName') + ' (Ru)'}
+              placeholder="Например: Яблоко"
             />
           </Grid>
           <Grid item md={12}>
@@ -335,6 +343,7 @@ const ProductForm = ({
               control={control}
               name="name.en"
               label={t('common.productName') + ' (En)'}
+              placeholder="For example: Apple"
             />
           </Grid>
           <Grid item md={12}>
@@ -343,6 +352,7 @@ const ProductForm = ({
               control={control}
               label={t("common.price")}
               type="number"
+              placeholder="Masalan: 5000"
             />
           </Grid>
           <Grid item md={12}>
@@ -351,6 +361,7 @@ const ProductForm = ({
               control={control}
               label={t("common.residue")}
               type="number"
+              placeholder="Masalan: 100"
             />
           </Grid>
           <Grid item md={12} display={"flex"} justifyContent={"space-between"}>
@@ -360,6 +371,7 @@ const ProductForm = ({
                 control={control}
                 type="number"
                 label={t("Qizil chiziq")}
+                placeholder="Masalan: 10"
                 rules={{
                   required: false,
                 }}
@@ -371,11 +383,40 @@ const ProductForm = ({
                 control={control}
                 label={t("Sariq chiziq")}
                 type="number"
+                placeholder="Masalan: 20"
                 rules={{
                   required: false,
                 }}
               />
             </Box>
+          </Grid>
+          {/* Product Location Fields */}
+          <Grid item md={4}>
+            <TextInput
+              name="locationBlock"
+              control={control}
+              label="Blok"
+              placeholder="Masalan: A blok"
+              rules={{ required: false }}
+            />
+          </Grid>
+          <Grid item md={4}>
+            <TextInput
+              name="locationShelf"
+              control={control}
+              label="Javon"
+              placeholder="Masalan: 2 javon"
+              rules={{ required: false }}
+            />
+          </Grid>
+          <Grid item md={4}>
+            <TextInput
+              name="locationRow"
+              control={control}
+              label="Qator"
+              placeholder="Masalan: 3 qator"
+              rules={{ required: false }}
+            />
           </Grid>
           {/* <Grid item md={12}>
             <AutoCompleteForm
@@ -415,10 +456,11 @@ const ProductForm = ({
 
           </Grid>
           <Grid item md={12}>
-            <label className="custom-label">{t("common.description")}</label>
+            <label className="custom-label">{t("common.description")} <span className="text-muted-foreground text-sm">(ixtiyoriy)</span></label>
             <Controller
               name="description"
               control={control}
+              rules={{ required: false }}
               render={({ field }) => (
                 <TextEditor
                   value={field.value}
@@ -435,7 +477,7 @@ const ProductForm = ({
               alignItems="center"
               justifyContent="space-between"
             >
-              <label htmlFor="isActive">{t("common.isActive")}</label>
+              <label htmlFor="isActive">{t("common.isActive")} <span className="text-muted-foreground text-sm">(ixtiyoriy)</span></label>
               <Switch
                 checked={!!isActive}
                 onChange={(e) => handleSwitchChange("isActive", e.target.checked)}
@@ -449,7 +491,7 @@ const ProductForm = ({
               alignItems="center"
               justifyContent="space-between"
             >
-              <label htmlFor="isMyExpire">Muddatli mahsulot</label>
+              <label htmlFor="isMyExpire">Muddatli mahsulot <span className="text-muted-foreground text-sm">(ixtiyoriy)</span></label>
               <Switch
                 checked={!!watch("isMyExpire")}
                 id="isMyExpire"
@@ -480,7 +522,7 @@ const ProductForm = ({
               alignItems="center"
               justifyContent="space-between"
             >
-              <label htmlFor="discountEnabled">{t("common.discount")}</label>
+              <label htmlFor="discountEnabled">{t("common.discount")} <span className="text-muted-foreground text-sm">(ixtiyoriy)</span></label>
               <Switch
                 checked={!!watch("discountEnabled")}
                 id="discountEnabled"
@@ -495,6 +537,7 @@ const ProductForm = ({
                     name="discountValue"
                     label={t("common.discountValue")}
                     type="number"
+                    placeholder={watch("discountType") === "percent" ? "Masalan: 10" : "Masalan: 1000"}
                     rules={{ required: { value: false, message: "Majburiy" } }}
                     inputProps={
                       watch("discountType") === "percent"
@@ -555,7 +598,7 @@ const ProductForm = ({
               alignItems="center"
               justifyContent="space-between"
             >
-              <label htmlFor="compounds">{t('general.compounds')}</label>
+              <label htmlFor="compounds">{t('general.compounds')} <span className="text-muted-foreground text-sm">(ixtiyoriy)</span></label>
               <Switch
                 checked={hasCompoundsEnabled}
                 onChange={(e) => handleSwitchChange("compounds", e.target.checked)}
@@ -572,11 +615,13 @@ const ProductForm = ({
                       type="text"
                       rules={{ required: false }}
                       label={t('general.composition')}
+                      placeholder="Masalan: Suv"
                     />
                   </Grid>
                   <Grid item md={5}>
                     <Input
                       label={t('general.quantity')}
+                      placeholder="Masalan: 100ml"
                       params={{
                         ...register(
                           `compounds.${index}.value`,
@@ -626,7 +671,7 @@ const ProductForm = ({
               alignItems="center"
               justifyContent="space-between"
             >
-              <label htmlFor="attributes">{t('general.attributes')}</label>
+              <label htmlFor="attributes">{t('general.attributes')} <span className="text-muted-foreground text-sm">(ixtiyoriy)</span></label>
               <Switch
                 checked={hasAttributesEnabled}
                 onChange={(e) => handleSwitchChange("attributes", e.target.checked)}

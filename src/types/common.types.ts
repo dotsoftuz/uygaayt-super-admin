@@ -32,6 +32,12 @@ export interface IOrder {
     phoneNumber: string;
     lastName: string;
   };
+  store?: {
+    _id: string;
+    name: string;
+    phoneNumber?: string;
+    addressName?: string;
+  };
   items: {
     _id: string;
     productId: string;
@@ -91,6 +97,9 @@ export interface IProduct {
     url: string;
     sizes: string[];
   };
+  locationBlock?: string;
+  locationShelf?: string;
+  locationRow?: string;
 }
 
 export interface ILocation {

@@ -35,9 +35,15 @@ export const FormDrawerStyled = styled(SwipeableDrawer)`
     .form_drawer_content {
       height: calc(100vh - 98px - 80px) !important;
       padding: 0 24px;
-      width: 100%;
+      width: 100% !important;
       min-width: 0;
+      max-width: 100% !important;
       overflow-x: hidden;
+      
+      > * {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
     }
   }
 

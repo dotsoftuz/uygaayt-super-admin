@@ -39,6 +39,7 @@ const CategoryForm: React.FC<IBranchForm> = ({
       ...data,
       imageId: data.imageId?._id,
       _id: editingCategoryId,
+      ...(editingCategoryId ? {} : { storeId: "uygaayt" }),
     });
   };
 

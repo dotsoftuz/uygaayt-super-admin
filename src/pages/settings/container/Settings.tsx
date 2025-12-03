@@ -63,13 +63,19 @@ const Settings = () => {
   }, [status]);
 
   const submit = handleSubmit((data: any) => {
-    mutate({
+    const submitData = {
       ...data,
       orderCalculateMethod: data.orderCalculateMethod,
       orderPrice: data.orderPrice,
       phonePrefix,
       deliveryChangePrice: data.deliveryChangePrice || 0,
-    });
+      // Cashback fields
+      cashbackEnabled: data.cashbackEnabled !== undefined ? data.cashbackEnabled : true,
+      cashbackPercentage: data.cashbackPercentage !== undefined ? Number(data.cashbackPercentage) : 0,
+      cashbackMinOrderAmount: data.cashbackMinOrderAmount !== undefined ? Number(data.cashbackMinOrderAmount) : 0,
+    };
+    console.log('Submitting settings:', submitData);
+    mutate(submitData);
   });
 
   const handleTab = (tab: { name: string; key: string }) => {
@@ -413,8 +419,84 @@ const Settings = () => {
                       control={control}
                       name="deliveryChangePrice"
                       type="number"
-                      rules={{required: false,}}
+                      rules={{ required: false, }}
                     />
+                  </div>
+                </Grid>
+
+                {/* Cashback Settings */}
+                <Grid item md={12} xs={12}>
+                  <div className="item" style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
+                    <Typography fontSize={"18px"} fontWeight="bold" marginBottom="15px">
+                      {t("settings.cashback_settings") || "Cashback Sozlamalari"}
+                    </Typography>
+                  </div>
+                </Grid>
+
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">
+                      {t("settings.cashback_enabled") || "Cashback yoqilgan"}
+                    </span>
+                    <Box display="flex" alignItems="center">
+                      <Switch
+                        checked={watch("cashbackEnabled") ?? true}
+                        id="cashbackEnabled"
+                        {...register("cashbackEnabled")}
+                      />
+                      <label className="mb-1" htmlFor="cashbackEnabled">
+                        {t("general.allow")}
+                      </label>
+                    </Box>
+                  </div>
+                </Grid>
+
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">
+                      {t("settings.cashback_percentage") || "Cashback foizi (%)"}
+                    </span>
+                    <TextInput
+                      control={control}
+                      name="cashbackPercentage"
+                      type="number"
+                      rules={{
+                        required: false,
+                        min: { value: 0, message: "Foiz manfiy bo'lishi mumkin emas" },
+                        max: { value: 100, message: "Foiz 100 dan oshmasligi kerak" }
+                      }}
+                      inputProps={{
+                        min: 0,
+                        max: 100,
+                        step: 0.1
+                      }}
+                    />
+                    <Typography fontSize={"12px"} color="#666" marginTop="5px">
+                      {t("settings.cashback_percentage_hint") || "Masalan: 5% = har 100,000 so'm uchun 5,000 so'm cashback"}
+                    </Typography>
+                  </div>
+                </Grid>
+
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">
+                      {t("settings.cashback_min_order_amount") || "Minimal buyurtma summasi"}
+                    </span>
+                    <TextInput
+                      control={control}
+                      name="cashbackMinOrderAmount"
+                      type="number"
+                      rules={{
+                        required: false,
+                        min: { value: 0, message: "Summa manfiy bo'lishi mumkin emas" }
+                      }}
+                      inputProps={{
+                        min: 0
+                      }}
+                    />
+                    <Typography fontSize={"12px"} color="#666" marginTop="5px">
+                      {t("settings.cashback_min_order_amount_hint") || "Bu summadan kam bo'lsa cashback berilmaydi (0 = cheklov yo'q)"}
+                    </Typography>
                   </div>
                 </Grid>
 
@@ -465,7 +547,7 @@ const Settings = () => {
               <DiscountOrder data={data} />
             </div>
           )}
-           {activeTab === "bonusOrder" && (
+          {activeTab === "bonusOrder" && (
             <div className="settings">
               <BonusOrder data={data} />
             </div>
