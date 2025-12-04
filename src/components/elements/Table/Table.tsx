@@ -111,17 +111,24 @@ const Table = <TData extends { _id: string }>({
           limit: allParams.limit || defaultLimit + "",
         });
       }
-      console.log("response", response);
     },
   });
-  console.log("data", data);
 
   /** Trigger data fetch */
   useEffect(() => {
-    mutate({
+    // Filter out empty strings, null, and undefined values
+    const cleanParams = Object.entries({
       ...allParams,
-      ...exQueryParams, // FIX 3: backendga to‘g‘ri query boradi
-    });
+      ...exQueryParams,
+    }).reduce((acc, [key, value]) => {
+      // Only include non-empty values
+      if (value !== undefined && value !== null && value !== "") {
+        acc[key] = value;
+      }
+      return acc;
+    }, {} as Record<string, any>);
+
+    mutate(cleanParams);
   }, [debValue, reRender, exQueryParams, locationSearch]);
 
   /** Delete request */

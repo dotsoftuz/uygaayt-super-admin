@@ -63,7 +63,6 @@ const OrderTable = () => {
             filterName="stateId"
             placeholder={t("common.status")}
             dataProp="data"
-
           />
         </Grid>
         <Grid item className="">
@@ -73,16 +72,18 @@ const OrderTable = () => {
           <SwitchView />
         </Grid>
       </Grid>
-
     </>
   );
 
-  const { data: columnState, status: columnStateStatus, refetch } = useApi(
+  const {
+    data: columnState,
+    status: columnStateStatus,
+    refetch,
+  } = useApi(
     "order-state/get-all",
     {},
     {
       onSuccess({ data }) {
-        console.log(data)
         setOrderStates(data || []);
       },
     }
@@ -106,7 +107,10 @@ const OrderTable = () => {
         // }
         onRowClick={(row) => navigate(`/order/${row._id}`)}
         exQueryParams={{
-          stateId: allParams?.stateId || undefined,
+          // Only include stateId if it's a non-empty string
+          ...(allParams?.stateId && allParams.stateId.trim() !== ""
+            ? { stateId: allParams.stateId }
+            : {}),
         }}
       />
     </>

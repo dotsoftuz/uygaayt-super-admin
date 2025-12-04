@@ -16,7 +16,7 @@ const StateSelectStyled = styled.div<{ stateColor: string; luma: any }>`
   & .MuiSelect-select.Mui-disabled {
     color: ${({ luma }) => (luma > 60 ? "#232323" : "#ffffff")} !important;
     -webkit-text-fill-color: ${({ luma }) =>
-    luma > 60 ? "#232323" : "#ffffff"} !important;
+      luma > 60 ? "#232323" : "#ffffff"} !important;
   }
 
   & svg {
@@ -61,10 +61,14 @@ export const useOrderTableColumns = (
       field: t("order.receiver"),
       renderCell({ row }) {
         const firstName = row?.customer?.firstName;
-        const shortFirst = firstName?.length > 10 ? `${firstName.substring(0, 10)}...` : firstName;
+        const shortFirst =
+          firstName?.length > 10
+            ? `${firstName.substring(0, 10)}...`
+            : firstName;
 
         const lastName = row?.customer?.lastName;
-        const shortLast = lastName?.length > 10 ? `${lastName.substring(0, 10)}...` : lastName;
+        const shortLast =
+          lastName?.length > 10 ? `${lastName.substring(0, 10)}...` : lastName;
 
         const fullName = `${shortFirst}${lastName ? ` ${shortLast}` : ""}`;
         const tooltipText = `${firstName}${lastName ? ` ${lastName}` : ""}`;
@@ -99,7 +103,29 @@ export const useOrderTableColumns = (
       field: "store",
       headerName: "Do'kon",
       renderCell({ row }) {
-        return row?.store?.name || row?.storeId || "-";
+        // Agar store name mavjud bo'lsa (to'g'ri populate qilingan)
+        if (row?.store?.name) {
+          return row.store.name;
+        }
+
+        // Agar storeId string bo'lsa (masalan "uygaayt")
+        if (typeof row?.storeId === "string") {
+          if (row.storeId.toLowerCase() === "uygaayt") {
+            return "Uygaayt";
+          }
+          // Boshqa string holatlar
+          return row.storeId;
+        }
+
+        // Agar storeId ObjectId bo'lsa lekin store populate qilinmagan
+        // Bu storeRestaurants buyurtmasi bo'lishi mumkin
+        // Hozircha ID ni ko'rsatamiz, lekin backend to'g'ri populate qilishi kerak
+        if (row?.storeId && typeof row.storeId === "object") {
+          // ObjectId ni string ga o'tkazish
+          return row.storeId.toString();
+        }
+
+        return row?.storeId || "-";
       },
       flex: 0.8,
     },
