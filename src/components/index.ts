@@ -27,6 +27,7 @@ import MoneyInput from "./form/TextInput/MoneyInput/MoneyInput";
 import TextInput from "./form/TextInput/TextInput";
 import Input from "./form/Input/Input";
 import TimeInput from "./form/TimeInput/TimeInput";
+import ColorPicker from "./form/ColorPicker/ColorPicker";
 import Modal from "./shared/modal/modal";
 import Navbar from "./shared/navbar/Navbar";
 import Sidebar from "./shared/sidebar/Sidebar";
@@ -75,5 +76,6 @@ export {
   DragTable,
   Input,
   ExportButton,
-  CommonModal
+  CommonModal,
+  ColorPicker
 };

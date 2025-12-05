@@ -6,6 +6,7 @@ import {
   PhoneInput,
   TextInput,
   SelectForm,
+  ColorPicker,
 } from "components";
 import { UseFormReturn, useFieldArray } from "react-hook-form";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
@@ -139,6 +140,7 @@ const StoreForm: FC<IStoreForm> = ({
         addressName: store.addressName || "",
         addressLocation: store.addressLocation || null,
         type: store.type || "shop",
+        brandColor: store.brandColor || "#ef6c1d",
         categoryIds: store.categoryIds || [],
         orderMinimumPrice: store.orderMinimumPrice || "",
         deliveryPrice: store.deliveryPrice || "",
@@ -196,6 +198,7 @@ const StoreForm: FC<IStoreForm> = ({
         addressName: "",
         addressLocation: null,
         type: "shop",
+        brandColor: "#ef6c1d",
         categoryIds: [],
         orderMinimumPrice: "",
         deliveryPrice: "",
@@ -244,6 +247,7 @@ const StoreForm: FC<IStoreForm> = ({
       addressName: data.addressName || "",
       addressLocation: addressLocation || undefined,
       type: data.type || "shop",
+      brandColor: data.brandColor || "#ef6c1d",
       categoryIds: data.categoryIds || [],
       orderMinimumPrice: data.orderMinimumPrice ? +data.orderMinimumPrice : 0,
       deliveryPrice: data.deliveryPrice ? +data.deliveryPrice : 0,
@@ -425,6 +429,16 @@ const StoreForm: FC<IStoreForm> = ({
                   { _id: "shop", name: "Do'kon" },
                   { _id: "restaurant", name: "Restoran" },
                 ]}
+                rules={{ required: true }}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+              <ColorPicker
+                control={control}
+                name="brandColor"
+                label="Brend rangi"
+                placeholder="#ef6c1d"
                 rules={{ required: true }}
               />
             </Grid>

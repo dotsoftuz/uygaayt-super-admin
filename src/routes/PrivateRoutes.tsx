@@ -24,6 +24,7 @@ const Rating = lazy(() => import("pages/rating"));
 const PromoCode = lazy(() => import("pages/promo_code"));
 const Attribute = lazy(() => import("pages/attribute"));
 const PaymentMethod = lazy(() => import("pages/payment-method"));
+const Review = lazy(() => import("pages/review"));
 
 const CourierAnalytics = lazy(() => import("pages/courier_analytics"));
 const CustomerAnalytics = lazy(() => import("pages/customer_analytics"));
@@ -100,7 +101,7 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   {
     element: <News />,
     path: "news",
-    role: "news", 
+    role: "news",
   },
   {
     element: <Attribute />,
@@ -122,7 +123,7 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
     path: "/rating",
     role: "rateComment",
   },
-   {
+  {
     element: <PromoCode />,
     path: "/promo_code",
     role: "_id", // must change
@@ -146,6 +147,11 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
     element: <Settings />,
     path: "settings",
     role: "settings",
+  },
+  {
+    element: <Review />,
+    path: "review",
+    role: "employee",
   },
   {
     element: <CourierAnalytics />,

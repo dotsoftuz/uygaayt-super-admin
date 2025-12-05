@@ -19,6 +19,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import ArticleIcon from "@mui/icons-material/Article";
 import StoreIcon from "@mui/icons-material/Store";
+import RateReviewIcon from "@mui/icons-material/RateReview";
 
 export const sidebarRoutes: ISidebarRoute[] = [
   {
@@ -123,6 +124,12 @@ export const sidebarRoutes: ISidebarRoute[] = [
     translate: "rating",
     role: "rateComment",
     icon: <RatingIcon />,
+  },
+  {
+    path: "/review",
+    translate: "review",
+    role: "employee",
+    icon: <RateReviewIcon style={{ color: "#EB5B00" }} />,
   },
   {
     path: "/transaction",

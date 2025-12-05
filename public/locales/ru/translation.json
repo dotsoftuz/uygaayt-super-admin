@@ -86,7 +86,8 @@
     "promo_code": "Промо-код",
     "attribute": "Атрибут",
     "payment_method": "Тип оплаты",
-    "stores_restaurants": "Магазины и Рестораны"
+    "stores_restaurants": "Магазины и Рестораны",
+    "review": "Отзывы"
   },
   "common": {
     "fullName": "Ф.И.О.",

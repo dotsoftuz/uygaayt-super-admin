@@ -87,7 +87,8 @@
     "promo_code": "Promo-kod",
     "attribute": "Atribut",
     "payment_method": "To'lov turi",
-    "stores_restaurants": "Do'konlar va Restoranlar"
+    "stores_restaurants": "Do'konlar va Restoranlar",
+    "review": "Sharhlar"
   },
   "common": {
     "fullName": "F.I.O",
