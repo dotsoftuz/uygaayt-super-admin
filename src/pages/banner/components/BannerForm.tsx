@@ -45,7 +45,8 @@ const BannerForm: FC<IEmployeesForm> = ({
       _id: editingBannerId,
       ...data,
       imageId: data.imageId?._id,
-      productId: data.productId,
+      productId: data.productId?._id || data.productId, // Backward compatibility
+      productIds: data.productIds?.map((p: any) => p._id || p) || data.productIds, // Array uchun
     });
   };
 
@@ -54,7 +55,8 @@ const BannerForm: FC<IEmployeesForm> = ({
       reset({
         title: getByIdData.data.title,
         imageId: getByIdData.data.image,
-        productId: getByIdData.data.productId,
+        productId: getByIdData.data.productId, // Backward compatibility
+        productIds: getByIdData.data.productIds, // Yangi - array
         description: getByIdData.data.description,
       });
     }
@@ -80,6 +82,17 @@ const BannerForm: FC<IEmployeesForm> = ({
               dataProp="data.data"
               label={t("common.product")}
               rules={{ required: false }}
+            />
+          </Grid>
+          <Grid item md={12}>
+            <AutoCompleteForm
+              control={control}
+              name="productIds"
+              optionsUrl="product/choose"
+              dataProp="data.data"
+              label={t("common.products")} // Ko'p mahsulotlar
+              rules={{ required: false }}
+              multiple={true} // Multi-select uchun
             />
           </Grid>
           <Grid item md={12}>
