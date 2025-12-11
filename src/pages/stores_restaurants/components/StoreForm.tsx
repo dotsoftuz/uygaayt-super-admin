@@ -263,8 +263,8 @@ const StoreForm: FC<IStoreForm> = ({
       name: data.name,
       phoneNumber: data.phoneNumber,
       password: data.password || undefined, // Password qo'shish - bo'sh bo'lsa undefined
-      email: data.email || undefined,
-      website: data.website || undefined,
+      email: data.email?.trim() || undefined, // Email bo'sh bo'lsa undefined
+      website: data.website?.trim() || undefined,
       addressName: data.addressName || "",
       addressLocation: addressLocation || undefined,
       type: data.type || "shop",

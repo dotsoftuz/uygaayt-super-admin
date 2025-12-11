@@ -15,25 +15,9 @@ const TimePicker: FC<ITimePicker> = ({
 }) => {
   const { t } = useTranslation();
 
-  // Check if required is truthy (handles boolean, string, or object with value)
-  const isRequired = rules?.required && (
-    typeof rules.required === 'boolean' 
-      ? rules.required 
-      : typeof rules.required === 'object' && rules.required !== null && 'value' in rules.required
-        ? (rules.required as { value: boolean }).value
-        : Boolean(rules.required)
-  );
-
   return (
     <TimePickerContainer>
-      {label && (
-        <label className="custom-label">
-          {label}
-          {isRequired && (
-            <span style={{ color: '#d32f2f', marginLeft: '4px' }}>*</span>
-          )}
-        </label>
-      )}
+      {label && <label className="custom-label">{label}</label>}
       <Controller
         control={control}
         name={name}
@@ -52,7 +36,7 @@ const TimePicker: FC<ITimePicker> = ({
         )}
       />
       {!!errors[name] && (
-        <h6 className="text-error mt-1">{errors[name]?.message || t("general.required")}</h6>
+        <h6 className="text-error mt-1">{t("general.required")}</h6>
       )}
     </TimePickerContainer>
   );

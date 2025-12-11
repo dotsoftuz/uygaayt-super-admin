@@ -1,5 +1,4 @@
 import {
-  AutoCompleteFilter,
   Checkbox,
   ExportButton,
   FormDrawer,
@@ -12,7 +11,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useRoleManager } from "services/useRoleManager";
 import { Grid, MenuItem, Select } from "@mui/material";
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import WarningModal from "components/common/WarningModal/WarningModal";
 import { useNavigate } from "react-router-dom";
 import { useApiMutation } from "hooks/useApi/useApiHooks";
@@ -78,17 +77,15 @@ const StoresRestaurants = () => {
     handleActivate
   );
 
+  const isActiveQuery = formStore.watch("isActiveQuery");
+  const typeFilter = formStore.watch("typeFilter");
+
   const queryParams = useMemo(
     () => ({
-      isActive: formStore.watch("isActiveQuery") || undefined,
-      categoryId: formStore.watch("categoryId") || undefined,
-      orderSort: formStore.watch("orderSort") || undefined,
+      isActive: isActiveQuery || undefined,
+      type: typeFilter || undefined,
     }),
-    [
-      formStore.watch("isActiveQuery"),
-      formStore.watch("categoryId"),
-      formStore.watch("orderSort"),
-    ]
+    [isActiveQuery, typeFilter]
   );
 
   const exportUrl: string = "/store/export";
@@ -110,29 +107,21 @@ const StoresRestaurants = () => {
             borderRadius: "10px",
           }}
           size="small"
-          value={formStore.watch("orderSort") || ""}
-          onChange={(e) => formStore.setValue("orderSort", e.target.value)}
+          value={formStore.watch("typeFilter") || ""}
+          onChange={(e) => formStore.setValue("typeFilter", e.target.value)}
           displayEmpty
         >
-          {formStore.watch("orderSort") && (
+          {formStore.watch("typeFilter") && (
             <MenuItem value="">Tozalash</MenuItem>
           )}
-          {!formStore.watch("orderSort") && (
+          {!formStore.watch("typeFilter") && (
             <MenuItem value="" hidden disabled>
-              Buyurtma soni
+              Tur
             </MenuItem>
           )}
-          <MenuItem value="mostActive">Eng faol</MenuItem>
-          <MenuItem value="leastActive">Eng kam</MenuItem>
+          <MenuItem value="shop">Do'kon</MenuItem>
+          <MenuItem value="restaurant">Restoran</MenuItem>
         </Select>
-      </Grid>
-      <Grid item>
-        <AutoCompleteFilter
-          optionsUrl="category/paging"
-          filterName="categoryId"
-          placeholder={t("common.category")}
-          onChange={() => {}}
-        />
       </Grid>
       <Grid item>
         <ExportButton url={exportUrl} extraParams={queryParams} />
@@ -178,8 +167,7 @@ const StoresRestaurants = () => {
       acceptOnlinePayment: false,
       // Filter qiymatlarini saqlab qolish
       isActiveQuery: formStore.watch("isActiveQuery"),
-      categoryId: formStore.watch("categoryId"),
-      orderSort: formStore.watch("orderSort"),
+      typeFilter: formStore.watch("typeFilter"),
     });
   };
 

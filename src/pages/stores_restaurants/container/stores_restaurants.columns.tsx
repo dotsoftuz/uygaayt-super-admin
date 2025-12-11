@@ -16,14 +16,6 @@ export const useStoresRestaurantsColumns = (
 
   return [
     {
-      field: "ID",
-      headerName: "ID",
-      width: 80,
-      renderCell({ row }) {
-        return get(row, "_id", "").slice(-4) || get(row, "id", "");
-      },
-    },
-    {
       field: t("common.name"),
       headerName: "Do'kon nomi",
       flex: 1,

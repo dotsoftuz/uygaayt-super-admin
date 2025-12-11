@@ -135,7 +135,7 @@ function TextInput<FormNames extends Record<string, any>>({
               }}
               onBlur={onBlur}
               disabled={disabled}
-              value={value}
+              value={value ?? ""}
               name={name}
               placeholder={String(placeholder)}
               ref={ref}
