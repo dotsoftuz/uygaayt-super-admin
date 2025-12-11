@@ -115,8 +115,10 @@ const StoreForm: FC<IStoreForm> = ({
         latitude: addressLocation.latitude,
         longitude: addressLocation.longitude,
       });
+      // Sync addressLocation with form state
+      setValue("addressLocation", addressLocation);
     }
-  }, [addressLocation]);
+  }, [addressLocation, setValue]);
 
   const { data: getByIdData, status: getByIdStatus } = useApi(
     `store/get-by-id/${editingStoreId}`,
@@ -238,6 +240,25 @@ const StoreForm: FC<IStoreForm> = ({
   }, [status, setValue]);
 
   const submit = (data: any) => {
+    // Validation checks - faqat create uchun addressLocation required
+    if (!editingStoreId && !addressLocation) {
+      toast.error("Manzilni xaritada belgilash majburiy");
+      setActiveTab(1);
+      return;
+    }
+
+    if (!data.startTime || !data.endTime) {
+      toast.error("Ish vaqti majburiy");
+      setActiveTab(2); // Switch to prices/time tab
+      return;
+    }
+
+    if (!data.type) {
+      toast.error("Turi majburiy");
+      setActiveTab(0); // Switch to main tab
+      return;
+    }
+
     const requestData = {
       name: data.name,
       phoneNumber: data.phoneNumber,
@@ -271,8 +292,8 @@ const StoreForm: FC<IStoreForm> = ({
       acceptOnlinePayment: data.acceptOnlinePayment || false,
     };
 
-    // Password bo'sh bo'lsa, uni requestData'dan olib tashlash
-    if (!requestData.password) {
+    // Password bo'sh bo'lsa, uni requestData'dan olib tashlash (update uchun)
+    if (!requestData.password && editingStoreId) {
       delete requestData.password;
     }
 
@@ -345,7 +366,12 @@ const StoreForm: FC<IStoreForm> = ({
                 name="name"
                 label="Do'kon/Restoran nomi"
                 placeholder="Masalan: Uygaayt Do'kon"
-                rules={{ required: true }}
+                rules={{
+                  required: {
+                    value: true,
+                    message: "Do'kon/Restoran nomi majburiy"
+                  }
+                }}
               />
             </Grid>
 
@@ -354,7 +380,12 @@ const StoreForm: FC<IStoreForm> = ({
                 control={control}
                 name="phoneNumber"
                 label={t("common.phoneNumber")}
-                rules={{ required: true }}
+                rules={{
+                  required: {
+                    value: true,
+                    message: "Telefon raqami majburiy"
+                  }
+                }}
               />
             </Grid>
 
@@ -429,7 +460,12 @@ const StoreForm: FC<IStoreForm> = ({
                   { _id: "shop", name: "Do'kon" },
                   { _id: "restaurant", name: "Restoran" },
                 ]}
-                rules={{ required: true }}
+                rules={{
+                  required: {
+                    value: true,
+                    message: "Turi majburiy"
+                  }
+                }}
               />
             </Grid>
 
@@ -439,7 +475,12 @@ const StoreForm: FC<IStoreForm> = ({
                 name="brandColor"
                 label="Brend rangi"
                 placeholder="#ef6c1d"
-                rules={{ required: true }}
+                rules={{
+                  required: {
+                    value: true,
+                    message: "Brend rangi majburiy"
+                  }
+                }}
               />
             </Grid>
 
@@ -533,12 +574,20 @@ const StoreForm: FC<IStoreForm> = ({
             </Grid>
 
             <Grid item xs={12}>
-              <InputLabel sx={{ mb: 1, fontWeight: 600 }}>Xarita (Manzilni belgilash)</InputLabel>
+              <InputLabel sx={{ mb: 1, fontWeight: 600 }}>
+                Xarita (Manzilni belgilash)
+                <span style={{ color: '#d32f2f', marginLeft: '4px' }}>*</span>
+              </InputLabel>
               <YandexMap
                 getCoordinate={setAddressLocation}
                 center={watch("addressLocation")}
                 height="400px"
               />
+              {!addressLocation && (
+                <h6 style={{ color: '#d32f2f', marginTop: '8px', fontSize: '0.75rem', margin: '8px 0 0 0' }}>
+                  Manzilni xaritada belgilash majburiy
+                </h6>
+              )}
             </Grid>
           </Grid>
         </Box>
@@ -626,7 +675,12 @@ const StoreForm: FC<IStoreForm> = ({
                 name="startTime"
                 errors={formState.errors}
                 label="Ish vaqti (boshlanish)"
-                rules={{ required: false }}
+                rules={{
+                  required: {
+                    value: true,
+                    message: "Ish vaqti boshlanishi majburiy"
+                  }
+                }}
               />
             </Grid>
             <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -635,7 +689,12 @@ const StoreForm: FC<IStoreForm> = ({
                 name="endTime"
                 errors={formState.errors}
                 label="Ish vaqti (tugash)"
-                rules={{ required: false }}
+                rules={{
+                  required: {
+                    value: true,
+                    message: "Ish vaqti tugashi majburiy"
+                  }
+                }}
               />
             </Grid>
 

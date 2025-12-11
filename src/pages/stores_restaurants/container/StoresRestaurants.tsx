@@ -199,14 +199,6 @@ const StoresRestaurants = () => {
         onAddButton={
           hasAccess("store") ? () => dispatch(setOpenDrawer(true)) : undefined
         }
-        onEditColumn={
-          hasAccess("storeUpdate")
-            ? (row) => {
-                setEditingStoreId(row._id);
-                dispatch(setOpenDrawer(true));
-              }
-            : undefined
-        }
         onRowClick={(row) => {
           navigate(`/stores_restaurants/${row._id}`);
         }}
