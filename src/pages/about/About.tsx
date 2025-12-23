@@ -74,6 +74,7 @@ const About = () => {
       const about = data?.data;
       reset({
         ...about,
+        _id: about._id, // _id ni form'ga saqlash
         startTime:
           about.workTime?.length === 11 ? about.workTime?.slice(0, 5) : "",
         endTime: about.workTime?.length === 11 ? about.workTime?.slice(-5) : "",
@@ -87,6 +88,7 @@ const About = () => {
 
   const submit = (data: any) => {
     const requestData = {
+      _id: data._id, // _id ni qo'shish - update uchun majburiy
       name: data.name,
       description: data.description,
       workTime: data.startTime

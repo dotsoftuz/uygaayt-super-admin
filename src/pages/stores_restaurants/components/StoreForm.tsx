@@ -260,6 +260,7 @@ const StoreForm: FC<IStoreForm> = ({
     }
 
     const requestData = {
+      ...(editingStoreId && { _id: editingStoreId }), // Update uchun _id qo'shish
       name: data.name,
       phoneNumber: data.phoneNumber,
       password: data.password || undefined, // Password qo'shish - bo'sh bo'lsa undefined
