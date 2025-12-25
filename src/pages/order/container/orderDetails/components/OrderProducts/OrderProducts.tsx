@@ -46,6 +46,8 @@ const OrderProducts = ({ formStore, state, order }: any) => {
             ? 4
             : 0;
 
+  const isCombined = order?.orderStructureType === "combined" && order?.stores && order.stores.length > 1;
+
   return (
     <OrderProductsStyled>
       <div className="steps" style={{ border: "none" }}>
@@ -80,8 +82,101 @@ const OrderProducts = ({ formStore, state, order }: any) => {
         </span>
       </div>
       <div className="products">
-        <div>
-          {products?.map((item: any, index) => (
+        {isCombined ? (
+          <div>
+            {order.stores.map((store: any, storeIndex: number) => (
+              <div key={storeIndex} style={{ marginBottom: "24px", padding: "16px", border: "1px solid #e0e0e0", borderRadius: "8px" }}>
+                <div style={{ marginBottom: "16px", paddingBottom: "12px", borderBottom: "2px solid #1976d2" }}>
+                  <h4 style={{ margin: 0, fontSize: "18px", fontWeight: 600, color: "#1976d2" }}>
+                    {store.storeName}
+                  </h4>
+                  {store.store?.addressName && (
+                    <p style={{ margin: "4px 0 0 0", fontSize: "14px", color: "#666" }}>
+                      📍 {store.store.addressName}
+                    </p>
+                  )}
+                  {store.store?.phoneNumber && (
+                    <p style={{ margin: "4px 0 0 0", fontSize: "14px", color: "#666" }}>
+                      📞 {store.store.phoneNumber}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  {store.items?.map((item: any, itemIndex: number) => {
+                    const productItem: any = products?.find((p: any) => p.productId === item.productId) as any;
+                    if (!productItem) return null;
+                    return (
+                      <div key={itemIndex} className="product">
+                        <span className="default-image">
+                          {productItem.product?.mainImage ? (
+                            <img
+                              src={
+                                process.env.REACT_APP_BASE_URL + "/" +
+                                productItem.product.mainImage.url
+                              }
+                              alt="product"
+                            />
+                          ) : (
+                            <DefaultImage />
+                          )}
+                        </span>
+                        <div className="info">
+                          <div className="flex">
+                            <span className="name">{productItem?.product?.name}</span>
+                            {productItem?.attributes?.length > 0 && (
+                              <div className="variant-info flex">
+                                {productItem?.attributes?.map((variant: any, variantIndex: any) => (
+                                  <div key={variantIndex} className="variant-item flex">
+                                    <span className="name ml-1">
+                                      {variant.attributeItem}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                          <div className="amount-price">
+                            {productItem.amount} x {numberFormat(productItem.price)}{" "}
+                            {get(settingsData, "currency", "uzs")}
+                          </div>
+                        </div>
+                        {state !== "completed" && state !== "cancelled" && (
+                          <div className="action">
+                            {state !== "inDelivery" && (
+                              <>
+                                <span onClick={() => {
+                                  const foundIndex = products.findIndex((p: any) => p.productId === item.productId);
+                                  if (foundIndex !== -1) setProductIndex(foundIndex + 1);
+                                }}>
+                                  <DeleteIcon />
+                                </span>
+                                <span
+                                  onClick={() => {
+                                    const foundIndex = products.findIndex((p: any) => p.productId === item.productId);
+                                    if (foundIndex !== -1) setUpdatedProduct({ ...productItem, index: foundIndex });
+                                  }}
+                                >
+                                  <EditIcon />
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+                <div style={{ marginTop: "12px", paddingTop: "12px", borderTop: "1px solid #e0e0e0" }}>
+                  <span style={{ fontSize: "14px", fontWeight: 500 }}>
+                    Do'kon jami: {numberFormat(store.subtotal)} {get(settingsData, "currency", "uzs")}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div>
+            {products?.map((item: any, index) => (
             <div className="product">
               <span className="default-image">
                 {item.product.mainImage ? (
@@ -135,6 +230,7 @@ const OrderProducts = ({ formStore, state, order }: any) => {
             </div>
           ))}
         </div>
+        )}
 
         <ul className="product_info">
           <li>

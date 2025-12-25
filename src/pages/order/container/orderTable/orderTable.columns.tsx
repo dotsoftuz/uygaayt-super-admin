@@ -103,6 +103,18 @@ export const useOrderTableColumns = (
       field: "store",
       headerName: "Do'kon",
       renderCell({ row }) {
+        // Combined order bo'lsa
+        if (row?.orderStructureType === "combined" && row?.stores && row.stores.length > 0) {
+          const storeNames = row.stores.map((s: any) => s.storeName || s.store?.name || "Noma'lum").join(" + ");
+          return (
+            <Tooltip title={`Birlashtirilgan buyurtma: ${storeNames}`} arrow>
+              <span style={{ color: "#1976d2", fontWeight: 500 }}>
+                {storeNames}
+              </span>
+            </Tooltip>
+          );
+        }
+
         // Agar store name mavjud bo'lsa (to'g'ri populate qilingan)
         if (row?.store?.name) {
           return row.store.name;

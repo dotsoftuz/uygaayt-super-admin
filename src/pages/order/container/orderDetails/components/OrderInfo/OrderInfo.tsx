@@ -117,27 +117,61 @@ const OrderInfo = ({ formStore, order }: any) => {
           </div>
         </div>
       )}
-      {order?.store && (
-        <div className="card">
-          <h4 className="title">Do'kon</h4>
-          <div className="info">
-            <div>
-              <h4 className="name">
-                {get(order, "store.name", "")}
-              </h4>
-              {get(order, "store.phoneNumber", "") && (
-                <span className="phone">
-                  {get(order, "store.phoneNumber", "")}
-                </span>
-              )}
-              {get(order, "store.addressName", "") && (
-                <span className="phone">
-                  {get(order, "store.addressName", "")}
-                </span>
-              )}
+      {order?.orderStructureType === "combined" && order?.stores && order.stores.length > 1 ? (
+        order.stores.map((store: any, index: number) => (
+          <div key={index} className="card" style={{ marginTop: index > 0 ? "16px" : "0" }}>
+            <h4 className="title">Do'kon {index + 1}: {store.storeName}</h4>
+            <div className="info">
+              <div>
+                <h4 className="name">
+                  {get(store, "store.name", store.storeName)}
+                </h4>
+                {get(store, "store.phoneNumber", "") && (
+                  <span className="phone">
+                    📞 {get(store, "store.phoneNumber", "")}
+                  </span>
+                )}
+                {get(store, "store.addressName", "") && (
+                  <span className="phone" style={{ display: "block", marginTop: "4px" }}>
+                    📍 {get(store, "store.addressName", "")}
+                  </span>
+                )}
+                <div style={{ marginTop: "8px", paddingTop: "8px", borderTop: "1px solid #e0e0e0" }}>
+                  <span style={{ fontSize: "14px", fontWeight: 500 }}>
+                    Mahsulotlar: {store.items?.length || 0} ta
+                  </span>
+                  <br />
+                  <span style={{ fontSize: "14px", fontWeight: 500, color: "#1976d2" }}>
+                    Jami: {store.subtotal?.toLocaleString() || 0} {get(order, "currency", "uzs")}
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        ))
+      ) : (
+        order?.store && (
+          <div className="card">
+            <h4 className="title">Do'kon</h4>
+            <div className="info">
+              <div>
+                <h4 className="name">
+                  {get(order, "store.name", "")}
+                </h4>
+                {get(order, "store.phoneNumber", "") && (
+                  <span className="phone">
+                    {get(order, "store.phoneNumber", "")}
+                  </span>
+                )}
+                {get(order, "store.addressName", "") && (
+                  <span className="phone">
+                    {get(order, "store.addressName", "")}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        )
       )}
       {/* <div className="card">
         <h4 className="title">Moderator</h4>

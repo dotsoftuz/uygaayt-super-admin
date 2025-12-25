@@ -43,9 +43,11 @@ export interface IOrder {
     productId: string;
     price: number;
     amount: number;
+    storeId?: string;
     product: {
       _id: string;
       name: string;
+      storeId?: string;
       mainImage: {
         _id: string;
         url: string;
@@ -56,6 +58,36 @@ export interface IOrder {
         }[];
       };
     };
+  }[];
+  orderStructureType?: string;
+  stores?: {
+    storeId: string;
+    storeName: string;
+    store: {
+      _id: string;
+      name: string;
+      phoneNumber?: string;
+      addressName?: string;
+      addressLocation?: {
+        latitude: number;
+        longitude: number;
+      };
+    };
+    items: {
+      _id: string;
+      productId: string;
+      price: number;
+      amount: number;
+      product: {
+        _id: string;
+        name: string;
+        mainImage: {
+          _id: string;
+          url: string;
+        };
+      };
+    }[];
+    subtotal: number;
   }[];
 }
 
