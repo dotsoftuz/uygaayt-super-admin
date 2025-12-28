@@ -125,7 +125,7 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   },
   {
     element: <PromoCode />,
-    path: "/promo_code",
+    path: "promo_code/*",
     role: "_id", // must change
   },
   {

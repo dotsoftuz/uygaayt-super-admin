@@ -1,5 +1,6 @@
 import { FormDrawer, Table } from "components";
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useBannerColumns } from "./promo-code.columns";
 import { useAppDispatch } from "../../../store/storeHooks";
 import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
@@ -11,6 +12,7 @@ import WarningModal from "components/common/WarningModal/WarningModal";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 
 const PromoCode = () => {
+  const navigate = useNavigate();
   const [editingBannerId, setEditingBannerId] = useState<any>();
   const [bannerId, setBannerId] = useState<any>();
   const columns = useBannerColumns();
@@ -49,6 +51,7 @@ const PromoCode = () => {
           dis(setOpenDrawer(true));
         } : undefined}
         onDeleteColumn={hasAccess("bannerDelete") ? (row) => setBannerId(row._id) : undefined}
+        onRowClick={(row) => navigate(`/promo_code/${row._id}`)}
         exQueryParams={queryParams}
       />
       <WarningModal open={bannerId} setOpen={setBannerId} url="promocode/delete" />
