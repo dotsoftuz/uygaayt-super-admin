@@ -141,8 +141,28 @@ const OrderInfo = ({ formStore, order }: any) => {
                     Mahsulotlar: {store.items?.length || 0} ta
                   </span>
                   <br />
+                  <span style={{ fontSize: "14px", fontWeight: 500 }}>
+                    Subtotal: {store.subtotal?.toLocaleString() || 0} {get(order, "currency", "uzs")}
+                  </span>
+                  {store.promocodePrice > 0 && (
+                    <>
+                      <br />
+                      <span style={{ fontSize: "14px", fontWeight: 500, color: "#28a745" }}>
+                        Promokod: -{store.promocodePrice?.toLocaleString() || 0} {get(order, "currency", "uzs")}
+                      </span>
+                    </>
+                  )}
+                  {store.usedBalance > 0 && (
+                    <>
+                      <br />
+                      <span style={{ fontSize: "14px", fontWeight: 500, color: "#dc3545" }}>
+                        Balance: -{store.usedBalance?.toLocaleString() || 0} {get(order, "currency", "uzs")}
+                      </span>
+                    </>
+                  )}
+                  <br />
                   <span style={{ fontSize: "14px", fontWeight: 500, color: "#1976d2" }}>
-                    Jami: {store.subtotal?.toLocaleString() || 0} {get(order, "currency", "uzs")}
+                    Jami: {((store.subtotal || 0) - (store.promocodePrice || 0) - (store.usedBalance || 0))?.toLocaleString() || 0} {get(order, "currency", "uzs")}
                   </span>
                 </div>
               </div>

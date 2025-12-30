@@ -88,6 +88,8 @@ export interface IOrder {
       };
     }[];
     subtotal: number;
+    promocodePrice?: number;
+    usedBalance?: number;
   }[];
 }
 

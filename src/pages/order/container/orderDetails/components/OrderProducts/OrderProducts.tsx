@@ -167,9 +167,30 @@ const OrderProducts = ({ formStore, state, order }: any) => {
                   })}
                 </div>
                 <div style={{ marginTop: "12px", paddingTop: "12px", borderTop: "1px solid #e0e0e0" }}>
-                  <span style={{ fontSize: "14px", fontWeight: 500 }}>
-                    Do'kon jami: {numberFormat(store.subtotal)} {get(settingsData, "currency", "uzs")}
-                  </span>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px" }}>
+                      <span style={{ fontWeight: 500 }}>Subtotal:</span>
+                      <span style={{ fontWeight: 500 }}>{numberFormat(store.subtotal)} {get(settingsData, "currency", "uzs")}</span>
+                    </div>
+                    {store.promocodePrice > 0 && (
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px", color: "#28a745" }}>
+                        <span>Promokod:</span>
+                        <span>-{numberFormat(store.promocodePrice)} {get(settingsData, "currency", "uzs")}</span>
+                      </div>
+                    )}
+                    {store.usedBalance > 0 && (
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px", color: "#dc3545" }}>
+                        <span>Balance:</span>
+                        <span>-{numberFormat(store.usedBalance)} {get(settingsData, "currency", "uzs")}</span>
+                      </div>
+                    )}
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "14px", fontWeight: 600, marginTop: "4px", paddingTop: "4px", borderTop: "1px solid #e0e0e0" }}>
+                      <span>Do'kon jami:</span>
+                      <span style={{ color: "#1976d2" }}>
+                        {numberFormat((store.subtotal || 0) - (store.promocodePrice || 0) - (store.usedBalance || 0))} {get(settingsData, "currency", "uzs")}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}
