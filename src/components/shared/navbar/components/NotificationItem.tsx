@@ -4,6 +4,8 @@ import Typography from '@mui/material/Typography';
 import ImageIcon from '@mui/icons-material/Image';
 import PersonIcon from '@mui/icons-material/Person';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom';
@@ -43,10 +45,11 @@ function getIcon(type: string) {
 interface NotificationItemProps {
   notification: any;
   onRead: (id: string) => void;
+  onDelete: (id: string) => void;
   refreshNotifications: any;
 }
 
-export const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onRead, refreshNotifications }) => {
+export const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onRead, onDelete, refreshNotifications }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const currentLang = localStorage.getItem("i18nextLng") || "uz";
@@ -78,6 +81,12 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
     }
   };
 
+  const handleDeleteClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    onDelete(notification._id);
+    toast.success(t('notification.deleted'));
+  };
+
 
   return (
     <Box
@@ -85,10 +94,13 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
         display: 'flex',
         p: 2,
         gap: 2,
+        alignItems: 'flex-start',
+        position: 'relative',
         '&:hover': {
           bgcolor: 'action.hover',
         },
-        cursor: 'pointer'
+        cursor: 'pointer',
+        transition: 'background-color 0.2s ease',
       }}
       onClick={handleItemClick}
     >
@@ -100,14 +112,23 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
           borderRadius: '50%',
           width: 40,
           height: 40,
+          minWidth: 40,
           bgcolor: notification?.isRead ? 'action.selected' : '#EB5B00',
           color: notification?.isRead ? 'text.secondary' : 'white',
+          flexShrink: 0,
         }}
       >
         {getIcon(notification?.type)}
       </Box>
-      <Box sx={{ flex: 1 }}>
-        <Typography variant="body1" sx={{ fontWeight: 500 }}>
+      <Box sx={{ flex: 1, minWidth: 0 }}>
+        <Typography 
+          variant="body1" 
+          sx={{ 
+            fontWeight: notification?.isRead ? 400 : 600,
+            mb: 0.5,
+            wordBreak: 'break-word',
+          }}
+        >
           {notification?.shortText?.[currentLang]}
         </Typography> 
 
@@ -118,21 +139,50 @@ export const NotificationItem: React.FC<NotificationItemProps> = ({ notification
                 disabled={isLoading}
                 variant="contained"
                 onClick={handleAcceptClick}
+                size="small"
               >
                 {t("notification.confirmation")}
               </AcceptButton>
             ) : (
-              <AcceptedButton variant="contained" disabled>
+              <AcceptedButton variant="contained" disabled size="small">
                 {t("notification.approved")}
               </AcceptedButton>
             )}
           </Box>
         )}
 
-        <Typography variant="body2" color="text.secondary" my={1}>
+        <Typography 
+          variant="body2" 
+          color="text.secondary" 
+          sx={{ 
+            mt: 0.5,
+            fontSize: '0.75rem',
+          }}
+        >
           {dayjs(notification?.date).format('DD.MM.YYYY HH:mm')}
         </Typography>
       </Box>
+      <IconButton
+        size="small"
+        onClick={handleDeleteClick}
+        sx={{
+          color: 'text.secondary',
+          opacity: 0.6,
+          flexShrink: 0,
+          alignSelf: 'flex-start',
+          mt: 0.5,
+          transition: 'all 0.2s ease',
+          '&:hover': {
+            color: 'error.main',
+            opacity: 1,
+            bgcolor: 'rgba(211, 47, 47, 0.08)',
+            transform: 'scale(1.1)',
+          },
+        }}
+        aria-label={String(t('notification.delete'))}
+      >
+        <DeleteIcon fontSize="small" />
+      </IconButton>
     </Box>
   );
 };

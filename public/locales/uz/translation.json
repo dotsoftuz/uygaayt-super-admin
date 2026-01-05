@@ -84,6 +84,7 @@
     "courier_analytics": "Kuryerlar analitikasi",
     "product_analytics": "Mahsulotlar analitikasi",
     "abc_analytics": "ABC analitikasi",
+    "constructor_analytics": "Konstruktor",
     "promo_code": "Promo-kod",
     "attribute": "Atribut",
     "payment_method": "To'lov turi",
@@ -236,7 +237,9 @@
   },
   "notification": {
     "confirmation": "Tasdiqlash",
-    "approved": "Tasdiqlangan"
+    "approved": "Tasdiqlangan",
+    "delete": "O'chirish",
+    "deleted": "Bildirishnoma o'chirildi"
   },
   "driver": {
     "title": "Haydovchiga bonus",

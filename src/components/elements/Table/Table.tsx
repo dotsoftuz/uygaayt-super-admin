@@ -27,7 +27,6 @@ const Table = <TData extends { _id: string }>({
   onSeenClick,
   isRowSelectable = () => true,
   mapData,
-
   dataUrl,
   deleteUrl,
   columns,
@@ -42,7 +41,6 @@ const Table = <TData extends { _id: string }>({
   isGetAll = false,
   addButtonTitle,
   noRerender,
-
   headerChildren,
   headerChildrenSecondRow,
   insteadOfTable,
@@ -52,7 +50,6 @@ const Table = <TData extends { _id: string }>({
   const [selectedRows, setSelectedRows] = useState<any[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const allParams = useAllQueryParams();
-
   const [search, setSearch] = useState<any>(allParams.search || "");
   const { debouncedValue: debValue } = useDebounce(search, 500);
   const isOpen = useAppSelector((store) => store.formDrawerState.isOpen);
@@ -104,7 +101,7 @@ const Table = <TData extends { _id: string }>({
       if (response?.data?.total > 0 && response?.data?.data?.length === 0) {
         setSearchParams({
           ...(filterParams ? { ...filterParams } : { ...allParams }),
-          ...exQueryParams, // FIX 2: filter params yo‘qolmasligi uchun
+          ...exQueryParams, // FIX 2: filter params yo'qolmasligi uchun
           ...allParams,
           search: debValue || "",
           page: search ? "1" : allParams.page || "1",
@@ -112,7 +109,7 @@ const Table = <TData extends { _id: string }>({
         });
       }
     },
-  });
+  }, true);
 
   /** Trigger data fetch */
   useEffect(() => {

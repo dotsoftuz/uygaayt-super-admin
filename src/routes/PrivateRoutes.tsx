@@ -30,92 +30,93 @@ const CourierAnalytics = lazy(() => import("pages/courier_analytics"));
 const CustomerAnalytics = lazy(() => import("pages/customer_analytics"));
 const ProductAnalytics = lazy(() => import("pages/product_analytics"));
 const AbcAnalytics = lazy(() => import("pages/abc_analytics"));
+const ConstructorAnalytics = lazy(() => import("pages/constructor_analytics"));
 
 
 const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   {
-    element: <Navigate to="home" replace />,
+    element: <Navigate to="/home" replace />,
     path: "/",
     role: "_id",
   },
   {
     element: <BLACK_PAGE />,
-    path: "home",
+    path: "/home",
     role: "_id",
   },
   {
     element: <Dashboard />,
-    path: "dashboard",
+    path: "/dashboard",
     role: "_id", // must change
   },
   {
     element: <Order />,
-    path: "order/*",
+    path: "/order/*",
     role: "order",
   },
   {
     element: <Customer />,
-    path: "customer/*",
+    path: "/customer/*",
     role: "customer",
   },
   {
     element: <Product />,
-    path: "product",
+    path: "/product",
     role: "product",
   },
   {
     element: <Category />,
-    path: "category/*",
+    path: "/category/*",
     role: "category",
   },
   {
     element: <CategoryChild />,
-    path: "category_child",
+    path: "/category_child",
     role: "employee",
   },
   {
     element: <StoresRestaurants />,
-    path: "stores_restaurants/*",
+    path: "/stores_restaurants/*",
     role: "_id",
   },
   {
     element: <About />,
-    path: "about",
+    path: "/about",
     role: "_id",
   },
   {
     element: <Employee />,
-    path: "employee",
+    path: "/employee",
     role: "employee",
   },
   {
     element: <Role />,
-    path: "role",
+    path: "/role",
     role: "role",
   },
   {
     element: <Banner />,
-    path: "banner",
+    path: "/banner",
     role: "banner",
   },
   {
     element: <News />,
-    path: "news",
+    path: "/news",
     role: "news",
   },
   {
     element: <Attribute />,
-    path: "attribute",
+    path: "/attribute",
     role: "_id", // must change 
   },
   {
     element: <Measure />,
-    path: "measure",
+    path: "/measure",
     role: "measure",
   },
   {
     element: <Courier />,
-    path: "courier/*",
+    path: "/courier/*",
     role: "courier",
   },
   {
@@ -125,52 +126,57 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   },
   {
     element: <PromoCode />,
-    path: "promo_code/*",
+    path: "/promo_code/*",
     role: "_id", // must change
   },
   {
     element: <Transaction />,
-    path: "transaction",
+    path: "/transaction",
     role: "transaction",
   },
   {
     element: <PaymentMethod />,
-    path: "payment-method",
+    path: "/payment-method",
     role: "_id", // must change 
   },
   {
     element: <Integration />,
-    path: "integration",
+    path: "/integration",
     role: "integration",
   },
   {
     element: <Settings />,
-    path: "settings",
+    path: "/settings",
     role: "settings",
   },
   {
     element: <Review />,
-    path: "review/*",
+    path: "/review/*",
     role: "employee",
   },
   {
     element: <CourierAnalytics />,
-    path: "analytics_courier",
+    path: "/analytics_courier",
     role: "report",
   },
   {
     element: <CustomerAnalytics />,
-    path: "analytics_customer",
+    path: "/analytics_customer",
     role: "report",
   },
   {
     element: <ProductAnalytics />,
-    path: "analytics_product",
+    path: "/analytics_product",
     role: "report",
   },
   {
     element: <AbcAnalytics />,
-    path: "abc_product",
+    path: "/abc_product",
+    role: "report",
+  },
+  {
+    element: <ConstructorAnalytics />,
+    path: "/constructor_analytics",
     role: "report",
   },
 ];

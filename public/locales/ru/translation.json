@@ -83,6 +83,7 @@
     "courier_analytics": "Курьерская аналитика",
     "product_analytics": "Аналитика продукта",
     "abc_analytics": "ABC аналитика",
+    "constructor_analytics": "Конструктор",
     "promo_code": "Промо-код",
     "attribute": "Атрибут",
     "payment_method": "Тип оплаты",
@@ -233,7 +234,9 @@
   },
   "notification": {
     "confirmation": "Подтверждение",
-    "approved": "Одобренный"
+    "approved": "Одобренный",
+    "delete": "Удалить",
+    "deleted": "Уведомление удалено"
   },
   "driver": {
     "title": "Бонус водителю",

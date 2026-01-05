@@ -32,12 +32,12 @@ const ImportModal = () => {
     {
       onSuccess() {
         setOpen("");
-        toast.success(t("toast_messages.success"));
         dis(reRenderTable(true));
         setUploadedFilePath("");
         setErrors({});
       },
-    }
+    },
+    true
   );
 
   const { mutate, data, status: uploadStatus } = useApiMutation(
@@ -52,7 +52,8 @@ const ImportModal = () => {
         // setUploadedFilePath(get(data, "data.uploadedFilePath", ""));
         setErrors(get(data, "message.errors", {}));
       },
-    }
+    },
+    true
   );
 
   const { uploadImage } = usePostFile((response) => {

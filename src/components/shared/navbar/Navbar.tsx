@@ -113,7 +113,7 @@ const Navbar = ({ hasNavbar }: { hasNavbar: boolean }) => {
   }>("employee/branch", "post", {
     onSuccess(data, variables, context) {
       if (pathname?.split("/")?.some((path) => path?.length === 24)) {
-        navigate("order/table");
+        navigate("/order/table");
       }
       navigate(0);
     },

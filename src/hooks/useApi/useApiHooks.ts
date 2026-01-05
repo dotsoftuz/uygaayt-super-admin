@@ -73,25 +73,27 @@ const useApiMutation = <
       return response;
     },
     {
-      onError(error: any) {
+      onError(error: any, variables: Variables, context: any) {
         const errorMessage =
           error?.message ||
           error?.data?.message ||
           `${method} failed, no response`;
         toast.error(errorMessage);
+        options.onError?.(error, variables, context);
       },
-      onMutate() {
+      onMutate(variables: Variables) {
         dis(setButtonDisable(true));
+        return options.onMutate?.(variables);
       },
-      onSuccess(data) {
-        if (!withoutNotification) {
-          toast.success(t("general.success"));
-        }
+      onSuccess(data, variables: Variables, context: any) {
+        
         dis(setOpenDrawer(false));
         dis(reRenderTable(true));
+        options.onSuccess?.(data, variables, context);
       },
-      onSettled(data, error, variables, context) {
+      onSettled(data, error, variables: Variables, context: any) {
         dis(setButtonDisable(false));
+        options.onSettled?.(data, error, variables, context);
       },
       ...options,
     }

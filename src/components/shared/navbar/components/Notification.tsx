@@ -13,7 +13,8 @@ const Notification = () => {
     hasMore, 
     loadMore,
     refreshNotifications,
-    handleNotificationRead 
+    handleNotificationRead,
+    handleNotificationDelete
   } = useNotifications();
   
   const { loadMoreRef, loading } = useInfiniteScroll({
@@ -72,6 +73,7 @@ const Notification = () => {
           loading={loading}
           hasMore={hasMore}
           onNotificationRead={handleNotificationRead}
+          onNotificationDelete={handleNotificationDelete}
           refreshNotifications={refreshNotifications}
         />
       </Popover>

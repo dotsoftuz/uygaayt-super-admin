@@ -61,7 +61,9 @@ const ProductForm = ({
 
   const { mutate, status } = useApiMutation<any>(
     editingProductId ? `/product/update` : "product/create",
-    editingProductId ? "put" : "post"
+    editingProductId ? "put" : "post",
+    {},
+    true
   );
 
   const { data: getByIdData, status: getByIdStatus } = useApi<IProduct>(

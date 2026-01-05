@@ -1,5 +1,6 @@
 export interface NotificationType {
-    id: string;
+    id?: string;
+    _id: string;
     shortText: {
       [key: string]: string;
     };

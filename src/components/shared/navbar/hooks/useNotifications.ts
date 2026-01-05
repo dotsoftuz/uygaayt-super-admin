@@ -113,6 +113,35 @@ export const useNotifications = () => {
     refreshNotifications();
   };
 
+  // Delete a notification
+  const { mutate: deleteNotification } = useApiMutation(
+    'notification/delete',
+    'post',
+    {
+      onSuccess: () => {
+        refreshNotifications();
+      },
+      onError: () => {
+        // Refresh to restore the notification if deletion failed
+        refreshNotifications();
+      },
+    }
+  );
+
+  const handleNotificationDelete = async (notificationId: string) => {
+    const deletedNotification = state.notifications.find((n) => n._id === notificationId);
+    // Optimistically update the state
+    setState((prev) => ({
+      ...prev,
+      notifications: prev.notifications.filter((n) => n._id !== notificationId),
+      total: Math.max(0, prev.total - 1),
+      unreadCount: deletedNotification && !deletedNotification.isRead 
+        ? Math.max(0, prev.unreadCount - 1) 
+        : prev.unreadCount,
+    }));
+    await deleteNotification({ _id: notificationId });
+  };
+
   // Fetch notifications when the component mounts or when the socket is updated
   useEffect(() => {
     if (state.page === 1) {
@@ -125,5 +154,6 @@ export const useNotifications = () => {
     loadMore,
     refreshNotifications,
     handleNotificationRead,
+    handleNotificationDelete,
   };
 };
