@@ -63,7 +63,7 @@ const CustomerInfo = () => {
             <CustomerCard
               customerInfoData={customerInfoData}
             />
-            <CustomerTabs historyOrders={data?.data} customerReportData={customerReportData} />
+            <CustomerTabs historyOrders={data?.data} customerReportData={customerReportData} customerId={id || ''} />
           </Grid>
         )
       }

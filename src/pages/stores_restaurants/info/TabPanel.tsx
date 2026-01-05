@@ -195,7 +195,7 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
         </Box>
 
         <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4}>
             <Paper sx={{ p: 3, backgroundColor: '#F7FAFC', borderRadius: 2 }}>
               <Typography variant="h6" gutterBottom>
                 Kunlik buyurtmalar
@@ -206,13 +206,24 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
             </Paper>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4}>
             <Paper sx={{ p: 3, backgroundColor: '#F7FAFC', borderRadius: 2 }}>
               <Typography variant="h6" gutterBottom>
                 Haftalik buyurtmalar
               </Typography>
               <Typography variant="h4" color="primary">
                 {statistics.weeklyOrders || 0}
+              </Typography>
+            </Paper>
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <Paper sx={{ p: 3, backgroundColor: '#F7FAFC', borderRadius: 2 }}>
+              <Typography variant="h6" gutterBottom>
+                Sahifa ko'rildi
+              </Typography>
+              <Typography variant="h4" color="primary">
+                {statistics.storeViewsCount || 0}
               </Typography>
             </Paper>
           </Grid>

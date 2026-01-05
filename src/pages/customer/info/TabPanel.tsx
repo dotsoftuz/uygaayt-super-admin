@@ -3,6 +3,7 @@ import { Tabs, Tab, Box, Typography, Paper, Chip, LinearProgress, Button } from 
 import { Money, ShoppingBag } from '@mui/icons-material';
 import HistoryIcon from '@mui/icons-material/History';
 import BackpackIcon from '@mui/icons-material/Backpack';
+import TimelineIcon from '@mui/icons-material/Timeline';
 import { useTranslation } from 'react-i18next';
 import { get } from 'lodash';
 import useCommonContext from 'context/useCommon';
@@ -16,6 +17,7 @@ import { formatSeconds } from 'utils/formatSeconds';
 import { formatMinutes } from 'utils/formatMinutes';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import { useTransactionColumns } from './transaction.columns';
+import { CustomerActivity } from './CustomerActivity';
 
 dayjs.extend(isBetween);
 
@@ -28,6 +30,7 @@ interface TabPanelProps {
 interface CustomerTabsProps {
   historyOrders: any;
   customerReportData: any;
+  customerId: string;
 }
 
 function TabPanel(props: TabPanelProps) {
@@ -91,7 +94,7 @@ const OrderItem = ({ _id, id, amount, status, currency, date, status_color }: { 
   )
 };
 
-export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders, customerReportData }) => {
+export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders, customerReportData, customerId }) => {
   const [value, setValue] = React.useState(0);
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -187,6 +190,18 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders, custo
             iconPosition="start"
             label={t('tabs.transaction_history')}
           />
+          <Tab
+            icon={
+              <TimelineIcon
+                style={{
+                  fontSize: 20,
+                  marginRight: 4
+                }}
+              />
+            }
+            iconPosition="start"
+            label={t('tabs.customer_activity')}
+          />
         </Tabs>
 
       </Box>
@@ -273,6 +288,10 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders, custo
             customerId: id
           }}
         />
+      </TabPanel>
+
+      <TabPanel value={value} index={3}>
+        {customerId && <CustomerActivity customerId={customerId} />}
       </TabPanel>
     </Paper>
   );
