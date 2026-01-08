@@ -1,213 +1,249 @@
-import { Grid, Typography } from '@mui/material'
-import { RangeDatePicker } from 'components';
-import { useApiMutation } from 'hooks/useApi/useApiHooks';
-import useAllQueryParams from 'hooks/useGetAllQueryParams/useAllQueryParams';
-import React, { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next';
-import { numberFormat } from 'utils/numberFormat';
-import TopTable from '../components/TopTable';
-import useCommonContext from 'context/useCommon';
-import { get } from 'lodash';
-import MainCharts from '../components/mainCharts/MainCharts';
-import { StyledCard, TypographyTitle } from '../style/StatisticsCard.style';
-import { formatMinutes } from '../../../utils/formatMinutes';
-import DashboardMap from 'components/common/DashboardMap/DashboardMap';
+import { Grid, Typography } from "@mui/material";
+import { RangeDatePicker } from "components";
+import { useApiMutation } from "hooks/useApi/useApiHooks";
+import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { numberFormat } from "utils/numberFormat";
+import TopTable from "../components/TopTable";
+import useCommonContext from "context/useCommon";
+import { get } from "lodash";
+import MainCharts from "../components/mainCharts/MainCharts";
+import { StyledCard, TypographyTitle } from "../style/StatisticsCard.style";
+import { formatMinutes } from "../../../utils/formatMinutes";
+import DashboardMap from "components/common/DashboardMap/DashboardMap";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CancelIcon from "@mui/icons-material/Cancel";
+import PaidIcon from "@mui/icons-material/Paid";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import PersonIcon from "@mui/icons-material/Person";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 
-type SortField = 'total_price' | 'total_order';
+type SortField = "total_price" | "total_order";
 type SortOrder = "1" | "-1";
 
-
 const Dashboard = () => {
-    const { t } = useTranslation();
-    const allParams = useAllQueryParams();
-    const currentLang = localStorage.getItem("i18nextLng") || "uz";
-    const [sortFieldUser, setSortFieldUser] = useState<SortField>('total_price');
-    const [sortOrderUser, setSortOrderUser] = useState<SortOrder>("1");
+  const { t } = useTranslation();
+  const allParams = useAllQueryParams();
+  const currentLang = localStorage.getItem("i18nextLng") || "uz";
+  const [sortFieldUser, setSortFieldUser] = useState<SortField>("total_price");
+  const [sortOrderUser, setSortOrderUser] = useState<SortOrder>("1");
 
-    const [sortFieldCourier, setSortFieldCourier] = useState<SortField>('total_order');
-    const [sortOrderCourier, setSortOrderCourier] = useState<SortOrder>("1");
+  const [sortFieldCourier, setSortFieldCourier] =
+    useState<SortField>("total_order");
+  const [sortOrderCourier, setSortOrderCourier] = useState<SortOrder>("1");
 
-    const {
-        state: { data: settingsData },
-    } = useCommonContext();
+  const {
+    state: { data: settingsData },
+  } = useCommonContext();
 
-    const { mutate: attributesChooseMutate, data: attributesData } = useApiMutation<any>(
-        "report/order",
-        "post",
-        {},
-        true
+  const { mutate: attributesChooseMutate, data: attributesData } =
+    useApiMutation<any>("report/order", "post", {}, true);
+
+  const { mutate: totalIncomeMutate, data: totalIncomeData } = useApiMutation(
+    "balance/total",
+    "post",
+    {},
+    true
+  );
+
+  const { mutate: customerMutate, data: customerData } = useApiMutation<any>(
+    "report/customer/count",
+    "post",
+    {},
+    true
+  );
+
+  const { mutate: courierMutate, data: couriersData } = useApiMutation<any>(
+    "report/courier/top",
+    "post",
+    {},
+    true
+  );
+  const { mutate: topCustomerMutate, data: topCustomerData } =
+    useApiMutation<any>("report/customer/top", "post", {}, true);
+
+  const mutations = [
+    attributesChooseMutate,
+    totalIncomeMutate,
+    customerMutate,
+    courierMutate,
+    topCustomerMutate,
+  ];
+
+  const mutateAll = () => {
+    mutations.forEach((mutate) =>
+      mutate({
+        dateFrom: allParams.dateFrom,
+        dateTo: allParams.dateTo,
+      })
     );
+  };
 
-    const { mutate: totalIncomeMutate, data: totalIncomeData } = useApiMutation("balance/total", "post", {
-    }, true);
+  useEffect(mutateAll, [allParams.dateFrom, allParams.dateTo]);
 
-    const { mutate: customerMutate, data: customerData } = useApiMutation<any>(
-        "report/customer/count",
-        "post",
-        {},
-        true
-    );
+  useEffect(() => {
+    topCustomerMutate({
+      dateFrom: allParams.dateFrom,
+      dateTo: allParams.dateTo,
+      sortBy: sortFieldUser,
+      sortOrder: sortOrderUser,
+    });
+  }, [sortFieldUser, sortOrderUser]);
 
+  useEffect(() => {
+    courierMutate({
+      dateFrom: allParams.dateFrom,
+      dateTo: allParams.dateTo,
+      sortBy: sortFieldCourier,
+      sortOrder: sortOrderCourier,
+    });
+  }, [sortFieldCourier, sortOrderCourier]);
 
-    const { mutate: courierMutate, data: couriersData } = useApiMutation<any>(
-        "report/courier/top",
-        "post",
-        {},
-        true
-    );
-    const { mutate: topCustomerMutate, data: topCustomerData } = useApiMutation<any>(
-        "report/customer/top",
-        "post",
-        {},
-        true
-    );
+  const { mutate: customerReport, data: customerReportData } = useApiMutation(
+    "report/customer/saved",
+    "post",
+    {
+      onSuccess(response) {},
+    }
+  );
 
-    const mutations = [
-        attributesChooseMutate,
-        totalIncomeMutate,
-        customerMutate,
-        courierMutate,
-        topCustomerMutate
-    ];
+  useEffect(() => {
+    customerReport({
+      dateFrom: allParams.dateFrom,
+      dateTo: allParams.dateTo,
+    });
+  }, [allParams.dateFrom, allParams.dateTo]);
 
-    const mutateAll = () => {
-        mutations.forEach(mutate => mutate({
-            dateFrom: allParams.dateFrom,
-            dateTo: allParams.dateTo
-        }));
-    };
+  return (
+    <>
+      <Grid className="bg-white p-2 flex rounded-lg">
+        <Grid className="">
+          <RangeDatePicker />
+        </Grid>
+      </Grid>
+      <Grid className="grid mt-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-2">
+        <StyledCard>
+          <TypographyTitle>{t("dashboard.total_orders")}</TypographyTitle>
+          <div className="flex items-center gap-2">
+            <Typography
+              style={{
+                fontSize: "20px",
+                fontWeight: 600,
+                color: "#FF6701",
+              }}
+            >
+              {attributesData?.data?.total_amount}
+            </Typography>
+            <ShoppingCartIcon style={{ color: "#FF6701", fontSize: "24px" }} />
+          </div>
+        </StyledCard>
+        {attributesData?.data?.states.map((item: any) => (
+          <StyledCard key={item.state?.state}>
+            <TypographyTitle>
+              {item.state?.state === "completed"
+                ? t("dashboard.completed_orders")
+                : t("dashboard.cancelled_orders")}
+            </TypographyTitle>
+            <div className="flex items-center gap-2">
+              <Typography
+                style={{
+                  fontSize: "20px",
+                  fontWeight: 600,
+                  color: "#FF6701",
+                }}
+              >
+                {item.total_amount}
+              </Typography>
+              {item.state?.state === "completed" ? (
+                <CheckCircleIcon
+                  style={{
+                    color: "#FF6701",
+                    fontSize: "24px",
+                  }}
+                />
+              ) : (
+                <CancelIcon
+                  style={{
+                    color: "#FF6701",
+                    fontSize: "24px",
+                  }}
+                />
+              )}
+            </div>
+          </StyledCard>
+        ))}
 
-    useEffect(mutateAll, [allParams.dateFrom, allParams.dateTo]);
+        <StyledCard>
+          <TypographyTitle>{t("dashboard.total_income")}</TypographyTitle>
+          <div className="flex items-center gap-2">
+            <Typography
+              style={{
+                fontSize: "20px",
+                fontWeight: 600,
+                color: "#FF6701",
+              }}
+            >
+              {numberFormat(totalIncomeData?.data?.income)}{" "}
+              {get(settingsData, "currency", "uzs")}
+            </Typography>
+            <PaidIcon style={{ color: "#FF6701", fontSize: "24px" }} />
+          </div>
+        </StyledCard>
 
-    useEffect(() => {
-        topCustomerMutate({
-            dateFrom: allParams.dateFrom,
-            dateTo: allParams.dateTo,
-            sortBy: sortFieldUser,
-            sortOrder: sortOrderUser
-        });
-    }, [sortFieldUser, sortOrderUser]);
+        <StyledCard>
+          <TypographyTitle>
+            {t("dashboard.registered_customer")}
+          </TypographyTitle>
+          <div className="flex items-center gap-2">
+            <Typography
+              style={{
+                fontSize: "20px",
+                fontWeight: 600,
+                color: "#FF6701",
+              }}
+            >
+              {customerData?.data?.registered}
+            </Typography>
+            <PersonAddIcon style={{ color: "#FF6701", fontSize: "24px" }} />
+          </div>
+        </StyledCard>
 
-    useEffect(() => {
-        courierMutate({
-            dateFrom: allParams.dateFrom,
-            dateTo: allParams.dateTo,
-            sortBy: sortFieldCourier,
-            sortOrder: sortOrderCourier
-        });
-    }, [sortFieldCourier, sortOrderCourier]);
+        <StyledCard>
+          <TypographyTitle>{t("dashboard.active_customer")}</TypographyTitle>
+          <div className="flex items-center gap-2">
+            <Typography
+              style={{
+                fontSize: "20px",
+                fontWeight: 600,
+                color: "#FF6701",
+              }}
+            >
+              {customerData?.data?.active}
+            </Typography>
+            <PersonIcon style={{ color: "#FF6701", fontSize: "24px" }} />
+          </div>
+        </StyledCard>
 
+        <StyledCard>
+          <TypographyTitle>{t("dashboard.sold_product")}</TypographyTitle>
+          <div className="flex items-center gap-2">
+            <Typography
+              style={{
+                fontSize: "20px",
+                fontWeight: 600,
+                color: "#FF6701",
+              }}
+            >
+              {attributesData?.data?.productCount}
+            </Typography>
+            <InventoryIcon style={{ color: "#FF6701", fontSize: "24px" }} />
+          </div>
+        </StyledCard>
 
-    const { mutate: customerReport, data: customerReportData } = useApiMutation(
-        "report/customer/saved",
-        "post",
-        {
-          onSuccess(response) {
-          },
-        }
-      );
-    
-      useEffect(() => {
-        customerReport({
-          dateFrom: allParams.dateFrom,
-          dateTo: allParams.dateTo
-        });
-      }, [allParams.dateFrom, allParams.dateTo]);
-
-    return (
-        <>
-            <Grid className='bg-white p-2 flex rounded-lg'>
-                <Grid className=''>
-                    <RangeDatePicker />
-                </Grid>
-            </Grid>
-            <Grid className='grid mt-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-2'>
-                <StyledCard>
-                    <TypographyTitle>
-                        {t("dashboard.total_orders")}
-                    </TypographyTitle>
-                    <Typography
-                        style={{
-                            fontSize: "24px",
-                            fontWeight: 600,
-                            textAlign: "center",
-                            color: '#FF6701'
-                        }}
-                    >{attributesData?.data?.total_amount}</Typography>
-                </StyledCard>
-                {attributesData?.data?.states.map((item: any) => (
-                    <StyledCard>
-                        <TypographyTitle>
-                            {item.state?.state === "completed" ? t('dashboard.completed_orders') : t('dashboard.cancelled_orders')}
-                        </TypographyTitle>
-                        <Typography
-                            style={{
-                                fontSize: "24px",
-                                fontWeight: 600,
-                                textAlign: "center",
-                                color: '#FF6701'
-                            }}>{item.total_amount}</Typography>
-                    </StyledCard>
-                ))}
-
-                <StyledCard>
-                    <TypographyTitle>
-                        {t("dashboard.total_income")}
-                    </TypographyTitle>
-                    <Typography
-                        style={{
-                            fontSize: "18px",
-                            fontWeight: 600,
-                            textAlign: "center",
-                            color: '#FF6701'
-                        }}>
-                        {numberFormat(totalIncomeData?.data?.income)} {get(settingsData, "currency", "uzs")}
-                    </Typography>
-                </StyledCard>
-
-                <StyledCard
-                >
-                    <TypographyTitle>
-                        {t("dashboard.registered_customer")}
-                    </TypographyTitle>
-                    <Typography
-                        style={{
-                            fontSize: "24px",
-                            fontWeight: 600,
-                            textAlign: "center",
-                            color: '#FF6701'
-                        }}>{customerData?.data?.registered}</Typography>
-                </StyledCard>
-
-                <StyledCard
-                >
-                    <TypographyTitle>
-                        {t("dashboard.active_customer")}
-                    </TypographyTitle>
-                    <Typography
-                        style={{
-                            fontSize: "24px",
-                            fontWeight: 600,
-                            textAlign: "center",
-                            color: '#FF6701'
-                        }}>{customerData?.data?.active}</Typography>
-                </StyledCard>
-
-                <StyledCard>
-                    <TypographyTitle>
-                        {t("dashboard.sold_product")}
-                    </TypographyTitle>
-                    <Typography
-                        style={{
-                            fontSize: "24px",
-                            fontWeight: 600,
-                            textAlign: "center",
-                            color: '#FF6701'
-                        }}
-                    >{attributesData?.data?.productCount}</Typography>
-                </StyledCard>
-
-                <StyledCard>
+        {/* <StyledCard>
                     <TypographyTitle>
                         {t("dashboard.customers_saved_time")}
                     </TypographyTitle>
@@ -233,67 +269,93 @@ const Dashboard = () => {
                             color: '#FF6701'
                         }}
                     >{numberFormat(customerReportData?.data?.saved_amount)} {get(settingsData, "currency", "uzs")}</Typography>
-                </StyledCard>
-                <StyledCard>
-                    <TypographyTitle>
-                        {t("general.all_discounts_summ")}
-                    </TypographyTitle>
-                    <Typography
-                        style={{
-                            fontSize: "18px",
-                            fontWeight: 600,
-                            textAlign: "center",
-                            color: '#FF6701'
-                        }}>
-                        {numberFormat(attributesData?.data?.total_discount)} {get(settingsData, "currency", "uzs")}
-                    </Typography>
-                </StyledCard>
-                <StyledCard>
-                    <TypographyTitle>
-                        {t("general.all_promocode_summ")}
-                    </TypographyTitle>
-                    <Typography
-                        style={{
-                            fontSize: "18px",
-                            fontWeight: 600,
-                            textAlign: "center",
-                            color: '#FF6701'
-                        }}>
-                        {numberFormat(attributesData?.data?.total_promocode)} {get(settingsData, "currency", "uzs")}
-                    </Typography>
-                </StyledCard>
-            </Grid>
+                </StyledCard> */}
+        {/* <StyledCard>
+          <TypographyTitle>{t("general.all_discounts_summ")}</TypographyTitle>
+          <Typography
+            style={{
+              fontSize: "20px",
+              fontWeight: 600,
+              textAlign: "center",
+              color: "#FF6701",
+            }}
+          >
+            {numberFormat(attributesData?.data?.total_discount)}{" "}
+            {get(settingsData, "currency", "uzs")}
+          </Typography>
+        </StyledCard> */}
+        <StyledCard>
+          <TypographyTitle>{t("general.all_promocode_summ")}</TypographyTitle>
+          <div className="flex items-center gap-2">
+            <Typography
+              style={{
+                fontSize: "20px",
+                fontWeight: 600,
+                color: "#FF6701",
+              }}
+            >
+              {numberFormat(attributesData?.data?.total_promocode)}{" "}
+              {get(settingsData, "currency", "uzs")}
+            </Typography>
+            <LocalOfferIcon style={{ color: "#FF6701", fontSize: "24px" }} />
+          </div>
+        </StyledCard>
+      </Grid>
+      
 
-            <Grid className='p-2 bg-white mt-2 rounded-lg'>
-                <MainCharts data={attributesData?.data?.states} all_orders={attributesData?.data?.total_amount} />
-            </Grid>
+      <StyledCard className="mt-2">
+        
+      </StyledCard>
 
-            <Grid className='bg-white mt-2 rounded-lg p-4'>
-                <Typography
-                    style={{
-                        fontSize: "20px",
-                        fontWeight: 600,
-                        marginBottom: "16px",
-                        color: '#FF6701'
-                    }}
-                >
-                    {t("dashboard.orders_by_location")}
-                </Typography>
-                <DashboardMap height="600px" useDemoData={false} />
-            </Grid>
+      {/* <Grid className="p-2 bg-white mt-2 rounded-lg">
+        <MainCharts
+          data={attributesData?.data?.states}
+          all_orders={attributesData?.data?.total_amount}
+        />
+      </Grid>
 
-            <Grid className='grid mt-2 md:grid-cols-2 gap-4'>
-                <div className='bg-white rounded-lg'>
-                    <p className='font-semibold text-lg p-3'>{t('dashboard.top_users')}</p>
-                    <TopTable data={topCustomerData?.data} setSortField={setSortFieldUser} sortField={sortFieldUser} setSortOrder={setSortOrderUser} sortOrder={sortOrderUser} />
-                </div>
-                <div className='bg-white rounded-lg'>
-                    <p className='font-semibold text-lg p-3'>{t('dashboard.top_courier')}</p>
-                    <TopTable data={couriersData?.data} setSortField={setSortFieldCourier} sortField={sortFieldCourier} setSortOrder={setSortOrderCourier} sortOrder={sortOrderCourier} />
-                </div>
-            </Grid>
-        </>
-    )
-}
+      <Grid className="bg-white mt-2 rounded-lg p-4">
+        <Typography
+          style={{
+            fontSize: "20px",
+            fontWeight: 600,
+            marginBottom: "16px",
+            color: "#FF6701",
+          }}
+        >
+          {t("dashboard.orders_by_location")}
+        </Typography>
+        <DashboardMap height="600px" useDemoData={false} />
+      </Grid>
 
-export default Dashboard
+      <Grid className="grid mt-2 md:grid-cols-2 gap-4">
+        <div className="bg-white rounded-lg">
+          <p className="font-semibold text-lg p-3">
+            {t("dashboard.top_users")}
+          </p>
+          <TopTable
+            data={topCustomerData?.data}
+            setSortField={setSortFieldUser}
+            sortField={sortFieldUser}
+            setSortOrder={setSortOrderUser}
+            sortOrder={sortOrderUser}
+          />
+        </div>
+        <div className="bg-white rounded-lg">
+          <p className="font-semibold text-lg p-3">
+            {t("dashboard.top_courier")}
+          </p>
+          <TopTable
+            data={couriersData?.data}
+            setSortField={setSortFieldCourier}
+            sortField={sortFieldCourier}
+            setSortOrder={setSortOrderCourier}
+            sortOrder={sortOrderCourier}
+          />
+        </div>
+      </Grid> */}
+    </>
+  );
+};
+
+export default Dashboard;
