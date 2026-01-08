@@ -1,4 +1,4 @@
-import { Grid, IconButton, Box, Divider, InputLabel, Button } from "@mui/material";
+import { Grid, IconButton, Box, Divider, InputLabel, Button, Badge, Card, CardContent, Avatar, Typography, Chip } from "@mui/material";
 import { AboutStyled } from "./About.styled";
 import { ImageInput, MainButton, PhoneInput, TextInput, SelectForm, Checkbox, ColorPicker, AutoCompleteForm } from "components";
 import { useForm, useFieldArray } from "react-hook-form";
@@ -13,7 +13,8 @@ import useDebounce from "hooks/useDebounce";
 import { get } from "lodash";
 import { CopyIcon } from "assets/svgs";
 import useCopyToClipboard from "hooks/useClipboard";
-import { Add, Delete } from "@mui/icons-material";
+import { Add, Delete, Edit, Inventory, CheckCircle, Cancel } from "@mui/icons-material";
+import PackageItemForm from "./components/PackageItemForm";
 
 const About = () => {
   const [showOptions, setShowOptions] = useState(false);
@@ -21,6 +22,10 @@ const About = () => {
   const [address, setAddress] = useState("");
   const { debouncedValue } = useDebounce(address, 1000);
   const [copiedText, copy] = useCopyToClipboard();
+  const [packageItems, setPackageItems] = useState<any[]>([]);
+  const [showPackageItemForm, setShowPackageItemForm] = useState(false);
+  const [editingPackageItem, setEditingPackageItem] = useState<any | null>(null);
+  const [categoriesMap, setCategoriesMap] = useState<Record<string, any>>({});
   const { control, setValue, handleSubmit, formState, reset, watch } =
     useForm();
   const { t } = useTranslation();
@@ -84,7 +89,7 @@ const About = () => {
       const about = data?.data;
       reset({
         ...about,
-        _id: about._id, // _id ni form'ga saqlash
+        _id: about._id,
         email: about.email || "",
         website: about.website || "",
         type: about.type || "shop",
@@ -112,12 +117,60 @@ const About = () => {
         acceptOnlinePayment: about.acceptOnlinePayment !== undefined ? about.acceptOnlinePayment : false,
       });
       setAddressLocation(about.addressLocation);
+      if (about.packageItems) {
+        setPackageItems(Array.isArray(about.packageItems) ? about.packageItems : []);
+      }
     }
-  }, [status, data]);
+  }, [status, data, reset]);
+
+  const { mutate: fetchCategories, data: categoriesData } = useApiMutation(
+    "category/paging",
+    "post",
+    {}
+  );
+
+  useEffect(() => {
+    if (packageItems.length > 0) {
+      fetchCategories({ page: 1, limit: 200 });
+    }
+  }, [packageItems.length, fetchCategories]);
+
+  useEffect(() => {
+    if (categoriesData?.data?.data) {
+      const map: Record<string, any> = {};
+      categoriesData.data.data.forEach((cat: any) => {
+        map[String(cat._id)] = cat;
+      });
+      setCategoriesMap(map);
+    } else if (categoriesData?.data && Array.isArray(categoriesData.data)) {
+      const map: Record<string, any> = {};
+      categoriesData.data.forEach((cat: any) => {
+        map[String(cat._id)] = cat;
+      });
+      setCategoriesMap(map);
+    }
+  }, [categoriesData]);
+
+  const handlePackageItemSave = async (packageItemData: any) => {
+    const currentData = watch();
+    const updateData = {
+      ...currentData,
+      _id: currentData._id,
+      packageItems: editingPackageItem
+        ? packageItems.map((item) =>
+            item._id === editingPackageItem._id ? packageItemData : item
+          )
+        : [...packageItems, packageItemData],
+    };
+    mutate(updateData);
+    setPackageItems(updateData.packageItems);
+    setShowPackageItemForm(false);
+    setEditingPackageItem(null);
+  };
 
   const submit = (data: any) => {
     const requestData = {
-      _id: data._id, // _id ni qo'shish - update uchun majburiy
+      _id: data._id,
       name: data.name,
       email: data.email || undefined,
       website: data.website || undefined,
@@ -143,8 +196,30 @@ const About = () => {
       acceptCash: data.acceptCash !== undefined ? data.acceptCash : false,
       acceptCard: data.acceptCard !== undefined ? data.acceptCard : false,
       acceptOnlinePayment: data.acceptOnlinePayment !== undefined ? data.acceptOnlinePayment : false,
+      packageItems: packageItems,
     };
     mutate(requestData);
+  };
+
+  const getCategoryName = (categoryId: string) => {
+    const category = categoriesMap[String(categoryId)];
+    if (!category) return '';
+    const currentLang = localStorage.getItem('i18nextLng') || 'uz';
+    return category.name?.[currentLang] || category.name?.uz || category.name || '';
+  };
+
+  const formatImageUrl = (imageUrl: any) => {
+    if (!imageUrl) return null;
+    const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:3002/v1';
+    const cleanBaseUrl = baseUrl.replace(/\/$/, '');
+    let url = typeof imageUrl === 'string' ? imageUrl : imageUrl.url || '';
+    if (url.startsWith('uploads/')) {
+      url = url.replace('uploads/', '');
+    }
+    if (!url.startsWith('http')) {
+      return `${cleanBaseUrl}/uploads/${url}`;
+    }
+    return url;
   };
 
   const weekDays = [
@@ -467,6 +542,127 @@ const About = () => {
                 />
               </div>
             </div>
+            <Divider sx={{ my: 3 }} />
+            <div className="mb-3">
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Inventory />
+                  <InputLabel sx={{ fontWeight: 600, fontSize: '16px' }}>Qo'shimcha itemlar</InputLabel>
+                </Box>
+                {packageItems.length === 0 && (
+                  <Button
+                    variant="contained"
+                    size="small"
+                    startIcon={<Add />}
+                    onClick={() => {
+                      setEditingPackageItem(null);
+                      setShowPackageItemForm(true);
+                    }}
+                  >
+                    Qo'shish
+                  </Button>
+                )}
+              </Box>
+              {packageItems.map((item, index) => {
+                const currentLang = localStorage.getItem('i18nextLng') || 'uz';
+                const itemName = item.name?.[currentLang] || item.name?.uz || item.name || 'Nomsiz';
+                
+                let imageUrl = null;
+                if (item.image?.url) {
+                  imageUrl = formatImageUrl(item.image.url);
+                } else if (item.imageId) {
+                  const baseUrl = process.env.REACT_APP_BASE_URL || 'http://localhost:3002/v1';
+                  const cleanBaseUrl = baseUrl.replace(/\/$/, '');
+                  imageUrl = `${cleanBaseUrl}/image/get/${item.imageId}`;
+                }
+                
+                return (
+                  <Card key={item._id || index} sx={{ mb: 2 }}>
+                    <CardContent>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                        {imageUrl ? (
+                          <Avatar
+                            src={imageUrl}
+                            alt={itemName}
+                            sx={{ width: 64, height: 64 }}
+                            variant="rounded"
+                          />
+                        ) : (
+                          <Avatar sx={{ width: 64, height: 64 }} variant="rounded">
+                            <Inventory />
+                          </Avatar>
+                        )}
+                        <Box sx={{ flex: 1 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+                            <Typography variant="subtitle1" fontWeight={600}>
+                              {itemName}
+                            </Typography>
+                            {item.isActive === true ? (
+                              <Badge
+                                badgeContent={
+                                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                    <CheckCircle sx={{ fontSize: 12 }} />
+                                    <Typography variant="caption">Faol</Typography>
+                                  </Box>
+                                }
+                                color="success"
+                              />
+                            ) : (
+                              <Badge
+                                badgeContent={
+                                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                                    <Cancel sx={{ fontSize: 12 }} />
+                                    <Typography variant="caption">Nofaol</Typography>
+                                  </Box>
+                                }
+                                color="default"
+                              />
+                            )}
+                          </Box>
+                          <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                            {item.price?.toLocaleString('uz-UZ') || 0} so'm
+                          </Typography>
+                          {item.categoryIds && item.categoryIds.length > 0 ? (
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                              {item.categoryIds.map((categoryId: string) => {
+                                const categoryName = getCategoryName(categoryId);
+                                if (!categoryName) return null;
+                                return (
+                                  <Chip
+                                    key={String(categoryId)}
+                                    label={categoryName}
+                                    size="small"
+                                    variant="outlined"
+                                  />
+                                );
+                              })}
+                            </Box>
+                          ) : (
+                            <Chip
+                              label="Barcha kategoriyalar uchun"
+                              size="small"
+                              variant="outlined"
+                              color="default"
+                            />
+                          )}
+                        </Box>
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          startIcon={<Edit />}
+                          onClick={() => {
+                            setEditingPackageItem(item);
+                            setShowPackageItemForm(true);
+                          }}
+                        >
+                          Tahrirlash
+                        </Button>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
           </Grid>
           <Grid className="lg:w-[50%]">
             <div className="mt-5">
@@ -480,6 +676,15 @@ const About = () => {
           </Grid>
         </Grid>
       </form>
+      <PackageItemForm
+        open={showPackageItemForm}
+        onClose={() => {
+          setShowPackageItemForm(false);
+          setEditingPackageItem(null);
+        }}
+        packageItem={editingPackageItem}
+        onSave={handlePackageItemSave}
+      />
     </AboutStyled>
   );
 };
