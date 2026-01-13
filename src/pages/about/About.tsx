@@ -60,7 +60,7 @@ const About = () => {
 
   const { mutate: addressByPointName } = useApiMutation(`address/by-point`, "post", {
 
-    onSuccess({ data }) {
+    onSuccess({ data }: { data: any }) {
       setValue("addressName", data?.name);
     },
   });
@@ -410,7 +410,7 @@ const About = () => {
             <Divider sx={{ my: 3 }} />
             <div className="mb-3">
               <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Hafta kunlari</InputLabel>
-              {workDaysFields.map((field, index) => (
+              {workDaysFields.map((field: any, index: number) => (
                 <Grid
                   container
                   spacing={2}
