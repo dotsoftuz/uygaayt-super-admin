@@ -16,6 +16,8 @@ import useCopyToClipboard from "hooks/useClipboard";
 import { Add, Delete, Edit, Inventory, CheckCircle, Cancel } from "@mui/icons-material";
 import PackageItemForm from "./components/PackageItemForm";
 
+console.log("About");
+
 const About = () => {
   const [showOptions, setShowOptions] = useState(false);
   const [addressLocation, setAddressLocation] = useState<ILocation>();
