@@ -8,7 +8,7 @@ import {
   SelectForm,
   ColorPicker,
 } from "components";
-import { UseFormReturn, useFieldArray } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import { useTranslation } from "react-i18next";
 import TextEditor from "components/form/TextEditor/TextEditor";
@@ -19,7 +19,7 @@ import useDebounce from "hooks/useDebounce";
 import { Checkbox } from "components";
 import { IIdImage } from "hooks/usePostImage";
 import { toast } from "react-toastify";
-import { Add, Delete, Store, LocationOn, AttachMoney, Settings, Description } from "@mui/icons-material";
+import { Store, LocationOn, AttachMoney, Settings, Description, Delete } from "@mui/icons-material";
 
 interface IStoreForm {
   formStore: UseFormReturn<any>;
@@ -49,6 +49,16 @@ const StoreForm: FC<IStoreForm> = ({
   const [address, setAddress] = useState("");
   const { debouncedValue } = useDebounce(address, 1000);
 
+  const weekDays = [
+    { value: 1, label: "Dushanba" },
+    { value: 2, label: "Seshanba" },
+    { value: 3, label: "Chorshanba" },
+    { value: 4, label: "Payshanba" },
+    { value: 5, label: "Juma" },
+    { value: 6, label: "Shanba" },
+    { value: 7, label: "Yakshanba" },
+  ];
+
   // Logo va Banner image'larni form field'lar bilan sinxronlashtirish
   useEffect(() => {
     if (logoImage) {
@@ -66,14 +76,7 @@ const StoreForm: FC<IStoreForm> = ({
     }
   }, [bannerImage, setValue]);
 
-  const {
-    fields: workDaysFields,
-    append: appendWorkDay,
-    remove: removeWorkDay,
-  } = useFieldArray({
-    control,
-    name: "workDays",
-  });
+  const [workDays, setWorkDays] = useState<number[]>([1, 2, 3, 4, 5, 6, 7]);
 
   const { mutate, status } = useApiMutation(
     editingStoreId ? "store/update" : "store/create",
@@ -152,7 +155,7 @@ const StoreForm: FC<IStoreForm> = ({
         startTime:
           store.workTime?.length === 11 ? store.workTime?.slice(0, 5) : "",
         endTime: store.workTime?.length === 11 ? store.workTime?.slice(-5) : "",
-        workDays: store.workDays || [],
+        workDays: store.workDays?.filter((wd: any) => wd.isWorking !== false).map((wd: any) => wd.day) || [1, 2, 3, 4, 5, 6, 7],
         description: store.description || "",
         descriptionTranslate: store.descriptionTranslate || {
           uz: "",
@@ -169,6 +172,12 @@ const StoreForm: FC<IStoreForm> = ({
         isShowReview: store.isShowReview !== undefined ? store.isShowReview : true,
       });
       setAddressLocation(store.addressLocation);
+      const workDaysFromStore = store.workDays?.filter((wd: any) => wd.isWorking !== false).map((wd: any) => wd.day) || [1, 2, 3, 4, 5, 6, 7];
+      const uniqueWorkDays = Array.from(new Set(workDaysFromStore)) as number[];
+      setWorkDays(uniqueWorkDays);
+      weekDays.forEach((day) => {
+        setValue(`workDay_${day.value}`, uniqueWorkDays.includes(day.value));
+      });
       // Logo va Banner image'larni set qilish
       if (store.logoId) {
         const logoImg = { _id: store.logoId, url: `${process.env.REACT_APP_BASE_URL}/image/${store.logoId}` };
@@ -195,7 +204,7 @@ const StoreForm: FC<IStoreForm> = ({
       reset({
         name: "",
         phoneNumber: "",
-        password: "", // Password qo'shish
+        password: "",
         email: "",
         website: "",
         addressName: "",
@@ -210,7 +219,7 @@ const StoreForm: FC<IStoreForm> = ({
         workTime: "",
         startTime: "",
         endTime: "",
-        workDays: [],
+        workDays: [1, 2, 3, 4, 5, 6, 7],
         description: "",
         descriptionTranslate: {
           uz: "",
@@ -226,6 +235,7 @@ const StoreForm: FC<IStoreForm> = ({
         acceptOnlinePayment: false,
         isShowReview: true,
       });
+      setWorkDays([1, 2, 3, 4, 5, 6, 7]);
 
       // State'larni tozalash
       setAddressLocation(undefined);
@@ -281,7 +291,10 @@ const StoreForm: FC<IStoreForm> = ({
         data.startTime && data.endTime
           ? `${data.startTime}-${data.endTime}`
           : "",
-      workDays: data.workDays || [],
+      workDays: [1, 2, 3, 4, 5, 6, 7].map((day) => ({
+        day: day,
+        isWorking: workDays.includes(day),
+      })),
       description: data.description || "",
       descriptionTranslate: data.descriptionTranslate || undefined,
       logoId: logoImage?._id || undefined,
@@ -303,16 +316,6 @@ const StoreForm: FC<IStoreForm> = ({
 
     mutate(requestData);
   };
-
-  const weekDays = [
-    { value: 0, label: "Yakshanba" },
-    { value: 1, label: "Dushanba" },
-    { value: 2, label: "Seshanba" },
-    { value: 3, label: "Chorshanba" },
-    { value: 4, label: "Payshanba" },
-    { value: 5, label: "Juma" },
-    { value: 6, label: "Shanba" },
-  ];
 
   const [activeTab, setActiveTab] = useState(0);
 
@@ -708,80 +711,33 @@ const StoreForm: FC<IStoreForm> = ({
 
             <Grid item xs={12}>
               <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Hafta kunlari</InputLabel>
-              {workDaysFields.map((field, index) => (
-                <Grid
-                  container
-                  spacing={2}
-                  key={field.id}
-                  sx={{ mt: 1 }}
-                >
-                  <Grid item xs={12} md={3}>
-                    <SelectForm
-                      control={control}
-                      name={`workDays.${index}.day`}
-                      label="Kun"
-                      options={weekDays.map((day) => ({
-                        _id: day.value.toString(),
-                        name: day.label,
-                      }))}
-                      rules={{ required: true }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={3}>
-                    <TimePicker
-                      control={control}
-                      name={`workDays.${index}.startTime`}
-                      label="Boshlanish"
-                      errors={formState.errors}
-                      rules={{ required: true }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={3}>
-                    <TimePicker
-                      control={control}
-                      name={`workDays.${index}.endTime`}
-                      label="Tugash"
-                      errors={formState.errors}
-                      rules={{ required: true }}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={2}>
-                    <Box sx={{ pt: 2 }}>
+              <Grid container spacing={2}>
+                {weekDays.map((day) => {
+                  const isChecked = workDays.includes(day.value);
+                  return (
+                    <Grid item xs={12} sm={6} md={4} key={day.value}>
                       <Checkbox
                         control={control}
-                        name={`workDays.${index}.isWorking`}
-                        label="Ishlaydi"
+                        name={`workDay_${day.value}`}
+                        label={day.label}
+                        onChange={(checked) => {
+                          if (checked) {
+                            if (!workDays.includes(day.value)) {
+                              const newWorkDays = [...workDays, day.value].sort((a, b) => a - b);
+                              setWorkDays(newWorkDays);
+                              setValue("workDays", newWorkDays);
+                            }
+                          } else {
+                            const newWorkDays = workDays.filter((d) => d !== day.value);
+                            setWorkDays(newWorkDays);
+                            setValue("workDays", newWorkDays);
+                          }
+                        }}
                       />
-                    </Box>
-                  </Grid>
-                  <Grid item xs={12} md={1}>
-                    <Box sx={{ pt: 1 }}>
-                      <Button
-                        color="error"
-                        onClick={() => removeWorkDay(index)}
-                        size="small"
-                      >
-                        <Delete />
-                      </Button>
-                    </Box>
-                  </Grid>
-                </Grid>
-              ))}
-              <Button
-                variant="outlined"
-                startIcon={<Add />}
-                onClick={() =>
-                  appendWorkDay({
-                    day: 0,
-                    startTime: "09:00",
-                    endTime: "18:00",
-                    isWorking: true,
-                  })
-                }
-                sx={{ mt: 2 }}
-              >
-                Kun qo'shish
-              </Button>
+                    </Grid>
+                  );
+                })}
+              </Grid>
             </Grid>
           </Grid>
         </Box>

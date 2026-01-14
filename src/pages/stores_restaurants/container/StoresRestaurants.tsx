@@ -162,7 +162,7 @@ const StoresRestaurants = () => {
       itemPrepTimeTo: "",
       startTime: "",
       endTime: "",
-      workDays: [],
+      workDays: [1, 2, 3, 4, 5, 6, 7],
       description: "",
       descriptionTranslate: {
         uz: "",
