@@ -16,6 +16,8 @@ import useCopyToClipboard from "hooks/useClipboard";
 import { Add, Delete, Edit, Inventory, CheckCircle, Cancel } from "@mui/icons-material";
 import PackageItemForm from "./components/PackageItemForm";
 
+console.log("About");
+
 const About = () => {
   const [showOptions, setShowOptions] = useState(false);
   const [addressLocation, setAddressLocation] = useState<ILocation>();
@@ -58,7 +60,7 @@ const About = () => {
 
   const { mutate: addressByPointName } = useApiMutation(`address/by-point`, "post", {
 
-    onSuccess({ data }) {
+    onSuccess({ data }: { data: any }) {
       setValue("addressName", data?.name);
     },
   });
@@ -408,7 +410,7 @@ const About = () => {
             <Divider sx={{ my: 3 }} />
             <div className="mb-3">
               <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Hafta kunlari</InputLabel>
-              {workDaysFields.map((field, index) => (
+              {workDaysFields.map((field: any, index: number) => (
                 <Grid
                   container
                   spacing={2}
