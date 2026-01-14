@@ -166,6 +166,7 @@ const StoreForm: FC<IStoreForm> = ({
         acceptCash: store.acceptCash || false,
         acceptCard: store.acceptCard || false,
         acceptOnlinePayment: store.acceptOnlinePayment || false,
+        isShowReview: store.isShowReview !== undefined ? store.isShowReview : true,
       });
       setAddressLocation(store.addressLocation);
       // Logo va Banner image'larni set qilish
@@ -223,6 +224,7 @@ const StoreForm: FC<IStoreForm> = ({
         acceptCash: false,
         acceptCard: false,
         acceptOnlinePayment: false,
+        isShowReview: true,
       });
 
       // State'larni tozalash
@@ -291,6 +293,7 @@ const StoreForm: FC<IStoreForm> = ({
       acceptCash: data.acceptCash || false,
       acceptCard: data.acceptCard || false,
       acceptOnlinePayment: data.acceptOnlinePayment || false,
+      isShowReview: data.isShowReview !== undefined ? data.isShowReview : true,
     };
 
     // Password bo'sh bo'lsa, uni requestData'dan olib tashlash (update uchun)
