@@ -48,32 +48,16 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
   const allParams = useAllQueryParams();
   const navigate = useNavigate();
 
-  const { mutate: getOrders, data: ordersData } = useApiMutation(
-    "order/paging",
-    "post",
-    {}
-  );
-
   const { mutate: getStatistics, data: statisticsData } = useApiMutation(
     "store/statistics",
     "post",
-    {}
+    {
+      onError: () => {},
+    }
   );
 
   useEffect(() => {
-    if (value === 0 && storeId) {
-      // Buyurtmalar ro'yxatini olish
-      getOrders({
-        storeId: storeId,
-        dateFrom: allParams.dateFrom,
-        dateTo: allParams.dateTo
-      });
-    }
-  }, [value, allParams.dateFrom, allParams.dateTo, storeId]);
-
-  useEffect(() => {
     if (value === 1 && storeId) {
-      // Statistika ma'lumotlarini olish
       getStatistics({
         storeId: storeId,
         dateFrom: allParams.dateFrom,
@@ -87,17 +71,10 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
   };
 
   const handleExport = (format: 'excel' | 'pdf') => {
-    // Export funksiyasi (keyinchalik)
     console.log(`Exporting store ${storeId} as ${format}`);
   };
 
-  const orders = ordersData?.data?.data || [];
   const statistics = statisticsData?.data || {};
-
-  // Oxirgi buyurtma vaqtini olish
-  const lastOrderDate = orders.length > 0 
-    ? orders[0]?.createdAt 
-    : store.lastOrderDate;
 
   return (
     <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden', flex: 1 }}>
@@ -138,14 +115,6 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
               />
             </Grid>
           </Grid>
-        </Box>
-
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Oxirgi buyurtma vaqti: {lastOrderDate 
-              ? dayjs(lastOrderDate).format('YYYY-MM-DD HH:mm')
-              : 'Hozircha buyurtma yo\'q'}
-          </Typography>
         </Box>
 
         <Table

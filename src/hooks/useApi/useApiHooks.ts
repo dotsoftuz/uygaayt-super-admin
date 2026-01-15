@@ -59,13 +59,14 @@ const useApiMutation = <
 >(
   url: string,
   method: Method,
-  options: UseMutationOptions<AxiosResponse<Response>, Error, Variables> = {},
+  options: UseMutationOptions<AxiosResponse<Response>, Error, Variables> & { withoutNotification?: boolean } = {},
   withoutNotification?: boolean
 ): ReturnType<
   typeof useMutation<AxiosResponse<Response>, Error, Variables>
 > => {
   const dis = useAppDispatch();
   const { t } = useTranslation();
+  const shouldShowNotification = withoutNotification !== true && options.withoutNotification !== true;
 
   return useMutation<AxiosResponse<Response>, Error, Variables>(
     (data) => {
@@ -74,11 +75,13 @@ const useApiMutation = <
     },
     {
       onError(error: any, variables: Variables, context: any) {
-        const errorMessage =
-          error?.message ||
-          error?.data?.message ||
-          `${method} failed, no response`;
-        toast.error(errorMessage);
+        if (shouldShowNotification) {
+          const errorMessage =
+            error?.message ||
+            error?.data?.message ||
+            `${method} failed, no response`;
+          toast.error(errorMessage);
+        }
         options.onError?.(error, variables, context);
       },
       onMutate(variables: Variables) {
