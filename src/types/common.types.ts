@@ -134,6 +134,16 @@ export interface IProduct {
   locationBlock?: string;
   locationShelf?: string;
   locationRow?: string;
+  location?: {
+    id: string;
+    name: string;
+    rect: {
+      x_percent: string;
+      y_percent: string;
+      width_percent: string;
+      height_percent: string;
+    };
+  };
 }
 
 export interface ILocation {
