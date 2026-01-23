@@ -1,14 +1,5 @@
-import {
-  AccountBalance,
-  Analytics,
-  Cancel,
-  CheckCircle,
-  History,
-  Payment,
-  ShoppingCart,
-  TrendingUp,
-} from "@mui/icons-material";
-import { Box, Grid, Paper, Tab, Tabs, Typography } from "@mui/material";
+import { History } from "@mui/icons-material";
+import { Box, Grid, Paper, Tab, Tabs } from "@mui/material";
 import { Tooltip } from "antd";
 import { RangeDatePicker, Select, Table } from "components";
 import AutoCompleteFilter from "components/common/AutocompleteFilterGet/AutoCompleteFilter";
@@ -23,7 +14,6 @@ import { socketReRender } from "store/reducers/SocketSlice";
 import { useAppDispatch, useAppSelector } from "store/storeHooks";
 import styled from "styled-components";
 import { numberFormat } from "utils/numberFormat";
-import Accounting from "./Accounting";
 
 const StateSelectStyled = styled.div<{ stateColor: string; luma: any }>`
   margin-bottom: 5px;
@@ -118,8 +108,12 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
     if (value === 1 && storeId) {
       getStatistics({
         storeId: storeId,
-        dateFrom: allParams.dateFrom,
-        dateTo: allParams.dateTo,
+        ...(allParams?.dateFrom && allParams?.dateTo
+          ? {
+              dateFrom: new Date(allParams.dateFrom),
+              dateTo: new Date(allParams.dateTo),
+            }
+          : {}),
       });
     }
   }, [value, allParams.dateFrom, allParams.dateTo, storeId]);
@@ -282,13 +276,13 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
           }}
         >
           <Tab icon={<History />} iconPosition="start" label="Buyurtmalar" />
-          <Tab icon={<Analytics />} iconPosition="start" label="Statistika" />
-          <Tab icon={<Payment />} iconPosition="start" label="Transaksiyalar" />
-          <Tab
+          {/* <Tab icon={<Analytics />} iconPosition="start" label="Statistika" /> */}
+          {/* <Tab icon={<Payment />} iconPosition="start" label="Transaksiyalar" /> */}
+          {/* <Tab
             icon={<AccountBalance />}
             iconPosition="start"
             label="Hisob-kitoblar"
-          />
+          /> */}
         </Tabs>
       </Box>
 
@@ -314,7 +308,7 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
         />
       </TabPanel>
 
-      <TabPanel value={value} index={1}>
+      {/* <TabPanel value={value} index={1}>
         <Box sx={{ mb: 3 }}>
           <RangeDatePicker />
         </Box>
@@ -369,9 +363,9 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
             </Paper>
           </Grid>
         </Grid>
-      </TabPanel>
+      </TabPanel> */}
 
-      <TabPanel value={value} index={2}>
+      {/* <TabPanel value={value} index={2}>
         <Box sx={{ mb: 3 }}>
           <Grid container spacing={2} alignItems="center">
             <Grid item>
@@ -434,11 +428,11 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
               : {}),
           }}
         />
-      </TabPanel>
+      </TabPanel> */}
 
-      <TabPanel value={value} index={3}>
+      {/* <TabPanel value={value} index={3}>
         <Accounting storeId={storeId} store={store} />
-      </TabPanel>
+      </TabPanel> */}
     </Paper>
   );
 };
