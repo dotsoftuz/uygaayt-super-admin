@@ -293,6 +293,8 @@ const StoreForm: FC<IStoreForm> = ({
           : "",
       workDays: [1, 2, 3, 4, 5, 6, 7].map((day) => ({
         day: day,
+        startTime: data.startTime || '09:00',
+        endTime: data.endTime || '18:00',
         isWorking: workDays.includes(day),
       })),
       description: data.description || "",
