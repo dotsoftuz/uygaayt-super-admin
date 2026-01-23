@@ -69,12 +69,21 @@ const useApiMutation = <
   const shouldShowNotification = withoutNotification !== true && options.withoutNotification !== true;
 
   return useMutation<AxiosResponse<Response>, Error, Variables>(
-    (data) => {
-      const response = api({ url, method, data });
+    async (data) => {
+      // #region agent log
+      if(url.includes('balance/paging')){fetch('http://127.0.0.1:7242/ingest/ce1c437f-4b53-45a3-b9ea-6cfa04072735',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'useApiHooks.ts:72',message:'useApiMutation request',data:{url,method,data},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,C'})}).catch(()=>{});}
+      // #endregion
+      const response = await api({ url, method, data });
+      // #region agent log
+      if(url.includes('balance/paging')){fetch('http://127.0.0.1:7242/ingest/ce1c437f-4b53-45a3-b9ea-6cfa04072735',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'useApiHooks.ts:74',message:'useApiMutation response',data:{url,responseData:response?.data,hasResponse:!!response},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,C'})}).catch(()=>{});}
+      // #endregion
       return response;
     },
     {
       onError(error: any, variables: Variables, context: any) {
+        // #region agent log
+        if(url.includes('balance/paging')){fetch('http://127.0.0.1:7242/ingest/ce1c437f-4b53-45a3-b9ea-6cfa04072735',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'useApiHooks.ts:77',message:'useApiMutation error',data:{url,error:error?.message,statusCode:error?.statusCode,data:error?.data,variables},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'A,B,C,D'})}).catch(()=>{});}
+        // #endregion
         if (shouldShowNotification) {
           const errorMessage =
             error?.message ||

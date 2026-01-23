@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Tabs, Tab, Box, Typography, Paper, Button, Grid } from '@mui/material';
-import { Analytics, History, AttachMoney, Download, AccountBalance } from '@mui/icons-material';
-import { useTranslation } from 'react-i18next';
-import { numberFormat } from 'utils/numberFormat';
-import dayjs from 'dayjs';
-import { RangeDatePicker, Table } from 'components';
-import useAllQueryParams from 'hooks/useGetAllQueryParams/useAllQueryParams';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useApiMutation } from 'hooks/useApi/useApiHooks';
-import { ExportButton } from 'components';
-import Accounting from './Accounting';
+import {
+  AccountBalance,
+  Analytics,
+  Download,
+  History,
+} from "@mui/icons-material";
+import { Box, Button, Grid, Paper, Tab, Tabs, Typography } from "@mui/material";
+import { RangeDatePicker, Table } from "components";
+import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
+import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
+import { useOrderTableColumns } from "pages/order/container/orderTable/orderTable.columns";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { numberFormat } from "utils/numberFormat";
+import Accounting from "./Accounting";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -33,11 +37,7 @@ function TabPanel(props: TabPanelProps) {
       aria-labelledby={`store-tab-${index}`}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
-      )}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
 }
@@ -47,21 +47,63 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
   const { t } = useTranslation();
   const allParams = useAllQueryParams();
   const navigate = useNavigate();
+  const [stateUpdateData, setStateUpdateData] = useState<any>();
+  const [orderStates, setOrderStates] = useState([]);
 
   const { mutate: getStatistics, data: statisticsData } = useApiMutation(
     "store/statistics",
     "post",
     {
       onError: () => {},
-    }
+    },
   );
+
+  const { mutate, reset } = useApiMutation(
+    `order/state/${stateUpdateData?.orderId}`,
+    "put",
+    {
+      onSuccess() {
+        setStateUpdateData(undefined);
+        // Trigger table re-render
+      },
+    },
+  );
+
+  useEffect(() => {
+    if (stateUpdateData) {
+      mutate({
+        stateId: stateUpdateData.stateId,
+        _id: stateUpdateData.orderId,
+        position: 1,
+      });
+    }
+  }, [stateUpdateData]);
+
+  // Fetch order states
+  const {
+    data: orderStatesData,
+    status: orderStatesStatus,
+    refetch: refetchOrderStates,
+  } = useApi(
+    "order-state/get-all",
+    {},
+    {
+      onSuccess({ data }) {
+        setOrderStates(data || []);
+      },
+    },
+  );
+
+  useEffect(() => {
+    refetchOrderStates();
+  }, []);
 
   useEffect(() => {
     if (value === 1 && storeId) {
       getStatistics({
         storeId: storeId,
         dateFrom: allParams.dateFrom,
-        dateTo: allParams.dateTo
+        dateTo: allParams.dateTo,
       });
     }
   }, [value, allParams.dateFrom, allParams.dateTo, storeId]);
@@ -70,32 +112,36 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
     setValue(newValue);
   };
 
-  const handleExport = (format: 'excel' | 'pdf') => {
+  const handleExport = (format: "excel" | "pdf") => {
     console.log(`Exporting store ${storeId} as ${format}`);
   };
 
   const statistics = statisticsData?.data || {};
 
   return (
-    <Paper elevation={3} sx={{ borderRadius: 4, overflow: 'hidden', flex: 1 }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+    <Paper elevation={3} sx={{ borderRadius: 4, overflow: "hidden", flex: 1 }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}
           onChange={handleChange}
           aria-label="store tabs"
           sx={{
-            '& .MuiTab-root': {
-              textTransform: 'none',
+            "& .MuiTab-root": {
+              textTransform: "none",
               fontWeight: 600,
             },
-            '& .Mui-selected': {
-              color: '#EB5B00',
+            "& .Mui-selected": {
+              color: "#EB5B00",
             },
           }}
         >
           <Tab icon={<History />} iconPosition="start" label="Buyurtmalar" />
           <Tab icon={<Analytics />} iconPosition="start" label="Statistika" />
-          <Tab icon={<AccountBalance />} iconPosition="start" label="Hisob-kitoblar" />
+          <Tab
+            icon={<AccountBalance />}
+            iconPosition="start"
+            label="Hisob-kitoblar"
+          />
         </Tabs>
       </Box>
 
@@ -105,55 +151,22 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
             <Grid item>
               <RangeDatePicker />
             </Grid>
-            <Grid item>
-              <ExportButton
-                url={`/store/${storeId}/export`}
-                extraParams={{
-                  dateFrom: allParams.dateFrom,
-                  dateTo: allParams.dateTo,
-                }}
-              />
-            </Grid>
           </Grid>
         </Box>
 
         <Table
-          columns={[
-            {
-              field: 'id',
-              headerName: 'ID',
-              width: 100,
-              renderCell: ({ row }: { row: any }) => row._id?.slice(-4) || row.id || '-',
-            },
-            {
-              field: 'date',
-              headerName: 'Sana',
-              flex: 1,
-              minWidth: 150,
-              renderCell: ({ row }: { row: any }) => row.createdAt 
-                ? dayjs(row.createdAt).format('YYYY-MM-DD HH:mm')
-                : '-',
-            },
-            {
-              field: 'amount',
-              headerName: 'Summa',
-              flex: 1,
-              minWidth: 120,
-              renderCell: ({ row }: { row: any }) => numberFormat(row.totalPrice || row.amount || 0) + ' ' + t('common.symbol'),
-            },
-            {
-              field: 'status',
-              headerName: 'Status',
-              width: 150,
-              renderCell: ({ row }: { row: any }) => row.status || '-',
-            },
-          ]}
+          columns={useOrderTableColumns(setStateUpdateData, orderStates)}
           dataUrl="order/paging"
           searchable={false}
+          onRowClick={(row) => navigate(`/order/${row._id}`)}
           exQueryParams={{
             storeId: storeId,
-            dateFrom: allParams.dateFrom,
-            dateTo: allParams.dateTo,
+            ...(allParams.dateFrom && allParams.dateTo
+              ? {
+                  dateFrom: new Date(allParams.dateFrom),
+                  dateTo: new Date(allParams.dateTo),
+                }
+              : {}),
           }}
         />
       </TabPanel>
@@ -165,7 +178,7 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
 
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>
-            <Paper sx={{ p: 3, backgroundColor: '#F7FAFC', borderRadius: 2 }}>
+            <Paper sx={{ p: 3, backgroundColor: "#F7FAFC", borderRadius: 2 }}>
               <Typography variant="h6" gutterBottom>
                 Kunlik buyurtmalar
               </Typography>
@@ -176,7 +189,7 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <Paper sx={{ p: 3, backgroundColor: '#F7FAFC', borderRadius: 2 }}>
+            <Paper sx={{ p: 3, backgroundColor: "#F7FAFC", borderRadius: 2 }}>
               <Typography variant="h6" gutterBottom>
                 Haftalik buyurtmalar
               </Typography>
@@ -187,7 +200,7 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <Paper sx={{ p: 3, backgroundColor: '#F7FAFC', borderRadius: 2 }}>
+            <Paper sx={{ p: 3, backgroundColor: "#F7FAFC", borderRadius: 2 }}>
               <Typography variant="h6" gutterBottom>
                 Sahifa ko'rildi
               </Typography>
@@ -198,30 +211,38 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
           </Grid>
 
           <Grid item xs={12}>
-            <Paper sx={{ p: 3, backgroundColor: '#F7FAFC', borderRadius: 2 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <Typography variant="h6">
-                  Umumiy daromad
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 2 }}>
+            <Paper sx={{ p: 3, backgroundColor: "#F7FAFC", borderRadius: 2 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  mb: 2,
+                }}
+              >
+                <Typography variant="h6">Umumiy daromad</Typography>
+                <Box sx={{ display: "flex", gap: 2 }}>
                   <Button
                     variant="outlined"
                     startIcon={<Download />}
-                    onClick={() => handleExport('excel')}
+                    onClick={() => handleExport("excel")}
                   >
                     Excel
                   </Button>
                   <Button
                     variant="outlined"
                     startIcon={<Download />}
-                    onClick={() => handleExport('pdf')}
+                    onClick={() => handleExport("pdf")}
                   >
                     PDF
                   </Button>
                 </Box>
               </Box>
               <Typography variant="h4" color="primary">
-                {numberFormat(statistics.totalRevenue || store.totalRevenue || 0)} {t('common.symbol')}
+                {numberFormat(
+                  statistics.totalRevenue || store.totalRevenue || 0,
+                )}{" "}
+                {t("common.symbol")}
               </Typography>
             </Paper>
           </Grid>
@@ -234,4 +255,3 @@ export const StoreTabs: React.FC<StoreTabsProps> = ({ storeId, store }) => {
     </Paper>
   );
 };
-

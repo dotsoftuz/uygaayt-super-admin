@@ -62,6 +62,17 @@
   "sidebar": {
     "dashboard": "Панель инструментов",
     "store": "Магазины",
+    "store_statistics": {
+      "daily_orders": "Ежедневные заказы",
+      "weekly_orders": "Еженедельные заказы",
+      "store_views": "Просмотры магазина",
+      "total_revenue": "Общий доход",
+      "total_orders": "Всего заказов",
+      "completed_orders": "Выполненные заказы",
+      "cancelled_orders": "Отмененные заказы",
+      "transactions": "Транзакции",
+      "balance_after": "Остаток"
+    },
     "banner": "Баннеры",
     "order": "Заказы",
     "customer": "Клиенты",
