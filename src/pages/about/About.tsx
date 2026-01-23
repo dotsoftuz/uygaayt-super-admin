@@ -103,7 +103,6 @@ const About = () => {
         endTime: about.workTime?.length === 11 ? about.workTime?.slice(-5) : "",
         workDays: about.workDays || [],
         addressLocation: about.addressLocation,
-        deliveryPrice: about.deliveryPrice || "",
         itemPrepTimeFrom: about.itemPrepTimeFrom || "",
         itemPrepTimeTo: about.itemPrepTimeTo || "",
         descriptionTranslate: about.descriptionTranslate || {
@@ -220,7 +219,6 @@ const About = () => {
       phoneNumber: data.phoneNumber,
       addressName: data.addressName,
       addressLocation: addressLocation || undefined,
-      deliveryPrice: data.deliveryPrice ? +data.deliveryPrice : 0,
       itemPrepTimeFrom: data.itemPrepTimeFrom ? +data.itemPrepTimeFrom : 5,
       itemPrepTimeTo: data.itemPrepTimeTo ? +data.itemPrepTimeTo : 10,
       isActive: data.isActive !== undefined ? data.isActive : true,
@@ -392,15 +390,6 @@ const About = () => {
                   type="number"
                   label="Minimal buyurtma narxi (so'm)"
                   placeholder="Masalan: 50000"
-                  rules={{ required: false }}
-                />
-              </div>
-              <div className="mb-3">
-                <TextInput
-                  control={control}
-                  name="deliveryPrice"
-                  type="number"
-                  label={t('order.deliveryPrice')}
                   rules={{ required: false }}
                 />
               </div>

@@ -148,7 +148,6 @@ const StoreForm: FC<IStoreForm> = ({
         brandColor: store.brandColor || "#ef6c1d",
         categoryIds: store.categoryIds || [],
         orderMinimumPrice: store.orderMinimumPrice || "",
-        deliveryPrice: store.deliveryPrice || "",
         itemPrepTimeFrom: store.itemPrepTimeFrom || "",
         itemPrepTimeTo: store.itemPrepTimeTo || "",
         workTime: store.workTime || "",
@@ -213,7 +212,6 @@ const StoreForm: FC<IStoreForm> = ({
         brandColor: "#ef6c1d",
         categoryIds: [],
         orderMinimumPrice: "",
-        deliveryPrice: "",
         itemPrepTimeFrom: "",
         itemPrepTimeTo: "",
         workTime: "",
@@ -284,7 +282,6 @@ const StoreForm: FC<IStoreForm> = ({
       brandColor: data.brandColor || "#ef6c1d",
       categoryIds: data.categoryIds || [],
       orderMinimumPrice: data.orderMinimumPrice ? +data.orderMinimumPrice : 0,
-      deliveryPrice: data.deliveryPrice ? +data.deliveryPrice : 0,
       itemPrepTimeFrom: data.itemPrepTimeFrom ? +data.itemPrepTimeFrom : 5,
       itemPrepTimeTo: data.itemPrepTimeTo ? +data.itemPrepTimeTo : 10,
       workTime:
@@ -616,17 +613,6 @@ const StoreForm: FC<IStoreForm> = ({
                 type="number"
                 label="Minimal buyurtma narxi (so'm)"
                 placeholder="Masalan: 50000"
-                rules={{ required: false }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column' }}>
-              <TextInput
-                control={control}
-                name="deliveryPrice"
-                type="number"
-                label="Yetkazib berish narxi (so'm)"
-                placeholder="Masalan: 15000"
                 rules={{ required: false }}
               />
             </Grid>
