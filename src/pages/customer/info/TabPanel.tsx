@@ -11,7 +11,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { RangeDatePicker, Table } from 'components';
 import useAllQueryParams from 'hooks/useGetAllQueryParams/useAllQueryParams';
 import isBetween from "dayjs/plugin/isBetween";
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { numberFormat } from 'utils/numberFormat';
 import { formatSeconds } from 'utils/formatSeconds';
 import { formatMinutes } from 'utils/formatMinutes';
@@ -99,9 +99,7 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders, custo
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const allParams = useAllQueryParams();
-  const { id } = useParams();
   const columns = useTransactionColumns();
-
 
   const {
     state: { data: settingsData },
@@ -285,7 +283,7 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({ historyOrders, custo
           columns={columns}
           dataUrl="balance/paging"
           exQueryParams={{
-            customerId: id
+            customerId: customerId
           }}
         />
       </TabPanel>
