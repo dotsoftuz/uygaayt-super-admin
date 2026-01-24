@@ -30,7 +30,6 @@ const CourierAnalytics = lazy(() => import("pages/courier_analytics"));
 const CustomerAnalytics = lazy(() => import("pages/customer_analytics"));
 const ProductAnalytics = lazy(() => import("pages/product_analytics"));
 const AbcAnalytics = lazy(() => import("pages/abc_analytics"));
-const ConstructorAnalytics = lazy(() => import("pages/constructor_analytics"));
 
 
 const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
@@ -172,11 +171,6 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
   {
     element: <AbcAnalytics />,
     path: "/abc_product",
-    role: "report",
-  },
-  {
-    element: <ConstructorAnalytics />,
-    path: "/constructor_analytics",
     role: "report",
   },
 ];
