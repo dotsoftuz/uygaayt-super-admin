@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
 import { ConfigProvider, DatePicker } from "antd";
-import dayjs, { Dayjs } from "dayjs";
-import { useSearchParams } from "react-router-dom";
-import "dayjs/locale/ru";
 import locale from "antd/locale/ru_RU";
-import { RangeDatePickerStyled } from "./RangeDatePicker.style";
+import dayjs, { Dayjs } from "dayjs";
+import "dayjs/locale/ru";
 import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { RangeDatePickerStyled } from "./RangeDatePicker.style";
 
 type RangePickerValue = [Dayjs, Dayjs] | null;
 
@@ -17,7 +17,14 @@ const RangeDatePicker = ({ filterable = true }: { filterable?: boolean }) => {
   // allParams dan dateFrom va dateTo ni olish
   useEffect(() => {
     if (allParams.dateFrom && allParams.dateTo) {
-      setDate([dayjs(allParams.dateFrom), dayjs(allParams.dateTo)]);
+      const fromDate = dayjs(allParams.dateFrom);
+      const toDate = dayjs(allParams.dateTo);
+      // Only set dates if they are valid
+      if (fromDate.isValid() && toDate.isValid()) {
+        setDate([fromDate, toDate]);
+      } else {
+        setDate(null);
+      }
     } else {
       setDate(null);
     }
@@ -48,7 +55,9 @@ const RangeDatePicker = ({ filterable = true }: { filterable?: boolean }) => {
           onChange={(val) => onDateChange(val as RangePickerValue)}
           disabledDate={(current) => current && current > dayjs().endOf("day")}
           getPopupContainer={(trigger) =>
-            trigger.parentNode instanceof HTMLElement ? trigger.parentNode : document.body
+            trigger.parentNode instanceof HTMLElement
+              ? trigger.parentNode
+              : document.body
           }
         />
       </ConfigProvider>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, CardContent, Typography, Avatar, Box, Paper, Chip, Switch, Button } from '@mui/material';
-import { Phone, LocationOn, Store, AttachMoney, Inventory, ShoppingBag } from '@mui/icons-material';
+import { Phone, LocationOn, Store, AttachMoney, Inventory, ShoppingBag, Category } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 import { numberFormat } from 'utils/numberFormat';
 import useCommonContext from 'context/useCommon';
@@ -58,8 +58,12 @@ export const StoreCard: React.FC<StoreCardProps> = ({
   // );
 
   const totalProducts = storeId?.startsWith('store_')
-    ? 0 // localStorage'dan tovarlar sonini olish mumkin emas
+    ? 0
     : store?.totalProducts || 0;
+
+  const totalCategories = storeId?.startsWith('store_')
+    ? 0
+    : (store?.categoryIds?.length || store?.totalCategories || 0);
 
   const handleStatusChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const isActive = event.target.checked;
@@ -220,61 +224,29 @@ export const StoreCard: React.FC<StoreCardProps> = ({
           <Box sx={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between',
             gap: 2,
             p: 2,
             backgroundColor: '#F7FAFC',
             borderRadius: 2,
           }}>
-            <Box 
-              sx={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: 2,
-                cursor: 'pointer',
-                '&:hover': {
-                  opacity: 0.7,
-                },
-              }}
-              onClick={() => navigate(`/product?storeId=${storeId}`)}
-            >
-              <Inventory style={{ fontSize: 20, color: '#EB5B00' }} />
-              <Typography variant="body1" color="text.primary">
-                Tovarlar soni: {totalProducts}
-              </Typography>
-            </Box>
-            <Button
-              variant="contained"
-              startIcon={<ShoppingBag />}
-              onClick={() => navigate(`/product?storeId=${storeId}`)}
-              sx={{
-                backgroundColor: '#EB5B00',
-                '&:hover': {
-                  backgroundColor: '#EB7B00',
-                },
-              }}
-            >
-              Tovarlar
-            </Button>
+            <Inventory style={{ fontSize: 20, color: '#EB5B00' }} />
+            <Typography variant="body1" color="text.primary">
+              Tovarlar soni: {totalProducts}
+            </Typography>
           </Box>
 
           <Box sx={{
             display: 'flex',
-            justifyContent: 'space-between',
             alignItems: 'center',
+            gap: 2,
             p: 2,
             backgroundColor: '#F7FAFC',
             borderRadius: 2,
-            mt: 2
           }}>
-            <Typography variant="body1" fontWeight="bold">
-              Holatni o'zgartirish:
+            <Category style={{ fontSize: 20, color: '#EB5B00' }} />
+            <Typography variant="body1" color="text.primary">
+              Kategoriyalar soni: {totalCategories}
             </Typography>
-            <Switch
-              checked={store.isActive || false}
-              onChange={handleStatusChange}
-              color="primary"
-            />
           </Box>
         </Box>
       </CardContent>

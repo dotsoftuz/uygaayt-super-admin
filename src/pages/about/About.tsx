@@ -103,7 +103,6 @@ const About = () => {
         endTime: about.workTime?.length === 11 ? about.workTime?.slice(-5) : "",
         workDays: about.workDays || [],
         addressLocation: about.addressLocation,
-        deliveryPrice: about.deliveryPrice || "",
         itemPrepTimeFrom: about.itemPrepTimeFrom || "",
         itemPrepTimeTo: about.itemPrepTimeTo || "",
         descriptionTranslate: about.descriptionTranslate || {
@@ -155,14 +154,45 @@ const About = () => {
 
   const handlePackageItemSave = async (packageItemData: any) => {
     const currentData = watch();
+    let finalPackageItemData = { ...packageItemData };
+    if (!editingPackageItem && !packageItemData._id) {
+      const generateMongoObjectId = () => {
+        const timestamp = Math.floor(new Date().getTime() / 1000).toString(16);
+        const randomPart = 'xxxxxxxxxxxxxxxx'.replace(/[x]/g, function() {
+          return (Math.random() * 16 | 0).toString(16);
+        }).toLowerCase();
+        const objectId = (timestamp + randomPart).substring(0, 24);
+        return { $oid: objectId };
+      };
+      finalPackageItemData._id = generateMongoObjectId();
+    }
+    const normalizeId = (id: any) => {
+      if (!id) return null;
+      if (typeof id === 'object' && id.$oid) return id.$oid;
+      return String(id);
+    };
+    const transformPackageItemsForBackend = (items: any[]) => {
+      return items.map(item => {
+        const transformedItem = { ...item };
+        if (transformedItem._id && typeof transformedItem._id === 'object' && transformedItem._id.$oid) {
+          transformedItem._id = transformedItem._id.$oid;
+        }
+        return transformedItem;
+      });
+    };
+
     const updateData = {
       ...currentData,
       _id: currentData._id,
-      packageItems: editingPackageItem
-        ? packageItems.map((item) =>
-            item._id === editingPackageItem._id ? packageItemData : item
-          )
-        : [...packageItems, packageItemData],
+      packageItems: transformPackageItemsForBackend(
+        editingPackageItem
+          ? packageItems.map((item) => {
+              const itemId = normalizeId(item._id);
+              const editingId = normalizeId(editingPackageItem._id);
+              return itemId === editingId ? finalPackageItemData : item;
+            })
+          : [...packageItems, finalPackageItemData]
+      ),
     };
     mutate(updateData);
     setPackageItems(updateData.packageItems);
@@ -189,7 +219,6 @@ const About = () => {
       phoneNumber: data.phoneNumber,
       addressName: data.addressName,
       addressLocation: addressLocation || undefined,
-      deliveryPrice: data.deliveryPrice ? +data.deliveryPrice : 0,
       itemPrepTimeFrom: data.itemPrepTimeFrom ? +data.itemPrepTimeFrom : 5,
       itemPrepTimeTo: data.itemPrepTimeTo ? +data.itemPrepTimeTo : 10,
       isActive: data.isActive !== undefined ? data.isActive : true,
@@ -198,7 +227,13 @@ const About = () => {
       acceptCash: data.acceptCash !== undefined ? data.acceptCash : false,
       acceptCard: data.acceptCard !== undefined ? data.acceptCard : false,
       acceptOnlinePayment: data.acceptOnlinePayment !== undefined ? data.acceptOnlinePayment : false,
-      packageItems: packageItems,
+      packageItems: packageItems.map(item => {
+        const transformedItem = { ...item };
+        if (transformedItem._id && typeof transformedItem._id === 'object' && transformedItem._id.$oid) {
+          transformedItem._id = transformedItem._id.$oid;
+        }
+        return transformedItem;
+      }),
     };
     mutate(requestData);
   };
@@ -355,15 +390,6 @@ const About = () => {
                   type="number"
                   label="Minimal buyurtma narxi (so'm)"
                   placeholder="Masalan: 50000"
-                  rules={{ required: false }}
-                />
-              </div>
-              <div className="mb-3">
-                <TextInput
-                  control={control}
-                  name="deliveryPrice"
-                  type="number"
-                  label={t('order.deliveryPrice')}
                   rules={{ required: false }}
                 />
               </div>

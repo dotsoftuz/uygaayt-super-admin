@@ -22,6 +22,7 @@ import { Delete } from "@mui/icons-material";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import AttributeForm from "./Fields";
 import ImageInputPro from "components/form/ImageInputPro/ImageInputPro";
+import ProductLocationSelector, { SelectedLocation } from "components/form/ProductLocationSelector";
 
 interface IProductForm {
   formStore: any;
@@ -55,6 +56,10 @@ const ProductForm = ({
 
   const [selectedParentCategory, setSelectedParentCategory] = useState<any>(null);
   const [selectedChildCategory, setSelectedChildCategory] = useState<any>(null);
+  const [storeSections, setStoreSections] = useState<any[]>([]);
+  const [selectedLocation, setSelectedLocation] = useState<SelectedLocation | null>(null);
+  const [mapImageUrl, setMapImageUrl] = useState<string>('');
+  const [imageSize, setImageSize] = useState({ width: 837, height: 634 });
 
   const discountEndMinDate = new Date(watch("discountStartAt"));
   discountEndMinDate.setDate(discountEndMinDate.getDate() + 1);
@@ -121,6 +126,7 @@ const ProductForm = ({
       locationBlock: data.locationBlock || undefined,
       locationShelf: data.locationShelf || undefined,
       locationRow: data.locationRow || undefined,
+      location: data.location || undefined,
     };
 
     // discountEnabled = true bo'lganda discount ma'lumotlarini qo'shish
@@ -182,6 +188,7 @@ const ProductForm = ({
 
   useEffect(() => {
     if (status === "success") {
+      setSelectedLocation(null);
       resetForm();
     }
   }, [status]);
@@ -241,6 +248,7 @@ const ProductForm = ({
         locationBlock: getByIdData.data.locationBlock || undefined,
         locationShelf: getByIdData.data.locationShelf || undefined,
         locationRow: getByIdData.data.locationRow || undefined,
+        location: getByIdData.data.location || undefined,
       });
 
       // if (!getByIdData.data.attributes?.length) {
@@ -249,6 +257,16 @@ const ProductForm = ({
       // }
 
       setValue("isMyExpire", !!watch("expiryDate"));
+
+      if (getByIdData.data.location) {
+        setSelectedLocation({
+          section_id: getByIdData.data.location.id,
+          section_name: getByIdData.data.location.name,
+          rect: getByIdData.data.location.rect,
+        });
+      } else {
+        setSelectedLocation(null);
+      }
 
       setProductImages(getByIdData.data?.images || []);
 
@@ -269,6 +287,25 @@ const ProductForm = ({
       setMainImageId(productImages[0]._id);
     }
   }, [productImages]);
+
+  useEffect(() => {
+    const loadStoreMapData = async () => {
+      try {
+        const response = await fetch('/store-map-sections.json');
+        const data = await response.json();
+        setStoreSections(data.sections || []);
+        if (data.imageSize) {
+          setImageSize(data.imageSize);
+        }
+        if (data.mapImageUrl) {
+          setMapImageUrl(data.mapImageUrl);
+        }
+      } catch (error) {
+        console.error('Error loading store map data:', error);
+      }
+    };
+    loadStoreMapData();
+  }, []);
 
   const {
     fields,
@@ -393,6 +430,34 @@ const ProductForm = ({
             </Box>
           </Grid>
           {/* Product Location Fields */}
+          <Grid item md={12}>
+            <Box className="product-location-selector">
+              <label className="custom-label">
+                Mahsulot joylashuvi (Xarita)
+                <span className="text-muted-foreground text-sm">(ixtiyoriy)</span>
+              </label>
+              {storeSections.length > 0 && (
+                <ProductLocationSelector
+                  sections={storeSections}
+                  mapImageUrl={mapImageUrl || undefined}
+                  imageSize={imageSize}
+                  onLocationSelect={(location) => {
+                    setSelectedLocation(location);
+                    if (location) {
+                      setValue('location', {
+                        id: location.section_id,
+                        name: location.section_name,
+                        rect: location.rect,
+                      });
+                    } else {
+                      setValue('location', undefined);
+                    }
+                  }}
+                  selectedLocation={selectedLocation}
+                />
+              )}
+            </Box>
+          </Grid>
           <Grid item md={4}>
             <TextInput
               name="locationBlock"

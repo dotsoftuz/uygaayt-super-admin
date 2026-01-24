@@ -1,30 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Paper, Typography, Grid, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { Download, AttachMoney, TrendingUp, CalendarToday } from '@mui/icons-material';
-import { useTranslation } from 'react-i18next';
-import { numberFormat } from 'utils/numberFormat';
-import { RangeDatePicker } from 'components';
-import useAllQueryParams from 'hooks/useGetAllQueryParams/useAllQueryParams';
-import { useApiMutation } from 'hooks/useApi/useApiHooks';
-import { getStoresFromLocalStorage } from '../utils/localStorageUtils';
+import {
+  AttachMoney,
+  CalendarToday,
+  Download,
+  TrendingUp,
+} from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Grid,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from "@mui/material";
+import { RangeDatePicker } from "components";
+import { useApiMutation } from "hooks/useApi/useApiHooks";
+import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { numberFormat } from "utils/numberFormat";
 
 interface AccountingProps {
   storeId: string;
   store: any;
 }
 
-const Accounting: React.FC<AccountingProps> = ({ storeId, store: storeProp }) => {
+const Accounting: React.FC<AccountingProps> = ({
+  storeId,
+  store: storeProp,
+}) => {
   const { t } = useTranslation();
   const allParams = useAllQueryParams();
 
   const [accountingData, setAccountingData] = useState<any>(null);
 
   // Hisob-kitob ma'lumotlarini olish
-  const { mutate: getAccountingData, data: accountingResponse } = useApiMutation(
-    "store/accounting",
-    "post",
-    {}
-  );
+  const { mutate: getAccountingData, data: accountingResponse } =
+    useApiMutation("store/accounting", "post", {});
 
   useEffect(() => {
     if (storeId && allParams.dateFrom && allParams.dateTo) {
@@ -44,12 +60,10 @@ const Accounting: React.FC<AccountingProps> = ({ storeId, store: storeProp }) =>
 
   const handleExportPDF = () => {
     // PDF export funksiyasi (keyinchalik)
-    console.log('Exporting PDF for store:', storeId);
   };
 
   const handleExportExcel = () => {
     // Excel export funksiyasi (keyinchalik)
-    console.log('Exporting Excel for store:', storeId);
   };
 
   if (!storeProp) {
@@ -70,11 +84,18 @@ const Accounting: React.FC<AccountingProps> = ({ storeId, store: storeProp }) =>
 
   return (
     <Box sx={{ p: 3 }}>
-      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <Box
+        sx={{
+          mb: 3,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
         <Typography variant="h4" fontWeight="bold">
           Hisob-kitoblar - {storeProp.name}
         </Typography>
-        <Box sx={{ display: 'flex', gap: 2 }}>
+        <Box sx={{ display: "flex", gap: 2 }}>
           <Button
             variant="outlined"
             startIcon={<Download />}
@@ -98,25 +119,25 @@ const Accounting: React.FC<AccountingProps> = ({ storeId, store: storeProp }) =>
 
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 3, backgroundColor: '#F7FAFC', borderRadius: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <AttachMoney style={{ fontSize: 24, color: '#EB5B00' }} />
+          <Paper sx={{ p: 3, backgroundColor: "#F7FAFC", borderRadius: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+              <AttachMoney style={{ fontSize: 24, color: "#EB5B00" }} />
               <Typography variant="h6">To'langan summalar</Typography>
             </Box>
             <Typography variant="h4" color="primary" fontWeight="bold">
-              {numberFormat(data.totalPaid || 0)} {t('common.symbol')}
+              {numberFormat(data.totalPaid || 0)} {t("common.symbol")}
             </Typography>
           </Paper>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 3, backgroundColor: '#F7FAFC', borderRadius: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <TrendingUp style={{ fontSize: 24, color: '#EB5B00' }} />
+          <Paper sx={{ p: 3, backgroundColor: "#F7FAFC", borderRadius: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+              <TrendingUp style={{ fontSize: 24, color: "#EB5B00" }} />
               <Typography variant="h6">Platforma ulushi</Typography>
             </Box>
             <Typography variant="h4" color="primary" fontWeight="bold">
-              {numberFormat(platformShare)} {t('common.symbol')}
+              {numberFormat(platformShare)} {t("common.symbol")}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
               ({commissionPercent}% komissiya)
@@ -125,13 +146,13 @@ const Accounting: React.FC<AccountingProps> = ({ storeId, store: storeProp }) =>
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <Paper sx={{ p: 3, backgroundColor: '#F7FAFC', borderRadius: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <AttachMoney style={{ fontSize: 24, color: '#10B981' }} />
+          <Paper sx={{ p: 3, backgroundColor: "#F7FAFC", borderRadius: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+              <AttachMoney style={{ fontSize: 24, color: "#10B981" }} />
               <Typography variant="h6">Do'kon daromadi</Typography>
             </Box>
             <Typography variant="h4" color="success.main" fontWeight="bold">
-              {numberFormat(storeRevenue)} {t('common.symbol')}
+              {numberFormat(storeRevenue)} {t("common.symbol")}
             </Typography>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
               (100% - {commissionPercent}% = {100 - commissionPercent}%)
@@ -143,8 +164,8 @@ const Accounting: React.FC<AccountingProps> = ({ storeId, store: storeProp }) =>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 3, borderRadius: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <CalendarToday style={{ fontSize: 24, color: '#EB5B00' }} />
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+              <CalendarToday style={{ fontSize: 24, color: "#EB5B00" }} />
               <Typography variant="h6" fontWeight="bold">
                 Haftalik to'lov hisoboti
               </Typography>
@@ -161,9 +182,12 @@ const Accounting: React.FC<AccountingProps> = ({ storeId, store: storeProp }) =>
                   {data.weeklyPayments && data.weeklyPayments.length > 0 ? (
                     data.weeklyPayments.map((payment: any, index: number) => (
                       <TableRow key={index}>
-                        <TableCell>{payment.week || `Hafta ${index + 1}`}</TableCell>
+                        <TableCell>
+                          {payment.week || `Hafta ${index + 1}`}
+                        </TableCell>
                         <TableCell align="right">
-                          {numberFormat(payment.amount || 0)} {t('common.symbol')}
+                          {numberFormat(payment.amount || 0)}{" "}
+                          {t("common.symbol")}
                         </TableCell>
                       </TableRow>
                     ))
@@ -182,8 +206,8 @@ const Accounting: React.FC<AccountingProps> = ({ storeId, store: storeProp }) =>
 
         <Grid item xs={12} md={6}>
           <Paper sx={{ p: 3, borderRadius: 2 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <CalendarToday style={{ fontSize: 24, color: '#EB5B00' }} />
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 2 }}>
+              <CalendarToday style={{ fontSize: 24, color: "#EB5B00" }} />
               <Typography variant="h6" fontWeight="bold">
                 Oylik to'lov hisoboti
               </Typography>
@@ -200,9 +224,12 @@ const Accounting: React.FC<AccountingProps> = ({ storeId, store: storeProp }) =>
                   {data.monthlyPayments && data.monthlyPayments.length > 0 ? (
                     data.monthlyPayments.map((payment: any, index: number) => (
                       <TableRow key={index}>
-                        <TableCell>{payment.month || `Oy ${index + 1}`}</TableCell>
+                        <TableCell>
+                          {payment.month || `Oy ${index + 1}`}
+                        </TableCell>
                         <TableCell align="right">
-                          {numberFormat(payment.amount || 0)} {t('common.symbol')}
+                          {numberFormat(payment.amount || 0)}{" "}
+                          {t("common.symbol")}
                         </TableCell>
                       </TableRow>
                     ))
@@ -224,4 +251,3 @@ const Accounting: React.FC<AccountingProps> = ({ storeId, store: storeProp }) =>
 };
 
 export default Accounting;
-
