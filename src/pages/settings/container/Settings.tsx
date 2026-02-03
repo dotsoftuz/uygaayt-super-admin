@@ -93,22 +93,18 @@ const Settings = () => {
       <Grid className="md:flex" spacing={1}>
         <Grid item className="md:w-1/3 p-2" >
           <div className="tabs">
-            {SETTINGS_TABS.map((tab) => {
-              if (hasAccess(tab.role)) {
-                return (
-                  <div
-                    key={tab.key}
-                    className={`tab ${activeTab === tab.key && "active"}`}
-                    onClick={() => setActiveTab(tab.key)}
-                  >
-                    {t(`settings.${tab.name}`)} {/* Tarjima qilish */}
-                    {activeTab === tab.key && (
-                      <div className="left-border"></div>
-                    )}
-                  </div>
-                );
-              }
-            })}
+            {SETTINGS_TABS.filter(tab => hasAccess(tab.role)).map((tab) => (
+              <div
+                key={tab.key}
+                className={`tab ${activeTab === tab.key && "active"}`}
+                onClick={() => setActiveTab(tab.key)}
+              >
+                {t(`settings.${tab.name}`)}
+                {activeTab === tab.key && (
+                  <div className="left-border"></div>
+                )}
+              </div>
+            ))}
 
           </div>
         </Grid>
