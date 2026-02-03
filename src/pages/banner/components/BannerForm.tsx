@@ -17,7 +17,7 @@ const BannerForm: FC<IEmployeesForm> = ({
   resetForm,
 }) => {
   const { t } = useTranslation();
-  const { control, handleSubmit, reset, watch, setValue } = formStore;
+  const { control, handleSubmit, reset, setValue } = formStore;
 
   const { mutate, status } = useApiMutation(
     editingBannerId ? `/banner/update` : "/banner/create",
@@ -37,7 +37,7 @@ const BannerForm: FC<IEmployeesForm> = ({
     if (status === "success") {
       resetForm();
     }
-  }, [status]);
+  }, [status, resetForm]);
 
   const submit = (data: any) => {
     mutate({
@@ -60,7 +60,7 @@ const BannerForm: FC<IEmployeesForm> = ({
         description: getByIdData.data.description,
       });
     }
-  }, [getByIdStatus, getByIdData]);
+  }, [getByIdStatus, getByIdData, reset]);
 
   return (
     <div className="custom-drawer">
