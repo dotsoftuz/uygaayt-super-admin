@@ -1,11 +1,10 @@
-import { FC, useEffect } from "react";
 import { Grid } from "@mui/material";
 import { AutoCompleteForm, ImageInput, TextInput } from "components";
-import { Controller, UseFormReturn } from "react-hook-form";
-import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
-import { useTranslation } from "react-i18next";
 import TextEditor from "components/form/TextEditor/TextEditor";
-import { debounce } from "lodash";
+import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
+import { FC, useEffect } from "react";
+import { Controller, UseFormReturn } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 interface IEmployeesForm {
   formStore: UseFormReturn<any>;
@@ -22,7 +21,7 @@ const BannerForm: FC<IEmployeesForm> = ({
 
   const { mutate, status } = useApiMutation(
     editingBannerId ? `/banner/update` : "/banner/create",
-    editingBannerId ? "put" : "post"
+    editingBannerId ? "put" : "post",
   );
 
   const { data: getByIdData, status: getByIdStatus } = useApi(
@@ -31,7 +30,7 @@ const BannerForm: FC<IEmployeesForm> = ({
     {
       enabled: !!editingBannerId,
       suspense: false,
-    }
+    },
   );
 
   useEffect(() => {
@@ -46,7 +45,8 @@ const BannerForm: FC<IEmployeesForm> = ({
       ...data,
       imageId: data.imageId?._id,
       productId: data.productId?._id || data.productId, // Backward compatibility
-      productIds: data.productIds?.map((p: any) => p._id || p) || data.productIds, // Array uchun
+      productIds:
+        data.productIds?.map((p: any) => p._id || p) || data.productIds, // Array uchun
     });
   };
 
@@ -61,7 +61,6 @@ const BannerForm: FC<IEmployeesForm> = ({
       });
     }
   }, [getByIdStatus, getByIdData]);
-
 
   return (
     <div className="custom-drawer">
@@ -96,6 +95,9 @@ const BannerForm: FC<IEmployeesForm> = ({
             />
           </Grid>
           <Grid item md={12}>
+            <label className="py-2" htmlFor="description">
+              {t("common.description")}
+            </label>
             <Controller
               name="description"
               control={control}
@@ -110,7 +112,11 @@ const BannerForm: FC<IEmployeesForm> = ({
             />
           </Grid>
           <Grid item md={12}>
-            <label className="py-2" htmlFor="">{t('general.recommendation_img')}</label><br /><br />
+            <label className="py-2" htmlFor="">
+              {t("general.recommendation_img")}
+            </label>
+            <br />
+            <br />
             <ImageInput control={control} setValue={setValue} name="imageId" />
             <div className="d-flex justify-content-between mt-3">
               <span>O'lcham</span>
