@@ -19,9 +19,12 @@ import { get } from "lodash";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { Map, Placemark, Polyline, YMaps } from "react-yandex-maps";
+import { Map, Placemark, YMaps } from "react-yandex-maps";
 import { numberFormat } from "utils/numberFormat";
+import DashboardMap from "components/common/DashboardMap/DashboardMap";
+import TopTable from "../components/TopTable";
 import { StyledCard, TypographyTitle } from "../style/StatisticsCard.style";
+import MainCharts from "../components/mainCharts/MainCharts";
 
 type SortField = "total_price" | "total_order";
 type SortOrder = "1" | "-1";
@@ -738,24 +741,6 @@ const Dashboard = () => {
                                 selectedDelivery.addressName || "Manzil",
                             }}
                           />
-                          <Polyline
-                            geometry={[
-                              [
-                                selectedDelivery.store.addressLocation.latitude,
-                                selectedDelivery.store.addressLocation
-                                  .longitude,
-                              ],
-                              [
-                                selectedDelivery.addressLocation.latitude,
-                                selectedDelivery.addressLocation.longitude,
-                              ],
-                            ]}
-                            options={{
-                              strokeColor: "#FF6701",
-                              strokeWidth: 3,
-                              strokeOpacity: 0.7,
-                            }}
-                          />
                         </>
                       )}
                       {!selectedDelivery.store?.addressLocation && (
@@ -1304,7 +1289,7 @@ const Dashboard = () => {
         </Grid>
       </Grid>
 
-      {/* <Grid className="p-2 bg-white mt-2 rounded-lg">
+      <Grid className="p-2 bg-white mt-2 rounded-lg">
         <MainCharts
           data={attributesData?.data?.states}
           all_orders={attributesData?.data?.total_amount}
@@ -1350,7 +1335,7 @@ const Dashboard = () => {
             sortOrder={sortOrderCourier}
           />
         </div>
-      </Grid> */}
+      </Grid>
     </>
   );
 };

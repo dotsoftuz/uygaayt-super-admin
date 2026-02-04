@@ -4,10 +4,6 @@ import {
   Map,
   Placemark,
   Circle,
-  Clusterer,
-  FullscreenControl,
-  TypeSelector,
-  ZoomControl,
 } from "react-yandex-maps";
 import { useApiMutation } from "hooks/useApi/useApiHooks";
 import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
@@ -163,6 +159,86 @@ const generateDemoOrders = (): IOrderLocation[] => {
 
 const DEMO_ORDERS = generateDemoOrders();
 
+interface MapContentProps {
+  locationGroups: ILocationGroup[];
+  getMarkerColor: (count: number) => string;
+  getMarkerSize: (count: number) => number[];
+  createCustomIcon: (count: number, color: string, size: number[]) => string;
+}
+
+const MapContent = ({
+  locationGroups,
+  getMarkerColor,
+  getMarkerSize,
+  createCustomIcon,
+}: MapContentProps) => {
+  if (!locationGroups || locationGroups.length === 0) {
+    return null;
+  }
+
+  return (
+    <>
+      {locationGroups
+        .filter((group) => group && group.latitude && group.longitude)
+        .map((group, index) => {
+          if (!group || typeof group.count !== "number") {
+            return null;
+          }
+
+          const color = getMarkerColor(group.count);
+          const size = getMarkerSize(group.count);
+          const isHotSpot = group.count > 10;
+          const iconUrl = createCustomIcon(group.count, color, size);
+
+          const circleRadius = isHotSpot ? Math.min(500 + group.count * 20, 1500) : 0;
+
+          try {
+            return (
+              <React.Fragment key={`group_${group.latitude}_${group.longitude}_${index}_${group.count}`}>
+                {isHotSpot && circleRadius > 0 && (
+                  <Circle
+                    geometry={[[group.latitude, group.longitude], circleRadius]}
+                    options={{
+                      fillColor: color,
+                      fillOpacity: 0.1,
+                      strokeColor: color,
+                      strokeOpacity: 0.5,
+                      strokeWidth: 2,
+                    }}
+                  />
+                )}
+                <Placemark
+                  key={`marker_${group.latitude}_${group.longitude}_${index}_${group.count}`}
+                  geometry={[group.latitude, group.longitude]}
+                  properties={{
+                    balloonContentHeader: `<b>${group.areaName || "Noma'lum hudud"}${isHotSpot ? " 🔥" : ""}</b>`,
+                    balloonContentBody: `<p>Zakazlar soni: <b>${group.count}</b></p>${isHotSpot
+                        ? '<p style="color: #FF4500; font-weight: bold;">Qaynoq nuqta</p>'
+                        : ""
+                      }`,
+                    balloonContentFooter: `<small>Koordinatalar: ${group.latitude.toFixed(
+                      4,
+                    )}, ${group.longitude.toFixed(4)}</small>`,
+                    hintContent: `${group.areaName || "Hudud"}: ${group.count} zakaz`,
+                  }}
+                  options={{
+                    iconLayout: "default#image",
+                    iconImageHref: iconUrl,
+                    iconImageSize: size,
+                    iconImageOffset: [-size[0] / 2, -size[1] / 2],
+                  }}
+                />
+              </React.Fragment>
+            );
+          } catch (error) {
+            console.error("Error rendering placemark:", error);
+            return null;
+          }
+        })}
+    </>
+  );
+};
+
 interface DashboardMapProps {
   height?: string;
   useDemoData?: boolean; // Demo data ishlatish uchun flag
@@ -175,15 +251,34 @@ const DashboardMap = ({ height = "600px", useDemoData = true }: DashboardMapProp
   const [currentZoom, setCurrentZoom] = useState<number>(JIZZAX_DEFAULT_ZOOM);
   const mapRef = useRef<any>(null);
 
+  // #region agent log
+  fetch("http://127.0.0.1:7242/ingest/ce1c437f-4b53-45a3-b9ea-6cfa04072735", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      sessionId: "debug-session",
+      runId: "pre-fix-1",
+      hypothesisId: "H1",
+      location: "DashboardMap.tsx:component-init",
+      message: "DashboardMap init",
+      data: {
+        heightProp: height,
+        useDemoDataProp: useDemoData,
+      },
+      timestamp: Date.now(),
+    }),
+  }).catch(() => { });
+  // #endregion
+
   // Zoom darajasiga qarab cluster distance ni hisoblash
   const getClusterDistance = (zoom: number): number => {
-    if (zoom <= 10) return 0.08; // Juda katta radius - butun shahar
-    if (zoom <= 11) return 0.05; // Katta radius - katta hududlar
-    if (zoom <= 12) return 0.03; // O'rtacha radius
-    if (zoom <= 13) return 0.02; // O'rtacha-kichik radius
-    if (zoom <= 14) return 0.01; // Kichik radius - kichik hududlar
-    if (zoom <= 15) return 0.005; // Juda kichik radius - aniq hududlar
-    return 0.002; // Minimal radius - aniq nuqtalar
+    if (zoom <= 10) return 0.06;
+    if (zoom <= 11) return 0.04;
+    if (zoom <= 12) return 0.02;
+    if (zoom <= 13) return 0.01;
+    if (zoom <= 14) return 0.006;
+    if (zoom <= 15) return 0.003;
+    return 0.0015;
   };
 
   // Zakazlar ma'lumotlarini olish (real data uchun)
@@ -200,7 +295,7 @@ const DashboardMap = ({ height = "600px", useDemoData = true }: DashboardMapProp
               order.addressLocation.latitude &&
               order.addressLocation.longitude
           );
-          
+
           setOrderLocations(ordersWithLocation);
           groupOrdersByArea(ordersWithLocation, currentZoom);
         }
@@ -246,7 +341,7 @@ const DashboardMap = ({ height = "600px", useDemoData = true }: DashboardMapProp
           (closestGroup.latitude * (closestGroup.count - 1) + lat) / closestGroup.count;
         closestGroup.longitude =
           (closestGroup.longitude * (closestGroup.count - 1) + lng) / closestGroup.count;
-        
+
         // Hudud nomini yangilash (ko'proq zakaz bo'lgan hudud nomini olish)
         if (order.addressName && order.addressName !== "Noma'lum hudud") {
           closestGroup.areaName = order.addressName;
@@ -265,17 +360,40 @@ const DashboardMap = ({ height = "600px", useDemoData = true }: DashboardMapProp
       }
     });
 
-    setLocationGroups(Object.values(groups));
+    const grouped = Object.values(groups);
+    setLocationGroups(grouped);
+
+    // #region agent log
+    fetch("http://127.0.0.1:7242/ingest/ce1c437f-4b53-45a3-b9ea-6cfa04072735", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sessionId: "debug-session",
+        runId: "pre-fix-1",
+        hypothesisId: "H2",
+        location: "DashboardMap.tsx:groupOrdersByArea",
+        message: "Grouped orders by area",
+        data: {
+          ordersCount: orders.length,
+          zoomLevel,
+          groupsCount: grouped.length,
+          maxGroupCount: grouped.reduce(
+            (max, g) => (g.count > max ? g.count : max),
+            0,
+          ),
+        },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => { });
+    // #endregion
   };
 
   // Zakazlarni yuklash
   useEffect(() => {
     if (useDemoData) {
-      // Demo data ishlatish
       setOrderLocations(DEMO_ORDERS);
       groupOrdersByArea(DEMO_ORDERS, currentZoom);
     } else {
-      // Real data olish
       fetchOrders({
         page: 1,
         limit: 200, // API limit: maksimal 200
@@ -298,25 +416,100 @@ const DashboardMap = ({ height = "600px", useDemoData = true }: DashboardMapProp
   const handleMapBoundsChange = (event: any) => {
     const map = event.get("target");
     const zoom = map.getZoom();
-    
+
     // Zoom darajasi o'zgarganda, yangi zoom ni saqlash
     if (zoom !== currentZoom) {
       setCurrentZoom(zoom);
     }
   };
 
+  useEffect(() => {
+    if (locationGroups.length === 0) {
+      // #region agent log
+      fetch("http://127.0.0.1:7242/ingest/ce1c437f-4b53-45a3-b9ea-6cfa04072735", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sessionId: "debug-session",
+          runId: "pre-fix-1",
+          hypothesisId: "H3",
+          location: "DashboardMap.tsx:locationGroups-effect",
+          message: "Location groups empty",
+          data: {
+            groupsCount: 0,
+            orderLocationsCount: orderLocations.length,
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => { });
+      // #endregion
+      return;
+    }
+
+    const hotGroups = locationGroups.filter((g) => g && g.count > 10);
+
+    // #region agent log
+    fetch("http://127.0.0.1:7242/ingest/ce1c437f-4b53-45a3-b9ea-6cfa04072735", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        sessionId: "debug-session",
+        runId: "pre-fix-1",
+        hypothesisId: "H3",
+        location: "DashboardMap.tsx:locationGroups-effect",
+        message: "Location groups updated",
+        data: {
+          groupsCount: locationGroups.length,
+          hotGroupsCount: hotGroups.length,
+          hotGroupsSample: hotGroups
+            .slice(0, 3)
+            .map((g) => ({ lat: g.latitude, lng: g.longitude, count: g.count })),
+          allGroupsSample: locationGroups
+            .slice(0, 5)
+            .map((g) => ({ lat: g.latitude, lng: g.longitude, count: g.count, areaName: g.areaName })),
+        },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => { });
+    // #endregion
+  }, [locationGroups, orderLocations.length]);
+
   // Marker rangini aniqlash
   const getMarkerColor = (count: number) => {
-    if (count > 10) return "#FF4500"; // Qizil - ko'p zakazlar
-    if (count > 5) return "#FF6701"; // To'q jigarrang - o'rtacha
-    return "#FFA500"; // Sariq - kam zakazlar
+    if (count > 20) return "#ef4444"; // Qizil - juda ko'p zakazlar
+    if (count > 10) return "#f59e0b"; // To'q sariq - ko'p zakazlar
+    if (count > 5) return "#eab308"; // Sariq - o'rtacha
+    return "#22c55e"; // Yashil - kam zakazlar
   };
 
   // Marker o'lchamini aniqlash
   const getMarkerSize = (count: number) => {
-    if (count > 10) return [50, 50];
-    if (count > 5) return [40, 40];
+    if (count > 20) return [50, 50];
+    if (count > 10) return [40, 40];
+    if (count > 5) return [35, 35];
     return [30, 30];
+  };
+
+  // Custom SVG icon yaratish
+  const createCustomIcon = (count: number, color: string, size: number[]) => {
+    const [width, height] = size;
+    const svgIcon = `
+      <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="shadow-${count}">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+          </filter>
+        </defs>
+        <circle cx="${width / 2}" cy="${height / 2}" r="${Math.min(width, height) / 2 - 2}" 
+                fill="${color}" stroke="white" stroke-width="2.5" opacity="0.95" filter="url(#shadow-${count})"/>
+        <text x="${width / 2}" y="${height / 2}" 
+              text-anchor="middle" dominant-baseline="central" 
+              fill="white" font-size="${Math.min(width, height) / 2.5}" font-weight="bold">
+          ${count}
+        </text>
+      </svg>
+    `;
+    return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgIcon)))}`;
   };
 
   return (
@@ -344,86 +537,12 @@ const DashboardMap = ({ height = "600px", useDemoData = true }: DashboardMapProp
           }
         }}
       >
-        {/* Qaynoq nuqtalar uchun aylanalar */}
-        {locationGroups
-          .filter((group) => group.count > 10)
-          .map((group, index) => {
-            const color = getMarkerColor(group.count);
-            // Aylana radiusini zakazlar soniga qarab hisoblash (metrlarda)
-            const circleRadius = Math.min(500 + (group.count * 20), 1500);
-            
-            return (
-              <Circle
-                key={`circle_${group.latitude}_${group.longitude}_${index}`}
-                geometry={[
-                  [group.latitude, group.longitude],
-                  circleRadius
-                ]}
-                options={{
-                  fillColor: color,
-                  fillOpacity: 0.15,
-                  strokeColor: color,
-                  strokeOpacity: 0.7,
-                  strokeWidth: 3,
-                }}
-                properties={{
-                  hintContent: `${group.areaName}: ${group.count} zakaz (Qaynoq nuqta)`,
-                }}
-              />
-            );
-          })}
-
-        <Clusterer
-          options={{
-            preset: "islands#invertedOrangeClusterIcons",
-            groupByCoordinates: false,
-            clusterDisableClickZoom: false,
-            clusterHideIconOnBalloonOpen: false,
-            geoObjectHideIconOnBalloonOpen: false,
-          }}
-        >
-          {locationGroups.map((group, index) => {
-            const [width, height] = getMarkerSize(group.count);
-            const color = getMarkerColor(group.count);
-            const isHotSpot = group.count > 10; // Qaynoq nuqta - 10+ zakaz
-            
-            // SVG icon yaratish
-            const svgIcon = `
-              <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="${width/2}" cy="${height/2}" r="${width/2 - 2}" fill="${color}" stroke="white" stroke-width="3"/>
-                <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" 
-                      fill="white" font-weight="bold" font-size="${width > 40 ? '16' : width > 30 ? '14' : '12'}">
-                  ${group.count}
-                </text>
-              </svg>
-            `;
-            
-            const iconDataUrl = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgIcon)))}`;
-
-            return (
-              <Placemark
-                key={`marker_${group.latitude}_${group.longitude}_${index}`}
-                geometry={[group.latitude, group.longitude]}
-                properties={{
-                  balloonContentHeader: `<b>${group.areaName}${isHotSpot ? ' 🔥' : ''}</b>`,
-                  balloonContentBody: `<p>Zakazlar soni: <b>${group.count}</b></p>${isHotSpot ? '<p style="color: #FF4500; font-weight: bold;">Qaynoq nuqta</p>' : ''}`,
-                  balloonContentFooter: `<small>Koordinatalar: ${group.latitude.toFixed(4)}, ${group.longitude.toFixed(4)}</small>`,
-                  hintContent: `${group.areaName}: ${group.count} zakaz`,
-                }}
-                options={{
-                  iconLayout: "default#image",
-                  iconImageHref: iconDataUrl,
-                  iconImageSize: [width, height],
-                  iconImageOffset: [-width / 2, -height / 2],
-                }}
-              />
-            );
-          })}
-        </Clusterer>
-
-        <FullscreenControl />
-        <TypeSelector options={{ float: "right" }} />
-        <ZoomControl options={{ float: "right" }} />
+        <MapContent
+          locationGroups={locationGroups}
+          getMarkerColor={getMarkerColor}
+          getMarkerSize={getMarkerSize}
+          createCustomIcon={createCustomIcon}
+        />
       </Map>
     </YMaps>
   );
