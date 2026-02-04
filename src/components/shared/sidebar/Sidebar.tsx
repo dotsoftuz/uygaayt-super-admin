@@ -81,12 +81,9 @@ const Sidebar = () => {
 
         <div className="sidebar-main">
           <div className="asosiy">
-            {sidebarRoutes.map((item, key) => {
-                  if (hasAccess(item.role)) {
-                    return <MenuItemCustom key={key} item={item} />;
-                  }
-                })
-             }
+            {sidebarRoutes.filter(item => hasAccess(item.role)).map((item, key) => (
+              <MenuItemCustom key={key} item={item} />
+            ))}
           </div>
         </div>
 
@@ -212,24 +209,20 @@ const MultiLevelHover = ({ item }: { item: ISidebarRoute }) => {
         <span>{item?.icon}</span> {t("sidebar." + item?.translate)}
       </div>
 
-      {item.items?.map((cur) => {
-        if (hasAccess(cur.role)) {
-          return (
-            <ul>
-              <li
-                className={`sidebar-item-hovered ${
-                  pathname.includes(cur?.path || "")
-                    ? "sideBarHovered-active"
-                    : ""
-                }`}
-                onClick={() => cur?.path && navigate(cur?.path)}
-              >
-                <Ellips /> {t("sidebar." + cur.translate)}
-              </li>
-            </ul>
-          );
-        }
-      })}
+      {item.items?.filter(cur => hasAccess(cur.role)).map((cur) => (
+        <ul key={cur.path}>
+          <li
+            className={`sidebar-item-hovered ${
+              pathname.includes(cur?.path || "")
+                ? "sideBarHovered-active"
+                : ""
+            }`}
+            onClick={() => cur?.path && navigate(cur?.path)}
+          >
+            <Ellips /> {t("sidebar." + cur.translate)}
+          </li>
+        </ul>
+      ))}
     </HoveredItems>
   );
 };

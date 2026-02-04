@@ -1,0 +1,408 @@
+{
+    "imageSize": {
+        "width": 837,
+        "height": 634
+    },
+    "sections": [
+        {
+            "id": "1769197902184",
+            "name": "Chiqish",
+            "rect": {
+                "x_percent": "0.26",
+                "y_percent": "15.74",
+                "width_percent": "8.34",
+                "height_percent": "11.57"
+            }
+        },
+        {
+            "id": "1769197912541",
+            "name": "Kirish",
+            "rect": {
+                "x_percent": "0.64",
+                "y_percent": "64.32",
+                "width_percent": "9.37",
+                "height_percent": "12.82"
+            }
+        },
+        {
+            "id": "1769197930073",
+            "name": "Kassa 1",
+            "rect": {
+                "x_percent": "7.51",
+                "y_percent": "1.63",
+                "width_percent": "14.90",
+                "height_percent": "9.60"
+            }
+        },
+        {
+            "id": "1769197951823",
+            "name": "Qandolat - Shokalad",
+            "rect": {
+                "x_percent": "22.78",
+                "y_percent": "1.63",
+                "width_percent": "36.10",
+                "height_percent": "9.92"
+            }
+        },
+        {
+            "id": "1769197959783",
+            "name": "Kofe",
+            "rect": {
+                "x_percent": "59.12",
+                "y_percent": "1.63",
+                "width_percent": "33.32",
+                "height_percent": "9.92"
+            }
+        },
+        {
+            "id": "1769197971440",
+            "name": "Non mahsulotlari",
+            "rect": {
+                "x_percent": "88.68",
+                "y_percent": "11.86",
+                "width_percent": "9.81",
+                "height_percent": "12.00"
+            }
+        },
+        {
+            "id": "1769197979198",
+            "name": "Cheers",
+            "rect": {
+                "x_percent": "8.60",
+                "y_percent": "13.30",
+                "width_percent": "3.76",
+                "height_percent": "4.16"
+            }
+        },
+        {
+            "id": "1769197984967",
+            "name": "Lays",
+            "rect": {
+                "x_percent": "9.81",
+                "y_percent": "24.02",
+                "width_percent": "3.88",
+                "height_percent": "5.12"
+            }
+        },
+        {
+            "id": "1769197991767",
+            "name": "Sneklar",
+            "rect": {
+                "x_percent": "23.02",
+                "y_percent": "16.82",
+                "width_percent": "4.85",
+                "height_percent": "6.08"
+            }
+        },
+        {
+            "id": "1769198001683",
+            "name": "Parfumeriya",
+            "rect": {
+                "x_percent": "29.32",
+                "y_percent": "17.78",
+                "width_percent": "46.40",
+                "height_percent": "4.64"
+            }
+        },
+        {
+            "id": "1769198007990",
+            "name": "Kraska",
+            "rect": {
+                "x_percent": "76.81",
+                "y_percent": "16.98",
+                "width_percent": "4.97",
+                "height_percent": "6.08"
+            }
+        },
+        {
+            "id": "1769198014224",
+            "name": "Zira",
+            "rect": {
+                "x_percent": "76.81",
+                "y_percent": "26.26",
+                "width_percent": "4.85",
+                "height_percent": "6.72"
+            }
+        },
+        {
+            "id": "1769198024200",
+            "name": "parfumeriya 2",
+            "rect": {
+                "x_percent": "29.32",
+                "y_percent": "27.06",
+                "width_percent": "46.40",
+                "height_percent": "4.96"
+            }
+        },
+        {
+            "id": "1769198033164",
+            "name": "Kosmetika",
+            "rect": {
+                "x_percent": "23.02",
+                "y_percent": "26.74",
+                "width_percent": "5.21",
+                "height_percent": "6.72"
+            }
+        },
+        {
+            "id": "1769198040918",
+            "name": "Kass 2",
+            "rect": {
+                "x_percent": "7.63",
+                "y_percent": "30.26",
+                "width_percent": "13.21",
+                "height_percent": "8.16"
+            }
+        },
+        {
+            "id": "1769198059989",
+            "name": "Salqin ichimliklar",
+            "rect": {
+                "x_percent": "11.15",
+                "y_percent": "39.05",
+                "width_percent": "11.02",
+                "height_percent": "8.48"
+            }
+        },
+        {
+            "id": "1769198070397",
+            "name": "Ichimliklar 1",
+            "rect": {
+                "x_percent": "23.14",
+                "y_percent": "38.09",
+                "width_percent": "10.66",
+                "height_percent": "9.76"
+            }
+        },
+        {
+            "id": "1769198077855",
+            "name": "Ichimliklar 2",
+            "rect": {
+                "x_percent": "37.31",
+                "y_percent": "38.25",
+                "width_percent": "10.90",
+                "height_percent": "9.76"
+            }
+        },
+        {
+            "id": "1769198091635",
+            "name": "Ichimliklar 3",
+            "rect": {
+                "x_percent": "49.55",
+                "y_percent": "37.77",
+                "width_percent": "11.99",
+                "height_percent": "9.76"
+            }
+        },
+        {
+            "id": "1769198100834",
+            "name": "Bez sahar",
+            "rect": {
+                "x_percent": "62.39",
+                "y_percent": "44.33",
+                "width_percent": "9.93",
+                "height_percent": "13.43"
+            }
+        },
+        {
+            "id": "1769198109516",
+            "name": "O'yinchoq",
+            "rect": {
+                "x_percent": "11.02",
+                "y_percent": "48.81",
+                "width_percent": "15.02",
+                "height_percent": "9.76"
+            }
+        },
+        {
+            "id": "1769198118251",
+            "name": "Konstovar",
+            "rect": {
+                "x_percent": "26.41",
+                "y_percent": "48.97",
+                "width_percent": "18.29",
+                "height_percent": "10.40"
+            }
+        },
+        {
+            "id": "1769198126424",
+            "name": "Xoz tovar",
+            "rect": {
+                "x_percent": "45.79",
+                "y_percent": "49.29",
+                "width_percent": "15.87",
+                "height_percent": "9.60"
+            }
+        },
+        {
+            "id": "1769198133120",
+            "name": "Muzqaymoq",
+            "rect": {
+                "x_percent": "74.26",
+                "y_percent": "49.61",
+                "width_percent": "7.63",
+                "height_percent": "7.52"
+            }
+        },
+        {
+            "id": "1769198143169",
+            "name": "Yarim tayyor mahsuloatlar",
+            "rect": {
+                "x_percent": "74.63",
+                "y_percent": "58.41",
+                "width_percent": "7.15",
+                "height_percent": "7.36"
+            }
+        },
+        {
+            "id": "1769198152587",
+            "name": "Bolalar ozuqasi",
+            "rect": {
+                "x_percent": "82.74",
+                "y_percent": "55.21",
+                "width_percent": "6.42",
+                "height_percent": "25.27"
+            }
+        },
+        {
+            "id": "1769198167284",
+            "name": "Kiloli Shokolatlar",
+            "rect": {
+                "x_percent": "74.75",
+                "y_percent": "66.88",
+                "width_percent": "7.03",
+                "height_percent": "13.59"
+            }
+        },
+        {
+            "id": "1769198174566",
+            "name": "Tortlar",
+            "rect": {
+                "x_percent": "88.68",
+                "y_percent": "24.02",
+                "width_percent": "9.93",
+                "height_percent": "12.95"
+            }
+        },
+        {
+            "id": "1769198181999",
+            "name": "Go'shtlar",
+            "rect": {
+                "x_percent": "87.47",
+                "y_percent": "37.13",
+                "width_percent": "5.33",
+                "height_percent": "10.88"
+            }
+        },
+        {
+            "id": "1769198190271",
+            "name": "Mayonez",
+            "rect": {
+                "x_percent": "93.53",
+                "y_percent": "37.61",
+                "width_percent": "5.33",
+                "height_percent": "10.72"
+            }
+        },
+        {
+            "id": "1769198204133",
+            "name": "Kolbassa mahsulotlari",
+            "rect": {
+                "x_percent": "90.38",
+                "y_percent": "48.49",
+                "width_percent": "8.36",
+                "height_percent": "17.43"
+            }
+        },
+        {
+            "id": "1769198217222",
+            "name": "Sutli mahsulotlar",
+            "rect": {
+                "x_percent": "90.25",
+                "y_percent": "67.84",
+                "width_percent": "8.12",
+                "height_percent": "13.59"
+            }
+        },
+        {
+            "id": "1769198227355",
+            "name": "Sabzavotlar",
+            "rect": {
+                "x_percent": "54.03",
+                "y_percent": "62.56",
+                "width_percent": "10.90",
+                "height_percent": "14.23"
+            }
+        },
+        {
+            "id": "1769198232631",
+            "name": "Organik",
+            "rect": {
+                "x_percent": "43.37",
+                "y_percent": "61.76",
+                "width_percent": "7.51",
+                "height_percent": "9.44"
+            }
+        },
+        {
+            "id": "1769198240249",
+            "name": "Premium polka",
+            "rect": {
+                "x_percent": "21.81",
+                "y_percent": "62.08",
+                "width_percent": "21.44",
+                "height_percent": "9.28"
+            }
+        },
+        {
+            "id": "1769198251918",
+            "name": "Akksesuarlar",
+            "rect": {
+                "x_percent": "14.54",
+                "y_percent": "61.60",
+                "width_percent": "7.27",
+                "height_percent": "9.92"
+            }
+        },
+        {
+            "id": "1769198260567",
+            "name": "Uygaayt zona",
+            "rect": {
+                "x_percent": "6.54",
+                "y_percent": "80.80",
+                "width_percent": "8.00",
+                "height_percent": "11.20"
+            }
+        },
+        {
+            "id": "1769198269983",
+            "name": "Mevalar",
+            "rect": {
+                "x_percent": "15.14",
+                "y_percent": "81.76",
+                "width_percent": "37.92",
+                "height_percent": "9.28"
+            }
+        },
+        {
+            "id": "1769198278539",
+            "name": "Chaq chuq",
+            "rect": {
+                "x_percent": "54.03",
+                "y_percent": "81.60",
+                "width_percent": "7.39",
+                "height_percent": "9.60"
+            }
+        },
+        {
+            "id": "1769198292214",
+            "name": "Quruq pecheniyalar",
+            "rect": {
+                "x_percent": "62.51",
+                "y_percent": "81.92",
+                "width_percent": "24.23",
+                "height_percent": "10.56"
+            }
+        }
+    ]
+}

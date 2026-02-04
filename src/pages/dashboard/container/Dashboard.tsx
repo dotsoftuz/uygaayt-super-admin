@@ -1,36 +1,34 @@
-import { Grid, Typography, Box, Avatar, IconButton } from "@mui/material";
-import { RangeDatePicker } from "components";
-import { useApiMutation, useApi } from "hooks/useApi/useApiHooks";
-import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { numberFormat } from "utils/numberFormat";
-import TopTable from "../components/TopTable";
-import useCommonContext from "context/useCommon";
-import { get } from "lodash";
-import MainCharts from "../components/mainCharts/MainCharts";
-import { StyledCard, TypographyTitle } from "../style/StatisticsCard.style";
-import { formatMinutes } from "../../../utils/formatMinutes";
-import DashboardMap from "components/common/DashboardMap/DashboardMap";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CancelIcon from "@mui/icons-material/Cancel";
-import PaidIcon from "@mui/icons-material/Paid";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
-import PersonIcon from "@mui/icons-material/Person";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CloseIcon from "@mui/icons-material/Close";
+import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
-import DeliveryDiningIcon from '@mui/icons-material/DeliveryDining';
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import CloseIcon from "@mui/icons-material/Close";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import { YMaps, Map, Placemark, Polyline } from "react-yandex-maps";
+import PaidIcon from "@mui/icons-material/Paid";
+import PersonIcon from "@mui/icons-material/Person";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import StorefrontIcon from "@mui/icons-material/Storefront";
+import { Avatar, Box, Grid, IconButton, Typography } from "@mui/material";
+import { RangeDatePicker } from "components";
+import useCommonContext from "context/useCommon";
+import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
+import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
+import { get } from "lodash";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { Map, Placemark, Polyline, YMaps } from "react-yandex-maps";
+import { numberFormat } from "utils/numberFormat";
+import { StyledCard, TypographyTitle } from "../style/StatisticsCard.style";
 
 type SortField = "total_price" | "total_order";
 type SortOrder = "1" | "-1";
 
 const Dashboard = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const allParams = useAllQueryParams();
   const currentLang = localStorage.getItem("i18nextLng") || "uz";
   const [sortFieldUser, setSortFieldUser] = useState<SortField>("total_price");
@@ -43,6 +41,17 @@ const Dashboard = () => {
   const [activeOrders, setActiveOrders] = useState<any[]>([]);
   const [activeStateIds, setActiveStateIds] = useState<string[]>([]);
 
+  const { data: selectedOrderData } = useApi<any>(
+    selectedDelivery?._id ? `order/get-by-id/${selectedDelivery._id}` : "",
+    {},
+    {
+      enabled: !!selectedDelivery?._id,
+      toast: false,
+    },
+  );
+
+  const selectedOrder = selectedOrderData?.data || selectedDelivery;
+
   const {
     state: { data: settingsData },
   } = useCommonContext();
@@ -54,21 +63,21 @@ const Dashboard = () => {
     "balance/total",
     "post",
     {},
-    true
+    true,
   );
 
   const { mutate: customerMutate, data: customerData } = useApiMutation<any>(
     "report/customer/count",
     "post",
     {},
-    true
+    true,
   );
 
   const { mutate: courierMutate, data: couriersData } = useApiMutation<any>(
     "report/courier/top",
     "post",
     {},
-    true
+    true,
   );
   const { mutate: topCustomerMutate, data: topCustomerData } =
     useApiMutation<any>("report/customer/top", "post", {}, true);
@@ -86,7 +95,7 @@ const Dashboard = () => {
       mutate({
         dateFrom: allParams.dateFrom,
         dateTo: allParams.dateTo,
-      })
+      }),
     );
   };
 
@@ -115,7 +124,7 @@ const Dashboard = () => {
     "post",
     {
       onSuccess(response) {},
-    }
+    },
   );
 
   useEffect(() => {
@@ -141,13 +150,14 @@ const Dashboard = () => {
             const orderState = (order.state?.state || "").toLowerCase();
             const systemName = (order.state?.systemName || "").toLowerCase();
             const stateId = order.stateId?.toString() || "";
-            
+
             // Check if order state is in excluded states
-            const isExcluded = excludedStates.some(excluded => 
-              orderState === excluded.toLowerCase() || 
-              systemName === excluded.toLowerCase()
+            const isExcluded = excludedStates.some(
+              (excluded) =>
+                orderState === excluded.toLowerCase() ||
+                systemName === excluded.toLowerCase(),
             );
-            
+
             // Also check if stateId matches any excluded state IDs
             if (!isExcluded && orderStatesData?.data) {
               const excludedStateIds = orderStatesData.data
@@ -156,15 +166,15 @@ const Dashboard = () => {
                   return excludedStates.includes(stateValue);
                 })
                 .map((state: any) => state._id.toString());
-              
+
               if (excludedStateIds.includes(stateId)) {
                 return false;
               }
             }
-            
+
             return !isExcluded;
           });
-          
+
           setActiveOrders(filteredOrders);
           // Set first order as selected if none selected
           if (!selectedDelivery && filteredOrders.length > 0) {
@@ -172,7 +182,7 @@ const Dashboard = () => {
           } else if (selectedDelivery) {
             // Check if selected order is still in the list
             const isSelectedOrderStillActive = filteredOrders.some(
-              (order: any) => order._id === selectedDelivery._id
+              (order: any) => order._id === selectedDelivery._id,
             );
             if (!isSelectedOrderStillActive && filteredOrders.length > 0) {
               setSelectedDelivery(filteredOrders[0]);
@@ -182,7 +192,7 @@ const Dashboard = () => {
           }
         }
       },
-    }
+    },
   );
 
   // Get active state IDs when order states are loaded
@@ -195,13 +205,15 @@ const Dashboard = () => {
           const stateValue = (state.state || "").toLowerCase();
           const systemName = (state.systemName || "").toLowerCase();
           return (
-            activeStates.some(active => 
-              stateValue === active.toLowerCase() || 
-              systemName === active.toLowerCase()
+            activeStates.some(
+              (active) =>
+                stateValue === active.toLowerCase() ||
+                systemName === active.toLowerCase(),
             ) &&
-            !excludedStates.some(excluded => 
-              stateValue === excluded.toLowerCase() || 
-              systemName === excluded.toLowerCase()
+            !excludedStates.some(
+              (excluded) =>
+                stateValue === excluded.toLowerCase() ||
+                systemName === excluded.toLowerCase(),
             )
           );
         })
@@ -406,7 +418,6 @@ const Dashboard = () => {
           </div>
         </StyledCard>
       </Grid>
-      
 
       <Grid container spacing={2} className="mt-2">
         {/* Left Panel - Ongoing Delivery List */}
@@ -464,7 +475,10 @@ const Dashboard = () => {
                       "&:hover": {
                         boxShadow: "0 6px 16px rgba(255, 103, 1, 0.15)",
                         transform: "translateY(-3px)",
-                        borderColor: selectedDelivery?._id === order._id ? "#FF6701" : "#FF6701",
+                        borderColor:
+                          selectedDelivery?._id === order._id
+                            ? "#FF6701"
+                            : "#FF6701",
                       },
                       display: "flex",
                       gap: 2,
@@ -473,7 +487,14 @@ const Dashboard = () => {
                     }}
                   >
                     <Box sx={{ flex: 1, minWidth: 0 }}>
-                      <Box sx={{ display: "flex", alignItems: "center", gap: 1, marginBottom: "8px" }}>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1,
+                          marginBottom: "8px",
+                        }}
+                      >
                         <Typography
                           sx={{
                             fontSize: "15px",
@@ -496,15 +517,15 @@ const Dashboard = () => {
                           />
                         )}
                       </Box>
-                      
+
                       <Box
                         sx={{
                           display: "inline-flex",
                           alignItems: "center",
                           padding: "4px 8px",
                           borderRadius: "6px",
-                          backgroundColor: order.state?.color 
-                            ? `${order.state.color}15` 
+                          backgroundColor: order.state?.color
+                            ? `${order.state.color}15`
                             : "#f0f0f0",
                           marginBottom: "8px",
                         }}
@@ -517,12 +538,14 @@ const Dashboard = () => {
                             textTransform: "capitalize",
                           }}
                         >
-                          {order.state?.name?.[currentLang] || 
-                           (order.state?.state === "created" && "Yaratildi") ||
-                           (order.state?.state === "inProcess" && "Jarayonda") ||
-                           (order.state?.state === "inDelivery" && "Yetkazib berishda") ||
-                           order.state?.state || 
-                           "Aktiv"}
+                          {order.state?.name?.[currentLang] ||
+                            (order.state?.state === "created" && "Yaratildi") ||
+                            (order.state?.state === "inProcess" &&
+                              "Jarayonda") ||
+                            (order.state?.state === "inDelivery" &&
+                              "Yetkazib berishda") ||
+                            order.state?.state ||
+                            "Aktiv"}
                         </Typography>
                       </Box>
 
@@ -535,27 +558,47 @@ const Dashboard = () => {
                             marginBottom: "8px",
                           }}
                         >
-                          <PersonIcon sx={{ fontSize: "14px", color: "#666" }} />
+                          <PersonIcon
+                            sx={{ fontSize: "14px", color: "#666" }}
+                          />
                           <Typography
-                            sx={{ 
-                              fontSize: "12px", 
-                              fontWeight: 500, 
-                              color: "#45556c" 
+                            sx={{
+                              fontSize: "12px",
+                              fontWeight: 500,
+                              color: "#45556c",
                             }}
                           >
-                            {order.courier?.firstName || ""} {order.courier?.lastName || ""}
+                            {order.courier?.firstName || ""}{" "}
+                            {order.courier?.lastName || ""}
                           </Typography>
                         </Box>
                       )}
-                      
-                      <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
-                        <Box sx={{ display: "flex", alignItems: "flex-start", gap: 0.5 }}>
+
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 0.5,
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "flex-start",
+                            gap: 0.5,
+                          }}
+                        >
                           <LocationOnIcon
-                            sx={{ fontSize: "14px", color: "#FF6701", marginTop: "2px", flexShrink: 0 }}
+                            sx={{
+                              fontSize: "14px",
+                              color: "#FF6701",
+                              marginTop: "2px",
+                              flexShrink: 0,
+                            }}
                           />
-                          <Typography 
-                            sx={{ 
-                              fontSize: "12px", 
+                          <Typography
+                            sx={{
+                              fontSize: "12px",
                               color: "#666",
                               lineHeight: 1.4,
                               overflow: "hidden",
@@ -568,16 +611,26 @@ const Dashboard = () => {
                             {order.addressName || "Manzil ko'rsatilmagan"}
                           </Typography>
                         </Box>
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, marginTop: "4px" }}>
-                          <PaidIcon sx={{ fontSize: "14px", color: "#FF6701" }} />
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 1,
+                            marginTop: "4px",
+                          }}
+                        >
+                          <PaidIcon
+                            sx={{ fontSize: "14px", color: "#FF6701" }}
+                          />
                           <Typography
-                            sx={{ 
-                              fontSize: "13px", 
-                              fontWeight: 600, 
-                              color: "#FF6701" 
+                            sx={{
+                              fontSize: "13px",
+                              fontWeight: 600,
+                              color: "#FF6701",
                             }}
                           >
-                            {numberFormat(order.totalPrice)} {get(settingsData, "currency", "uzs")}
+                            {numberFormat(order.totalPrice)}{" "}
+                            {get(settingsData, "currency", "uzs")}
                           </Typography>
                         </Box>
                       </Box>
@@ -594,7 +647,10 @@ const Dashboard = () => {
                       <DeliveryDiningIcon
                         sx={{
                           fontSize: "32px",
-                          color: selectedDelivery?._id === order._id ? "#FF6701" : "#45556c",
+                          color:
+                            selectedDelivery?._id === order._id
+                              ? "#FF6701"
+                              : "#45556c",
                           transition: "color 0.3s",
                         }}
                       />
@@ -634,14 +690,20 @@ const Dashboard = () => {
                   height="100%"
                   defaultState={{
                     center: selectedDelivery?.addressLocation
-                      ? [selectedDelivery.addressLocation.latitude, selectedDelivery.addressLocation.longitude]
+                      ? [
+                          selectedDelivery.addressLocation.latitude,
+                          selectedDelivery.addressLocation.longitude,
+                        ]
                       : [40.1158, 67.8422],
                     zoom: selectedDelivery?.addressLocation ? 14 : 12,
                     behaviors: ["default", "scrollZoom"],
                   }}
                   state={{
                     center: selectedDelivery?.addressLocation
-                      ? [selectedDelivery.addressLocation.latitude, selectedDelivery.addressLocation.longitude]
+                      ? [
+                          selectedDelivery.addressLocation.latitude,
+                          selectedDelivery.addressLocation.longitude,
+                        ]
                       : [40.1158, 67.8422],
                     zoom: selectedDelivery?.addressLocation ? 14 : 12,
                   }}
@@ -659,7 +721,8 @@ const Dashboard = () => {
                               preset: "islands#blueCircleDotIcon",
                             }}
                             properties={{
-                              balloonContent: selectedDelivery.store?.name || "Do'kon",
+                              balloonContent:
+                                selectedDelivery.store?.name || "Do'kon",
                             }}
                           />
                           <Placemark
@@ -671,14 +734,16 @@ const Dashboard = () => {
                               preset: "islands#redCircleDotIcon",
                             }}
                             properties={{
-                              balloonContent: selectedDelivery.addressName || "Manzil",
+                              balloonContent:
+                                selectedDelivery.addressName || "Manzil",
                             }}
                           />
                           <Polyline
                             geometry={[
                               [
                                 selectedDelivery.store.addressLocation.latitude,
-                                selectedDelivery.store.addressLocation.longitude,
+                                selectedDelivery.store.addressLocation
+                                  .longitude,
                               ],
                               [
                                 selectedDelivery.addressLocation.latitude,
@@ -703,7 +768,8 @@ const Dashboard = () => {
                             preset: "islands#redCircleDotIcon",
                           }}
                           properties={{
-                            balloonContent: selectedDelivery.addressName || "Manzil",
+                            balloonContent:
+                              selectedDelivery.addressName || "Manzil",
                           }}
                         />
                       )}
@@ -714,7 +780,7 @@ const Dashboard = () => {
             </Box>
 
             {/* Order Details Card Overlay */}
-            {selectedDelivery && (
+            {selectedOrder && (
               <Box
                 sx={{
                   position: "absolute",
@@ -747,15 +813,64 @@ const Dashboard = () => {
                     borderBottom: "2px solid #f0f0f0",
                   }}
                 >
-                  <Typography
+                  <Box
                     sx={{
-                      fontSize: "18px",
-                      fontWeight: 700,
-                      color: "#45556c",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 3,
+                      minWidth: 0,
                     }}
                   >
-                    Buyurtma #{selectedDelivery.number || selectedDelivery._id?.slice(-6)}
-                  </Typography>
+                    <Typography
+                      onClick={() => navigate(`/order/${selectedOrder._id}`)}
+                      sx={{
+                        fontSize: "18px",
+                        fontWeight: 700,
+                        color: "#45556c",
+                        textDecoration: "underline",
+                        cursor: "pointer",
+                        textUnderlineOffset: "4px",
+                        "&:hover": { color: "#FF6701" },
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      Buyurtma #
+                      {selectedOrder.number || selectedOrder._id?.slice(-6)}
+                    </Typography>
+
+                    <Box
+                      sx={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        padding: "6px 12px",
+                        borderRadius: "8px",
+                        backgroundColor: selectedOrder.state?.color
+                          ? `${selectedOrder.state.color}15`
+                          : "#f0f0f0",
+                        flexShrink: 0,
+                      }}
+                    >
+                      <Typography
+                        sx={{
+                          fontSize: "13px",
+                          fontWeight: 600,
+                          color: selectedOrder.state?.color || "#666",
+                        }}
+                      >
+                        {selectedOrder.state?.name?.[currentLang] ||
+                          (selectedOrder.state?.state === "created" &&
+                            "Yaratildi") ||
+                          (selectedOrder.state?.state === "inProcess" &&
+                            "Jarayonda") ||
+                          (selectedOrder.state?.state === "inDelivery" &&
+                            "Yetkazib berishda") ||
+                          selectedOrder.state?.state ||
+                          "Aktiv"}
+                      </Typography>
+                    </Box>
+                  </Box>
                   <IconButton
                     size="small"
                     onClick={() => setSelectedDelivery(null)}
@@ -771,53 +886,21 @@ const Dashboard = () => {
                   </IconButton>
                 </Box>
 
-                {/* Status Badge */}
-                <Box sx={{ marginBottom: "16px" }}>
+                {/* Courier Info */}
+                {selectedOrder.courier && (
                   <Box
                     sx={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      padding: "6px 12px",
-                      borderRadius: "8px",
-                      backgroundColor: selectedDelivery.state?.color 
-                        ? `${selectedDelivery.state.color}15` 
-                        : "#f0f0f0",
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        fontSize: "13px",
-                        fontWeight: 600,
-                        color: selectedDelivery.state?.color || "#666",
-                      }}
-                    >
-                      {selectedDelivery.state?.name?.[currentLang] || 
-                       (selectedDelivery.state?.state === "created" && "Yaratildi") ||
-                       (selectedDelivery.state?.state === "inProcess" && "Jarayonda") ||
-                       (selectedDelivery.state?.state === "inDelivery" && "Yetkazib berishda") ||
-                       selectedDelivery.state?.state || 
-                       "Aktiv"}
-                    </Typography>
-                  </Box>
-                </Box>
-
-                {/* Courier Info */}
-                {selectedDelivery.courier && (
-                  <Box 
-                    sx={{ 
-                      display: "flex", 
-                      gap: 2, 
+                      display: "flex",
+                      gap: 2,
                       marginBottom: "16px",
                       padding: "12px",
                       backgroundColor: "#f8f9fa",
                       borderRadius: "8px",
                     }}
                   >
-                    <Avatar
-                      sx={{ width: 48, height: 48, bgcolor: "#FF6701" }}
-                    >
-                      {selectedDelivery.courier?.firstName?.[0] || ""}
-                      {selectedDelivery.courier?.lastName?.[0] || ""}
+                    <Avatar sx={{ width: 48, height: 48, bgcolor: "#FF6701" }}>
+                      {selectedOrder.courier?.firstName?.[0] || ""}
+                      {selectedOrder.courier?.lastName?.[0] || ""}
                     </Avatar>
                     <Box sx={{ flex: 1 }}>
                       <Typography
@@ -828,8 +911,8 @@ const Dashboard = () => {
                           marginBottom: "4px",
                         }}
                       >
-                        {selectedDelivery.courier?.firstName || ""}{" "}
-                        {selectedDelivery.courier?.lastName || ""}
+                        {selectedOrder.courier?.firstName || ""}{" "}
+                        {selectedOrder.courier?.lastName || ""}
                       </Typography>
                       <Typography sx={{ fontSize: "12px", color: "#666" }}>
                         Kuryer
@@ -840,22 +923,63 @@ const Dashboard = () => {
 
                 {/* Order Details */}
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  {/* Store Info */}
+                  {selectedOrder.store && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.5,
+                        padding: "12px",
+                        backgroundColor: "#f8f9fa",
+                        borderRadius: "8px",
+                      }}
+                    >
+                      <StorefrontIcon
+                        sx={{
+                          fontSize: "20px",
+                          color: "#FF6701",
+                          flexShrink: 0,
+                        }}
+                      />
+                      <Typography
+                        sx={{
+                          fontSize: "13px",
+                          fontWeight: 600,
+                          color: "#45556c",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {selectedOrder.store?.name || "Ko'rsatilmagan"}
+                      </Typography>
+                    </Box>
+                  )}
+
                   {/* Address */}
-                  <Box 
-                    sx={{ 
-                      display: "flex", 
-                      alignItems: "flex-start", 
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "flex-start",
                       gap: 1.5,
                       padding: "12px",
                       backgroundColor: "#f8f9fa",
                       borderRadius: "8px",
                     }}
                   >
-                    <LocationOnIcon sx={{ fontSize: "20px", color: "#FF6701", marginTop: "2px", flexShrink: 0 }} />
+                    <LocationOnIcon
+                      sx={{
+                        fontSize: "20px",
+                        color: "#FF6701",
+                        marginTop: "2px",
+                        flexShrink: 0,
+                      }}
+                    />
                     <Box sx={{ flex: 1 }}>
-                      <Typography 
-                        sx={{ 
-                          fontSize: "13px", 
+                      <Typography
+                        sx={{
+                          fontSize: "13px",
                           fontWeight: 600,
                           color: "#45556c",
                           marginBottom: "4px",
@@ -863,37 +987,59 @@ const Dashboard = () => {
                       >
                         Manzil
                       </Typography>
-                      <Typography sx={{ fontSize: "13px", color: "#666", lineHeight: 1.5 }}>
-                        {selectedDelivery.addressName || "Ko'rsatilmagan"}
+                      <Typography
+                        sx={{
+                          fontSize: "13px",
+                          color: "#666",
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        {selectedOrder.addressName || "Ko'rsatilmagan"}
                       </Typography>
-                      {selectedDelivery.houseNumber && (
-                        <Typography sx={{ fontSize: "12px", color: "#999", marginTop: "4px" }}>
-                          {selectedDelivery.houseNumber}
-                          {selectedDelivery.entrance && `, Kirish: ${selectedDelivery.entrance}`}
-                          {selectedDelivery.apartmentNumber && `, Kv: ${selectedDelivery.apartmentNumber}`}
-                          {selectedDelivery.floor && `, Qavat: ${selectedDelivery.floor}`}
+                      {selectedOrder.houseNumber && (
+                        <Typography
+                          sx={{
+                            fontSize: "12px",
+                            color: "#999",
+                            marginTop: "4px",
+                          }}
+                        >
+                          {selectedOrder.houseNumber}
+                          {selectedOrder.entrance &&
+                            `, Kirish: ${selectedOrder.entrance}`}
+                          {selectedOrder.apartmentNumber &&
+                            `, Kv: ${selectedOrder.apartmentNumber}`}
+                          {selectedOrder.floor &&
+                            `, Qavat: ${selectedOrder.floor}`}
                         </Typography>
                       )}
                     </Box>
                   </Box>
 
                   {/* Customer Info */}
-                  {selectedDelivery.customer && (
-                    <Box 
-                      sx={{ 
-                        display: "flex", 
-                        alignItems: "flex-start", 
+                  {selectedOrder.customer && (
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "flex-start",
                         gap: 1.5,
                         padding: "12px",
                         backgroundColor: "#f8f9fa",
                         borderRadius: "8px",
                       }}
                     >
-                      <PersonIcon sx={{ fontSize: "20px", color: "#FF6701", marginTop: "2px", flexShrink: 0 }} />
+                      <PersonIcon
+                        sx={{
+                          fontSize: "20px",
+                          color: "#FF6701",
+                          marginTop: "2px",
+                          flexShrink: 0,
+                        }}
+                      />
                       <Box sx={{ flex: 1 }}>
-                        <Typography 
-                          sx={{ 
-                            fontSize: "13px", 
+                        <Typography
+                          sx={{
+                            fontSize: "13px",
                             fontWeight: 600,
                             color: "#45556c",
                             marginBottom: "4px",
@@ -902,21 +1048,156 @@ const Dashboard = () => {
                           Mijoz
                         </Typography>
                         <Typography sx={{ fontSize: "13px", color: "#666" }}>
-                          {selectedDelivery.customer?.firstName || ""}{" "}
-                          {selectedDelivery.customer?.lastName || ""}
+                          {selectedOrder.customer?.firstName || ""}{" "}
+                          {selectedOrder.customer?.lastName || ""}
                         </Typography>
-                        <Typography sx={{ fontSize: "12px", color: "#999", marginTop: "2px" }}>
-                          {selectedDelivery.customer?.phoneNumber || ""}
+                        <Typography
+                          sx={{
+                            fontSize: "12px",
+                            color: "#999",
+                            marginTop: "2px",
+                          }}
+                        >
+                          {selectedOrder.customer?.phoneNumber || ""}
                         </Typography>
                       </Box>
                     </Box>
                   )}
 
+                  {/* Products */}
+                  {Array.isArray(selectedOrder.items) &&
+                    selectedOrder.items.length > 0 && (
+                      <Box
+                        sx={{
+                          padding: "12px",
+                          backgroundColor: "#f8f9fa",
+                          borderRadius: "8px",
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            fontSize: "13px",
+                            fontWeight: 600,
+                            color: "#45556c",
+                            marginBottom: "8px",
+                          }}
+                        >
+                          Mahsulotlar
+                        </Typography>
+
+                        <Box
+                          sx={{
+                            maxHeight: "220px",
+                            overflowY: "auto",
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 1,
+                            pr: "6px",
+                          }}
+                        >
+                          {selectedOrder.items.map((item: any, idx: number) => {
+                            const name =
+                              item?.product?.name?.[currentLang] ||
+                              item?.product?.name ||
+                              item?.name?.[currentLang] ||
+                              item?.name ||
+                              "Mahsulot";
+                            const qty = item?.amount ?? item?.quantity ?? 1;
+                            const price = item?.price ?? item?.itemPrice ?? 0;
+                            const imageUrl = item?.product?.mainImage?.url
+                              ? `${process.env.REACT_APP_BASE_URL}/${item.product.mainImage.url}`
+                              : item?.product?.mainImage
+                                ? `${process.env.REACT_APP_BASE_URL}${item.product.mainImage}`
+                                : item?.product?.image?.url
+                                  ? `${process.env.REACT_APP_BASE_URL}/${item.product.image.url}`
+                                  : "";
+
+                            return (
+                              <Box
+                                key={`${item?._id || item?.productId || idx}`}
+                                sx={{
+                                  display: "flex",
+                                  alignItems: "flex-start",
+                                  justifyContent: "space-between",
+                                  gap: 2,
+                                  padding: "8px 10px",
+                                  backgroundColor: "#fff",
+                                  borderRadius: "8px",
+                                  border: "1px solid #eee",
+                                }}
+                              >
+                                <Box
+                                  sx={{
+                                    width: 44,
+                                    height: 44,
+                                    borderRadius: "10px",
+                                    overflow: "hidden",
+                                    backgroundColor: "#f0f0f0",
+                                    border: "1px solid #eee",
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  {imageUrl ? (
+                                    <img
+                                      src={imageUrl}
+                                      alt={name}
+                                      style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        objectFit: "cover",
+                                      }}
+                                    />
+                                  ) : null}
+                                </Box>
+
+                                <Box sx={{ flex: 1, minWidth: 0 }}>
+                                  <Typography
+                                    sx={{
+                                      fontSize: "13px",
+                                      fontWeight: 600,
+                                      color: "#45556c",
+                                      overflow: "hidden",
+                                      textOverflow: "ellipsis",
+                                      whiteSpace: "nowrap",
+                                    }}
+                                  >
+                                    {name}
+                                  </Typography>
+                                  <Typography
+                                    sx={{
+                                      fontSize: "12px",
+                                      color: "#999",
+                                      mt: "2px",
+                                    }}
+                                  >
+                                    {qty} x {numberFormat(price)}{" "}
+                                    {get(settingsData, "currency", "uzs")}
+                                  </Typography>
+                                </Box>
+
+                                <Typography
+                                  sx={{
+                                    fontSize: "13px",
+                                    fontWeight: 700,
+                                    color: "#FF6701",
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  {numberFormat(price * qty)}{" "}
+                                  {get(settingsData, "currency", "uzs")}
+                                </Typography>
+                              </Box>
+                            );
+                          })}
+                        </Box>
+                      </Box>
+                    )}
+
                   {/* Price */}
-                  <Box 
-                    sx={{ 
-                      display: "flex", 
-                      alignItems: "center", 
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
                       justifyContent: "space-between",
                       padding: "12px",
                       backgroundColor: "#FFF5F0",
@@ -926,9 +1207,9 @@ const Dashboard = () => {
                   >
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                       <PaidIcon sx={{ fontSize: "20px", color: "#FF6701" }} />
-                      <Typography 
-                        sx={{ 
-                          fontSize: "14px", 
+                      <Typography
+                        sx={{
+                          fontSize: "14px",
                           fontWeight: 600,
                           color: "#45556c",
                         }}
@@ -937,20 +1218,21 @@ const Dashboard = () => {
                       </Typography>
                     </Box>
                     <Typography
-                      sx={{ 
-                        fontSize: "16px", 
-                        fontWeight: 700, 
-                        color: "#FF6701" 
+                      sx={{
+                        fontSize: "16px",
+                        fontWeight: 700,
+                        color: "#FF6701",
                       }}
                     >
-                      {numberFormat(selectedDelivery.totalPrice)} {get(settingsData, "currency", "uzs")}
+                      {numberFormat(selectedOrder.totalPrice)}{" "}
+                      {get(settingsData, "currency", "uzs")}
                     </Typography>
                   </Box>
 
                   {/* Dates */}
-                  <Box 
-                    sx={{ 
-                      display: "flex", 
+                  <Box
+                    sx={{
+                      display: "flex",
                       justifyContent: "space-between",
                       padding: "12px",
                       backgroundColor: "#f8f9fa",
@@ -959,12 +1241,26 @@ const Dashboard = () => {
                     }}
                   >
                     <Box>
-                      <Typography sx={{ fontSize: "11px", color: "#999", marginBottom: "4px" }}>
+                      <Typography
+                        sx={{
+                          fontSize: "11px",
+                          color: "#999",
+                          marginBottom: "4px",
+                        }}
+                      >
                         Yaratilgan
                       </Typography>
-                      <Typography sx={{ fontSize: "12px", color: "#666", fontWeight: 500 }}>
-                        {selectedDelivery.createdAt
-                          ? new Date(selectedDelivery.createdAt).toLocaleDateString("uz-UZ", {
+                      <Typography
+                        sx={{
+                          fontSize: "12px",
+                          color: "#666",
+                          fontWeight: 500,
+                        }}
+                      >
+                        {selectedOrder.createdAt
+                          ? new Date(
+                              selectedOrder.createdAt,
+                            ).toLocaleDateString("uz-UZ", {
                               day: "2-digit",
                               month: "2-digit",
                               year: "numeric",
@@ -972,13 +1268,27 @@ const Dashboard = () => {
                           : "Ko'rsatilmagan"}
                       </Typography>
                     </Box>
-                    {selectedDelivery.deliveryDate && (
+                    {selectedOrder.deliveryDate && (
                       <Box>
-                        <Typography sx={{ fontSize: "11px", color: "#999", marginBottom: "4px" }}>
+                        <Typography
+                          sx={{
+                            fontSize: "11px",
+                            color: "#999",
+                            marginBottom: "4px",
+                          }}
+                        >
                           Yetkazish
                         </Typography>
-                        <Typography sx={{ fontSize: "12px", color: "#666", fontWeight: 500 }}>
-                          {new Date(selectedDelivery.deliveryDate).toLocaleDateString("uz-UZ", {
+                        <Typography
+                          sx={{
+                            fontSize: "12px",
+                            color: "#666",
+                            fontWeight: 500,
+                          }}
+                        >
+                          {new Date(
+                            selectedOrder.deliveryDate,
+                          ).toLocaleDateString("uz-UZ", {
                             day: "2-digit",
                             month: "2-digit",
                             year: "numeric",
