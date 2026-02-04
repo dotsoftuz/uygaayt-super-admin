@@ -1,7 +1,7 @@
 import { Loading } from "components";
 import { useApi } from "hooks/useApi/useApiHooks";
 import { Suspense, useEffect } from "react";
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useRoleManager } from "services/useRoleManager";
 import { socket } from "socket";
 
@@ -16,6 +16,7 @@ const AuthUser = () => {
   const dis = useAppDispatch();
   const hasToken = !!localStorage.getItem("token");
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { isLoading, isFetching } = useApi<ILoginData | any>(
     "profile/get",
     {},
@@ -32,7 +33,10 @@ const AuthUser = () => {
         if (!localStorage.getItem("i18nextLng")) {
           localStorage.setItem("i18nextLng", "uz");
         }
-        navigate("/home");
+        // Sahifa yangilanganda joriy URL ni saqlash: faqat "/" da /home ga yo'naltirish
+        if (pathname === "/" || pathname === "") {
+          navigate("/home");
+        }
       },
     }
   );

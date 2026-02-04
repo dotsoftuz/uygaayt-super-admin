@@ -174,6 +174,11 @@ export const sidebarRoutes: ISidebarRoute[] = [
         role: "report",
         translate: "abc_analytics",
       },
+      {
+        path: "/analytics_constructor",
+        role: "report",
+        translate: "constructor_analytics",
+      },
     ],
   },
   {
