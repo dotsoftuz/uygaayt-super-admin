@@ -765,7 +765,7 @@ const Dashboard = () => {
             </Box>
 
             {/* Order Details Card Overlay */}
-            {selectedOrder && (
+            {selectedDelivery && (
               <Box
                 sx={{
                   position: "absolute",
@@ -858,13 +858,19 @@ const Dashboard = () => {
                   </Box>
                   <IconButton
                     size="small"
-                    onClick={() => setSelectedDelivery(null)}
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedDelivery(null);
+                    }}
                     sx={{
                       color: "#666",
                       "&:hover": {
                         backgroundColor: "#f5f5f5",
                         color: "#FF6701",
                       },
+                      zIndex: 1001,
+                      position: "relative",
                     }}
                   >
                     <CloseIcon />
@@ -1307,7 +1313,7 @@ const Dashboard = () => {
         >
           {t("dashboard.orders_by_location")}
         </Typography>
-        <DashboardMap height="600px" useDemoData={false} />
+        <DashboardMap  />
       </Grid>
 
       <Grid className="grid mt-2 md:grid-cols-2 gap-4">
