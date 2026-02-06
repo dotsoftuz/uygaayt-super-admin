@@ -83,18 +83,8 @@ export const sidebarRoutes: ISidebarRoute[] = [
         role: "courier",
         translate: "courier",
       },
-      {
-        path: "/stores_restaurants",
-        role: "store", // "store" role'ga o'zgartirish
-        translate: "stores_restaurants",
-      },
     ],
   },
-  // {
-  //   path: "/measure",
-  //   role: "role", // o'zgartirish kerak measure
-  //   translate: "measure",
-  // },
   {
     path: "/banner",
     role: "banner",
