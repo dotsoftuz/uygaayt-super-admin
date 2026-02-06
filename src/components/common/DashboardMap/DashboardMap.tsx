@@ -5,8 +5,6 @@ import {
   Placemark,
   Circle,
 } from "react-yandex-maps";
-import { useApiMutation } from "hooks/useApi/useApiHooks";
-import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
 
 interface IOrderLocation {
   _id: string;
@@ -242,10 +240,16 @@ const MapContent = ({
 interface DashboardMapProps {
   height?: string;
   useDemoData?: boolean; // Demo data ishlatish uchun flag
+  orders?: any[]; // Dashboard dan keladigan buyurtmalar
+  isLoading?: boolean; // Ma'lumotlar yuklanayotganini ko'rsatish
 }
 
-const DashboardMap = ({ height = "600px", useDemoData = true }: DashboardMapProps) => {
-  const allParams = useAllQueryParams();
+const DashboardMap = ({ 
+  height = "600px", 
+  useDemoData = false,
+  orders = [],
+  isLoading = false,
+}: DashboardMapProps) => {
   const [orderLocations, setOrderLocations] = useState<IOrderLocation[]>([]);
   const [locationGroups, setLocationGroups] = useState<ILocationGroup[]>([]);
   const [currentZoom, setCurrentZoom] = useState<number>(JIZZAX_DEFAULT_ZOOM);
@@ -281,30 +285,7 @@ const DashboardMap = ({ height = "600px", useDemoData = true }: DashboardMapProp
     return 0.0015;
   };
 
-  // Zakazlar ma'lumotlarini olish (real data uchun)
-  const { mutate: fetchOrders } = useApiMutation(
-    "order/paging",
-    "post",
-    {
-      onSuccess(response) {
-        if (response?.data?.data) {
-          // Faqat addressLocation bo'lgan zakazlarni filter qilish
-          const ordersWithLocation = response.data.data.filter(
-            (order: any) =>
-              order.addressLocation &&
-              order.addressLocation.latitude &&
-              order.addressLocation.longitude
-          );
-
-          setOrderLocations(ordersWithLocation);
-          groupOrdersByArea(ordersWithLocation, currentZoom);
-        }
-      },
-      onError(error) {
-        console.error("❌ Error fetching orders:", error);
-      },
-    }
-  );
+  // Prop sifatida kelgan buyurtmalarni ishlatish
 
   // Zakazlarni hududlar bo'yicha guruhlash
   const groupOrdersByArea = (orders: IOrderLocation[], zoom?: number) => {
@@ -388,21 +369,28 @@ const DashboardMap = ({ height = "600px", useDemoData = true }: DashboardMapProp
     // #endregion
   };
 
-  // Zakazlarni yuklash
+  // Prop sifatida kelgan buyurtmalarni ishlatish
   useEffect(() => {
     if (useDemoData) {
       setOrderLocations(DEMO_ORDERS);
       groupOrdersByArea(DEMO_ORDERS, currentZoom);
+    } else if (orders && orders.length > 0) {
+      // Faqat addressLocation bo'lgan zakazlarni filter qilish
+      const ordersWithLocation = orders.filter(
+        (order: any) =>
+          order.addressLocation &&
+          order.addressLocation.latitude &&
+          order.addressLocation.longitude
+      );
+      setOrderLocations(ordersWithLocation);
+      groupOrdersByArea(ordersWithLocation, currentZoom);
     } else {
-      fetchOrders({
-        page: 1,
-        limit: 200, // API limit: maksimal 200
-        dateFrom: allParams.dateFrom,
-        dateTo: allParams.dateTo,
-      });
+      // Ma'lumotlar bo'sh bo'lsa
+      setOrderLocations([]);
+      setLocationGroups([]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allParams.dateFrom, allParams.dateTo, useDemoData]);
+  }, [orders, useDemoData]);
 
   // Zoom o'zgarganda guruhlarni qayta hisoblash
   useEffect(() => {
@@ -512,6 +500,47 @@ const DashboardMap = ({ height = "600px", useDemoData = true }: DashboardMapProp
     return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgIcon)))}`;
   };
 
+  // Ma'lumotlar yuklanmaguncha loading ko'rsatish
+  // Xaritani faqat ma'lumotlar kelgandan so'ng render qilish
+  if (!useDemoData && isLoading) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: height,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#f5f5f5",
+          borderRadius: "8px",
+        }}
+      >
+        <div style={{ textAlign: "center" }}>
+          <div
+            style={{
+              width: "40px",
+              height: "40px",
+              border: "4px solid #f3f3f3",
+              borderTop: "4px solid #FF6701",
+              borderRadius: "50%",
+              animation: "spin 1s linear infinite",
+              margin: "0 auto 16px",
+            }}
+          />
+          <p style={{ color: "#666", fontSize: "14px" }}>Ma'lumotlar yuklanmoqda...</p>
+        </div>
+        <style>
+          {`
+            @keyframes spin {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+          `}
+        </style>
+      </div>
+    );
+  }
+
   return (
     <YMaps query={{ load: "package.full" }}>
       <Map
@@ -526,16 +555,6 @@ const DashboardMap = ({ height = "600px", useDemoData = true }: DashboardMapProp
           mapRef.current = mapInstance;
         }}
         onBoundsChange={handleMapBoundsChange}
-        onActionEnd={(event: any) => {
-          // Zoom yoki pan tugagandan keyin
-          const map = event.get("target");
-          if (map && typeof map.getZoom === 'function') {
-            const zoom = map.getZoom();
-            if (zoom !== currentZoom) {
-              setCurrentZoom(zoom);
-            }
-          }
-        }}
       >
         <MapContent
           locationGroups={locationGroups}

@@ -89,8 +89,6 @@ const Dashboard = () => {
     attributesChooseMutate,
     totalIncomeMutate,
     customerMutate,
-    courierMutate,
-    topCustomerMutate,
   ];
 
   const mutateAll = () => {
@@ -111,7 +109,7 @@ const Dashboard = () => {
       sortBy: sortFieldUser,
       sortOrder: sortOrderUser,
     });
-  }, [sortFieldUser, sortOrderUser]);
+  }, [allParams.dateFrom, allParams.dateTo, sortFieldUser, sortOrderUser]);
 
   useEffect(() => {
     courierMutate({
@@ -120,7 +118,7 @@ const Dashboard = () => {
       sortBy: sortFieldCourier,
       sortOrder: sortOrderCourier,
     });
-  }, [sortFieldCourier, sortOrderCourier]);
+  }, [allParams.dateFrom, allParams.dateTo, sortFieldCourier, sortOrderCourier]);
 
   const { mutate: customerReport, data: customerReportData } = useApiMutation(
     "report/customer/saved",
@@ -140,16 +138,21 @@ const Dashboard = () => {
   // Fetch order states to get active state IDs
   const { data: orderStatesData } = useApi<any>("order-state/get-all", {});
 
-  // Fetch active orders
-  const { mutate: fetchActiveOrders, data: activeOrdersData } = useApiMutation(
+  // Fetch orders - bitta API so'rovi, ma'lumotlar ikki joyda ishlatiladi (aktiv buyurtmalar va xarita)
+  const { mutate: fetchOrders, data: ordersData } = useApiMutation(
     "order/paging",
     "post",
     {
       onSuccess(response) {
         if (response?.data?.data) {
-          // Filter out completed and cancelled orders
+          const allOrders = response.data.data;
+          
+          // Xarita uchun barcha buyurtmalarni saqlash
+          // (DashboardMap komponenti o'z ichida filter qiladi)
+
+          // Aktiv buyurtmalar uchun filter qilish
           const excludedStates = ["completed", "cancelled"];
-          const filteredOrders = response.data.data.filter((order: any) => {
+          const filteredOrders = allOrders.filter((order: any) => {
             const orderState = (order.state?.state || "").toLowerCase();
             const systemName = (order.state?.systemName || "").toLowerCase();
             const stateId = order.stateId?.toString() || "";
@@ -225,17 +228,19 @@ const Dashboard = () => {
     }
   }, [orderStatesData]);
 
-  // Fetch active orders when state IDs are ready
+  // Fetch orders when state IDs are ready - bitta API so'rovi, ma'lumotlar ikki joyda ishlatiladi
   useEffect(() => {
     if (activeStateIds.length > 0) {
-      fetchActiveOrders({
+      fetchOrders({
         page: 1,
-        limit: 50,
+        limit: 200, // Xarita uchun ham yetarli bo'lishi uchun
+        dateFrom: allParams.dateFrom,
+        dateTo: allParams.dateTo,
         stateIds: activeStateIds,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeStateIds]);
+  }, [activeStateIds, allParams.dateFrom, allParams.dateTo]);
 
   return (
     <>
@@ -1313,7 +1318,11 @@ const Dashboard = () => {
         >
           {t("dashboard.orders_by_location")}
         </Typography>
-        <DashboardMap  />
+        <DashboardMap 
+          useDemoData={false} 
+          orders={ordersData?.data?.data || []}
+          isLoading={!ordersData}
+        />
       </Grid>
 
       <Grid className="grid mt-2 md:grid-cols-2 gap-4">
