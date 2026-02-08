@@ -1,28 +1,35 @@
-import { Dispatch, SetStateAction, useCallback, useEffect, useState } from "react";
+import { Delete } from "@mui/icons-material";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Box, Grid, Switch } from "@mui/material";
+import { DeleteIcon, PlusIcon } from "assets/svgs";
 import {
   AutoCompleteForm,
   DatePickerForm,
-  ImageInput,
   Input,
   SelectForm,
   TextInput,
 } from "components";
-import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
-import { useTranslation } from "react-i18next";
-import { ProductFormStyled } from "./ProductForm.styled";
-import TextEditor from "components/form/TextEditor/TextEditor";
-import { IIdImage } from "hooks/usePostFile";
-import { DeleteIcon, PlusIcon } from "assets/svgs";
-import { DISCOUNT_TYPES } from "types/enums";
-import { IProduct } from "types/common.types";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
 import CommonButton from "components/common/commonButton/Button";
-import { Delete } from "@mui/icons-material";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import AttributeForm from "./Fields";
 import ImageInputPro from "components/form/ImageInputPro/ImageInputPro";
-import ProductLocationSelector, { SelectedLocation } from "components/form/ProductLocationSelector";
+import ProductLocationSelector, {
+  SelectedLocation,
+} from "components/form/ProductLocationSelector";
+import TextEditor from "components/form/TextEditor/TextEditor";
+import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
+import { IIdImage } from "hooks/usePostFile";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import { Controller, useFieldArray } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { IProduct } from "types/common.types";
+import { DISCOUNT_TYPES } from "types/enums";
+import AttributeForm from "./Fields";
+import { ProductFormStyled } from "./ProductForm.styled";
 
 interface IProductForm {
   formStore: any;
@@ -45,20 +52,29 @@ const ProductForm = ({
   const { productImages, setProductImages, mainImageId, setMainImageId } =
     productProps;
   const { t } = useTranslation();
-  const { control, handleSubmit, reset, setValue, register, watch, formState: { errors } } = formStore;
+  const {
+    control,
+    handleSubmit,
+    reset,
+    setValue,
+    register,
+    watch,
+    formState: { errors },
+  } = formStore;
   const currentLang = localStorage.getItem("i18nextLng") || "uz";
   const [hasAttributesEnabled, setHasAttributesEnabled] = useState(false);
   const [hasCompoundsEnabled, setHasCompoundsEnabled] = useState(false);
 
-
   const [subCategory, setSubCategory] = useState<any>(null);
   const [subChildCategory, setSubChildCategory] = useState<any>(null);
 
-  const [selectedParentCategory, setSelectedParentCategory] = useState<any>(null);
+  const [selectedParentCategory, setSelectedParentCategory] =
+    useState<any>(null);
   const [selectedChildCategory, setSelectedChildCategory] = useState<any>(null);
   const [storeSections, setStoreSections] = useState<any[]>([]);
-  const [selectedLocation, setSelectedLocation] = useState<SelectedLocation | null>(null);
-  const [mapImageUrl, setMapImageUrl] = useState<string>('');
+  const [selectedLocation, setSelectedLocation] =
+    useState<SelectedLocation | null>(null);
+  const [mapImageUrl, setMapImageUrl] = useState<string>("");
   const [imageSize, setImageSize] = useState({ width: 837, height: 634 });
 
   const discountEndMinDate = new Date(watch("discountStartAt"));
@@ -68,7 +84,7 @@ const ProductForm = ({
     editingProductId ? `/product/update` : "product/create",
     editingProductId ? "put" : "post",
     {},
-    true
+    true,
   );
 
   const { data: getByIdData, status: getByIdStatus } = useApi<IProduct>(
@@ -77,17 +93,20 @@ const ProductForm = ({
     {
       enabled: !!editingProductId,
       suspense: false,
-    }
+    },
   );
 
   const submit = (data: any) => {
     console.log(data);
     const cleanedAttributes = Object.entries(data.attributes || {})
       .filter(([key]) => data.attributeId?.includes(key))
-      .reduce((acc, [key, value]) => ({
-        ...acc,
-        [key]: value
-      }), {});
+      .reduce(
+        (acc, [key, value]) => ({
+          ...acc,
+          [key]: value,
+        }),
+        {},
+      );
     const requestData: any = {
       // ...data,
       name: data.name,
@@ -114,15 +133,19 @@ const ProductForm = ({
       discountEnabled: data.discountEnabled,
       description: data.description,
       compounds: data.compounds || [],
-      attributes: hasAttributesEnabled ? Object.entries(cleanedAttributes).map(([key, item]: [string, any]) => ({
-        attributeId: key,
-        items: Array.isArray(item)
-          ? item.map((itm: any) => ({
-            attributeItem: itm?.attributeItem || null,
-            amount: Number(itm?.amount) || 0,
-          }))
-          : []
-      })) : [],
+      attributes: hasAttributesEnabled
+        ? Object.entries(cleanedAttributes).map(
+            ([key, item]: [string, any]) => ({
+              attributeId: key,
+              items: Array.isArray(item)
+                ? item.map((itm: any) => ({
+                    attributeItem: itm?.attributeItem || null,
+                    amount: Number(itm?.amount) || 0,
+                  }))
+                : [],
+            }),
+          )
+        : [],
       locationBlock: data.locationBlock || undefined,
       locationShelf: data.locationShelf || undefined,
       locationRow: data.locationRow || undefined,
@@ -170,7 +193,6 @@ const ProductForm = ({
     }
   }, [watch("discountEnabled")]);
 
-
   useEffect(() => {
     const selectedAttributeIds = watch("attributeId") || [];
     const currentAttributes = watch("attributes") || {};
@@ -178,10 +200,13 @@ const ProductForm = ({
     // Remove attributes that are no longer selected
     const cleanedAttributes = Object.entries(currentAttributes)
       .filter(([key]) => selectedAttributeIds.includes(key))
-      .reduce((acc, [key, value]) => ({
-        ...acc,
-        [key]: value
-      }), {});
+      .reduce(
+        (acc, [key, value]) => ({
+          ...acc,
+          [key]: value,
+        }),
+        {},
+      );
 
     setValue("attributes", cleanedAttributes);
   }, [watch("attributeId")]);
@@ -216,7 +241,6 @@ const ProductForm = ({
     setValue("categoryId", item?._id || ""); // Update form value
   };
 
-
   useEffect(() => {
     if (getByIdStatus === "success") {
       const productData = getByIdData.data;
@@ -230,21 +254,22 @@ const ProductForm = ({
       }
       reset({
         ...getByIdData.data,
-        attributes: getByIdData.data.attributes?.reduce((acc, attr) => {
-          return {
-            ...acc,
-            [attr.attribute._id]: attr.items
-          }
-        }, {}) || [],
+        attributes:
+          getByIdData.data.attributes?.reduce((acc, attr) => {
+            return {
+              ...acc,
+              [attr.attribute._id]: attr.items,
+            };
+          }, {}) || [],
         // categoryId: subChildCategory === undefined ? getByIdData.data.parentCategoryId : getByIdData.data.categoryId,
-        parentCategoryId: productData.parentCategoryId || productData.categoryId || "",
+        parentCategoryId:
+          productData.parentCategoryId || productData.categoryId || "",
         categoryId: productData.categoryId || "",
         isActiveQuery: formStore.watch("isActiveQuery"),
         description: getByIdData.data.description,
         compounds: getByIdData.data.compounds,
-        attributeId: getByIdData.data.attributeDetails.map((item: any) => (
-          item._id
-        )) || [],
+        attributeId:
+          getByIdData.data.attributeDetails.map((item: any) => item._id) || [],
         locationBlock: getByIdData.data.locationBlock || undefined,
         locationShelf: getByIdData.data.locationShelf || undefined,
         locationRow: getByIdData.data.locationRow || undefined,
@@ -271,7 +296,7 @@ const ProductForm = ({
       setProductImages(getByIdData.data?.images || []);
 
       const foundMain = getByIdData.data?.images?.find(
-        (img) => img?._id === getByIdData.data.mainImage?._id
+        (img) => img?._id === getByIdData.data.mainImage?._id,
       );
       if (foundMain && !!getByIdData.data?.images?.length) {
         setMainImageId(getByIdData.data.mainImage?._id);
@@ -291,7 +316,7 @@ const ProductForm = ({
   useEffect(() => {
     const loadStoreMapData = async () => {
       try {
-        const response = await fetch('/store-map-sections.json');
+        const response = await fetch("/store-map-sections.json");
         const data = await response.json();
         setStoreSections(data.sections || []);
         if (data.imageSize) {
@@ -301,61 +326,57 @@ const ProductForm = ({
           setMapImageUrl(data.mapImageUrl);
         }
       } catch (error) {
-        console.error('Error loading store map data:', error);
+        console.error("Error loading store map data:", error);
       }
     };
     loadStoreMapData();
   }, []);
 
-  const {
-    fields,
-    append,
-    remove,
-  } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     name: "compounds",
     control,
   });
 
   const selectedAttributes = watch("attributeId") || [];
 
-
-  const { mutate: attributesChoose, data: attributesData, status: attributesStatus } = useApiMutation<any>(
-    "attribute/choose",
-    "post"
-  );
+  const {
+    mutate: attributesChoose,
+    data: attributesData,
+    status: attributesStatus,
+  } = useApiMutation<any>("attribute/choose", "post");
 
   useEffect(() => {
-    attributesChoose({})
-  }, [])
-
+    attributesChoose({});
+  }, []);
 
   const filteredAttributes = attributesData?.data?.data?.filter((item: any) =>
-    selectedAttributes?.some((selected: any) => selected === item._id)
+    selectedAttributes?.some((selected: any) => selected === item._id),
   );
 
   const isActive = watch("isActive");
   const hasCompounds = watch("compounds");
 
-
-  const handleSwitchChange = useCallback((name: string, value: boolean) => {
-    if (name === "compounds") {
-      setHasCompoundsEnabled(value);
-      if (!value) {
-        setValue("compounds", []);
-      } else {
-        setValue("compounds", []);
+  const handleSwitchChange = useCallback(
+    (name: string, value: boolean) => {
+      if (name === "compounds") {
+        setHasCompoundsEnabled(value);
+        if (!value) {
+          setValue("compounds", []);
+        } else {
+          setValue("compounds", []);
+        }
+      } else if (name === "attributes") {
+        setHasAttributesEnabled(value);
+        if (!value) {
+          setValue("attributes", {});
+          setValue("attributeId", []);
+        }
       }
-    } else if (name === "attributes") {
-      setHasAttributesEnabled(value);
-      if (!value) {
-        setValue("attributes", {});
-        setValue("attributeId", []);
-      }
-    }
 
-    setValue(name, value);
-  }, [setValue]);
-
+      setValue(name, value);
+    },
+    [setValue],
+  );
 
   return (
     <ProductFormStyled className="custom-drawer">
@@ -365,7 +386,7 @@ const ProductForm = ({
             <TextInput
               control={control}
               name="name.uz"
-              label={t('common.productName') + ' (Uz)'}
+              label={t("common.productName") + " (Uz)"}
               placeholder="Masalan: Olma"
             />
           </Grid>
@@ -373,7 +394,7 @@ const ProductForm = ({
             <TextInput
               control={control}
               name="name.ru"
-              label={t('common.productName') + ' (Ru)'}
+              label={t("common.productName") + " (Ru)"}
               placeholder="Например: Яблоко"
             />
           </Grid>
@@ -381,7 +402,7 @@ const ProductForm = ({
             <TextInput
               control={control}
               name="name.en"
-              label={t('common.productName') + ' (En)'}
+              label={t("common.productName") + " (En)"}
               placeholder="For example: Apple"
             />
           </Grid>
@@ -434,7 +455,9 @@ const ProductForm = ({
             <Box className="product-location-selector">
               <label className="custom-label">
                 Mahsulot joylashuvi (Xarita)
-                <span className="text-muted-foreground text-sm">(ixtiyoriy)</span>
+                <span className="text-muted-foreground text-sm">
+                  (ixtiyoriy)
+                </span>
               </label>
               {storeSections.length > 0 && (
                 <ProductLocationSelector
@@ -444,13 +467,13 @@ const ProductForm = ({
                   onLocationSelect={(location) => {
                     setSelectedLocation(location);
                     if (location) {
-                      setValue('location', {
+                      setValue("location", {
                         id: location.section_id,
                         name: location.section_name,
                         rect: location.rect,
                       });
                     } else {
-                      setValue('location', undefined);
+                      setValue("location", undefined);
                     }
                   }}
                   selectedLocation={selectedLocation}
@@ -498,7 +521,11 @@ const ProductForm = ({
             <AutoCompleteForm
               control={control}
               // name="parentCategoryId"
-              name={subChildCategory !== undefined ? "parentCategoryId" : "categoryId"}
+              name={
+                subChildCategory !== undefined
+                  ? "parentCategoryId"
+                  : "categoryId"
+              }
               optionsUrl="category/paging"
               dataProp="data.data"
               label="Kategoriya"
@@ -519,11 +546,12 @@ const ProductForm = ({
                 key={`child-cat-${selectedParentCategory?._id}`} // Force re-render when parent changes
               />
             )}
-
-
           </Grid>
           <Grid item md={12}>
-            <label className="custom-label">{t("common.description")} <span className="text-muted-foreground text-sm">(ixtiyoriy)</span></label>
+            <label className="custom-label">
+              {t("common.description")}{" "}
+              <span className="text-muted-foreground text-sm">(ixtiyoriy)</span>
+            </label>
             <Controller
               name="description"
               control={control}
@@ -544,10 +572,17 @@ const ProductForm = ({
               alignItems="center"
               justifyContent="space-between"
             >
-              <label htmlFor="isActive">{t("common.isActive")} <span className="text-muted-foreground text-sm">(ixtiyoriy)</span></label>
+              <label htmlFor="isActive">
+                {t("common.isActive")}{" "}
+                <span className="text-muted-foreground text-sm">
+                  (ixtiyoriy)
+                </span>
+              </label>
               <Switch
                 checked={!!isActive}
-                onChange={(e) => handleSwitchChange("isActive", e.target.checked)}
+                onChange={(e) =>
+                  handleSwitchChange("isActive", e.target.checked)
+                }
                 id="isActive"
               />
             </Box>
@@ -558,7 +593,12 @@ const ProductForm = ({
               alignItems="center"
               justifyContent="space-between"
             >
-              <label htmlFor="isMyExpire">Muddatli mahsulot <span className="text-muted-foreground text-sm">(ixtiyoriy)</span></label>
+              <label htmlFor="isMyExpire">
+                Muddatli mahsulot{" "}
+                <span className="text-muted-foreground text-sm">
+                  (ixtiyoriy)
+                </span>
+              </label>
               <Switch
                 checked={!!watch("isMyExpire")}
                 id="isMyExpire"
@@ -589,7 +629,12 @@ const ProductForm = ({
               alignItems="center"
               justifyContent="space-between"
             >
-              <label htmlFor="discountEnabled">{t("common.discount")} <span className="text-muted-foreground text-sm">(ixtiyoriy)</span></label>
+              <label htmlFor="discountEnabled">
+                {t("common.discount")}{" "}
+                <span className="text-muted-foreground text-sm">
+                  (ixtiyoriy)
+                </span>
+              </label>
               <Switch
                 checked={!!watch("discountEnabled")}
                 id="discountEnabled"
@@ -604,16 +649,20 @@ const ProductForm = ({
                     name="discountValue"
                     label={t("common.discountValue")}
                     type="number"
-                    placeholder={watch("discountType") === "percent" ? "Masalan: 10" : "Masalan: 1000"}
+                    placeholder={
+                      watch("discountType") === "percent"
+                        ? "Masalan: 10"
+                        : "Masalan: 1000"
+                    }
                     rules={{ required: { value: false, message: "Majburiy" } }}
                     inputProps={
                       watch("discountType") === "percent"
                         ? {
-                          max: 100,
-                        }
+                            max: 100,
+                          }
                         : {
-                          max: Number(watch("price")),
-                        }
+                            max: Number(watch("price")),
+                          }
                     }
                   />
                 </Grid>
@@ -637,8 +686,8 @@ const ProductForm = ({
                     readOnly
                     maxDate={
                       watch("discountEndAt")
-                        // @ts-ignore
-                        ? new Date(watch("discountEndAt"))
+                        ? // @ts-ignore
+                          new Date(watch("discountEndAt"))
                         : undefined
                     }
                   />
@@ -665,36 +714,45 @@ const ProductForm = ({
               alignItems="center"
               justifyContent="space-between"
             >
-              <label htmlFor="compounds">{t('general.compounds')} <span className="text-muted-foreground text-sm">(ixtiyoriy)</span></label>
+              <label htmlFor="compounds">
+                {t("general.compounds")}{" "}
+                <span className="text-muted-foreground text-sm">
+                  (ixtiyoriy)
+                </span>
+              </label>
               <Switch
                 checked={hasCompoundsEnabled}
-                onChange={(e) => handleSwitchChange("compounds", e.target.checked)}
+                onChange={(e) =>
+                  handleSwitchChange("compounds", e.target.checked)
+                }
                 id="compounds"
               />
             </Box>
-            {hasCompoundsEnabled && (
+            {hasCompoundsEnabled &&
               fields.map((field: any, index: any) => (
-                <Grid container key={field.id} className="flex items-end justify-between mt-2">
+                <Grid
+                  container
+                  key={field.id}
+                  className="flex items-end justify-between mt-2"
+                >
                   <Grid item md={5}>
                     <TextInput
                       control={control}
                       name={`compounds.${index}.name`}
                       type="text"
                       rules={{ required: false }}
-                      label={t('general.composition')}
+                      label={t("general.composition")}
                       placeholder="Masalan: Suv"
                     />
                   </Grid>
                   <Grid item md={5}>
                     <Input
-                      label={t('general.quantity')}
+                      label={t("general.quantity")}
                       placeholder="Masalan: 100ml"
                       params={{
-                        ...register(
-                          `compounds.${index}.value`,
-                        ),
+                        ...register(`compounds.${index}.value`),
                       }}
-                    // error={errors?.compounds?.[index]?.value}
+                      // error={errors?.compounds?.[index]?.value}
                     />
                   </Grid>
                   <Grid item md={1}>
@@ -711,11 +769,16 @@ const ProductForm = ({
                     />
                   </Grid>
                 </Grid>
-              ))
-            )}
+              ))}
           </Grid>
           {hasCompoundsEnabled && (
-            <Grid item xs={3} md={2} paddingBlock={2} className="flex flex-col ">
+            <Grid
+              item
+              xs={3}
+              md={2}
+              paddingBlock={2}
+              className="flex flex-col "
+            >
               <CommonButton
                 startIcon={<PlusIcon />}
                 type="button"
@@ -738,16 +801,22 @@ const ProductForm = ({
               alignItems="center"
               justifyContent="space-between"
             >
-              <label htmlFor="attributes">{t('general.attributes')} <span className="text-muted-foreground text-sm">(ixtiyoriy)</span></label>
+              <label htmlFor="attributes">
+                {t("general.attributes")}{" "}
+                <span className="text-muted-foreground text-sm">
+                  (ixtiyoriy)
+                </span>
+              </label>
               <Switch
                 checked={hasAttributesEnabled}
-                onChange={(e) => handleSwitchChange("attributes", e.target.checked)}
+                onChange={(e) =>
+                  handleSwitchChange("attributes", e.target.checked)
+                }
                 id="attributes"
               />
             </Box>
           </Grid>
-          {
-            hasAttributesEnabled &&
+          {hasAttributesEnabled && (
             <Grid item md={12}>
               <AutoCompleteForm
                 control={control}
@@ -758,22 +827,17 @@ const ProductForm = ({
                 multiple
               />
             </Grid>
-          }
-
+          )}
 
           {hasAttributesEnabled &&
             selectedAttributes?.map((attributeId: any) => (
               <Grid key={attributeId} item md={12}>
                 <p className="text-[#EB5B00] font-bold text-xl">
-                  {
-                    filteredAttributes
-                      ?.filter((item: any) => item?._id === attributeId)
-                      ?.map((item: any) => (
-                        <div key={item?._id}>
-                          {item.name?.[currentLang]}:
-                        </div>
-                      ))
-                  }
+                  {filteredAttributes
+                    ?.filter((item: any) => item?._id === attributeId)
+                    ?.map((item: any) => (
+                      <div key={item?._id}>{item.name?.[currentLang]}:</div>
+                    ))}
                 </p>
                 <AttributeForm
                   attributeId={attributeId}
@@ -782,12 +846,15 @@ const ProductForm = ({
                   register={register}
                 />
               </Grid>
-            ))
-          }
+            ))}
 
           {/* Images */}
           <Grid item md={12}>
-            <label className="py-2" htmlFor="">{t('general.recommendation_img')}</label><br /><br />
+            <label className="py-2" htmlFor="">
+              {t("general.recommendation_img")}
+            </label>
+            <br />
+            <br />
             <div className="product-images">
               <ImageInputPro
                 control={control}
@@ -804,7 +871,7 @@ const ProductForm = ({
               {productImages?.map((image) => (
                 <div className="product-image" key={image._id}>
                   <img
-                    src={process.env.REACT_APP_BASE_URL + image.url}
+                    src={process.env.REACT_APP_BASE_URL + "/" + image.url}
                     alt="product"
                   />
                   <div className="on-hover flex gap-2">
@@ -812,7 +879,7 @@ const ProductForm = ({
                       className="delete"
                       onClick={() =>
                         setProductImages((prev) =>
-                          prev.filter((prevImg) => prevImg._id !== image._id)
+                          prev.filter((prevImg) => prevImg._id !== image._id),
                         )
                       }
                     >
@@ -821,34 +888,35 @@ const ProductForm = ({
                     <span
                       className="preview"
                       onClick={() => {
-                        const modal = document.createElement('div');
-                        modal.style.position = 'fixed';
-                        modal.style.top = '0';
-                        modal.style.left = '0';
-                        modal.style.width = '100%';
-                        modal.style.height = '100%';
-                        modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-                        modal.style.display = 'flex';
-                        modal.style.justifyContent = 'center';
-                        modal.style.alignItems = 'center';
-                        modal.style.zIndex = '2000';
+                        const modal = document.createElement("div");
+                        modal.style.position = "fixed";
+                        modal.style.top = "0";
+                        modal.style.left = "0";
+                        modal.style.width = "100%";
+                        modal.style.height = "100%";
+                        modal.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+                        modal.style.display = "flex";
+                        modal.style.justifyContent = "center";
+                        modal.style.alignItems = "center";
+                        modal.style.zIndex = "2000";
 
-                        const img = document.createElement('img');
-                        img.src = process.env.REACT_APP_BASE_URL + image.url;
-                        img.alt = 'preview';
-                        img.style.maxWidth = '90%';
-                        img.style.maxHeight = '90%';
-                        img.style.border = '2px solid white';
-                        img.style.borderRadius = '8px';
+                        const img = document.createElement("img");
+                        img.src =
+                          process.env.REACT_APP_BASE_URL + "/" + image.url;
+                        img.alt = "preview";
+                        img.style.maxWidth = "90%";
+                        img.style.maxHeight = "90%";
+                        img.style.border = "2px solid white";
+                        img.style.borderRadius = "8px";
 
-                        const closeButton = document.createElement('span');
-                        closeButton.innerText = '×';
-                        closeButton.style.position = 'absolute';
-                        closeButton.style.top = '20px';
-                        closeButton.style.right = '20px';
-                        closeButton.style.fontSize = '2rem';
-                        closeButton.style.color = 'white';
-                        closeButton.style.cursor = 'pointer';
+                        const closeButton = document.createElement("span");
+                        closeButton.innerText = "×";
+                        closeButton.style.position = "absolute";
+                        closeButton.style.top = "20px";
+                        closeButton.style.right = "20px";
+                        closeButton.style.fontSize = "2rem";
+                        closeButton.style.color = "white";
+                        closeButton.style.cursor = "pointer";
 
                         closeButton.onclick = () => {
                           document.body.removeChild(modal);
@@ -862,8 +930,9 @@ const ProductForm = ({
                       <VisibilityIcon className="text-white text-lg" />
                     </span>
                     <span
-                      className={`main-image ${image._id === mainImageId && "active"
-                        }`}
+                      className={`main-image ${
+                        image._id === mainImageId && "active"
+                      }`}
                       onClick={() => setMainImageId(image?._id)}
                     ></span>
                   </div>

@@ -1,9 +1,10 @@
 import { Box, Card, Grid, TextField, Typography } from "@mui/material";
 import { CopyIcon } from "assets/svgs";
-import { CommonLoader, Image, Modal, SelectForm, TextInput } from "components";
+import { CommonLoader, Modal, SelectForm, TextInput } from "components";
 import CommonButton from "components/common/commonButton/Button";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import useCopyToClipboard from "hooks/useClipboard";
+import { get } from "lodash";
 import { useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -13,7 +14,6 @@ import {
   IntegrationInfo,
   IntegrationStyled,
 } from "./Integration.styled";
-import { get } from "lodash";
 
 const Integration = () => {
   const [integrationId, setIntegrationId] = useState<string>("");
@@ -43,7 +43,7 @@ const Integration = () => {
     const requestData = {
       ...integration,
       fields: data.fields,
-      _id: integrationId
+      _id: integrationId,
     };
     mutate(requestData);
   });
@@ -60,7 +60,7 @@ const Integration = () => {
       onSuccess(data) {
         setIntegration(data?.data);
       },
-    }
+    },
   );
 
   const handleInstalled = (bool: boolean) => {
@@ -74,14 +74,7 @@ const Integration = () => {
       <Box sx={{ flexGrow: 1, p: 2 }}>
         <Grid container spacing={3}>
           {data?.data?.map((item: any) => (
-            <Grid
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              lg={2}
-              key={item._id}
-            >
+            <Grid item xs={12} sm={6} md={4} lg={2} key={item._id}>
               <Card
                 sx={{
                   p: 2,
@@ -118,7 +111,6 @@ const Integration = () => {
         </Grid>
       </Box>
 
-
       <Modal
         open={!!integrationId}
         onClose={() => {
@@ -136,7 +128,9 @@ const Integration = () => {
               <Grid item md={6}>
                 <div className="integration-logo">
                   <img
-                    src={process.env.REACT_APP_BASE_URL + integration?.logo}
+                    src={
+                      process.env.REACT_APP_BASE_URL + "/" + integration?.logo
+                    }
                     alt="integration.logo"
                   />
                   <h3 className="py-2">{integration?.name}</h3>
@@ -219,7 +213,7 @@ const Integration = () => {
                           </div>
                         ) : (
                           ""
-                        )
+                        ),
                       )}
 
                       <div className="d-flex justify-content-end gap-2 py-2">
@@ -273,7 +267,7 @@ const Integration = () => {
                                 </span>
                               )}
                             </li>
-                          )
+                          ),
                         )}
                       </ul>
                     </IntegrationInfo>

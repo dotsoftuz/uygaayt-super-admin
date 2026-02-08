@@ -12,6 +12,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import { Avatar, Box, Grid, IconButton, Typography } from "@mui/material";
 import { RangeDatePicker } from "components";
+import DashboardMap from "components/common/DashboardMap/DashboardMap";
 import useCommonContext from "context/useCommon";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
@@ -21,10 +22,9 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Map, Placemark, YMaps } from "react-yandex-maps";
 import { numberFormat } from "utils/numberFormat";
-import DashboardMap from "components/common/DashboardMap/DashboardMap";
+import MainCharts from "../components/mainCharts/MainCharts";
 import TopTable from "../components/TopTable";
 import { StyledCard, TypographyTitle } from "../style/StatisticsCard.style";
-import MainCharts from "../components/mainCharts/MainCharts";
 
 type SortField = "total_price" | "total_order";
 type SortOrder = "1" | "-1";
@@ -85,11 +85,7 @@ const Dashboard = () => {
   const { mutate: topCustomerMutate, data: topCustomerData } =
     useApiMutation<any>("report/customer/top", "post", {}, true);
 
-  const mutations = [
-    attributesChooseMutate,
-    totalIncomeMutate,
-    customerMutate,
-  ];
+  const mutations = [attributesChooseMutate, totalIncomeMutate, customerMutate];
 
   const mutateAll = () => {
     mutations.forEach((mutate) =>
@@ -118,7 +114,12 @@ const Dashboard = () => {
       sortBy: sortFieldCourier,
       sortOrder: sortOrderCourier,
     });
-  }, [allParams.dateFrom, allParams.dateTo, sortFieldCourier, sortOrderCourier]);
+  }, [
+    allParams.dateFrom,
+    allParams.dateTo,
+    sortFieldCourier,
+    sortOrderCourier,
+  ]);
 
   const { mutate: customerReport, data: customerReportData } = useApiMutation(
     "report/customer/saved",
@@ -146,7 +147,7 @@ const Dashboard = () => {
       onSuccess(response) {
         if (response?.data?.data) {
           const allOrders = response.data.data;
-          
+
           // Xarita uchun barcha buyurtmalarni saqlash
           // (DashboardMap komponenti o'z ichida filter qiladi)
 
@@ -1103,7 +1104,7 @@ const Dashboard = () => {
                             const imageUrl = item?.product?.mainImage?.url
                               ? `${process.env.REACT_APP_BASE_URL}/${item.product.mainImage.url}`
                               : item?.product?.mainImage
-                                ? `${process.env.REACT_APP_BASE_URL}${item.product.mainImage}`
+                                ? `${process.env.REACT_APP_BASE_URL}/${item.product.mainImage}`
                                 : item?.product?.image?.url
                                   ? `${process.env.REACT_APP_BASE_URL}/${item.product.image.url}`
                                   : "";
@@ -1318,8 +1319,8 @@ const Dashboard = () => {
         >
           {t("dashboard.orders_by_location")}
         </Typography>
-        <DashboardMap 
-          useDemoData={false} 
+        <DashboardMap
+          useDemoData={false}
           orders={ordersData?.data?.data || []}
           isLoading={!ordersData}
         />

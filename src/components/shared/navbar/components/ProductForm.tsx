@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
 import { Box, Grid, Switch } from "@mui/material";
+import { DeleteIcon } from "assets/svgs";
 import {
   AutoCompleteForm,
   DatePickerForm,
@@ -7,15 +7,14 @@ import {
   SelectForm,
   TextInput,
 } from "components";
-import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
-import { useTranslation } from "react-i18next";
-import { ProductFormStyled } from "./ProductForm.styled";
 import TextEditor from "components/form/TextEditor/TextEditor";
+import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import { IIdImage } from "hooks/usePostImage";
-import { DeleteIcon } from "assets/svgs";
-import { DISCOUNT_TYPES } from "types/enums";
+import { Dispatch, SetStateAction, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { IProduct } from "types/common.types";
-import dayjs from "dayjs";
+import { DISCOUNT_TYPES } from "types/enums";
+import { ProductFormStyled } from "./ProductForm.styled";
 
 interface IProductForm {
   formStore: any;
@@ -44,7 +43,7 @@ const ProductForm = ({
 
   const { mutate, status } = useApiMutation<any>(
     editingProductId ? `/product/update` : "product/create",
-    editingProductId ? "put" : "post"
+    editingProductId ? "put" : "post",
   );
 
   const { data: getByIdData, status: getByIdStatus } = useApi<IProduct>(
@@ -53,7 +52,7 @@ const ProductForm = ({
     {
       enabled: !!editingProductId,
       suspense: false,
-    }
+    },
   );
 
   const submit = (data: any) => {
@@ -66,13 +65,13 @@ const ProductForm = ({
       expiryDate: !data.isMyExpire
         ? null
         : typeof data.expiryDate === "string"
-        ? data.expiryDate
-        : typeof data.expiryDate === "object"
-        ? data.expiryDate?.toISOString()
-        : null,
+          ? data.expiryDate
+          : typeof data.expiryDate === "object"
+            ? data.expiryDate?.toISOString()
+            : null,
       _id: editingProductId,
     };
-  
+
     // discountEnabled = true bo'lganda discount ma'lumotlarini qo'shish
     if (data.discountEnabled) {
       requestData.discountType = data.discountType;
@@ -81,16 +80,16 @@ const ProductForm = ({
         typeof data.discountStartAt === "string"
           ? data.discountStartAt
           : typeof data.discountStartAt === "object"
-          ? data.discountStartAt?.toISOString()
-          : undefined;
+            ? data.discountStartAt?.toISOString()
+            : undefined;
       requestData.discountEndAt =
         typeof data.discountEndAt === "string"
           ? data.discountEndAt
           : typeof data.discountEndAt === "object"
-          ? data.discountEndAt?.toISOString()
-          : undefined;
+            ? data.discountEndAt?.toISOString()
+            : undefined;
     }
-  
+
     // discountEnabled = false bo'lganda chegirma maydonlarini olib tashlash
     if (!data.discountEnabled) {
       delete requestData.discountType;
@@ -98,7 +97,7 @@ const ProductForm = ({
       delete requestData.discountStartAt;
       delete requestData.discountEndAt;
     }
-  
+
     delete requestData.isMyExpire;
 
     mutate(requestData); // API so'rovini yuborish
@@ -113,8 +112,6 @@ const ProductForm = ({
       setValue("discountEndAt", undefined);
     }
   }, [watch("discountEnabled")]);
-  
-  
 
   useEffect(() => {
     if (status === "success") {
@@ -134,7 +131,7 @@ const ProductForm = ({
       setProductImages(getByIdData.data?.images || []);
 
       const foundMain = getByIdData.data?.images?.find(
-        (img) => img?._id === getByIdData.data.mainImage?._id
+        (img) => img?._id === getByIdData.data.mainImage?._id,
       );
       if (foundMain && !!getByIdData.data?.images?.length) {
         setMainImageId(getByIdData.data.mainImage?._id);
@@ -293,11 +290,11 @@ const ProductForm = ({
                     inputProps={
                       watch("discountType") === "percent"
                         ? {
-                          max: 100,
-                        }
+                            max: 100,
+                          }
                         : {
-                          max: Number(watch("price")),
-                        }
+                            max: Number(watch("price")),
+                          }
                     }
                   />
                 </Grid>
@@ -354,7 +351,7 @@ const ProductForm = ({
               {productImages?.map((image) => (
                 <div className="product-image" key={image._id}>
                   <img
-                    src={process.env.REACT_APP_BASE_URL + image.url}
+                    src={process.env.REACT_APP_BASE_URL + "/" + image.url}
                     alt="product"
                   />
                   <div className="on-hover">
@@ -362,15 +359,16 @@ const ProductForm = ({
                       className="delete"
                       onClick={() =>
                         setProductImages((prev) =>
-                          prev.filter((prevImg) => prevImg._id !== image._id)
+                          prev.filter((prevImg) => prevImg._id !== image._id),
                         )
                       }
                     >
                       <DeleteIcon />
                     </span>
                     <span
-                      className={`main-image ${image._id === mainImageId && "active"
-                        }`}
+                      className={`main-image ${
+                        image._id === mainImageId && "active"
+                      }`}
                       onClick={() => setMainImageId(image?._id)}
                     ></span>
                   </div>

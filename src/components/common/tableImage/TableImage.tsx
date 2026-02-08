@@ -18,8 +18,8 @@ const TableImage: React.FC<
           borderRadius: "4px",
           objectFit: "cover",
         }}
-        src={!src ? defImage : process.env.REACT_APP_BASE_URL + "public" + src}
-        alt={process.env.REACT_APP_BASE_URL + "public" + src}
+        src={!src ? defImage : process.env.REACT_APP_BASE_URL + "/" + src}
+        alt={process.env.REACT_APP_BASE_URL + "/" + src}
         width="100%"
       />
     </>

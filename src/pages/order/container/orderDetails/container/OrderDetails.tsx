@@ -1,21 +1,21 @@
-import { useParams } from "react-router-dom";
 import { Grid } from "@mui/material";
-import { OrderDetailsStyled } from "./OrderDetails.styled";
-import { MainButton, Select } from "components";
 import MoneyImage from "assets/images/money.png";
-import OrderProducts from "../components/OrderProducts/OrderProducts";
-import OrderInfo from "../components/OrderInfo/OrderInfo";
+import { MainButton } from "components";
+import dayjs from "dayjs";
 import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
-import { useTranslation } from "react-i18next";
-import { IOrder } from "types/common.types";
+import { get } from "lodash";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import { get } from "lodash";
-import { useAppSelector } from "store/storeHooks";
+import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 import { socketReRender } from "store/reducers/SocketSlice";
-import SelectPost from 'components/form/SelectPost/SelectFormPost';
+import { useAppSelector } from "store/storeHooks";
+import { IOrder } from "types/common.types";
+import OrderInfo from "../components/OrderInfo/OrderInfo";
+import OrderProducts from "../components/OrderProducts/OrderProducts";
+import { OrderDetailsStyled } from "./OrderDetails.styled";
 
 const OrderDetails = () => {
   const { id } = useParams();
@@ -32,18 +32,16 @@ const OrderDetails = () => {
     {},
     {
       enabled: !!id,
-    }
+    },
   );
   const order = data?.data;
   const isCompleted = order?.state?.state === "completed";
   const isCancelled = order?.state?.state === "cancelled";
 
-
-
   const { data: orderStates, refetch: refetchOrderState } = useApi(
     "order-state/get-all",
     {},
-    { suspense: false }
+    { suspense: false },
   );
 
   const { mutate: updateState } = useApiMutation(
@@ -54,7 +52,7 @@ const OrderDetails = () => {
         refetch();
         toast.success(t("general.success"));
       },
-    }
+    },
   );
 
   const { mutate } = useApiMutation(`order/update`, "put");
@@ -71,6 +69,11 @@ const OrderDetails = () => {
           " " +
           get(order, "customer.lastName", ""),
         receiverFirstName: get(order, "receiverCustomer.firstName", ""),
+        receiverPhoneNumber: get(
+          order,
+          "receiverCustomer.phoneNumber",
+          order?.customer?.phoneNumber,
+        ),
         phoneNumber: order?.customer?.phoneNumber,
         paymentType: order?.paymentType,
         houseNumber: order?.houseNumber,
@@ -86,23 +89,41 @@ const OrderDetails = () => {
 
   const submit = handleSubmit((data: any) => {
     const requestData = {
-      ...data,
+      _id: order?._id,
+      addressName: data.addressName,
+      addressLocation: data.addressLocation,
+      receiverFirstName: data.receiverFirstName,
+      receiverPhoneNumber: data.receiverPhoneNumber || data.phoneNumber,
+      phoneNumber: data.phoneNumber,
+      paymentType: data.paymentType,
+      houseNumber: data.houseNumber,
+      entrance: data.entrance,
+      floor: data.floor,
+      apartmentNumber: data.apartmentNumber,
+      comment: data.comment,
+      deliveryDate: data.deliveryDate
+        ? dayjs(data.deliveryDate).format()
+        : undefined,
+      storeId: order?.storeId,
       items: data?.items?.map((e: any) => ({
         productId: e.productId,
         amount: e.amount,
         attributes: e?.attributes?.map((item: any) => ({
           attributeId: item?.attributeId,
-          attributeItem: item?.attributeItem
-        }))
+          attributeItem: item?.attributeItem,
+        })),
       })),
-      _id: order?._id,
-      cardId: order?._id
     };
-    mutate(requestData);
+    mutate(requestData, {
+      onSuccess() {
+        refetch();
+        toast.success(t("general.success"));
+      },
+    });
   });
 
   const stateIndex = orderStates?.data?.findIndex(
-    (item: any) => item._id === order?.state._id
+    (item: any) => item._id === order?.state._id,
   );
 
   useEffect(() => {
@@ -111,8 +132,6 @@ const OrderDetails = () => {
       dis(socketReRender(false));
     }
   }, [socketRender]);
-
-
 
   return (
     <OrderDetailsStyled>
@@ -140,7 +159,8 @@ const OrderDetails = () => {
                   className="me-3"
                   onClick={() =>
                     updateState({
-                      stateId: orderStates?.data[orderStates?.data.length - 1]._id,
+                      stateId:
+                        orderStates?.data[orderStates?.data.length - 1]._id,
                       _id: order?._id,
                       position: 1,
                     })
@@ -156,7 +176,7 @@ const OrderDetails = () => {
               </div>
               <span className="state">
                 {order?.paymentType === "cash" &&
-                  order.state.state === "completed"
+                order.state.state === "completed"
                   ? "To'langan"
                   : order?.isPaid
                     ? "To'langan"

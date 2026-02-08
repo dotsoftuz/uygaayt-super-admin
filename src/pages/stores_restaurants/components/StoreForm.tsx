@@ -1,25 +1,40 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-import { Grid, InputLabel, Button, Box, Tabs, Tab, Divider } from "@mui/material";
+import {
+  AttachMoney,
+  Delete,
+  Description,
+  LocationOn,
+  Settings,
+  Store,
+} from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  Divider,
+  Grid,
+  InputLabel,
+  Tab,
+  Tabs,
+} from "@mui/material";
 import {
   AutoCompleteForm,
+  Checkbox,
+  ColorPicker,
   ImageInput,
   PhoneInput,
-  TextInput,
   SelectForm,
-  ColorPicker,
+  TextInput,
 } from "components";
-import { UseFormReturn } from "react-hook-form";
-import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
-import { useTranslation } from "react-i18next";
+import YandexMap from "components/common/YandexMap/YandexMap";
 import TextEditor from "components/form/TextEditor/TextEditor";
 import TimePicker from "components/form/TimePicker/TimePicker";
-import YandexMap from "components/common/YandexMap/YandexMap";
-import { ILocation } from "types/common.types";
+import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
 import useDebounce from "hooks/useDebounce";
-import { Checkbox } from "components";
 import { IIdImage } from "hooks/usePostImage";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { UseFormReturn } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { Store, LocationOn, AttachMoney, Settings, Description, Delete } from "@mui/icons-material";
+import { ILocation } from "types/common.types";
 
 interface IStoreForm {
   formStore: UseFormReturn<any>;
@@ -83,7 +98,7 @@ const StoreForm: FC<IStoreForm> = ({
     editingStoreId ? "put" : "post",
     {
       // onSuccess callback'ni olib tashlang - useApiMutation'da allaqachon drawer yopiladi va table refresh qilinadi
-    }
+    },
   );
 
   const { mutate: addressByName, data: addressData } = useApiMutation(
@@ -93,7 +108,7 @@ const StoreForm: FC<IStoreForm> = ({
       onSuccess() {
         setShowOptions(true);
       },
-    }
+    },
   );
 
   const { mutate: addressByPointName } = useApiMutation(
@@ -103,7 +118,7 @@ const StoreForm: FC<IStoreForm> = ({
       onSuccess({ data }) {
         setValue("addressName", data?.name);
       },
-    }
+    },
   );
 
   useEffect(() => {
@@ -129,7 +144,7 @@ const StoreForm: FC<IStoreForm> = ({
     {
       enabled: !!editingStoreId && !editingStoreId?.startsWith("store_"),
       suspense: false,
-    }
+    },
   );
 
   // API'dan ma'lumotlarni o'qish
@@ -154,7 +169,9 @@ const StoreForm: FC<IStoreForm> = ({
         startTime:
           store.workTime?.length === 11 ? store.workTime?.slice(0, 5) : "",
         endTime: store.workTime?.length === 11 ? store.workTime?.slice(-5) : "",
-        workDays: store.workDays?.filter((wd: any) => wd.isWorking !== false).map((wd: any) => wd.day) || [1, 2, 3, 4, 5, 6, 7],
+        workDays: store.workDays
+          ?.filter((wd: any) => wd.isWorking !== false)
+          .map((wd: any) => wd.day) || [1, 2, 3, 4, 5, 6, 7],
         description: store.description || "",
         descriptionTranslate: store.descriptionTranslate || {
           uz: "",
@@ -168,10 +185,13 @@ const StoreForm: FC<IStoreForm> = ({
         acceptCash: store.acceptCash || false,
         acceptCard: store.acceptCard || false,
         acceptOnlinePayment: store.acceptOnlinePayment || false,
-        isShowReview: store.isShowReview !== undefined ? store.isShowReview : true,
+        isShowReview:
+          store.isShowReview !== undefined ? store.isShowReview : true,
       });
       setAddressLocation(store.addressLocation);
-      const workDaysFromStore = store.workDays?.filter((wd: any) => wd.isWorking !== false).map((wd: any) => wd.day) || [1, 2, 3, 4, 5, 6, 7];
+      const workDaysFromStore = store.workDays
+        ?.filter((wd: any) => wd.isWorking !== false)
+        .map((wd: any) => wd.day) || [1, 2, 3, 4, 5, 6, 7];
       const uniqueWorkDays = Array.from(new Set(workDaysFromStore)) as number[];
       setWorkDays(uniqueWorkDays);
       weekDays.forEach((day) => {
@@ -179,7 +199,7 @@ const StoreForm: FC<IStoreForm> = ({
       });
       // Logo va Banner image'larni set qilish
       if (store.logoId) {
-        const logoImg = { _id: store.logoId, url: `${process.env.REACT_APP_BASE_URL}/image/${store.logoId}` };
+        const logoImg = { _id: store.logoId, url: `image/${store.logoId}` };
         setLogoImage(logoImg);
         setValue("logoImage", logoImg);
       } else {
@@ -187,7 +207,10 @@ const StoreForm: FC<IStoreForm> = ({
         setValue("logoImage", undefined);
       }
       if (store.bannerId) {
-        const bannerImg = { _id: store.bannerId, url: `${process.env.REACT_APP_BASE_URL}/image/${store.bannerId}` };
+        const bannerImg = {
+          _id: store.bannerId,
+          url: `image/${store.bannerId}`,
+        };
         setBannerImage(bannerImg);
         setValue("bannerImage", bannerImg);
       } else {
@@ -290,8 +313,8 @@ const StoreForm: FC<IStoreForm> = ({
           : "",
       workDays: [1, 2, 3, 4, 5, 6, 7].map((day) => ({
         day: day,
-        startTime: data.startTime || '09:00',
-        endTime: data.endTime || '18:00',
+        startTime: data.startTime || "09:00",
+        endTime: data.endTime || "18:00",
         isWorking: workDays.includes(day),
       })),
       description: data.description || "",
@@ -327,11 +350,11 @@ const StoreForm: FC<IStoreForm> = ({
       <Box
         sx={{
           borderBottom: 1,
-          borderColor: 'divider',
+          borderColor: "divider",
           mb: 3,
-          width: '100%',
+          width: "100%",
           minWidth: 0,
-          overflow: 'hidden'
+          overflow: "hidden",
         }}
       >
         <Tabs
@@ -340,22 +363,30 @@ const StoreForm: FC<IStoreForm> = ({
           variant="scrollable"
           scrollButtons="auto"
           sx={{
-            width: '100%',
+            width: "100%",
             minWidth: 0,
-            '& .MuiTab-root': {
+            "& .MuiTab-root": {
               minHeight: 48,
-              textTransform: 'none',
-              fontSize: '14px',
+              textTransform: "none",
+              fontSize: "14px",
               fontWeight: 500,
             },
-            '& .MuiTabs-scroller': {
-              width: '100%',
-            }
+            "& .MuiTabs-scroller": {
+              width: "100%",
+            },
           }}
         >
-          <Tab icon={<Store />} iconPosition="start" label="Asosiy ma'lumotlar" />
+          <Tab
+            icon={<Store />}
+            iconPosition="start"
+            label="Asosiy ma'lumotlar"
+          />
           <Tab icon={<LocationOn />} iconPosition="start" label="Manzil" />
-          <Tab icon={<AttachMoney />} iconPosition="start" label="Narxlar va vaqt" />
+          <Tab
+            icon={<AttachMoney />}
+            iconPosition="start"
+            label="Narxlar va vaqt"
+          />
           <Tab icon={<Description />} iconPosition="start" label="Tavsif" />
           <Tab icon={<Settings />} iconPosition="start" label="Sozlamalar" />
         </Tabs>
@@ -363,10 +394,15 @@ const StoreForm: FC<IStoreForm> = ({
 
       {/* Tab Panel 0: Asosiy ma'lumotlar */}
       {activeTab === 0 && (
-        <Box sx={{ width: '100%', minWidth: 0 }}>
+        <Box sx={{ width: "100%", minWidth: 0 }}>
           <Grid container spacing={2} alignItems="center">
             {/* Asosiy maydonlar */}
-            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              sx={{ display: "flex", flexDirection: "column" }}
+            >
               <TextInput
                 control={control}
                 name="name"
@@ -375,13 +411,18 @@ const StoreForm: FC<IStoreForm> = ({
                 rules={{
                   required: {
                     value: true,
-                    message: "Do'kon/Restoran nomi majburiy"
-                  }
+                    message: "Do'kon/Restoran nomi majburiy",
+                  },
                 }}
               />
             </Grid>
 
-            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              sx={{ display: "flex", flexDirection: "column" }}
+            >
               <PhoneInput
                 control={control}
                 name="phoneNumber"
@@ -389,15 +430,20 @@ const StoreForm: FC<IStoreForm> = ({
                 rules={{
                   required: {
                     value: true,
-                    message: "Telefon raqami majburiy"
-                  }
+                    message: "Telefon raqami majburiy",
+                  },
                 }}
               />
             </Grid>
 
             {/* Password input qo'shish - faqat yangi qo'shishda majburiy */}
             {!editingStoreId && (
-              <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Grid
+                item
+                xs={12}
+                md={6}
+                sx={{ display: "flex", flexDirection: "column" }}
+              >
                 <TextInput
                   control={control}
                   name="password"
@@ -417,7 +463,12 @@ const StoreForm: FC<IStoreForm> = ({
 
             {/* Tahrirlashda password yangilash uchun (ixtiyoriy) */}
             {editingStoreId && (
-              <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Grid
+                item
+                xs={12}
+                md={6}
+                sx={{ display: "flex", flexDirection: "column" }}
+              >
                 <TextInput
                   control={control}
                   name="password"
@@ -435,7 +486,12 @@ const StoreForm: FC<IStoreForm> = ({
               </Grid>
             )}
 
-            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              sx={{ display: "flex", flexDirection: "column" }}
+            >
               <TextInput
                 control={control}
                 name="email"
@@ -446,7 +502,12 @@ const StoreForm: FC<IStoreForm> = ({
               />
             </Grid>
 
-            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              sx={{ display: "flex", flexDirection: "column" }}
+            >
               <TextInput
                 control={control}
                 name="website"
@@ -457,7 +518,12 @@ const StoreForm: FC<IStoreForm> = ({
               />
             </Grid>
 
-            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              sx={{ display: "flex", flexDirection: "column" }}
+            >
               <SelectForm
                 control={control}
                 name="type"
@@ -469,13 +535,18 @@ const StoreForm: FC<IStoreForm> = ({
                 rules={{
                   required: {
                     value: true,
-                    message: "Turi majburiy"
-                  }
+                    message: "Turi majburiy",
+                  },
                 }}
               />
             </Grid>
 
-            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              sx={{ display: "flex", flexDirection: "column" }}
+            >
               <ColorPicker
                 control={control}
                 name="brandColor"
@@ -484,13 +555,18 @@ const StoreForm: FC<IStoreForm> = ({
                 rules={{
                   required: {
                     value: true,
-                    message: "Brend rangi majburiy"
-                  }
+                    message: "Brend rangi majburiy",
+                  },
                 }}
               />
             </Grid>
 
-            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              sx={{ display: "flex", flexDirection: "column" }}
+            >
               <AutoCompleteForm
                 control={control}
                 name="categoryIds"
@@ -504,10 +580,14 @@ const StoreForm: FC<IStoreForm> = ({
 
             {/* Rasmlar */}
             <Grid item xs={12}>
-              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Rasmlar</InputLabel>
+              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: "16px" }}>
+                Rasmlar
+              </InputLabel>
               <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
-                  <InputLabel sx={{ mb: 1, fontWeight: 500 }}>Logo rasm</InputLabel>
+                  <InputLabel sx={{ mb: 1, fontWeight: 500 }}>
+                    Logo rasm
+                  </InputLabel>
                   <ImageInput
                     control={control}
                     setValue={setValue}
@@ -533,7 +613,9 @@ const StoreForm: FC<IStoreForm> = ({
                   )}
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <InputLabel sx={{ mb: 1, fontWeight: 500 }}>Banner rasm</InputLabel>
+                  <InputLabel sx={{ mb: 1, fontWeight: 500 }}>
+                    Banner rasm
+                  </InputLabel>
                   <ImageInput
                     control={control}
                     setValue={setValue}
@@ -566,7 +648,7 @@ const StoreForm: FC<IStoreForm> = ({
 
       {/* Tab Panel 1: Manzil */}
       {activeTab === 1 && (
-        <Box sx={{ width: '100%', minWidth: 0 }}>
+        <Box sx={{ width: "100%", minWidth: 0 }}>
           <Grid container spacing={2} alignItems="centert">
             <Grid item xs={12}>
               <TextInput
@@ -582,7 +664,7 @@ const StoreForm: FC<IStoreForm> = ({
             <Grid item xs={12}>
               <InputLabel sx={{ mb: 1, fontWeight: 600 }}>
                 Xarita (Manzilni belgilash)
-                <span style={{ color: '#d32f2f', marginLeft: '4px' }}>*</span>
+                <span style={{ color: "#d32f2f", marginLeft: "4px" }}>*</span>
               </InputLabel>
               <YandexMap
                 getCoordinate={setAddressLocation}
@@ -590,7 +672,14 @@ const StoreForm: FC<IStoreForm> = ({
                 height="400px"
               />
               {!addressLocation && (
-                <h6 style={{ color: '#d32f2f', marginTop: '8px', fontSize: '0.75rem', margin: '8px 0 0 0' }}>
+                <h6
+                  style={{
+                    color: "#d32f2f",
+                    marginTop: "8px",
+                    fontSize: "0.75rem",
+                    margin: "8px 0 0 0",
+                  }}
+                >
                   Manzilni xaritada belgilash majburiy
                 </h6>
               )}
@@ -601,12 +690,19 @@ const StoreForm: FC<IStoreForm> = ({
 
       {/* Tab Panel 2: Narxlar va vaqt */}
       {activeTab === 2 && (
-        <Box sx={{ width: '100%', minWidth: 0 }}>
+        <Box sx={{ width: "100%", minWidth: 0 }}>
           <Grid container spacing={2} alignItems="centert">
             <Grid item xs={12}>
-              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Narxlar</InputLabel>
+              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: "16px" }}>
+                Narxlar
+              </InputLabel>
             </Grid>
-            <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Grid
+              item
+              xs={12}
+              md={4}
+              sx={{ display: "flex", flexDirection: "column" }}
+            >
               <TextInput
                 control={control}
                 name="orderMinimumPrice"
@@ -617,7 +713,12 @@ const StoreForm: FC<IStoreForm> = ({
               />
             </Grid>
 
-            <Grid item xs={12} md={4} sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Grid
+              item
+              xs={12}
+              md={4}
+              sx={{ display: "flex", flexDirection: "column" }}
+            >
               <TextInput
                 control={control}
                 name="averageRating"
@@ -633,9 +734,16 @@ const StoreForm: FC<IStoreForm> = ({
             </Grid>
 
             <Grid item xs={12}>
-              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Tayyorlash vaqti</InputLabel>
+              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: "16px" }}>
+                Tayyorlash vaqti
+              </InputLabel>
             </Grid>
-            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              sx={{ display: "flex", flexDirection: "column" }}
+            >
               <TextInput
                 control={control}
                 name="itemPrepTimeFrom"
@@ -646,7 +754,12 @@ const StoreForm: FC<IStoreForm> = ({
               />
             </Grid>
 
-            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              sx={{ display: "flex", flexDirection: "column" }}
+            >
               <TextInput
                 control={control}
                 name="itemPrepTimeTo"
@@ -662,9 +775,16 @@ const StoreForm: FC<IStoreForm> = ({
             </Grid>
 
             <Grid item xs={12}>
-              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Ish vaqti</InputLabel>
+              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: "16px" }}>
+                Ish vaqti
+              </InputLabel>
             </Grid>
-            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              sx={{ display: "flex", flexDirection: "column" }}
+            >
               <TimePicker
                 control={control}
                 name="startTime"
@@ -673,12 +793,17 @@ const StoreForm: FC<IStoreForm> = ({
                 rules={{
                   required: {
                     value: true,
-                    message: "Ish vaqti boshlanishi majburiy"
-                  }
+                    message: "Ish vaqti boshlanishi majburiy",
+                  },
                 }}
               />
             </Grid>
-            <Grid item xs={12} md={6} sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Grid
+              item
+              xs={12}
+              md={6}
+              sx={{ display: "flex", flexDirection: "column" }}
+            >
               <TimePicker
                 control={control}
                 name="endTime"
@@ -687,8 +812,8 @@ const StoreForm: FC<IStoreForm> = ({
                 rules={{
                   required: {
                     value: true,
-                    message: "Ish vaqti tugashi majburiy"
-                  }
+                    message: "Ish vaqti tugashi majburiy",
+                  },
                 }}
               />
             </Grid>
@@ -698,7 +823,9 @@ const StoreForm: FC<IStoreForm> = ({
             </Grid>
 
             <Grid item xs={12}>
-              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Hafta kunlari</InputLabel>
+              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: "16px" }}>
+                Hafta kunlari
+              </InputLabel>
               <Grid container spacing={2}>
                 {weekDays.map((day) => {
                   const isChecked = workDays.includes(day.value);
@@ -711,12 +838,16 @@ const StoreForm: FC<IStoreForm> = ({
                         onChange={(checked) => {
                           if (checked) {
                             if (!workDays.includes(day.value)) {
-                              const newWorkDays = [...workDays, day.value].sort((a, b) => a - b);
+                              const newWorkDays = [...workDays, day.value].sort(
+                                (a, b) => a - b,
+                              );
                               setWorkDays(newWorkDays);
                               setValue("workDays", newWorkDays);
                             }
                           } else {
-                            const newWorkDays = workDays.filter((d) => d !== day.value);
+                            const newWorkDays = workDays.filter(
+                              (d) => d !== day.value,
+                            );
                             setWorkDays(newWorkDays);
                             setValue("workDays", newWorkDays);
                           }
@@ -733,10 +864,12 @@ const StoreForm: FC<IStoreForm> = ({
 
       {/* Tab Panel 3: Tavsif */}
       {activeTab === 3 && (
-        <Box sx={{ width: '100%', minWidth: 0 }}>
+        <Box sx={{ width: "100%", minWidth: 0 }}>
           <Grid container spacing={2} alignItems="centert">
             <Grid item xs={12}>
-              <InputLabel sx={{ mb: 1, fontWeight: 600 }}>Asosiy tavsif</InputLabel>
+              <InputLabel sx={{ mb: 1, fontWeight: 600 }}>
+                Asosiy tavsif
+              </InputLabel>
               <TextEditor
                 value={watch("description") || ""}
                 onChange={(value) => setValue("description", value)}
@@ -748,7 +881,9 @@ const StoreForm: FC<IStoreForm> = ({
             </Grid>
 
             <Grid item xs={12}>
-              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Ko'p tilli tavsif</InputLabel>
+              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: "16px" }}>
+                Ko'p tilli tavsif
+              </InputLabel>
             </Grid>
             <Grid item xs={12} md={4}>
               <InputLabel sx={{ mb: 1 }}>O'zbekcha</InputLabel>
@@ -777,10 +912,12 @@ const StoreForm: FC<IStoreForm> = ({
 
       {/* Tab Panel 4: Sozlamalar */}
       {activeTab === 4 && (
-        <Box sx={{ width: '100%', minWidth: 0 }}>
+        <Box sx={{ width: "100%", minWidth: 0 }}>
           <Grid container spacing={2} alignItems="centert">
             <Grid item xs={12}>
-              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>To'lov usullari</InputLabel>
+              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: "16px" }}>
+                To'lov usullari
+              </InputLabel>
               <Grid container spacing={2}>
                 <Grid item>
                   <Checkbox control={control} name="acceptCard" label="Karta" />
@@ -803,7 +940,9 @@ const StoreForm: FC<IStoreForm> = ({
             </Grid>
 
             <Grid item xs={12}>
-              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: '16px' }}>Statuslar</InputLabel>
+              <InputLabel sx={{ mb: 2, fontWeight: 600, fontSize: "16px" }}>
+                Statuslar
+              </InputLabel>
               <Grid container spacing={2}>
                 <Grid item>
                   <Checkbox control={control} name="isActive" label="Faol" />
@@ -816,7 +955,11 @@ const StoreForm: FC<IStoreForm> = ({
                   />
                 </Grid>
                 <Grid item>
-                  <Checkbox control={control} name="isPremium" label="Premium" />
+                  <Checkbox
+                    control={control}
+                    name="isPremium"
+                    label="Premium"
+                  />
                 </Grid>
               </Grid>
             </Grid>

@@ -16,8 +16,8 @@ const Image: React.FC<
           objectFit: "cover",
           borderRadius: ".5rem",
         }}
-        src={src ? process.env.REACT_APP_BASE_URL + src : def}
-        alt={process.env.REACT_APP_BASE_URL + "" + src}
+        src={src ? process.env.REACT_APP_BASE_URL + "/" + src : def}
+        alt={process.env.REACT_APP_BASE_URL + "/" + src}
         width="100%"
         {...props}
       />
