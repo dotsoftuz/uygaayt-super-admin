@@ -1,20 +1,20 @@
 import { DataGrid, GridColumns, GridRowParams } from "@mui/x-data-grid";
-import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
+import { useApiMutation } from "hooks/useApi/useApiHooks";
 import useDebounce from "hooks/useDebounce";
 import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
 import { get } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useLocation, useSearchParams } from "react-router-dom";
+import { socketReRender } from "store/reducers/SocketSlice";
 import { useAppSelector } from "store/storeHooks";
 import NoDataFound from "./components/noDataFound";
 import TableHeader from "./components/tableHeader";
 import TablePagination from "./components/tablePagination";
 import { reRenderTable } from "./reducer/table.slice";
-import { IQueryParams, ITable, ITableData } from "./Table.constants";
+import { ITable } from "./Table.constants";
 import { TableContainerMain } from "./Table.style";
 import { getTableColumns, localization } from "./utils";
-import { socketReRender } from "store/reducers/SocketSlice";
-import { useLocation, useSearchParams } from "react-router-dom";
 
 const Table = <TData extends { _id: string }>({
   onEditColumn,
@@ -89,41 +89,49 @@ const Table = <TData extends { _id: string }>({
   }, [debValue]);
 
   /** Fetch data */
-  const { mutate, reset, data, isLoading } = useApiMutation(dataUrl, "post", {
-    onSuccess(response) {
-      const tableData = isGetAll
-        ? get(response, "data", [])
-        : response?.data?.data;
+  const { mutate, reset, data, isLoading } = useApiMutation(
+    dataUrl,
+    "post",
+    {
+      onSuccess(response) {
+        const tableData = isGetAll
+          ? get(response, "data", [])
+          : response?.data?.data;
 
-      onDataChange?.(tableData);
-      getAllData?.(response?.data);
+        onDataChange?.(tableData);
+        getAllData?.(response?.data);
 
-      if (response?.data?.total > 0 && response?.data?.data?.length === 0) {
-        setSearchParams({
-          ...(filterParams ? { ...filterParams } : { ...allParams }),
-          ...exQueryParams, // FIX 2: filter params yo'qolmasligi uchun
-          ...allParams,
-          search: debValue || "",
-          page: search ? "1" : allParams.page || "1",
-          limit: allParams.limit || defaultLimit + "",
-        });
-      }
+        if (response?.data?.total > 0 && response?.data?.data?.length === 0) {
+          setSearchParams({
+            ...(filterParams ? { ...filterParams } : { ...allParams }),
+            ...exQueryParams, // FIX 2: filter params yo'qolmasligi uchun
+            ...allParams,
+            search: debValue || "",
+            page: search ? "1" : allParams.page || "1",
+            limit: allParams.limit || defaultLimit + "",
+          });
+        }
+      },
     },
-  }, true);
+    true,
+  );
 
   /** Trigger data fetch */
   useEffect(() => {
-    // Filter out empty strings, null, and undefined values
+    // Filter out null and undefined values, but keep empty strings
     const cleanParams = Object.entries({
       ...allParams,
       ...exQueryParams,
-    }).reduce((acc, [key, value]) => {
-      // Only include non-empty values
-      if (value !== undefined && value !== null && value !== "") {
-        acc[key] = value;
-      }
-      return acc;
-    }, {} as Record<string, any>);
+    }).reduce(
+      (acc, [key, value]) => {
+        // Include all values except null and undefined
+        if (value !== undefined && value !== null) {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {} as Record<string, any>,
+    );
 
     mutate(cleanParams);
   }, [debValue, reRender, exQueryParams, locationSearch]);
@@ -131,7 +139,7 @@ const Table = <TData extends { _id: string }>({
   /** Delete request */
   const { mutate: deleteMutate, isSuccess: isDeleteSuccess } = useApiMutation(
     deleteUrl || dataUrl,
-    "delete"
+    "delete",
   );
 
   const onDelete = () => {
@@ -167,7 +175,7 @@ const Table = <TData extends { _id: string }>({
           item?.firstName?.toLowerCase()?.includes(search) ||
           item?.lastName?.toLowerCase()?.includes(search) ||
           item?.name?.toLowerCase()?.includes(search) ||
-          item?.car?.name?.toLowerCase()?.includes(search)
+          item?.car?.name?.toLowerCase()?.includes(search),
       );
     }
 
@@ -195,7 +203,7 @@ const Table = <TData extends { _id: string }>({
         onDeleteColumn,
         onSeenClick,
       }),
-    [columns]
+    [columns],
   );
 
   const totalData = data?.data?.total || tableData?.length || 0;

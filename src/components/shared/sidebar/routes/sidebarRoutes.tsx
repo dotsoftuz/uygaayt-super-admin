@@ -1,3 +1,9 @@
+import ArticleIcon from "@mui/icons-material/Article";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import NewspaperIcon from "@mui/icons-material/Newspaper";
+import RateReviewIcon from "@mui/icons-material/RateReview";
+import StoreIcon from "@mui/icons-material/Store";
+import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
 import {
   AboutIcon,
   AnaliticIcon,
@@ -8,18 +14,11 @@ import {
   OrderIcon,
   PaymentType,
   ProductIcon,
-  RatingIcon,
   SettingsIcon,
   TransactionIcon,
   UserIcon,
 } from "assets/svgs";
 import { ISidebarRoute } from "../sidebar.types";
-import NewspaperIcon from "@mui/icons-material/Newspaper";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import ViewCarouselIcon from "@mui/icons-material/ViewCarousel";
-import ArticleIcon from "@mui/icons-material/Article";
-import StoreIcon from "@mui/icons-material/Store";
-import RateReviewIcon from "@mui/icons-material/RateReview";
 
 export const sidebarRoutes: ISidebarRoute[] = [
   {
@@ -109,12 +108,12 @@ export const sidebarRoutes: ISidebarRoute[] = [
     translate: "attribute",
     icon: <ArticleIcon style={{ color: "#EB5B00" }} />,
   },
-  {
-    path: "/rating",
-    translate: "rating",
-    role: "rateComment",
-    icon: <RatingIcon />,
-  },
+  // {
+  //   path: "/rating",
+  //   translate: "rating",
+  //   role: "rateComment",
+  //   icon: <RatingIcon />,
+  // },
   {
     path: "/review",
     translate: "review",

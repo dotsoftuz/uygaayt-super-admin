@@ -1,24 +1,18 @@
-import {
-  AutoCompleteFilter,
-  Checkbox,
-  ExportButton,
-  FormDrawer,
-  Table,
-} from "components";
-import { useStoresRestaurantsColumns } from "./stores_restaurants.columns";
-import { useAppDispatch } from "store/storeHooks";
+import { Grid, MenuItem, Select } from "@mui/material";
+import { Checkbox, ExportButton, FormDrawer, Table } from "components";
+import WarningModal from "components/common/WarningModal/WarningModal";
 import { setOpenDrawer } from "components/elements/FormDrawer/formdrawer.slice";
+import { useApiMutation } from "hooks/useApi/useApiHooks";
+import { IIdImage } from "hooks/usePostImage";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useRoleManager } from "services/useRoleManager";
-import { Grid, MenuItem, Select } from "@mui/material";
-import { useMemo, useState, useEffect } from "react";
-import WarningModal from "components/common/WarningModal/WarningModal";
 import { useNavigate } from "react-router-dom";
-import { useApiMutation } from "hooks/useApi/useApiHooks";
 import { toast } from "react-toastify";
+import { useRoleManager } from "services/useRoleManager";
+import { useAppDispatch } from "store/storeHooks";
 import StoreForm from "../components/StoreForm";
-import { IIdImage } from "hooks/usePostImage";
+import { useStoresRestaurantsColumns } from "./stores_restaurants.columns";
 // Bu importlarni olib tashlang:
 // import { getStoresFromLocalStorage, deleteStoreFromLocalStorage, activateStoreInLocalStorage, ILocalStore } from "../utils/localStorageUtils";
 
@@ -75,23 +69,18 @@ const StoresRestaurants = () => {
         }
       : undefined,
     hasAccess("store") ? (row) => handleDelete(row._id) : undefined,
-    handleActivate
+    handleActivate,
   );
 
   const queryParams = useMemo(
     () => ({
       isActive: formStore.watch("isActiveQuery") || undefined,
-      categoryId: formStore.watch("categoryId") || undefined,
-      orderSort: formStore.watch("orderSort") || undefined,
+      type: formStore.watch("storeType") || undefined,
     }),
-    [
-      formStore.watch("isActiveQuery"),
-      formStore.watch("categoryId"),
-      formStore.watch("orderSort"),
-    ]
+    [formStore.watch("isActiveQuery"), formStore.watch("storeType")],
   );
 
-  const exportUrl: string = "/store/export";
+  const exportUrl: string = "store/export";
 
   const renderHeader = (
     <Grid className="lg:w-[80%] w-full flex flex-wrap gap-2 items-center mt-2 ml-2 pb-2">
@@ -105,34 +94,26 @@ const StoresRestaurants = () => {
       <Grid item>
         <Select
           style={{
-            width: "150px",
+            width: "180px",
             paddingBlock: "4px",
             borderRadius: "10px",
           }}
           size="small"
-          value={formStore.watch("orderSort") || ""}
-          onChange={(e) => formStore.setValue("orderSort", e.target.value)}
+          value={formStore.watch("storeType") || ""}
+          onChange={(e) => formStore.setValue("storeType", e.target.value)}
           displayEmpty
         >
-          {formStore.watch("orderSort") && (
-            <MenuItem value="">Tozalash</MenuItem>
+          {formStore.watch("storeType") && (
+            <MenuItem value="">Barchasi</MenuItem>
           )}
-          {!formStore.watch("orderSort") && (
+          {!formStore.watch("storeType") && (
             <MenuItem value="" hidden disabled>
-              Buyurtma soni
+              Turi bo'yicha
             </MenuItem>
           )}
-          <MenuItem value="mostActive">Eng faol</MenuItem>
-          <MenuItem value="leastActive">Eng kam</MenuItem>
+          <MenuItem value="shop">Do'kon</MenuItem>
+          <MenuItem value="restaurant">Restoran/Kafe</MenuItem>
         </Select>
-      </Grid>
-      <Grid item>
-        <AutoCompleteFilter
-          optionsUrl="category/paging"
-          filterName="categoryId"
-          placeholder={t("common.category")}
-          onChange={() => {}}
-        />
       </Grid>
       <Grid item>
         <ExportButton url={exportUrl} extraParams={queryParams} />
@@ -178,8 +159,7 @@ const StoresRestaurants = () => {
       acceptOnlinePayment: false,
       // Filter qiymatlarini saqlab qolish
       isActiveQuery: formStore.watch("isActiveQuery"),
-      categoryId: formStore.watch("categoryId"),
-      orderSort: formStore.watch("orderSort"),
+      storeType: formStore.watch("storeType"),
     });
   };
 

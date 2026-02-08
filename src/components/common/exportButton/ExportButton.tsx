@@ -2,7 +2,6 @@ import { ExportIcon } from "assets/svgs";
 import CommonButton from "components/common/commonButton/Button";
 import { useApiMutation } from "hooks/useApi/useApiHooks";
 import useAllQueryParams from "hooks/useGetAllQueryParams/useAllQueryParams";
-import React from "react";
 
 interface IExportButton {
   url: string;
@@ -19,7 +18,7 @@ export const downlaodFileByName = async ({
 }) => {
   try {
     const response = await fetch(
-      process.env.REACT_APP_BASE_URL + "/" + fileUrl
+      process.env.REACT_APP_BASE_URL + "/" + fileUrl,
     );
     if (!response.ok) {
       throw new Error("Network response was not ok");
@@ -40,11 +39,11 @@ export const downlaodFileByName = async ({
 
 const getFileNameFromPath = (path?: any) => {
   if (!path) return null;
-  const match = path.match(/uploads\/(.*?)\.xlsx/);
-  return match ? match[1] : null;
+  const match = path.match(/uploads\/(.*?)\.(xlsx|csv)/);
+  return match ? `${match[1]}.${match[2]}` : null;
 };
 
-const ExportButton = ({ url, fileName, extraParams}: IExportButton) => {
+const ExportButton = ({ url, fileName, extraParams }: IExportButton) => {
   const allParams = useAllQueryParams();
 
   const { mutate, status } = useApiMutation(url, "post", {
@@ -52,14 +51,23 @@ const ExportButton = ({ url, fileName, extraParams}: IExportButton) => {
       if (data) {
         downlaodFileByName({
           fileUrl: data?.data as string,
-          fileName: fileName || getFileNameFromPath(data?.data),
+          fileName: fileName || getFileNameFromPath(data?.data) || "export",
         });
       }
     },
   });
 
   const generateRequestBody = () => {
-    const { dateFrom, dateTo, customer_id, categoryId, page, limit, sortOrder, sortBy } = allParams || {};
+    const {
+      dateFrom,
+      dateTo,
+      customer_id,
+      categoryId,
+      page,
+      limit,
+      sortOrder,
+      sortBy,
+    } = allParams || {};
 
     const baseParams: Record<string, any> = {
       page,
@@ -82,8 +90,6 @@ const ExportButton = ({ url, fileName, extraParams}: IExportButton) => {
 
     return cleanedBody;
   };
-
-
 
   return (
     <CommonButton
