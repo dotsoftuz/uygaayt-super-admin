@@ -10,7 +10,6 @@ const Product = lazy(() => import("pages/product"));
 const Category = lazy(() => import("pages/category"));
 const CategoryChild = lazy(() => import("pages/category/info/CategoryChild"));
 const StoresRestaurants = lazy(() => import("pages/stores_restaurants"));
-const About = lazy(() => import("pages/about"));
 const Employee = lazy(() => import("pages/employee"));
 const Role = lazy(() => import("pages/role"));
 const Transaction = lazy(() => import("pages/transaction"));
@@ -80,7 +79,7 @@ const privateRoutes: (RouteObject & { role: keyof IRoleData })[] = [
     role: "_id",
   },
   {
-    element: <About />,
+    element: <Navigate to="/settings?tab=about" replace />,
     path: "/about",
     role: "_id",
   },

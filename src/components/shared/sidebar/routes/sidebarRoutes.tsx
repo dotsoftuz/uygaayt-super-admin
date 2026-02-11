@@ -57,12 +57,12 @@ export const sidebarRoutes: ISidebarRoute[] = [
     translate: "stores_restaurants",
     icon: <StoreIcon style={{ color: "#EB5B00" }} />,
   },
-  {
-    path: "/about",
-    role: "_id",
-    translate: "about",
-    icon: <AboutIcon />,
-  },
+  // {
+  //   path: "/settings?tab=about",
+  //   role: "_id",
+  //   translate: "about",
+  //   icon: <AboutIcon />,
+  // },
   {
     translate: "control",
     icon: <ManageIcon />,
@@ -126,12 +126,12 @@ export const sidebarRoutes: ISidebarRoute[] = [
     role: "transaction",
     icon: <TransactionIcon />,
   },
-  {
-    path: "/integration",
-    role: "integration",
-    translate: "integration",
-    icon: <IntegrationIcon />,
-  },
+  // {
+  //   path: "/integration",
+  //   role: "integration",
+  //   translate: "integration",
+  //   icon: <IntegrationIcon />,
+  // },
   {
     path: "/payment-method",
     role: "_id", // must change

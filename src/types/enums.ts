@@ -41,6 +41,11 @@ export const SETTINGS_TABS: ISettingsTabs[] = [
     role: "role",  // o'zgartirish kere measure
   },
   {
+    name: "about",
+    key: "about",
+    role: "_id",
+  },
+  {
     name: "discounts",
     key: "discountOrder",
     role: "role",  // o'zgartirish kere 

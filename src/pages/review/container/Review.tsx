@@ -103,7 +103,6 @@ const Review = () => {
             <Table
                 dataUrl="review/paging"
                 columns={columns}
-                searchable
                 headerChildren={renderHeader}
                 exQueryParams={queryParams}
                 onRowClick={(row) => {

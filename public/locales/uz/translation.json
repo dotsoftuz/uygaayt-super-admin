@@ -167,7 +167,9 @@
     "create": "Qo'shish",
     "update": "Tahrirlash",
     "delete": "O'chirish",
-    "store": "Kompaniya haqida",
+    "store": "Do'konlar",
+    "review": "Sharhlar",
+    "restaurant": "Restoranlar",
     "integration": "Integratsiya",
     "stateMap": "Xolatlar integratsiyasi",
     "transaction": "Tranzaksiyalar",
@@ -284,6 +286,7 @@
   "settings": {
     "switch_for_courier": "Kuryer o'zi onlayn yoki oflayn qila olsin",
     "functionality": "Funksionallik",
+    "about": "Kompaniya haqida",
     "discounts": "Chegirmalar",
     "bonus": "Bonus",
     "premium_discounts": "Premium chegirmalar",

@@ -241,11 +241,51 @@ export const ALL_ROLES: Array<{
     label: "store",
     childRoles: [
       {
+        role: "storeCreate",
+        label: "create",
+      },
+      {
         role: "storeUpdate",
         label: "update",
       },
       {
         role: "storeDelete",
+        label: "delete",
+      },
+    ],
+  },
+  {
+    role: "review",
+    label: "review",
+    childRoles: [
+      {
+        role: "reviewCreate",
+        label: "create",
+      },
+      {
+        role: "reviewUpdate",
+        label: "update",
+      },
+      {
+        role: "reviewDelete",
+        label: "delete",
+      },
+    ],
+  },
+  {
+    role: "restaurant",
+    label: "restaurant",
+    childRoles: [
+      {
+        role: "restaurantCreate",
+        label: "create",
+      },
+      {
+        role: "restaurantUpdate",
+        label: "update",
+      },
+      {
+        role: "restaurantDelete",
         label: "delete",
       },
     ],

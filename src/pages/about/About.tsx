@@ -443,7 +443,7 @@ const About = () => {
                   key={field.id}
                   sx={{ mt: 1, mb: 2 }}
                 >
-                  <Grid item xs={12} md={3}>
+                  <Grid item xs={12} md={4}>
                     <SelectForm
                       control={control}
                       name={`workDays.${index}.day`}

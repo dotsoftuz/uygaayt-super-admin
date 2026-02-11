@@ -20,6 +20,7 @@ import { Percent } from "@mui/icons-material";
 import { miniSize } from '../../../styles/global.style';
 import BonusOrder from "../components/BonusOrder";
 import DiscountOrder from "../components/DiscountOrder";
+import About from "pages/about";
 
 const Settings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -62,6 +63,13 @@ const Settings = () => {
     }
   }, [status]);
 
+  useEffect(() => {
+    const tabFromUrl = searchParams.get("tab");
+    if (tabFromUrl && SETTINGS_TABS.some((tab) => tab.key === tabFromUrl)) {
+      setActiveTab(tabFromUrl);
+    }
+  }, [searchParams]);
+
   const submit = handleSubmit((data: any) => {
     const submitData = {
       ...data,
@@ -91,13 +99,13 @@ const Settings = () => {
   return (
     <SettingsStyled>
       <Grid className="md:flex" spacing={1}>
-        <Grid item className="md:w-1/3 p-2" >
+        <Grid item className="md:w-1/6 p-2" >
           <div className="tabs">
             {SETTINGS_TABS.filter(tab => hasAccess(tab.role)).map((tab) => (
               <div
                 key={tab.key}
                 className={`tab ${activeTab === tab.key && "active"}`}
-                onClick={() => setActiveTab(tab.key)}
+                onClick={() => handleTab(tab)}
               >
                 {t(`settings.${tab.name}`)}
                 {activeTab === tab.key && (
@@ -108,7 +116,7 @@ const Settings = () => {
 
           </div>
         </Grid>
-        <Grid className="md:w-2/3 p-2" >
+        <Grid className="md:w-5/6 p-2" >
           {activeTab === "functionality" && (
             <div className="settings">
               <HeaderOfSettings>
@@ -536,6 +544,11 @@ const Settings = () => {
                   </div>
                 </Grid>
               </Grid>
+            </div>
+          )}
+          {activeTab === "about" && (
+            <div className="settings">
+              <About />
             </div>
           )}
           {activeTab === "discountOrder" && (
