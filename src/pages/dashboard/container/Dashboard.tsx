@@ -266,7 +266,9 @@ const Dashboard = () => {
             <ShoppingCartIcon style={{ color: "#FF6701", fontSize: "24px" }} />
           </div>
         </StyledCard>
-        {attributesData?.data?.states.map((item: any) => (
+        {attributesData?.data?.states?.filter((item: any) => 
+          item.state?.state === "completed" || item.state?.state === "cancelled"
+        ).map((item: any) => (
           <StyledCard key={item.state?.state}>
             <TypographyTitle>
               {item.state?.state === "completed"

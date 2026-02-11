@@ -48,7 +48,7 @@ export const useProductColumns = (): GridColumns => {
       field: "group",
       headerName: t("common.type")!,
       renderCell({ row }) {
-        return numberFormat(get(row, "group", ""));
+        return get(row, "group", "");
       },
     },
     // {
