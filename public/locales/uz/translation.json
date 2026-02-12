@@ -364,6 +364,7 @@
     "user_bonus": "Foydalanuvchi bonusi",
     "withdraw_balance": "Balansdan yechib olish",
     "buy_premium": "Premium xarid",
-    "cashback": "Cashback"
+    "cashback": "Cashback",
+    "order_payment": "Buyurtma uchun to'lov"
   }
 }

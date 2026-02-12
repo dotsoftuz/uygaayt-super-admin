@@ -10,32 +10,6 @@ api.interceptors.request.use(
     const token = localStorage.getItem("token");
     config.headers["Authorization"] = `Bearer ${token}`;
     config.headers["Accept-Language"] = localStorage.getItem("i18nextLng");
-    // #region agent log
-    if (config.url?.includes("balance/paging")) {
-      fetch(
-        "http://127.0.0.1:7242/ingest/ce1c437f-4b53-45a3-b9ea-6cfa04072735",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            location: "client.ts:8",
-            message: "API request interceptor",
-            data: {
-              url: config.url,
-              method: config.method,
-              data: config.data,
-              hasToken: !!token,
-              baseURL: config.baseURL,
-            },
-            timestamp: Date.now(),
-            sessionId: "debug-session",
-            runId: "run1",
-            hypothesisId: "B,D",
-          }),
-        },
-      ).catch(() => {});
-    }
-    // #endregion
     // config.headers["storeId"] = localStorage.getItem("storeId");
     return config;
   },
@@ -48,32 +22,6 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response.data,
   (err) => {
-    // #region agent log
-    if (err.config?.url?.includes("balance/paging")) {
-      fetch(
-        "http://127.0.0.1:7242/ingest/ce1c437f-4b53-45a3-b9ea-6cfa04072735",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            location: "client.ts:27",
-            message: "API response error",
-            data: {
-              url: err.config?.url,
-              status: err.response?.status,
-              statusText: err.response?.statusText,
-              data: err.response?.data,
-              message: err.message,
-            },
-            timestamp: Date.now(),
-            sessionId: "debug-session",
-            runId: "run1",
-            hypothesisId: "A,B,C,D",
-          }),
-        },
-      ).catch(() => {});
-    }
-    // #endregion
     if (err?.message === "Network Error") {
       // setIsNetworkErr(true);
       return Promise.reject({

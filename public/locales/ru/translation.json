@@ -373,6 +373,7 @@
     "user_bonus": "Бонус пользователя",
     "withdraw_balance": "Вывести с баланса",
     "buy_premium": "Премиум покупка",
-    "cashback": "Кэшбэк"
+    "cashback": "Кэшбэк",
+    "order_payment": "Оплата заказа"
   }
 }
