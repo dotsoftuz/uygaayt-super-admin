@@ -2,7 +2,18 @@ import { Money, ShoppingBag } from "@mui/icons-material";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 import BackpackIcon from "@mui/icons-material/Backpack";
 import TimelineIcon from "@mui/icons-material/Timeline";
-import { Box, Button, Paper, Tab, Tabs, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  Tab,
+  Tabs,
+  Typography,
+} from "@mui/material";
 import { RangeDatePicker, Table } from "components";
 import useCommonContext from "context/useCommon";
 import dayjs from "dayjs";
@@ -133,6 +144,7 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({
   customerId,
 }) => {
   const [value, setValue] = React.useState(0);
+  const [transactionType, setTransactionType] = React.useState<string>("all");
   const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const allParams = useAllQueryParams();
@@ -335,11 +347,31 @@ export const CustomerTabs: React.FC<CustomerTabsProps> = ({
       </TabPanel>
 
       <TabPanel value={value} index={2}>
+        <Box sx={{ mb: 2 }}>
+          <FormControl sx={{ minWidth: 200 }}>
+            <InputLabel>{t("common.type")}</InputLabel>
+            <Select
+              value={transactionType}
+              label={t("common.type")}
+              onChange={(e) => setTransactionType(e.target.value)}
+            >
+              <MenuItem value="all">{t("common.all")}</MenuItem>
+              <MenuItem value="order_payment">
+                {t("type.order_payment")}
+              </MenuItem>
+              <MenuItem value="cashback">{t("type.cashback")}</MenuItem>
+              <MenuItem value="withdraw_balance">
+                {t("type.withdraw_balance")}
+              </MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
         <Table
           columns={columns}
           dataUrl="balance/customer-timeline"
           exQueryParams={{
             customerId: customerId,
+            ...(transactionType !== "all" && { transactionType }),
           }}
         />
       </TabPanel>
