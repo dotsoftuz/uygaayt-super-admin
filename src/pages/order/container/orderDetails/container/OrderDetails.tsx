@@ -88,31 +88,52 @@ const OrderDetails = () => {
   }, [status]);
 
   const submit = handleSubmit((data: any) => {
+    const parsedDeliveryDate = data.deliveryDate
+      ? dayjs(data.deliveryDate)
+      : null;
+    const safeDeliveryDate = parsedDeliveryDate?.isValid()
+      ? parsedDeliveryDate.format()
+      : undefined;
+
+    const safePhoneNumber = data.phoneNumber || order?.customer?.phoneNumber;
+
+    const sourceItems =
+      Array.isArray(data?.items) && data.items.length > 0
+        ? data.items
+        : order?.items;
+    const safeItems = Array.isArray(sourceItems)
+      ? sourceItems
+          .map((e: any) => ({
+            productId: e.productId,
+            amount: e.amount,
+            attributes: Array.isArray(e?.attributes)
+              ? e.attributes
+                  .map((item: any) => ({
+                    attributeId: item?.attributeId,
+                    attributeItem: item?.attributeItem,
+                  }))
+                  .filter((x: any) => x?.attributeId || x?.attributeItem)
+              : undefined,
+          }))
+          .filter((e: any) => e?.productId && e?.amount)
+      : [];
+
     const requestData = {
       _id: order?._id,
       addressName: data.addressName,
       addressLocation: data.addressLocation,
       receiverFirstName: data.receiverFirstName,
       receiverPhoneNumber: data.receiverPhoneNumber || data.phoneNumber,
-      phoneNumber: data.phoneNumber,
+      phoneNumber: safePhoneNumber,
       paymentType: data.paymentType,
       houseNumber: data.houseNumber,
       entrance: data.entrance,
       floor: data.floor,
       apartmentNumber: data.apartmentNumber,
       comment: data.comment,
-      deliveryDate: data.deliveryDate
-        ? dayjs(data.deliveryDate).format()
-        : undefined,
+      deliveryDate: safeDeliveryDate,
       storeId: order?.storeId,
-      items: data?.items?.map((e: any) => ({
-        productId: e.productId,
-        amount: e.amount,
-        attributes: e?.attributes?.map((item: any) => ({
-          attributeId: item?.attributeId,
-          attributeItem: item?.attributeItem,
-        })),
-      })),
+      items: safeItems,
     };
     mutate(requestData, {
       onSuccess() {

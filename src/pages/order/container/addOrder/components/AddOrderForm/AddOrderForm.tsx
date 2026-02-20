@@ -1,13 +1,5 @@
-import { Controller, useForm } from "react-hook-form";
-import {
-  FullscreenControl,
-  GeolocationControl,
-  Map,
-  Placemark,
-  TypeSelector,
-  YMaps,
-  ZoomControl,
-} from "react-yandex-maps";
+import { Grid, TextareaAutosize } from "@mui/material";
+import { LeftArrowIcon } from "assets/svgs";
 import {
   DatePickerTime,
   MainButton,
@@ -16,46 +8,45 @@ import {
   SelectForm,
   TextInput,
 } from "components";
-import { AddOrderFormStyled, AddressModalStyled } from "./AddOrderForm.styled";
-import TextEditor from "components/form/TextEditor/TextEditor";
-import { useTranslation } from "react-i18next";
-import { Grid, TextareaAutosize } from "@mui/material";
-import { useEffect, useState } from "react";
-import { LeftArrowIcon } from "assets/svgs";
-import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
-import useDebounce from "hooks/useDebounce";
-import { PAYMENT_TYPES } from "types/enums";
-import { IOrder, IProduct } from "types/common.types";
-import { useNavigate, useParams } from "react-router-dom";
-import { numberFormat } from "utils/numberFormat";
-import { toast } from "react-toastify";
-import dayjs from "dayjs";
-import useCommonContext from "context/useCommon";
-import { get } from "lodash";
 import YandexMapForOrder from "components/common/YandexMapForOrder/YandexMapForOrder";
 import SelectPost from "components/form/SelectPost/SelectFormPost";
+import useCommonContext from "context/useCommon";
+import dayjs from "dayjs";
+import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
+import useDebounce from "hooks/useDebounce";
+import { get } from "lodash";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { IProduct } from "types/common.types";
+import { PAYMENT_TYPES } from "types/enums";
+import { numberFormat } from "utils/numberFormat";
+import { AddOrderFormStyled, AddressModalStyled } from "./AddOrderForm.styled";
 
 const AddOrderForm = ({
   basketItems,
   formStore,
-  order
+  order,
 }: {
   basketItems: IProduct[];
   formStore?: any;
-  order?: any
+  order?: any;
 }) => {
   const [showOptions, setShowOptions] = useState(false);
   const [open, setOpen] = useState(false);
   const [coordinate, setCoordinate] = useState<any>();
   const [address, setAddress] = useState("");
   const { t } = useTranslation();
-  const { control, setValue, handleSubmit, watch, setError, reset, getValues } = useForm();
+  const { control, setValue, handleSubmit, watch, setError, reset, getValues } =
+    useForm();
   const { debouncedValue } = useDebounce(address, 1000);
   const navigate = useNavigate();
   const { id } = useParams();
   const allProductPrice = basketItems.reduce(
     (prev, item) => prev + item.salePrice * item.amount,
-    0
+    0,
   );
   const deliveryPrice = 0;
   const [selectedCourier, setSelectedCourier] = useState("");
@@ -63,7 +54,6 @@ const AddOrderForm = ({
   const {
     state: { data: settingsData },
   } = useCommonContext();
-
 
   const { mutate: addressByName, data } = useApiMutation(
     `address/by-name`,
@@ -75,7 +65,7 @@ const AddOrderForm = ({
       onError(error) {
         console.error("Error fetching address:", error);
       },
-    }
+    },
   );
 
   useEffect(() => {
@@ -83,8 +73,6 @@ const AddOrderForm = ({
       addressByName({ name: address });
     }
   }, [address]);
-
-
 
   const { mutate, status } = useApiMutation("order/create", "post", {
     onSuccess() {
@@ -109,7 +97,7 @@ const AddOrderForm = ({
       onError(error) {
         console.error("Error fetching address:", error);
       },
-    }
+    },
   );
 
   useEffect(() => {
@@ -121,14 +109,12 @@ const AddOrderForm = ({
     } else {
       console.error("Coordinates are missing");
     }
-  }, [addressByPointName, coordinate])
+  }, [addressByPointName, coordinate]);
 
   // Trigger the mutation
   // const handleFetchAddress = () => {
 
   // };
-
-
 
   // const { data: storeData, status: storeStatus } = useApi(
   //   "store/get",
@@ -138,11 +124,15 @@ const AddOrderForm = ({
   //   }
   // );
 
-  console.log(basketItems)
+  console.log(basketItems);
 
   const submit = (data: any) => {
     const addressLocation = watch("addressLocation");
-    if (!addressLocation || !addressLocation.latitude || !addressLocation.longitude) {
+    if (
+      !addressLocation ||
+      !addressLocation.latitude ||
+      !addressLocation.longitude
+    ) {
       toast.error("Manzil noto'g'ri kiritilgan yoki xaritada topilmadi!");
       return;
     }
@@ -158,69 +148,78 @@ const AddOrderForm = ({
     const minimumOrderPrice = get(settingsData, "orderMinimumPrice", 0);
 
     if (allProductPrice < minimumOrderPrice) {
-      return toast.warning(`${t("order.minimum_order_amount")} ${numberFormat(minimumOrderPrice)} ${get(settingsData, "currency", "uzs")}`);
+      return toast.warning(
+        `${t("order.minimum_order_amount")} ${numberFormat(minimumOrderPrice)} ${get(settingsData, "currency", "uzs")}`,
+      );
     }
 
+    const { deliveryDate, ...restData } = data;
+    const parsedDeliveryDate = deliveryDate ? dayjs(deliveryDate) : null;
+    const safeDeliveryDate = parsedDeliveryDate?.isValid()
+      ? parsedDeliveryDate.format()
+      : undefined;
+
     const requestData = {
-      ...data,
-      deliveryDate: dayjs(data.deliveryDate).format(),
+      ...restData,
+      ...(safeDeliveryDate ? { deliveryDate: safeDeliveryDate } : {}),
       items: basketItems.map((e) => ({
         productId: e._id,
         amount: e.amount,
         attributes: e?.variants?.map((item) => ({
           attributeId: item.attributeId,
-          attributeItem: item.attributeItem
-        }))
+          attributeItem: item.attributeItem,
+        })),
       })),
       addressLocation: {
         latitude: coordinate?.latitude,
         longitude: coordinate?.longitude,
-      }
+      },
     };
 
     mutate(requestData);
   };
-
 
   const { data: orderData } = useApi<any>(
     `order/get-by-id/${id}`,
     {},
     {
       enabled: !!id,
-    }
+    },
   );
 
-  const courierId = orderData?.data?.courierId
+  const courierId = orderData?.data?.courierId;
 
+  const {
+    mutate: setCourier,
+    data: setCourierData,
+    status: setCourierStatus,
+    isLoading: isSettingCourier,
+  } = useApiMutation<any>("order/set-courier", "post", {
+    onSuccess(data) {
+      setSelectedCourier(data.data.courierId);
+    },
+    onError(error) {
+      console.error("API Error:", error);
+    },
+  });
 
-  const { mutate: setCourier, data: setCourierData, status: setCourierStatus, isLoading: isSettingCourier } = useApiMutation<any>(
-    "order/set-courier",
-    "post",
-    {
-      onSuccess(data) {
-        setSelectedCourier(data.data.courierId);
-      },
-      onError(error) {
-        console.error("API Error:", error);
-      },
-    }
-  );
-
-  const { mutate: deliveryMutate, data: deliveryData, status: deliveryStatus, isLoading: deliveryLoading } = useApiMutation<any>(
-    "order/calculate",
-    "post",
-    {
-      onSuccess(data) {
-        // setSelectedCourier(data.data.courierId);
-      },
-      onError(error) {
-        console.error("API Error:", error);
-      },
-    }
-  );
+  const {
+    mutate: deliveryMutate,
+    data: deliveryData,
+    status: deliveryStatus,
+    isLoading: deliveryLoading,
+  } = useApiMutation<any>("order/calculate", "post", {
+    onSuccess(data) {
+      // setSelectedCourier(data.data.courierId);
+    },
+    onError(error) {
+      console.error("API Error:", error);
+    },
+  });
 
   const DeliveryOnChange = () => {
-    const phoneNumber = formStore?.getValues("phoneNumber") || getValues("phoneNumber");
+    const phoneNumber =
+      formStore?.getValues("phoneNumber") || getValues("phoneNumber");
     deliveryMutate({
       paymentType: "cash",
       addressLocation: {
@@ -232,13 +231,12 @@ const AddOrderForm = ({
         amount: e.amount,
         attributes: e?.variants?.map((item) => ({
           attributeId: item.attributeId,
-          attributeItem: item.attributeItem
-        }))
+          attributeItem: item.attributeItem,
+        })),
       })),
-      phoneNumber: phoneNumber
+      phoneNumber: phoneNumber,
     });
-  }
-
+  };
 
   useEffect(() => {
     if (basketItems.length > 0) {
@@ -296,7 +294,7 @@ const AddOrderForm = ({
               control={formStore ? formStore?.control : control}
               name="houseNumber"
               rules={{ required: false }}
-              label={t('order.home_number')}
+              label={t("order.home_number")}
               disabled={order?.state?.state === "completed" ? true : false}
             />
           </Grid>
@@ -305,7 +303,7 @@ const AddOrderForm = ({
               control={formStore ? formStore?.control : control}
               name="entrance"
               rules={{ required: false }}
-              label={t('order.entrance')}
+              label={t("order.entrance")}
               disabled={order?.state?.state === "completed" ? true : false}
             />
           </Grid>
@@ -314,7 +312,7 @@ const AddOrderForm = ({
               control={formStore ? formStore?.control : control}
               name="floor"
               rules={{ required: false }}
-              label={t('order.floor')}
+              label={t("order.floor")}
               disabled={order?.state?.state === "completed" ? true : false}
             />
           </Grid>
@@ -323,7 +321,7 @@ const AddOrderForm = ({
               control={formStore ? formStore?.control : control}
               name="apartmentNumber"
               rules={{ required: false }}
-              label={t('order.apartment_number')}
+              label={t("order.apartment_number")}
               disabled={order?.state?.state === "completed" ? true : false}
             />
           </Grid>
@@ -346,11 +344,12 @@ const AddOrderForm = ({
           </Grid>
           <Grid item sm={12}>
             <DatePickerTime
-              label={t("common.date")}
+              label="Yetkazib berish vaqti"
               control={formStore ? formStore?.control : control}
               name="deliveryDate"
               minDate={dayjs(new Date())}
               defaultValue={dayjs(new Date())}
+              rules={{ required: false }}
               disabled={order?.state?.state === "completed" ? true : false}
             />
           </Grid>
@@ -365,7 +364,7 @@ const AddOrderForm = ({
               onChange={DeliveryOnChange}
             />
           </Grid>
-          {id &&
+          {id && (
             <Grid item sm={12}>
               <SelectPost
                 control={formStore ? formStore?.control : control}
@@ -382,7 +381,7 @@ const AddOrderForm = ({
                 disabled={order?.state?.state === "completed" ? true : false}
               />
             </Grid>
-          }
+          )}
 
           <Grid item sm={12}>
             <label className="custom-label">{t("common.description")}</label>
@@ -397,14 +396,13 @@ const AddOrderForm = ({
                   : setValue("comment", value);
               }}
               style={{
-                width: '100%',
-                padding: '8px',
-                borderRadius: '4px',
-                border: '1px solid #ccc',
-                fontSize: '1rem',
+                width: "100%",
+                padding: "8px",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+                fontSize: "1rem",
               }}
             />
-
           </Grid>
         </Grid>
         {!id && (
@@ -442,7 +440,7 @@ const AddOrderForm = ({
         {!id && (
           <MainButton
             variant="contained"
-            title={t('order.formalization')}
+            title={t("order.formalization")}
             className="submit-btn"
             type="submit"
             disabled={status === "loading"}
@@ -458,14 +456,14 @@ const AddOrderForm = ({
                   <span onClick={() => setOpen(false)}>
                     <LeftArrowIcon />
                   </span>
-                  <h2>{t('order.add_new_address')}</h2>
+                  <h2>{t("order.add_new_address")}</h2>
                 </div>
                 <Grid container spacing={2}>
                   <Grid item md={12} position="relative">
                     <TextInput
                       control={formStore ? formStore.control : control}
                       name="addressName"
-                      placeholder={t('order.shipping_address')}
+                      placeholder={t("order.shipping_address")}
                       searchIcon
                       onCustomChange={(value) => {
                         setAddress(value);
@@ -502,7 +500,7 @@ const AddOrderForm = ({
                       control={formStore ? formStore?.control : control}
                       name="houseNumber"
                       rules={{ required: false }}
-                      label={t('order.home_number')}
+                      label={t("order.home_number")}
                     />
                   </Grid>
                   <Grid item md={6}>
@@ -510,7 +508,7 @@ const AddOrderForm = ({
                       control={formStore ? formStore?.control : control}
                       name="entrance"
                       rules={{ required: false }}
-                      label={t('order.entrance')}
+                      label={t("order.entrance")}
                     />
                   </Grid>
                   <Grid item md={6}>
@@ -518,27 +516,33 @@ const AddOrderForm = ({
                       control={formStore ? formStore?.control : control}
                       name="floor"
                       rules={{ required: false }}
-                      label={t('order.floor')}
+                      label={t("order.floor")}
                     />
                   </Grid>
                   <Grid item md={6}>
                     <TextInput
                       control={formStore ? formStore?.control : control}
                       name="apartmentNumber"
-                      label={t('order.apartment_number')}
+                      label={t("order.apartment_number")}
                       rules={{ required: false }}
                     />
                   </Grid>
                 </Grid>
                 <MainButton
-                  title={t('FORMDRAWER.SAVE')}
+                  title={t("FORMDRAWER.SAVE")}
                   variant="contained"
                   color="success"
                   className="save-btn"
                   onClick={() => {
                     const addressLocation = watch("addressLocation");
-                    if (!addressLocation || !addressLocation.latitude || !addressLocation.longitude) {
-                      toast.error("Manzil noto'g'ri kiritilgan yoki xaritada topilmadi!");
+                    if (
+                      !addressLocation ||
+                      !addressLocation.latitude ||
+                      !addressLocation.longitude
+                    ) {
+                      toast.error(
+                        "Manzil noto'g'ri kiritilgan yoki xaritada topilmadi!",
+                      );
                       return;
                     }
                     setOpen(false);
