@@ -323,7 +323,8 @@
     "cashback_percentage": "Процент кэшбэка (%)",
     "cashback_percentage_hint": "Например: 5% = 5,000 сум кэшбэка за каждые 100,000 сум",
     "cashback_min_order_amount": "Минимальная сумма заказа (для кэшбэка)",
-    "cashback_min_order_amount_hint": "Если сумма меньше, кэшбэк не предоставляется (0 = без ограничений)"
+    "cashback_min_order_amount_hint": "Если сумма меньше, кэшбэк не предоставляется (0 = без ограничений)",
+    "customer_analytics_enabled": "Отслеживать аналитику клиентов"
   },
   "transaction": {
     "total_balance": "Общий баланс",

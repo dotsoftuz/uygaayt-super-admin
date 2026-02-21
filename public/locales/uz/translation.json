@@ -313,7 +313,8 @@
     "cashback_percentage": "Cashback foizi (%)",
     "cashback_percentage_hint": "Masalan: 5% = har 100,000 so'm uchun 5,000 so'm cashback",
     "cashback_min_order_amount": "Minimal buyurtma summasi (cashback uchun)",
-    "cashback_min_order_amount_hint": "Bu summadan kam bo'lsa cashback berilmaydi (0 = cheklov yo'q)"
+    "cashback_min_order_amount_hint": "Bu summadan kam bo'lsa cashback berilmaydi (0 = cheklov yo'q)",
+    "customer_analytics_enabled": "Mijoz analitikasini track qilish"
   },
   "transaction": {
     "total_balance": "Umumiy balans",

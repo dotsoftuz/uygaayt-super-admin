@@ -1,26 +1,37 @@
-import { Box, FormControl, Grid, MenuItem, Select, Switch, Typography } from "@mui/material";
-import { HeaderOfSettings, SettingsStyled, SettingTitle, StyledMenuItem, StyledPhoneCountrySelect } from "./Settings.styled";
-import { SETTINGS_TABS } from "types/enums";
-import { useEffect, useState } from "react";
-import { useRoleManager } from "services/useRoleManager";
-import { Input, MainButton, TextInput } from "components";
-import { useTranslation } from "react-i18next";
-import { PHONE_COUNTRY_DATA } from "./Settings.constants";
-import { Controller, useForm } from "react-hook-form";
-import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
-import { toast } from "react-toastify";
-import { useSearchParams } from "react-router-dom";
-import MainAddress from "../components/MainAddress";
-import WebsiteConditions from "../components/WebsiteConditions";
-import PremiumDiscountOrder from "../components/PremiumDiscountOrder";
-import { realNumberPattern } from "utils/pattern";
-import currencyFormatter from "utils/currencyFormatter";
-import { StyledPercent, StyledSwitch } from "../style/discount.style";
 import { Percent } from "@mui/icons-material";
-import { miniSize } from '../../../styles/global.style';
+import {
+  Box,
+  FormControl,
+  Grid,
+  MenuItem,
+  Select,
+  Switch,
+  Typography,
+} from "@mui/material";
+import { MainButton, TextInput } from "components";
+import { useApi, useApiMutation } from "hooks/useApi/useApiHooks";
+import About from "pages/about";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useRoleManager } from "services/useRoleManager";
+import { SETTINGS_TABS } from "types/enums";
 import BonusOrder from "../components/BonusOrder";
 import DiscountOrder from "../components/DiscountOrder";
-import About from "pages/about";
+import MainAddress from "../components/MainAddress";
+import PremiumDiscountOrder from "../components/PremiumDiscountOrder";
+import WebsiteConditions from "../components/WebsiteConditions";
+import { StyledPercent, StyledSwitch } from "../style/discount.style";
+import { PHONE_COUNTRY_DATA } from "./Settings.constants";
+import {
+  HeaderOfSettings,
+  SettingsStyled,
+  SettingTitle,
+  StyledMenuItem,
+  StyledPhoneCountrySelect,
+} from "./Settings.styled";
 
 const Settings = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,7 +41,6 @@ const Settings = () => {
   const [phonePrefix, setphonePrefix] = useState<string>("");
   const { control, reset, watch, register, handleSubmit, setValue } = useForm();
 
-
   const { data, status, refetch } = useApi(
     "settings-general",
     {},
@@ -38,7 +48,7 @@ const Settings = () => {
       onSuccess({ data }) {
         localStorage.setItem("settings", JSON.stringify(data));
       },
-    }
+    },
   );
 
   useEffect(() => {
@@ -47,7 +57,7 @@ const Settings = () => {
     }
   }, [data, setValue]);
 
-  console.log(data?.data?.orderCalculateMethod)
+  console.log(data?.data?.orderCalculateMethod);
 
   const { mutate } = useApiMutation("settings-general", "put", {
     onSuccess() {
@@ -78,11 +88,22 @@ const Settings = () => {
       phonePrefix,
       deliveryChangePrice: data.deliveryChangePrice || 0,
       // Cashback fields
-      cashbackEnabled: data.cashbackEnabled !== undefined ? data.cashbackEnabled : true,
-      cashbackPercentage: data.cashbackPercentage !== undefined ? Number(data.cashbackPercentage) : 0,
-      cashbackMinOrderAmount: data.cashbackMinOrderAmount !== undefined ? Number(data.cashbackMinOrderAmount) : 0,
+      cashbackEnabled:
+        data.cashbackEnabled !== undefined ? data.cashbackEnabled : true,
+      cashbackPercentage:
+        data.cashbackPercentage !== undefined
+          ? Number(data.cashbackPercentage)
+          : 0,
+      cashbackMinOrderAmount:
+        data.cashbackMinOrderAmount !== undefined
+          ? Number(data.cashbackMinOrderAmount)
+          : 0,
+      customerAnalyticsEnabled:
+        data.customerAnalyticsEnabled !== undefined
+          ? data.customerAnalyticsEnabled
+          : false,
     };
-    console.log('Submitting settings:', submitData);
+    console.log("Submitting settings:", submitData);
     mutate(submitData);
   });
 
@@ -95,32 +116,30 @@ const Settings = () => {
     setphonePrefix(event.target.value);
   };
 
-
   return (
     <SettingsStyled>
       <Grid className="md:flex" spacing={1}>
-        <Grid item className="md:w-1/6 p-2" >
+        <Grid item className="md:w-1/6 p-2">
           <div className="tabs">
-            {SETTINGS_TABS.filter(tab => hasAccess(tab.role)).map((tab) => (
+            {SETTINGS_TABS.filter((tab) => hasAccess(tab.role)).map((tab) => (
               <div
                 key={tab.key}
                 className={`tab ${activeTab === tab.key && "active"}`}
                 onClick={() => handleTab(tab)}
               >
                 {t(`settings.${tab.name}`)}
-                {activeTab === tab.key && (
-                  <div className="left-border"></div>
-                )}
+                {activeTab === tab.key && <div className="left-border"></div>}
               </div>
             ))}
-
           </div>
         </Grid>
-        <Grid className="md:w-5/6 p-2" >
+        <Grid className="md:w-5/6 p-2">
           {activeTab === "functionality" && (
             <div className="settings">
               <HeaderOfSettings>
-                <SettingTitle className="md:text-2xl">{t("settings.functionality")}</SettingTitle>
+                <SettingTitle className="md:text-2xl">
+                  {t("settings.functionality")}
+                </SettingTitle>
                 <MainButton
                   title={t("general.save")}
                   variant="contained"
@@ -130,7 +149,9 @@ const Settings = () => {
               <Grid container spacing={2}>
                 <Grid item md={12} xs={12}>
                   <div className="item">
-                    <span className="key">{t("settings.minimum_order_amount")}</span>
+                    <span className="key">
+                      {t("settings.minimum_order_amount")}
+                    </span>
                     <TextInput
                       control={control}
                       name="orderMinimumPrice"
@@ -141,7 +162,9 @@ const Settings = () => {
                 </Grid>
                 <Grid item md={12} xs={12}>
                   <div className="item">
-                    <span className="key">{t('settings.switch_for_courier')}</span>
+                    <span className="key">
+                      {t("settings.switch_for_courier")}
+                    </span>
                     <Box display="flex" alignItems="center">
                       <Switch
                         checked={watch("courierChangeOnline")}
@@ -166,9 +189,7 @@ const Settings = () => {
                 </Grid>
                 <Grid item md={12} xs={12}>
                   <div className="item">
-                    <span className="key">
-                      {t("settings.store_radius")}
-                    </span>
+                    <span className="key">{t("settings.store_radius")}</span>
                     <TextInput
                       control={control}
                       name="storeRadius"
@@ -186,7 +207,10 @@ const Settings = () => {
                       name="currency"
                       type="text"
                       onCustomChange={(value) => {
-                        const allowedCharacters = value.replace(/[^a-zA-Z'`]/g, "");
+                        const allowedCharacters = value.replace(
+                          /[^a-zA-Z'`]/g,
+                          "",
+                        );
                         setValue("currency", allowedCharacters);
                       }}
                     />
@@ -194,7 +218,9 @@ const Settings = () => {
                 </Grid>
                 <Grid item md={12} xs={12}>
                   <div className="item">
-                    <span className="key">{t("settings.order_delivery_time")}</span>
+                    <span className="key">
+                      {t("settings.order_delivery_time")}
+                    </span>
                     <TextInput
                       control={control}
                       name="maxDeliveryTime"
@@ -205,7 +231,9 @@ const Settings = () => {
                 </Grid>
                 <Grid item md={12} xs={12}>
                   <div className="item">
-                    <span className="key">{t("settings.couirer_return_time")}</span>
+                    <span className="key">
+                      {t("settings.couirer_return_time")}
+                    </span>
                     <TextInput
                       control={control}
                       name="maxArrivalTime"
@@ -216,7 +244,9 @@ const Settings = () => {
                 </Grid>
                 <Grid item md={12} xs={12}>
                   <div className="item">
-                    <span className="key">{t("settings.premium_days")} (kun)</span>
+                    <span className="key">
+                      {t("settings.premium_days")} (kun)
+                    </span>
                     <TextInput
                       control={control}
                       name="premiumDays"
@@ -239,9 +269,7 @@ const Settings = () => {
 
                 <Grid item md={12} xs={12}>
                   <div className="item">
-                    <span className="key">
-                      {t('general.order_calculate')}
-                    </span>
+                    <span className="key">{t("general.order_calculate")}</span>
                     <FormControl fullWidth>
                       <Controller
                         name="orderCalculateMethod"
@@ -257,45 +285,49 @@ const Settings = () => {
                               console.log("Tanlangan qiymat:", e.target.value);
                             }}
                           >
-                            <MenuItem value="by_distance">{t('general.by_distance')}</MenuItem>
-                            <MenuItem value="static">{t('general.static')}</MenuItem>
+                            <MenuItem value="by_distance">
+                              {t("general.by_distance")}
+                            </MenuItem>
+                            <MenuItem value="static">
+                              {t("general.static")}
+                            </MenuItem>
                           </Select>
                         )}
                       />
                     </FormControl>
-
-
-
                   </div>
                 </Grid>
 
-                {
-                  watch("orderCalculateMethod") &&
+                {watch("orderCalculateMethod") && (
                   <Grid item md={12} xs={12}>
                     <div className="item">
                       <span className="key">
-                        {watch("orderCalculateMethod") === "by_distance" ? t('general.km_calculate_price') : t('general.static_price')}
+                        {watch("orderCalculateMethod") === "by_distance"
+                          ? t("general.km_calculate_price")
+                          : t("general.static_price")}
                       </span>
                       <TextInput
                         control={control}
                         name="orderPrice"
                         type="number"
                         rules={{
-                          min: { value: 0, message: "Narx manfiy bo'lishi mumkin emas" },
+                          min: {
+                            value: 0,
+                            message: "Narx manfiy bo'lishi mumkin emas",
+                          },
                         }}
                         inputProps={{
                           min: 0,
                         }}
                       />
-
                     </div>
                   </Grid>
-                }
+                )}
 
                 <Grid item md={12} xs={12}>
                   <div className="item">
                     <span className="key">
-                      {t('general.savings_percentage')}
+                      {t("general.savings_percentage")}
                     </span>
                     <TextInput
                       control={control}
@@ -308,7 +340,9 @@ const Settings = () => {
                 <Grid item md={12} xs={12}>
                   <div className="item">
                     <span className="key">
-                      {(watch(`savedTimeCalculateMethod`) === "percent" ? t('general.savings_time_percent') : t('general.savings_time_amount'))}
+                      {watch(`savedTimeCalculateMethod`) === "percent"
+                        ? t("general.savings_time_percent")
+                        : t("general.savings_time_amount")}
                     </span>
                     <div className="flex items-end justify-between">
                       <TextInput
@@ -318,7 +352,9 @@ const Settings = () => {
                         rules={{
                           required: false,
                           validate: (value) => {
-                            if (watch("savedTimeCalculateMethod") === "percent") {
+                            if (
+                              watch("savedTimeCalculateMethod") === "percent"
+                            ) {
                               return value <= 100 || "Qiymat 100% dan katta";
                             }
                             return true;
@@ -326,18 +362,19 @@ const Settings = () => {
                         }}
                       />
 
-                      <Grid
-                        className="flex">
+                      <Grid className="flex">
                         <StyledSwitch
                           className={
-                            watch(`savedTimeCalculateMethod`) === "percent" ? "show" : ""
+                            watch(`savedTimeCalculateMethod`) === "percent"
+                              ? "show"
+                              : ""
                           }
                           onClick={() =>
                             setValue(
                               `savedTimeCalculateMethod`,
                               watch(`savedTimeCalculateMethod`) === "percent"
                                 ? "amount"
-                                : "percent"
+                                : "percent",
                             )
                           }
                         >
@@ -355,9 +392,7 @@ const Settings = () => {
 
                 <Grid item md={12} xs={12}>
                   <div className="item">
-                    <span className="key">
-                      {t('settings.invitePromocode')}
-                    </span>
+                    <span className="key">{t("settings.invitePromocode")}</span>
                     <div className="flex items-end justify-between">
                       <TextInput
                         control={control}
@@ -374,18 +409,19 @@ const Settings = () => {
                         }}
                       />
 
-                      <Grid
-                        className="flex">
+                      <Grid className="flex">
                         <StyledSwitch
                           className={
-                            watch(`invitePromocodeType`) === "percent" ? "show" : ""
+                            watch(`invitePromocodeType`) === "percent"
+                              ? "show"
+                              : ""
                           }
                           onClick={() =>
                             setValue(
                               `invitePromocodeType`,
                               watch(`invitePromocodeType`) === "percent"
                                 ? "amount"
-                                : "percent"
+                                : "percent",
                             )
                           }
                         >
@@ -404,7 +440,7 @@ const Settings = () => {
                 <Grid item md={12} xs={12}>
                   <div className="item">
                     <span className="key">
-                      {t('settings.delivery_change_limit')}
+                      {t("settings.delivery_change_limit")}
                     </span>
                     <TextInput
                       control={control}
@@ -417,23 +453,58 @@ const Settings = () => {
                 <Grid item md={12} xs={12}>
                   <div className="item">
                     <span className="key">
-                      {t('settings.delivery_change_price')}
+                      {t("settings.delivery_change_price")}
                     </span>
                     <TextInput
                       control={control}
                       name="deliveryChangePrice"
                       type="number"
-                      rules={{ required: false, }}
+                      rules={{ required: false }}
                     />
                   </div>
                 </Grid>
 
                 {/* Cashback Settings */}
                 <Grid item md={12} xs={12}>
-                  <div className="item" style={{ borderTop: "2px solid #e0e0e0", paddingTop: "20px", marginTop: "20px" }}>
-                    <Typography fontSize={"18px"} fontWeight="bold" marginBottom="15px">
-                      {t("settings.cashback_settings") || "Cashback Sozlamalari"}
+                  <div
+                    className="item"
+                    style={{
+                      borderTop: "2px solid #e0e0e0",
+                      paddingTop: "20px",
+                      marginTop: "20px",
+                    }}
+                  >
+                    <Typography
+                      fontSize={"18px"}
+                      fontWeight="bold"
+                      marginBottom="15px"
+                    >
+                      {t("settings.cashback_settings") ||
+                        "Cashback Sozlamalari"}
                     </Typography>
+                  </div>
+                </Grid>
+
+                {/* Customer Analytics Settings */}
+                <Grid item md={12} xs={12}>
+                  <div className="item">
+                    <span className="key">
+                      {t("settings.customer_analytics_enabled") ||
+                        "Mijoz analitikasini track qilish"}
+                    </span>
+                    <Box display="flex" alignItems="center">
+                      <Switch
+                        checked={watch("customerAnalyticsEnabled") ?? false}
+                        id="customerAnalyticsEnabled"
+                        {...register("customerAnalyticsEnabled")}
+                      />
+                      <label
+                        className="mb-1"
+                        htmlFor="customerAnalyticsEnabled"
+                      >
+                        {t("general.allow")}
+                      </label>
+                    </Box>
                   </div>
                 </Grid>
 
@@ -458,7 +529,8 @@ const Settings = () => {
                 <Grid item md={12} xs={12}>
                   <div className="item">
                     <span className="key">
-                      {t("settings.cashback_percentage") || "Cashback foizi (%)"}
+                      {t("settings.cashback_percentage") ||
+                        "Cashback foizi (%)"}
                     </span>
                     <TextInput
                       control={control}
@@ -466,17 +538,24 @@ const Settings = () => {
                       type="number"
                       rules={{
                         required: false,
-                        min: { value: 0, message: "Foiz manfiy bo'lishi mumkin emas" },
-                        max: { value: 100, message: "Foiz 100 dan oshmasligi kerak" }
+                        min: {
+                          value: 0,
+                          message: "Foiz manfiy bo'lishi mumkin emas",
+                        },
+                        max: {
+                          value: 100,
+                          message: "Foiz 100 dan oshmasligi kerak",
+                        },
                       }}
                       inputProps={{
                         min: 0,
                         max: 100,
-                        step: 0.1
+                        step: 0.1,
                       }}
                     />
                     <Typography fontSize={"12px"} color="#666" marginTop="5px">
-                      {t("settings.cashback_percentage_hint") || "Masalan: 5% = har 100,000 so'm uchun 5,000 so'm cashback"}
+                      {t("settings.cashback_percentage_hint") ||
+                        "Masalan: 5% = har 100,000 so'm uchun 5,000 so'm cashback"}
                     </Typography>
                   </div>
                 </Grid>
@@ -484,7 +563,8 @@ const Settings = () => {
                 <Grid item md={12} xs={12}>
                   <div className="item">
                     <span className="key">
-                      {t("settings.cashback_min_order_amount") || "Minimal buyurtma summasi"}
+                      {t("settings.cashback_min_order_amount") ||
+                        "Minimal buyurtma summasi"}
                     </span>
                     <TextInput
                       control={control}
@@ -492,14 +572,18 @@ const Settings = () => {
                       type="number"
                       rules={{
                         required: false,
-                        min: { value: 0, message: "Summa manfiy bo'lishi mumkin emas" }
+                        min: {
+                          value: 0,
+                          message: "Summa manfiy bo'lishi mumkin emas",
+                        },
                       }}
                       inputProps={{
-                        min: 0
+                        min: 0,
                       }}
                     />
                     <Typography fontSize={"12px"} color="#666" marginTop="5px">
-                      {t("settings.cashback_min_order_amount_hint") || "Bu summadan kam bo'lsa cashback berilmaydi (0 = cheklov yo'q)"}
+                      {t("settings.cashback_min_order_amount_hint") ||
+                        "Bu summadan kam bo'lsa cashback berilmaydi (0 = cheklov yo'q)"}
                     </Typography>
                   </div>
                 </Grid>
