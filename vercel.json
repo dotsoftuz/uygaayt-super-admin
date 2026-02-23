@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/socket.js": {
+      "maxDuration": 10
+    }
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -10,7 +15,7 @@
     },
     {
       "source": "/socket.io",
-      "destination": "http://206.189.53.153:3004/socket.io"
+      "destination": "/api/socket.js"
     }
   ]
 }
