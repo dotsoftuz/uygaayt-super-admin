@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/v1/(.*)",
+      "destination": "http://206.189.53.153:3003/v1/$1"
+    },
+    {
+      "source": "/socket.io/(.*)",
+      "destination": "http://206.189.53.153:3004/socket.io/$1"
+    },
+    {
+      "source": "/socket.io",
+      "destination": "http://206.189.53.153:3004/socket.io"
+    }
+  ]
+}
