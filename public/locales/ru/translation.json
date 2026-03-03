@@ -118,6 +118,8 @@
     "discount": "Скидка",
     "isActive": "Активен",
     "categoryName": "Название категории",
+    "productsCount": "Прикрепленные продукты",
+    "subcategoriesCount": "Подкатегории",
     "name": "Имя",
     "firstName": "Имя",
     "lastName": "Фамилия",

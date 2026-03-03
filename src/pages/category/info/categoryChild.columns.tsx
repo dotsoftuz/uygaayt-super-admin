@@ -52,13 +52,12 @@ export const useCategoryCol = ({
       title: t("common.categoryName"),
       dataIndex: "name",
       key: "name",
-      render: (text: string, record: any) => (
-          // @ts-ignore
-          text?.[currentLang]
-      ),
+      render: (text: string, record: any) =>
+        // @ts-ignore
+        text?.[currentLang],
     },
     {
-      title: t("common.product") + " soni",
+      title: t("common.productsCount"),
       dataIndex: "productCount",
       key: "productCount",
       render: (text: string, record: any) => {

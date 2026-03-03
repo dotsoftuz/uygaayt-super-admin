@@ -1,8 +1,11 @@
 import axios from "axios";
 import React from "react";
 
+const baseURL =
+  process.env.REACT_APP_BASE_URL || "https://uygaaytbackend.uz/v1";
+
 const api = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL || "http://165.227.153.9/v1",
+  baseURL,
 });
 // Handle all configuration of request
 api.interceptors.request.use(

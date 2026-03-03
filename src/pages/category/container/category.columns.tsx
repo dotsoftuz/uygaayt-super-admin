@@ -55,20 +55,33 @@ export const useCategoryCol = ({
       dataIndex: "name",
       key: "name",
       render: (text: string, record: any) => (
-        <p style={{cursor: "pointer"}}
+        <p
+          style={{ cursor: "pointer" }}
           className="text-blue-600 hover:text-blue-800 font-medium"
-          onClick={() => navigate(`/category_child?parentId=${record._id}`, { state: { categoryId: record._id } })}
-        > 
-        {/* @ts-ignore */}
+          onClick={() =>
+            navigate(`/category_child?parentId=${record._id}`, {
+              state: { categoryId: record._id },
+            })
+          }
+        >
+          {/* @ts-ignore */}
           {text?.[currentLang]}
         </p>
       ),
     },
     {
-      title: t("common.product") + " soni",
+      title: t("common.productsCount", { defaultValue: "Products" }),
       dataIndex: "productCount",
       key: "productCount",
       render: (text: string, record: any) => {
+        return numberFormat(text);
+      },
+    },
+    {
+      title: t("common.subcategoriesCount", { defaultValue: "Subcategories" }),
+      dataIndex: "childrenCount",
+      key: "childrenCount",
+      render: (text: string) => {
         return numberFormat(text);
       },
     },
@@ -88,9 +101,11 @@ export const useCategoryCol = ({
               </IconButton>
             )}
             {hasAccess("categoryDelete") && (
-              <IconButton onClick={() => {
-                setCategoryId?.(record?._id)
-              }}>
+              <IconButton
+                onClick={() => {
+                  setCategoryId?.(record?._id);
+                }}
+              >
                 <DeleteIcon />
               </IconButton>
             )}
